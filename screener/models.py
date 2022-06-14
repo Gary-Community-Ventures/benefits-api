@@ -18,11 +18,11 @@ class Screen(models.Model):
     has_income = models.BooleanField()
     has_expenses = models.BooleanField()
     household_size = models.IntegerField()
-    household_assets = models.DecimalField(decimal_places=2)
+    household_assets = models.DecimalField(decimal_places=2, max_digits=10)
 
 class incomeStream(models.Model):
     screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
     type = models.CharField(max_length=30)
     label = models.CharField(max_length=200)
-    amount = DecimalField(decimal_places=2)
+    amount = models.DecimalField(decimal_places=2, max_digits=10)
     frequency = models.CharField(max_length=30)
