@@ -20,7 +20,7 @@ class Screen(models.Model):
     household_size = models.IntegerField()
     household_assets = models.DecimalField(decimal_places=2, max_digits=10)
 
-class incomeStream(models.Model):
+class IncomeStream(models.Model):
     screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
     type = models.CharField(max_length=30)
     label = models.CharField(max_length=200)
