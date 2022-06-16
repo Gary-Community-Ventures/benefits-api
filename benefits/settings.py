@@ -35,7 +35,13 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'authentication.User'
 
 REST_FRAMEWORK = {
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication'
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+    ]
 }
 
 # Application definition
@@ -44,6 +50,7 @@ INSTALLED_APPS = [
     'authentication.apps.AuthConfig',
     'screener.apps.ScreenerConfig',
     'rest_framework',
+    'rest_framework.authtoken',
     'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
