@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from screener.models import Screen, IncomeStream
+from screener.models import Screen, IncomeStream, Expense
 from rest_framework import viewsets
 from rest_framework import permissions
-from screener.serializers import ScreenSerializer, IncomeStreamSerializer
+from screener.serializers import ScreenSerializer, IncomeStreamSerializer, ExpenseSerializer
 
 def index(request):
     return HttpResponse("Colorado Benefits Screener API")
@@ -24,5 +24,15 @@ class IncomeStreamViewSet(viewsets.ModelViewSet):
     """
     queryset = IncomeStream.objects.all()
     serializer_class = IncomeStreamSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = ['screen']
+
+
+class ExpenseViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows expenses to be viewed or edited.
+    """
+    queryset = Expense.objects.all()
+    serializer_class = ExpenseSerializer
     permission_classes = [permissions.IsAuthenticated]
     filterset_fields = ['screen']
