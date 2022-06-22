@@ -22,9 +22,17 @@ class Screen(models.Model):
     household_assets = models.DecimalField(decimal_places=2, max_digits=10)
     housing_situation = models.CharField(max_length=30)
 
+    def total_income(self):
+        income_streams = self.incomestreams.all()
+        total_income = 0
+        for income_stream in income_streams:
+            total_income += income_stream.amount
+
+        return total_income
+
 
 class IncomeStream(models.Model):
-    screen = models.ForeignKey(Screen, on_delete=models.CASCADE)
+    screen = models.ForeignKey(Screen, related_name='incomestreams', on_delete=models.CASCADE)
     name = models.CharField(max_length=30)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     frequency = models.CharField(max_length=30)
