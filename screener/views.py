@@ -47,8 +47,21 @@ class EligibilityView(views.APIView):
         screen = Screen.objects.get(pk=id)
 
         data = []
+
         for program in all_programs:
             eligibility = program.eligibility(screen)
-            data.append({"program_name": program.programName, "eligible": eligibility["eligible"], "value": eligibility["value"]})
+            data.append(
+                {
+                    "description_short": program.description_short,
+                    "name": program.name,
+                    "description": program.description,
+                    "learn_more_link": program.learn_more_link,
+                    "apply_button_link": program.apply_button_link,
+                    "estimated_value": eligibility["estimated_value"],
+                    "estimated_delivery_time": program.estimated_delivery_time,
+                    "legal_status_required": program.legal_status_required,
+                    "eligible": eligibility["eligible"]
+                }
+            )
         results = EligibilitySerializer(data, many=True).data
         return Response(results)

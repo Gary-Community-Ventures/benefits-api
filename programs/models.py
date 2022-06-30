@@ -3,27 +3,27 @@ from programs.eligibility.snap import eligibility_snap, value_snap
 
 class Program(models.Model):
 
-    programSnapshot = models.TextField()
-    programName = models.CharField(max_length=120)
-    programNameShort = models.CharField(max_length=120)
-    programDescription = models.TextField()
-    learnMoreLink = models.CharField(max_length=320)
-    applyButtonLink = models.CharField(max_length=320)
-    dollarValue = models.IntegerField()
-    estimatedDeliveryTime = models.CharField(max_length=120)
-    legalStatusRequired = models.BooleanField()
+    description_short = models.TextField()
+    name = models.CharField(max_length=120)
+    name_abbreviated = models.CharField(max_length=120)
+    description = models.TextField()
+    learn_more_link = models.CharField(max_length=320)
+    apply_button_link = models.CharField(max_length=320)
+    dollar_value = models.IntegerField()
+    estimated_delivery_time = models.CharField(max_length=120)
+    legal_status_required = models.BooleanField()
 
     def eligibility(self, screen):
         eligibility = {
-            "eligible": False,
-            "value": 0
+            "estimated_value": 0,
+            "eligible": False
         }
 
-        eligibility_func_name = "eligibility_" + self.programNameShort
-        value_func_name = "value_" + self.programNameShort
+        eligibility_func_name = "eligibility_" + self.name_abbreviated
+        value_func_name = "value_" + self.name_abbreviated
 
         eligibility["eligible"] = eval(eligibility_func_name + "(screen)")
         if eligibility["eligible"]:
-            eligibility["value"] = eval(value_func_name + "(screen)")
+            eligibility["estimated_value"] = eval(value_func_name + "(screen)")
 
         return eligibility

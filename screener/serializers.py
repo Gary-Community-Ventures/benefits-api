@@ -27,9 +27,16 @@ class ExpenseSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EligibilitySerializer(serializers.Serializer):
-    program_name = serializers.CharField()
+    description_short = serializers.CharField()
+    name = serializers.CharField()
+    description = serializers.CharField()
+    learn_more_link = serializers.CharField()
+    apply_button_link = serializers.CharField()
+    estimated_value = serializers.IntegerField()
+    estimated_delivery_time = serializers.CharField()
+    legal_status_required = serializers.BooleanField
     eligible = serializers.BooleanField()
-    value = serializers.IntegerField()
+    estimated_value = serializers.IntegerField()
 
     class Meta:
         fields = '__all__'
