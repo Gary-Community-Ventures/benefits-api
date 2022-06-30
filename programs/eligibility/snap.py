@@ -28,7 +28,7 @@ def eligibility_snap(screen):
     earned_gross_income = screen.calc_gross_income(frequency, earned_income_types)
     unearned_gross_income = gross_income - earned_gross_income
     snap_gross_income = Decimal(.8) * earned_gross_income + unearned_gross_income
-    expense_types = ["childSupport", "dependentCare", "childCare", "rent", "heating", "cooling", "mortgage", "utilities"]
+    expense_types = ["childSupport", "dependentCare", "childCare", "rent", "heating", "cooling", "mortgage", "utilities", "telephone"]
 
     # SNAP allows disabled or applicants over the age of 60 to deduct medical
     if screen.disabled or screen.applicant_age >= 60:
@@ -56,17 +56,17 @@ def eligibility_snap(screen):
     if screen.applicant_age >= 60 and screen.household_assets >= 3750:
         eligibility["eligible"] = False
         eligibility["failed"].append("Households with members at or above the age of 60 have to pass an asset test."\
-                "Your reported household assets of "\
+                " Your reported household assets of "\
                 +str(screen.household_assets)\
-                +"is above the limit of 3750")
+                +" is above the limit of 3750")
     elif screen.applicant_age >= 60:
         eligibility["passed"].append("Households with members at or above the age of 60 have to pass an asset test."\
-                "Your reported household assets of "\
+                " Your reported household assets of "\
                 +str(screen.household_assets)\
                 +" is below the limit of 3750")
     else:
         eligibility["passed"].append("Households with members at or above the age of 60 have to pass an asset test."\
-                +"You did not report any household members at or above this age.")
+                +" You did not report any household members at or above this age.")
 
     # ABAWD TEST -- post pandemic we will need to add test for able bodied workers
 
