@@ -60,7 +60,9 @@ class EligibilityView(views.APIView):
                     "estimated_value": eligibility["estimated_value"],
                     "estimated_delivery_time": program.estimated_delivery_time,
                     "legal_status_required": program.legal_status_required,
-                    "eligible": eligibility["eligible"]
+                    "eligible": eligibility["eligible"],
+                    "failed_tests": eligibility["failed"],
+                    "passed_tests": eligibility["passed"]
                 }
             )
         results = EligibilitySerializer(data, many=True).data

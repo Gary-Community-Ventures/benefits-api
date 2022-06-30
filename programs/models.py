@@ -14,15 +14,13 @@ class Program(models.Model):
     legal_status_required = models.BooleanField()
 
     def eligibility(self, screen):
-        eligibility = {
-            "estimated_value": 0,
-            "eligible": False
-        }
 
         eligibility_func_name = "eligibility_" + self.name_abbreviated
         value_func_name = "value_" + self.name_abbreviated
 
-        eligibility["eligible"] = eval(eligibility_func_name + "(screen)")
+        eligibility = eval(eligibility_func_name + "(screen)")
+
+        eligibility["estimated_value"] = 0
         if eligibility["eligible"]:
             eligibility["estimated_value"] = eval(value_func_name + "(screen)")
 

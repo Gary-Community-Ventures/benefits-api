@@ -36,6 +36,8 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_delivery_time = serializers.CharField()
     legal_status_required = serializers.BooleanField
     eligible = serializers.BooleanField()
+    failed_tests = serializers.CharField()
+    passed_tests = serializers.CharField()
     estimated_value = serializers.IntegerField()
 
     class Meta:
