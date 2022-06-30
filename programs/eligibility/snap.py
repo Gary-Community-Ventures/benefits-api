@@ -15,8 +15,16 @@ def eligibility_snap(screen):
     }
 
     income_limit = income_bands[screen.household_size]
+    frequency = "monthly"
+    income_types = ["all"]
+    expense_types = ["childSupport", "dependentCare", "childCare", "rent", "heating", "cooling", "mortgage", "utilities"]
 
-    if screen.total_income() > income_limit:
+    if screen.disabled or screen.applicant_age >= 60:
+        expense_types.append("medical")
+
+    net_income = screen.calc_net_income(frequency, income_types, expense_types)
+
+    if net_income > income_limit:
         eligible = False
 
     return eligible
