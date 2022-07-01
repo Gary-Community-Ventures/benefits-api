@@ -45,10 +45,15 @@ REST_FRAMEWORK = {
     ]
 }
 
+CORS_ALLOWED_ORIGINS = [
+    "https://benefits-calculator-v1.herokuapp.com"
+]
+
 # Application definition
 
 INSTALLED_APPS = [
     'authentication.apps.AuthConfig',
+    'corsheaders',
     'screener.apps.ScreenerConfig',
     'programs.apps.ProgramsConfig',
     'rest_framework',
@@ -67,6 +72,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
