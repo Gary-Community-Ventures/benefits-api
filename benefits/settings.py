@@ -45,9 +45,7 @@ REST_FRAMEWORK = {
     ]
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "https://benefits-calculator-v1.herokuapp.com"
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 
