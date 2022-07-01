@@ -83,14 +83,14 @@ def value_snap(screen):
     # Variables that may change over time
     # household size : maximum monthly allotment
     value_bands = {
-        1: 250,
-        2: 459,
-        3: 658,
-        4: 835,
-        5: 992,
-        6: 1190,
-        7: 1316,
-        8: 1504
+        1: 250*12,
+        2: 459*12,
+        3: 658*12,
+        4: 835*12,
+        5: 992*12,
+        6: 1190*12,
+        7: 1316*12,
+        8: 1504*12
     }
 
     value = value_bands[screen.household_size]

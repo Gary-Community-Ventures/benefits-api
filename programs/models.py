@@ -1,6 +1,7 @@
 from django.db import models
 from programs.eligibility.snap import eligibility_snap, value_snap
 from programs.eligibility.acp import eligibility_acp, value_acp
+from programs.eligibility.lifeline import eligibility_lifeline, value_lifeline
 
 class Program(models.Model):
 
