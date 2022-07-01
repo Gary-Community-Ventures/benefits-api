@@ -12,7 +12,7 @@ class Program(models.Model):
     apply_button_link = models.CharField(max_length=320)
     dollar_value = models.IntegerField()
     estimated_delivery_time = models.CharField(max_length=320)
-    legal_status_required = models.BooleanField()
+    legal_status_required = models.CharField(max_length=120)
 
     def eligibility(self, screen):
 
