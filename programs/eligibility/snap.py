@@ -2,12 +2,15 @@ from decimal import Decimal
 
 def eligibility_snap(screen):
     eligible = True
+
     eligibility = {
         "eligible": True,
         "passed": [],
         "failed": []
     }
 
+    # Variables that may change over time
+    # household size : income limit
     income_bands = {
         1: 2148,
         2: 2904,
@@ -18,9 +21,11 @@ def eligibility_snap(screen):
         7: 6688,
         8: 7444
     }
+    frequency = "monthly"
+    older_adult = 60
+    older_adult_asset_limit = 3750
 
     income_limit = income_bands[screen.household_size]
-    frequency = "monthly"
 
     # INCOME TEST -- SNAP only counts 80% of earned income against eligibility
     earned_income_types = ["wages", "selfEmployment"]
@@ -31,7 +36,7 @@ def eligibility_snap(screen):
     expense_types = ["childSupport", "dependentCare", "childCare", "rent", "heating", "cooling", "mortgage", "utilities", "telephone"]
 
     # SNAP allows disabled or applicants over the age of 60 to deduct medical
-    if screen.disabled or screen.applicant_age >= 60:
+    if screen.disabled or screen.applicant_age >= older_adult:
         expense_types.append("medical")
     snap_expenses = screen.calc_expenses(frequency, expense_types)
     net_income = snap_gross_income - snap_expenses
@@ -53,13 +58,13 @@ def eligibility_snap(screen):
             +str(income_limit))
 
     # ASSET TEST -- SNAP requires an asset test for applicants over the age of 60
-    if screen.applicant_age >= 60 and screen.household_assets >= 3750:
+    if screen.applicant_age >= older_adult and screen.household_assets >= older_adult_asset_limit:
         eligibility["eligible"] = False
         eligibility["failed"].append("Households with members at or above the age of 60 have to pass an asset test."\
                 " Your reported household assets of "\
                 +str(screen.household_assets)\
                 +" is above the limit of 3750")
-    elif screen.applicant_age >= 60:
+    elif screen.applicant_age >= older_adult:
         eligibility["passed"].append("Households with members at or above the age of 60 have to pass an asset test."\
                 " Your reported household assets of "\
                 +str(screen.household_assets)\
@@ -75,6 +80,8 @@ def eligibility_snap(screen):
 def value_snap(screen):
     value = 0
 
+    # Variables that may change over time
+    # household size : maximum monthly allotment
     value_bands = {
         1: 250,
         2: 459,

@@ -76,6 +76,19 @@ class IncomeStream(models.Model):
 
         return monthly
 
+    def annual(self):
+        if self.frequency == "monthly":
+            annual = self.amount * 12
+        elif self.frequency == "weekly":
+            annual = self.amount * 52.1429
+        elif self.frequency == "biweekly":
+            annual = self.amount * 26.01745
+        elif self.frequency == "semimonthly":
+            annual = self.amount * 24
+        elif self.frequency == "yearly":
+            annual = self.amount
+
+        return monthly
 
 class Expense(models.Model):
     screen = models.ForeignKey(Screen, related_name='expenses', on_delete=models.CASCADE)
@@ -94,5 +107,17 @@ class Expense(models.Model):
             monthly = self.amount * 2
         elif self.frequency == "yearly":
             monthly = self.amount / 12
+
+        def annual(self):
+            if self.frequency == "monthly":
+                annual = self.amount * 12
+            elif self.frequency == "weekly":
+                annual = self.amount * 52.1429
+            elif self.frequency == "biweekly":
+                annual = self.amount * 26.01745
+            elif self.frequency == "semimonthly":
+                annual = self.amount * 24
+            elif self.frequency == "yearly":
+                annual = self.amount
 
         return monthly

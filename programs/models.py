@@ -1,5 +1,6 @@
 from django.db import models
 from programs.eligibility.snap import eligibility_snap, value_snap
+from programs.eligibility.acp import eligibility_acp, value_acp
 
 class Program(models.Model):
 
@@ -10,7 +11,7 @@ class Program(models.Model):
     learn_more_link = models.CharField(max_length=320)
     apply_button_link = models.CharField(max_length=320)
     dollar_value = models.IntegerField()
-    estimated_delivery_time = models.CharField(max_length=120)
+    estimated_delivery_time = models.CharField(max_length=320)
     legal_status_required = models.BooleanField()
 
     def eligibility(self, screen):
