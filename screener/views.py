@@ -17,7 +17,7 @@ class ScreenViewSet(viewsets.ModelViewSet):
     queryset = Screen.objects.all().order_by('-submission_date')
     serializer_class = ScreenSerializer
     permission_classes = [permissions.IsAuthenticated]
-    filterset_fields = ['has_income', 'agree_to_tos']
+    filterset_fields = ['agree_to_tos']
 
 class HouseholdMemberViewSet(viewsets.ModelViewSet):
     """
