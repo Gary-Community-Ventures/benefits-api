@@ -6,6 +6,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r'screens', views.ScreenViewSet)
+router.register(r'householdmembers', views.HouseholdMemberViewSet)
 router.register(r'incomestreams', views.IncomeStreamViewSet)
 router.register(r'expenses', views.ExpenseViewSet)
 

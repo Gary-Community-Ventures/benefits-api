@@ -1,4 +1,4 @@
-from screener.models import Screen, IncomeStream, Expense
+from screener.models import Screen, HouseholdMember, IncomeStream, Expense
 from rest_framework import serializers
 
 
@@ -7,6 +7,14 @@ class ScreenSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Screen 
+        fields = '__all__'
+
+
+class HouseholdMemberSerializer(serializers.HyperlinkedModelSerializer):
+    id = serializers.ReadOnlyField()
+
+    class Meta:
+        model = HouseholdMember
         fields = '__all__'
 
 

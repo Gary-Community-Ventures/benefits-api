@@ -1,10 +1,10 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from screener.models import Screen, IncomeStream, Expense
+from screener.models import Screen, HouseholdMember, IncomeStream, Expense
 from rest_framework import viewsets, views
 from rest_framework import permissions
 from rest_framework.response import Response
-from screener.serializers import ScreenSerializer, IncomeStreamSerializer, ExpenseSerializer, EligibilitySerializer
+from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, ExpenseSerializer, EligibilitySerializer
 from programs.models import Program
 
 def index(request):
@@ -19,6 +19,14 @@ class ScreenViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     filterset_fields = ['has_income', 'agree_to_tos']
 
+class HouseholdMemberViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows screens to be viewed or edited.
+    """
+    queryset = HouseholdMember.objects.all()
+    serializer_class = HouseholdMemberSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = ['has_income']
 
 class IncomeStreamViewSet(viewsets.ModelViewSet):
     """

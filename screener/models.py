@@ -4,7 +4,7 @@ from django.db import models
 class Screen(models.Model):
     submission_date = models.DateTimeField(auto_now=True)
     agree_to_tos = models.BooleanField()
-    applicant_age = models.IntegerField()
+    age = models.IntegerField()
     zipcode = models.CharField(max_length=5)
     student = models.BooleanField()
     student_full_time = models.BooleanField()
@@ -54,6 +54,23 @@ class Screen(models.Model):
             net_income = gross_income - expenses
 
         return net_income
+
+class HouseholdMember(models.Model):
+    screen = models.ForeignKey(Screen, related_name='householdmembers', on_delete=models.CASCADE)
+    age = models.IntegerField()
+    zipcode = models.CharField(max_length=5)
+    student = models.BooleanField()
+    student_full_time = models.BooleanField()
+    pregnant = models.BooleanField()
+    unemployed = models.BooleanField()
+    worked_in_last_18_mos = models.BooleanField()
+    visually_impaired = models.BooleanField()
+    disabled = models.BooleanField()
+    veteran = models.BooleanField()
+    medicaid = models.BooleanField()
+    disability_medicaid = models.BooleanField()
+    has_income = models.BooleanField()
+    has_expenses = models.BooleanField()
 
 
 class IncomeStream(models.Model):
