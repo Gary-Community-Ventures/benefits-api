@@ -41,8 +41,9 @@ class Screen(models.Model):
 
         return net_income
 
+
 class HouseholdMember(models.Model):
-    screen = models.ForeignKey(Screen, related_name='householdmembers', on_delete=models.CASCADE)
+    screen = models.ForeignKey(Screen, related_name='household_members', on_delete=models.CASCADE)
     age = models.IntegerField()
     student = models.BooleanField()
     student_full_time = models.BooleanField()
@@ -59,7 +60,8 @@ class HouseholdMember(models.Model):
 
 
 class IncomeStream(models.Model):
-    screen = models.ForeignKey(Screen, related_name='incomestreams', on_delete=models.CASCADE)
+    screen = models.ForeignKey(Screen, related_name='income_streams', on_delete=models.CASCADE)
+    household_member = models.ForeignKey(HouseholdMember, related_name='income_streams', on_delete=models.CASCADE)
     type = models.CharField(max_length=30)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     frequency = models.CharField(max_length=30)
@@ -94,6 +96,7 @@ class IncomeStream(models.Model):
 
 class Expense(models.Model):
     screen = models.ForeignKey(Screen, related_name='expenses', on_delete=models.CASCADE)
+    household_member = models.ForeignKey(HouseholdMember, related_name='expenses', on_delete=models.CASCADE)
     type = models.CharField(max_length=30)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     frequency = models.CharField(max_length=30)
