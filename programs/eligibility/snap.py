@@ -36,8 +36,9 @@ def eligibility_snap(screen):
     expense_types = ["childSupport", "dependentCare", "childCare", "rent", "heating", "cooling", "mortgage", "utilities", "telephone"]
 
     # SNAP allows disabled or applicants over the age of 60 to deduct medical
-    if screen.disabled or screen.applicant_age >= older_adult:
-        expense_types.append("medical")
+    # If we stop relying on the API, this needs updated to handle multiple household members
+    # if screen.disabled or screen.applicant_age >= older_adult:
+        # expense_types.append("medical")
     snap_expenses = screen.calc_expenses(frequency, expense_types)
     net_income = snap_gross_income - snap_expenses
 
@@ -58,20 +59,21 @@ def eligibility_snap(screen):
             +str(income_limit))
 
     # ASSET TEST -- SNAP requires an asset test for applicants over the age of 60
-    if screen.applicant_age >= older_adult and screen.household_assets >= older_adult_asset_limit:
-        eligibility["eligible"] = False
-        eligibility["failed"].append("Households with members at or above the age of 60 have to pass an asset test."\
-                " Your reported household assets of "\
-                +str(screen.household_assets)\
-                +" is above the limit of 3750")
-    elif screen.applicant_age >= older_adult:
-        eligibility["passed"].append("Households with members at or above the age of 60 have to pass an asset test."\
-                " Your reported household assets of "\
-                +str(screen.household_assets)\
-                +" is below the limit of 3750")
-    else:
-        eligibility["passed"].append("Households with members at or above the age of 60 have to pass an asset test."\
-                +" You did not report any household members at or above this age.")
+    # If we stop relying on the API this needs updated to handle multiple household members
+    # if screen.applicant_age >= older_adult and screen.household_assets >= older_adult_asset_limit:
+        # eligibility["eligible"] = False
+        # eligibility["failed"].append("Households with members at or above the age of 60 have to pass an asset test."\
+                # " Your reported household assets of "\
+                # +str(screen.household_assets)\
+                # +" is above the limit of 3750")
+    # elif screen.applicant_age >= older_adult:
+        # eligibility["passed"].append("Households with members at or above the age of 60 have to pass an asset test."\
+                # " Your reported household assets of "\
+                # +str(screen.household_assets)\
+                # +" is below the limit of 3750")
+    # else:
+        # eligibility["passed"].append("Households with members at or above the age of 60 have to pass an asset test."\
+                # +" You did not report any household members at or above this age.")
 
     # ABAWD TEST -- post pandemic we will need to add test for able bodied workers
 

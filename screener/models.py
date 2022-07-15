@@ -11,23 +11,33 @@ class Screen(models.Model):
 
 
     def calc_gross_income(self, frequency, types):
-        income_streams = self.incomestreams.all()
+        household_members = self.household_members.all()
         gross_income = 0
-        for income_stream in income_streams:
-            if "all" in types or income_stream.type in types:
-                if frequency == "monthly":
-                    gross_income += income_stream.monthly()
+
+        for household_member in household_members:
+            income_streams = household_member.income_streams.all()
+            for income_stream in income_streams:
+                if "all" in types or income_stream.type in types:
+                    if frequency == "monthly":
+                        gross_income += income_stream.monthly()
+                    elif frequency == "yearly":
+                        gross_income += income_stream.yearly()
 
         return gross_income
 
 
     def calc_expenses(self, frequency, types):
-        expenses = self.expenses.all()
+        household_members = self.household_members.all()
         total_expense = 0
-        for expense in expenses:
-            if "all" in types or expense.type in types:
-                if frequency == "monthly":
-                    total_expense += expense.monthly()
+
+        for household_member in household_members:
+            expenses = household_member.expenses.all()
+            for expense in expenses:
+                if "all" in types or expense.type in types:
+                    if frequency == "monthly":
+                        total_expense += expense.monthly()
+                    elif frequency == "yearly":
+                        total_expense += expense.yearly()
 
         return total_expense
 
@@ -58,6 +68,39 @@ class HouseholdMember(models.Model):
     has_income = models.BooleanField()
     has_expenses = models.BooleanField()
 
+    def calc_gross_income(self, frequency, types):
+        gross_income = 0
+
+        income_streams = self.income_streams.all()
+        for income_stream in income_streams:
+            if "all" in types or income_stream.type in types:
+                if frequency == "monthly":
+                    gross_income += income_stream.monthly()
+
+        return gross_income
+
+
+    def calc_expenses(self, frequency, types):
+        total_expense = 0
+
+        expenses = self.expenses.all()
+        for expense in expenses:
+            if "all" in types or expense.type in types:
+                if frequency == "monthly":
+                    total_expense += expense.monthly()
+
+        return total_expense
+
+
+    def calc_net_income(self, frequency, income_types, expense_types):
+        net_income = None
+        if frequency == "monthly":
+            gross_income = self.calc_gross_income(frequency, income_types)
+            expenses = self.calc_expenses(frequency, expense_types)
+            net_income = gross_income - expenses
+
+        return net_income
+
 
 class IncomeStream(models.Model):
     screen = models.ForeignKey(Screen, related_name='income_streams', on_delete=models.CASCADE)
@@ -80,19 +123,20 @@ class IncomeStream(models.Model):
 
         return monthly
 
-    def annual(self):
+    def yearly(self):
         if self.frequency == "monthly":
-            annual = self.amount * 12
+            yearly = self.amount * 12
         elif self.frequency == "weekly":
-            annual = self.amount * 52.1429
+            yearly = self.amount * 52.1429
         elif self.frequency == "biweekly":
-            annual = self.amount * 26.01745
+            yearly = self.amount * 26.01745
         elif self.frequency == "semimonthly":
-            annual = self.amount * 24
+            yearly = self.amount * 24
         elif self.frequency == "yearly":
-            annual = self.amount
+            yearly = self.amount
 
-        return monthly
+        return yearly
+
 
 class Expense(models.Model):
     screen = models.ForeignKey(Screen, related_name='expenses', on_delete=models.CASCADE)
@@ -113,16 +157,18 @@ class Expense(models.Model):
         elif self.frequency == "yearly":
             monthly = self.amount / 12
 
-        def annual(self):
-            if self.frequency == "monthly":
-                annual = self.amount * 12
-            elif self.frequency == "weekly":
-                annual = self.amount * 52.1429
-            elif self.frequency == "biweekly":
-                annual = self.amount * 26.01745
-            elif self.frequency == "semimonthly":
-                annual = self.amount * 24
-            elif self.frequency == "yearly":
-                annual = self.amount
-
         return monthly
+
+        def yearly(self):
+            if self.frequency == "monthly":
+                yearly = self.amount * 12
+            elif self.frequency == "weekly":
+                yearly = self.amount * 52.1429
+            elif self.frequency == "biweekly":
+                yearly = self.amount * 26.01745
+            elif self.frequency == "semimonthly":
+                yearly = self.amount * 24
+            elif self.frequency == "yearly":
+                yearly = self.amount
+
+        return yearly
