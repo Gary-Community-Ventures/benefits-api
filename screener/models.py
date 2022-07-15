@@ -76,7 +76,8 @@ class HouseholdMember(models.Model):
             if "all" in types or income_stream.type in types:
                 if frequency == "monthly":
                     gross_income += income_stream.monthly()
-
+                elif frequency == "yearly":
+                    gross_income += income_stream.yearly()
         return gross_income
 
 
@@ -88,7 +89,8 @@ class HouseholdMember(models.Model):
             if "all" in types or expense.type in types:
                 if frequency == "monthly":
                     total_expense += expense.monthly()
-
+                elif frequency == "yearly":
+                    total_expense += expense.yearly()
         return total_expense
 
 

@@ -1,7 +1,10 @@
 from decimal import Decimal
+from programs.eligibility.policyengine import policy_engine_calculate
 
 def eligibility_snap(screen):
     eligible = True
+
+    policy_engine_calculate(screen)
 
     eligibility = {
         "eligible": True,

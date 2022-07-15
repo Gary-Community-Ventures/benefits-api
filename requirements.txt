@@ -1,5 +1,7 @@
 asgiref==3.5.2
 backports.zoneinfo==0.2.1
+certifi==2022.6.15
+charset-normalizer==2.1.0
 dj-database-url==0.5.0
 Django==4.0.5
 django-cors-headers==3.13.0
@@ -7,9 +9,12 @@ django-filter==21.1
 django-heroku==0.3.1
 djangorestframework==3.13.1
 gunicorn==20.1.0
+idna==3.3
 psycopg2==2.9.3
 psycopg2-binary==2.9.3
 python-decouple==3.6
 pytz==2022.1
+requests==2.28.1
 sqlparse==0.4.2
+urllib3==1.26.10
 whitenoise==6.2.0
