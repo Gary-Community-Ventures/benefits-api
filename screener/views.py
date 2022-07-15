@@ -6,6 +6,7 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, ExpenseSerializer, EligibilitySerializer
 from programs.models import Program
+from programs.eligibility.policyengine import eligibility_policy_engine
 
 def index(request):
     return HttpResponse("Colorado Benefits Screener API")
@@ -56,8 +57,14 @@ class EligibilityView(views.APIView):
 
         data = []
 
+        pe_eligibility = eligibility_policy_engine(screen)
         for program in all_programs:
-            eligibility = program.eligibility(screen)
+            # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
+            if program.name_abbreviated != 'snap' and program.name_abbreviated != 'wic':
+                eligibility = program.eligibility(screen)
+            else:
+                eligibility = pe_eligibility[program.name_abbreviated]
+
             data.append(
                 {
                     "description_short": program.description_short,
