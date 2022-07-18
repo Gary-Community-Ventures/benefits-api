@@ -2,7 +2,7 @@ from screener.models import Screen, HouseholdMember, IncomeStream, Expense
 from rest_framework import serializers
 
 
-class IncomeStreamSerializer(serializers.HyperlinkedModelSerializer):
+class IncomeStreamSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
 
     class Meta:
@@ -10,7 +10,7 @@ class IncomeStreamSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
 
 
-class ExpenseSerializer(serializers.HyperlinkedModelSerializer):
+class ExpenseSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
 
     class Meta:
@@ -18,7 +18,7 @@ class ExpenseSerializer(serializers.HyperlinkedModelSerializer):
         fields = '__all__'
 
 
-class HouseholdMemberSerializer(serializers.HyperlinkedModelSerializer):
+class HouseholdMemberSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     expenses = ExpenseSerializer(read_only=True, many=True)
     income_streams = IncomeStreamSerializer(read_only=True, many=True)

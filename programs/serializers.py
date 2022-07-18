@@ -2,7 +2,7 @@ from programs.models import Program
 from rest_framework import serializers
 
 
-class ProgramSerializer(serializers.HyperlinkedModelSerializer):
+class ProgramSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
 
     class Meta:
