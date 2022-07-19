@@ -1,5 +1,6 @@
 import requests
 import json
+from decimal import Decimal
 
 def eligibility_policy_engine(screen):
 
@@ -15,7 +16,37 @@ def eligibility_policy_engine(screen):
             "passed": [],
             "failed": [],
             "estimated_value": 0
-        }
+        },
+        "nslp": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
+        "eitc": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
+        "ctc": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
+        "coeitc": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
+        "medicaid": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
     }
 
     benefit_data = policy_engine_calculate(screen)
@@ -31,6 +62,30 @@ def eligibility_policy_engine(screen):
         eligibility['snap']['eligible'] = True
         eligibility['snap']['estimated_value'] = benefit_data['spm_units']['spm_unit']['snap']['2022']
 
+    #NSLP
+    if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] > 0:
+        eligibility['nslp']['eligible'] = True
+        eligibility['nslp']['estimated_value'] = 160 * benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022']
+
+    #Medicaid
+    # if benefit_data['spm_units']['spm_unit']['medicaid']['2022'] > 0:
+        # eligibility['medicaid']['eligible'] = True
+        # eligibility['medicaid']['estimated_value'] = 160 * benefit_data['spm_units']['spm_unit']['medicaid']['2022']
+
+    #EITC
+    if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
+        eligibility['eitc']['eligible'] = True
+        eligibility['eitc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
+
+    #COEITC
+    if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
+        eligibility['coeitc']['eligible'] = True
+        eligibility['coeitc']['estimated_value'] = .15 * benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
+
+    #CTC
+    if benefit_data['tax_units']['tax_unit']['ctc']['2022'] > 0:
+        eligibility['ctc']['eligible'] = True
+        eligibility['ctc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['ctc']['2022']
     return eligibility
 
 # PolicyEngine currently supports SNAP and WIC for CO
@@ -43,6 +98,7 @@ def policy_engine_calculate(screen):
 
     return response
 
+# TODO: add medicical expense deduction for over 60 snap
 def policy_engine_prepare_params(screen):
     household_members = screen.household_members.all()
     policy_engine_params = {
@@ -51,7 +107,9 @@ def policy_engine_prepare_params(screen):
             "people": {},
             "tax_units": {
                 "tax_unit": {
-                    "members": []
+                    "members": [],
+                    "earned_income_tax_credit": {"2022": None},
+                    "ctc": {"2022": None}
                 }
             },
             "families": {
@@ -67,9 +125,14 @@ def policy_engine_prepare_params(screen):
             "spm_units": {
                 "spm_unit": {
                     "members": [],
+                    "snap_child_support_deduction": {"2022": int(screen.calc_expenses("yearly", ["childSupport"]))},
+                    "snap_dependent_care_deduction": {"2022": int(screen.calc_expenses("yearly", ["childCare", "dependentCare"]))},
+                    "snap_excess_shelter_expense_deduction": {"2022": int(screen.calc_expenses("yearly", ["rent", "mortgage"]) * 12) },
+                    "snap_assets": {"2022": int(screen.household_assets) },
                     "snap": {"2022": None },
                     "acp": {"2022": None },
-                    "lifeline": {"2022": None}
+                    "school_meal_daily_subsidy": {"2022": None},
+                    "lifeline": {"2022": None},
                 }
             }
         }

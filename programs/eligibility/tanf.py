@@ -173,5 +173,5 @@ def value_tanf(screen, children, guardians):
     elif guardians >= 2:
         value_band = two_parent_value_bands
 
-    value = value_band[children]
+    value = value_band[children] * 12
     return value

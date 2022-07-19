@@ -58,10 +58,12 @@ class EligibilityView(views.APIView):
         data = []
 
         # pe_eligibility = eligibility_policy_engine(screen)
+        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc']
+
         for program in all_programs:
             skip = False
             # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
-            if program.name_abbreviated != 'snap' and program.name_abbreviated != 'wic':
+            if program.name_abbreviated not in pe_programs:
                 eligibility = program.eligibility(screen)
             else:
                 skip = True

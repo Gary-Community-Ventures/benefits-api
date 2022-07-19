@@ -159,19 +159,18 @@ class Expense(models.Model):
             monthly = self.amount * 2
         elif self.frequency == "yearly":
             monthly = self.amount / 12
-
         return monthly
 
-        def yearly(self):
-            if self.frequency == "monthly":
-                yearly = self.amount * 12
-            elif self.frequency == "weekly":
-                yearly = self.amount * 52.1429
-            elif self.frequency == "biweekly":
-                yearly = self.amount * 26.01745
-            elif self.frequency == "semimonthly":
-                yearly = self.amount * 24
-            elif self.frequency == "yearly":
-                yearly = self.amount
+    def yearly(self):
+        if self.frequency == "monthly":
+            yearly = self.amount * 12
+        elif self.frequency == "weekly":
+            yearly = self.amount * 52.1429
+        elif self.frequency == "biweekly":
+            yearly = self.amount * 26.01745
+        elif self.frequency == "semimonthly":
+            yearly = self.amount * 24
+        elif self.frequency == "yearly":
+            yearly = self.amount
 
         return yearly
