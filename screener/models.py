@@ -54,6 +54,7 @@ class Screen(models.Model):
 
 class HouseholdMember(models.Model):
     screen = models.ForeignKey(Screen, related_name='household_members', on_delete=models.CASCADE)
+    relationship = models.CharField(max_length=30)
     age = models.IntegerField()
     student = models.BooleanField()
     student_full_time = models.BooleanField()

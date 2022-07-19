@@ -12,7 +12,7 @@ def eligibility_tanf(screen):
     # Variables that may change over time
     # household size : income limit
 
-    one_parent_income_bands{
+    one_parent_income_bands = {
         1: 331,
         2: 421,
         3: 510,
@@ -22,11 +22,45 @@ def eligibility_tanf(screen):
         7: 844,
         8: 920,
         9: 992,
-
+        10: 1065
     }
+
+    two_parent_income_bands = {
+        1: 439,
+        2: 533,
+        3: 628,
+        4: 716,
+        5: 787,
+        6: 861,
+        7: 937,
+        8: 1009,
+        9: 1082,
+        10: 1155
+    }
+
+    child_only_income_bands = {
+        1: 117,
+        2: 245,
+        3: 368,
+        4: 490,
+        5: 587,
+        6: 678,
+        7: 755,
+        8: 830,
+        9: 904,
+        10: 977
+    }
+
     frequency = "monthly"
-    older_adult = 60
-    older_adult_asset_limit = 3750
+    child_age_limit = 19
+    has_child = False
+    adults =
+
+    household_members = screen.household_members.all()
+    for household_member in household_members:
+        if household_member.age <= 19:
+            has_child = True
+        if
 
     income_limit = income_bands[screen.household_size]
 
