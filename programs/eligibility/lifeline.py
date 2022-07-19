@@ -1,5 +1,16 @@
 from decimal import Decimal
 
+def calculate_lifeline(screen):
+    eligibility = eligibility_lifeline(screen)
+    value = value_lifeline(screen)
+
+    calculation = {
+        'eligibility': eligibility,
+        'value': value
+    }
+
+    return calculation
+
 def eligibility_lifeline(screen):
     eligible = True
 

@@ -57,28 +57,32 @@ class EligibilityView(views.APIView):
 
         data = []
 
-        pe_eligibility = eligibility_policy_engine(screen)
+        # pe_eligibility = eligibility_policy_engine(screen)
         for program in all_programs:
+            skip = False
             # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
             if program.name_abbreviated != 'snap' and program.name_abbreviated != 'wic':
                 eligibility = program.eligibility(screen)
             else:
-                eligibility = pe_eligibility[program.name_abbreviated]
+                skip = True
+                # eligibility = pe_eligibility[program.name_abbreviated]
 
-            data.append(
-                {
-                    "description_short": program.description_short,
-                    "name": program.name,
-                    "description": program.description,
-                    "learn_more_link": program.learn_more_link,
-                    "apply_button_link": program.apply_button_link,
-                    "estimated_value": eligibility["estimated_value"],
-                    "estimated_delivery_time": program.estimated_delivery_time,
-                    "legal_status_required": program.legal_status_required,
-                    "eligible": eligibility["eligible"],
-                    "failed_tests": eligibility["failed"],
-                    "passed_tests": eligibility["passed"]
-                }
-            )
+            if not skip:
+                data.append(
+                    {
+                        "description_short": program.description_short,
+                        "name": program.name,
+                        "description": program.description,
+                        "learn_more_link": program.learn_more_link,
+                        "apply_button_link": program.apply_button_link,
+                        "estimated_value": eligibility["estimated_value"],
+                        "estimated_delivery_time": program.estimated_delivery_time,
+                        "legal_status_required": program.legal_status_required,
+                        "eligible": eligibility["eligible"],
+                        "failed_tests": eligibility["failed"],
+                        "passed_tests": eligibility["passed"]
+                    }
+                )
+
         results = EligibilitySerializer(data, many=True).data
         return Response(results)

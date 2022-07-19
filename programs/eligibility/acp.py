@@ -1,5 +1,17 @@
 from decimal import Decimal
 
+def calculate_acp(screen):
+    eligibility = eligibility_acp(screen)
+    value = value_acp(screen)
+
+    calculation = {
+        'eligibility': eligibility,
+        'value': value
+    }
+
+    return calculation
+
+
 def eligibility_acp(screen):
     eligible = True
 
