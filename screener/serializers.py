@@ -28,6 +28,7 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'screen',
+            'relationship',
             'age',
             'student',
             'student_full_time',
