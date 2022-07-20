@@ -55,7 +55,7 @@ class EligibilityView(views.APIView):
     def get(self, request, id):
         all_programs = Program.objects.all()
         screen = Screen.objects.get(pk=id)
-
+        filterset_fields = ['eligible']
         data = []
 
         # pe_eligibility = eligibility_policy_engine(screen)
@@ -87,8 +87,13 @@ class EligibilityView(views.APIView):
                     }
                 )
 
-            for idx, x in enumerate(data):
-                data[idx]['estimated_value'] = math.trunc(data[idx]['estimated_value'])
+            # for now we only return eligible programs
+            eligible_programs = []
+            for program in data:
+                if program['eligible']:
+                    clean_program = program
+                    clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
+                    eligible_programs.append(clean_program)
 
-        results = EligibilitySerializer(data, many=True).data
+        results = EligibilitySerializer(eligible_programs, many=True).data
         return Response(results)
