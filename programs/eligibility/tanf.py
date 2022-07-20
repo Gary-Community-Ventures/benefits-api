@@ -118,10 +118,10 @@ def eligibility_tanf(screen, children, guardians):
         +"."
 
     if tanf_earned_income <= income_limit:
-        eligibility['passed'] = income_test_description
+        eligibility['passed'].append(income_test_description)
     else:
         eligibility['eligible'] = False
-        eligibility['failed'] = income_test_description
+        eligibility['failed'].append(income_test_description)
 
     return eligibility
 
