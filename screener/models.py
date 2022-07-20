@@ -1,5 +1,5 @@
 from django.db import models
-
+from decimal import Decimal
 
 class Screen(models.Model):
     submission_date = models.DateTimeField(auto_now=True)
@@ -116,9 +116,9 @@ class IncomeStream(models.Model):
         if self.frequency == "monthly":
             monthly = self.amount
         elif self.frequency == "weekly":
-            monthly = self.amount * 4.35
+            monthly = self.amount * Decimal(4.35)
         elif self.frequency == "biweekly":
-            monthly = self.amount * 2.175
+            monthly = self.amount * Decimal(2.175)
         elif self.frequency == "semimonthly":
             monthly = self.amount * 2
         elif self.frequency == "yearly":
@@ -130,9 +130,9 @@ class IncomeStream(models.Model):
         if self.frequency == "monthly":
             yearly = self.amount * 12
         elif self.frequency == "weekly":
-            yearly = self.amount * 52.1429
+            yearly = self.amount * Decimal(52.1429)
         elif self.frequency == "biweekly":
-            yearly = self.amount * 26.01745
+            yearly = self.amount * Decimal(26.01745)
         elif self.frequency == "semimonthly":
             yearly = self.amount * 24
         elif self.frequency == "yearly":
@@ -152,9 +152,9 @@ class Expense(models.Model):
         if self.frequency == "monthly":
             monthly = self.amount
         elif self.frequency == "weekly":
-            monthly = self.amount * 4.35
+            monthly = self.amount * Decimal(4.35)
         elif self.frequency == "biweekly":
-            monthly = self.amount * 2.175
+            monthly = self.amount * Decimal(2.175)
         elif self.frequency == "semimonthly":
             monthly = self.amount * 2
         elif self.frequency == "yearly":
@@ -165,9 +165,9 @@ class Expense(models.Model):
         if self.frequency == "monthly":
             yearly = self.amount * 12
         elif self.frequency == "weekly":
-            yearly = self.amount * 52.1429
+            yearly = self.amount * Decimal(52.1429)
         elif self.frequency == "biweekly":
-            yearly = self.amount * 26.01745
+            yearly = self.amount * Decimal(26.01745)
         elif self.frequency == "semimonthly":
             yearly = self.amount * 24
         elif self.frequency == "yearly":
