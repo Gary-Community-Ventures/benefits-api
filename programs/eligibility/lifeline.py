@@ -1,4 +1,5 @@
 from decimal import Decimal
+import math
 
 def calculate_lifeline(screen):
     eligibility = eligibility_lifeline(screen)
@@ -43,14 +44,14 @@ def eligibility_lifeline(screen):
     if lifeline_income > income_limit:
         eligibility["eligible"] = False
         eligibility["failed"].append("Calculated income of "\
-            +str(lifeline_income)+" for a household with "\
+            +str(math.trunc(lifeline_income))+" for a household with "\
             +str(screen.household_size)\
             +" members is above the income limit of "\
             +str(income_limit))
     else:
         eligibility["passed"].append(
             "Calculated income of "\
-            +str(lifeline_income)\
+            +str(math.trunc(lifeline_income))\
             +" for a household with "\
             +str(screen.household_size)\
             +" members is below the income limit of "\

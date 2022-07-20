@@ -1,4 +1,5 @@
 from decimal import Decimal
+import math
 
 def calculate_tanf(screen):
     value = 0
@@ -113,7 +114,7 @@ def eligibility_tanf(screen, children, guardians):
         +" must have a monthly household income below "\
         +str(income_limit)\
         +". Your TANF qualifying household income is "\
-        +str(tanf_earned_income)\
+        +str(math.trunc(tanf_earned_income))\
         +"."
 
     if tanf_earned_income <= income_limit:

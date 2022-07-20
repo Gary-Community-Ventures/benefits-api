@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, ExpenseSerializer, EligibilitySerializer
 from programs.models import Program
 from programs.eligibility.policyengine import eligibility_policy_engine
+import math
 
 def index(request):
     return HttpResponse("Colorado Benefits Screener API")
@@ -85,6 +86,9 @@ class EligibilityView(views.APIView):
                         "passed_tests": eligibility["passed"]
                     }
                 )
+
+            for idx, x in enumerate(data):
+                data[idx]['estimated_value'] = math.trunc(data[idx]['estimated_value'])
 
         results = EligibilitySerializer(data, many=True).data
         return Response(results)
