@@ -63,7 +63,13 @@ def eligibility_policy_engine(screen):
         eligibility['snap']['estimated_value'] = benefit_data['spm_units']['spm_unit']['snap']['2022']
 
     #NSLP
-    if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] > 0:
+    household_members = screen.household_members.all()
+    children = False
+    for household_member in household_members:
+        if household_member.age <= 18:
+            children = True
+
+    if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] > 0 and children:
         eligibility['nslp']['eligible'] = True
         eligibility['nslp']['estimated_value'] = 160 * benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022']
 
