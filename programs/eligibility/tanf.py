@@ -14,6 +14,8 @@ def calculate_tanf(screen):
     for household_member in household_members:
         if household_member.age <= child_age_limit and household_member.relationship in child_relationship:
             children += 1
+        if household_member.pregnant:
+            children += 1
         if household_member.relationship in guardian_relationship:
             guardians += 1
 
