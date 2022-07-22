@@ -4,20 +4,8 @@ import math
 def calculate_tanf(screen):
     value = 0
     child_age_limit = 19
-    children = 0
-    guardians = 0
-    child_relationship = ['child', 'fosterChild']
-    guardian_relationship = ['parent', 'spouse', 'fosterParent']
-
-    # determine the number of guardians and children
-    household_members = screen.household_members.all()
-    for household_member in household_members:
-        if household_member.age <= child_age_limit and household_member.relationship in child_relationship:
-            children += 1
-        if household_member.pregnant:
-            children += 1
-        if household_member.relationship in guardian_relationship:
-            guardians += 1
+    children = screen.num_children(age_max=child_age_limit)
+    guardians = screen.num_guardians()
 
     eligibility = eligibility_tanf(screen, children, guardians)
 

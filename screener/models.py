@@ -41,6 +41,49 @@ class Screen(models.Model):
 
         return total_expense
 
+    def num_children(self, age_min = 0, age_max = 18, include_pregnant = True):
+        children = 0
+        child_relationship = ['child', 'fosterChild']
+
+        household_members = self.household_members.all()
+        for household_member in household_members:
+            if household_member.age <= age_min and \
+                    household_member.age >= age_max and \
+                    household_member.relationship in child_relationship:
+                children += 1
+            elif household_member.pregnant:
+                children += 1
+
+        return children
+
+    def num_adults(self, age_max = 19):
+        adults = 0
+
+        household_members = self.household_members.all()
+        for household_member in household_members:
+            if household_member.age >= age_max:
+                adults += 1
+
+    def num_guardians(self):
+        parents = 0
+        child_relationship = ['child', 'fosterChild']
+        guardian_relationship = ['spouse', 'parent', 'fosterParent']
+        child_exists = False
+
+        household_members = self.household_members.all()
+        for household_member in household_members:
+            if household_member.relationship in child_relationship:
+                child_exists = True
+            if household_member.relationship in guardian_relationship:
+                parents += 1
+
+        # account for head of household as a parent
+        if child_exists:
+            parents += 1
+
+        return parents
+
+
 
     def calc_net_income(self, frequency, income_types, expense_types):
         net_income = None
