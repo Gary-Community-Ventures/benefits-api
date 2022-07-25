@@ -51,11 +51,17 @@ def eligibility_policy_engine(screen):
 
     benefit_data = policy_engine_calculate(screen)
 
-    #WIC
+    #WIC & MEDICAID
     for pkey, pvalue in benefit_data['people'].items():
+        #WIC
         if pvalue['wic']['2022'] > 0:
             eligibility['wic']['eligible'] = True
             eligibility['wic']['estimated_value'] += pvalue['wic']['2022']
+
+        #MEDICAID
+        if pvalue['medicaid']['2022'] > 0:
+            eligibility['medicaid']['eligible'] = True
+            eligibility['medicaid']['estimated_value'] += pvalue['medicaid']['2022']
 
     #SNAP
     if benefit_data['spm_units']['spm_unit']['snap']['2022'] > 0:
@@ -72,11 +78,6 @@ def eligibility_policy_engine(screen):
     if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] > 0 and children:
         eligibility['nslp']['eligible'] = True
         eligibility['nslp']['estimated_value'] = 160 * benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022']
-
-    #Medicaid
-    # if benefit_data['spm_units']['spm_unit']['medicaid']['2022'] > 0:
-        # eligibility['medicaid']['eligible'] = True
-        # eligibility['medicaid']['estimated_value'] = 160 * benefit_data['spm_units']['spm_unit']['medicaid']['2022']
 
     #EITC
     if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
@@ -100,9 +101,10 @@ def policy_engine_calculate(screen):
     response = requests.post(
         "https://policyengine.org/us/api/calculate",
         json = policy_engine_params
-    ).json()
+    )
 
-    return response
+    data = response.json()
+    return data
 
 # TODO: add medicical expense deduction for over 60 snap
 def policy_engine_prepare_params(screen):
@@ -146,17 +148,28 @@ def policy_engine_prepare_params(screen):
 
     for household_member in household_members:
         member_id = str(household_member.id)
+
+        if household_member.relationship == "headOfHousehold":
+            is_tax_unit_head = True
+        else:
+            is_tax_unit_head = False
+
         policy_engine_params['household']['people'][member_id] = {
             "employment_income": {
                 "2022": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
             },
-            "age": {
-                "2022": household_member.age
-            },
-            "wic": {
-                "2022": None
-            }
+            "age": { "2022": household_member.age },
+            "is_tax_unit_head": { "2022": is_tax_unit_head },
+            "wic": { "2022": None },
+            "medicaid": {"2022": None }
         }
+
+        if household_member.pregnant:
+            policy_engine_params['household']['people'][member_id]['is_pregnant'] = {'2022': True}
+        if household_member.visually_impaired:
+            policy_engine_params['household']['people'][member_id]['is_blind'] = {'2022': True}
+        if household_member.disabled:
+            policy_engine_params['household']['people'][member_id]['is_ssi_disabled'] = {'2022': True}
 
         policy_engine_params['household']['tax_units']['tax_unit']['members'].append(member_id)
         policy_engine_params['household']['families']['family']['members'].append(member_id)

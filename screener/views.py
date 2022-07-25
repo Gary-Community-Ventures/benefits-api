@@ -59,7 +59,7 @@ class EligibilityView(views.APIView):
         data = []
 
         pe_eligibility = eligibility_policy_engine(screen)
-        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc']
+        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid']
 
         for program in all_programs:
             skip = False
