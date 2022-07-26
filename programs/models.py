@@ -1,8 +1,8 @@
 from django.db import models
 
-from programs.eligibility.acp import calculate_acp
-from programs.eligibility.lifeline import calculate_lifeline
-from programs.eligibility.tanf import calculate_tanf
+from programs.programs.acp.acp import calculate_acp
+from programs.programs.lifeline.lifeline import calculate_lifeline
+from programs.programs.tanf.tanf import calculate_tanf
 
 class Program(models.Model):
 

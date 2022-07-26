@@ -6,7 +6,7 @@ from rest_framework import permissions
 from rest_framework.response import Response
 from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, ExpenseSerializer, EligibilitySerializer
 from programs.models import Program
-from programs.eligibility.policyengine import eligibility_policy_engine
+from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import math
 
 def index(request):
