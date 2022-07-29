@@ -2,7 +2,6 @@ import requests
 import json
 from decimal import Decimal
 
-
 def eligibility_policy_engine(screen):
 
     eligibility = {
@@ -62,7 +61,21 @@ def eligibility_policy_engine(screen):
         #MEDICAID
         if pvalue['medicaid']['2022'] > 0:
             eligibility['medicaid']['eligible'] = True
-            eligibility['medicaid']['estimated_value'] += pvalue['medicaid']['2022']
+
+            # here we need to adjust for children as policy engine just uses the average
+            # which skews very high for adults and aged adults
+            co_child_medicaid_average = 2947
+            co_adult_medicaid_average = 4789
+            co_aged_medicaid_average = 21408
+
+            if pvalue['age']['2022'] <= 18:
+                medicaid_estimated_value = co_child_medicaid_average
+            elif pvalue['age']['2022'] > 18 and pvalue['age']['2022'] < 65:
+                medicaid_estimated_value = co_adult_medicaid_average
+            elif pvalue['age']['2022'] >= 65:
+                medicaid_estimated_value = co_aged_medicaid_average
+
+            eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
 
     #SNAP
     if benefit_data['spm_units']['spm_unit']['snap']['2022'] > 0:
@@ -128,6 +141,7 @@ def policy_engine_prepare_params(screen):
             },
             "households": {
                 "household": {
+                    "state_code_str": {"2022": "CO"},
                     "members": []
                 }
             },
