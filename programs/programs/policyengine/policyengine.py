@@ -64,9 +64,9 @@ def eligibility_policy_engine(screen):
 
             # here we need to adjust for children as policy engine just uses the average
             # which skews very high for adults and aged adults
-            co_child_medicaid_average = 2947
-            co_adult_medicaid_average = 4789
-            co_aged_medicaid_average = 21408
+            co_child_medicaid_average = 2592
+            co_adult_medicaid_average = 4768
+            co_aged_medicaid_average = 18803
 
             if pvalue['age']['2022'] <= 18:
                 medicaid_estimated_value = co_child_medicaid_average
