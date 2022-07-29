@@ -3,6 +3,7 @@ from django.db import models
 from programs.programs.acp.acp import calculate_acp
 from programs.programs.lifeline.lifeline import calculate_lifeline
 from programs.programs.tanf.tanf import calculate_tanf
+from programs.programs.rtdlive.rtdlive import calculate_rtdlive
 
 class Program(models.Model):
 

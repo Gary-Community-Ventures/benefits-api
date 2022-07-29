@@ -7,7 +7,7 @@ class PolicyEngineTestCase(TestCase):
     def test_medicaid_single_parent_two_children(self):
         expected_fpl_value = {
             3: {
-                'min': 10000,
+                'min': 9000,
                 'max': 11000
             }
         }
