@@ -48,6 +48,16 @@ def eligibility_rtdlive(screen):
     income_types = ["wages", "selfEmployment"]
     gross_income = screen.calc_gross_income(frequency, income_types)
 
+    # geography test
+    if int(screen.zipcode) not in denver_metro_zips:
+        eligibility["eligible"] = False
+        eligibility["failed"].append("To qualify for RTD live you must live in the RTD service area.")
+    else:
+        eligibility["passed"].append("The zipcode "\
+                +screen.zipcode\
+                +" is within the RTD service area.")
+
+    # income test
     if gross_income > income_limit:
         eligibility["eligible"] = False
         eligibility["failed"].append("Calculated income of "\
