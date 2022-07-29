@@ -87,13 +87,11 @@ class EligibilityView(views.APIView):
                     }
                 )
 
-            # for now we only return eligible programs
             eligible_programs = []
             for program in data:
-                if program['eligible']:
-                    clean_program = program
-                    clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
-                    eligible_programs.append(clean_program)
+                clean_program = program
+                clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
+                eligible_programs.append(clean_program)
 
         results = EligibilitySerializer(eligible_programs, many=True).data
         return Response(results)
