@@ -47,8 +47,8 @@ class Screen(models.Model):
 
         household_members = self.household_members.all()
         for household_member in household_members:
-            if household_member.age <= age_min and \
-                    household_member.age >= age_max and \
+            if household_member.age >= age_min and \
+                    household_member.age <= age_max and \
                     household_member.relationship in child_relationship:
                 children += 1
             elif household_member.pregnant:

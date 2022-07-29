@@ -2,6 +2,7 @@ import requests
 import json
 from decimal import Decimal
 
+
 def eligibility_policy_engine(screen):
 
     eligibility = {
