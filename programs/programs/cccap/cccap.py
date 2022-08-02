@@ -93,8 +93,7 @@ def value_cccap(screen):
 
 def cccap_county_values(county_name):
     match = False
-    # spreadsheet_id = '1WzobLnLoxGbN_JfTuw3jUCZV5N7IA_0uvwEkIoMt3Wk'
-    spreadsheet_id = '1cM9C52SzpNkZ8ETqVVcv2dokTG5YkQoIwAwUIvZTnH0'
+    spreadsheet_id = '1WzobLnLoxGbN_JfTuw3jUCZV5N7IA_0uvwEkIoMt3Wk'
     range_name = 'Sheet1!A14:J78'
     sheet_values = sheets_get_data(spreadsheet_id, range_name)
     if not sheet_values:
