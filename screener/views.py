@@ -58,7 +58,7 @@ class EligibilityView(views.APIView):
         filterset_fields = ['eligible']
         data = []
 
-        # pe_eligibility = eligibility_policy_engine(screen)
+        pe_eligibility = eligibility_policy_engine(screen)
         pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid']
 
         for program in all_programs:
@@ -67,8 +67,8 @@ class EligibilityView(views.APIView):
             if program.name_abbreviated not in pe_programs:
                 eligibility = program.eligibility(screen)
             else:
-                skip = True
-                # eligibility = pe_eligibility[program.name_abbreviated]
+                # skip = True
+                eligibility = pe_eligibility[program.name_abbreviated]
 
             if not skip:
                 data.append(
