@@ -32,7 +32,7 @@ def create_default_household_member(screen, relationship='headOfHousehold', age=
 # 1900 in monthly expenses between childcare and rent
 # no assets
 def create_single_parent_two_children_household(annual_income):
-    screen = Screen.objects.create(household_assets=0,household_size=3,agree_to_tos=True,housing_situation='renting')
+    screen = Screen.objects.create(household_assets=0,household_size=3,zipcode='80204',agree_to_tos=True,housing_situation='renting')
 
     parent = create_default_household_member(screen)
     parent_rent = parent.expenses.create(type='rent',amount='1200',frequency='monthly',screen=screen)
