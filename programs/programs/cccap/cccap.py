@@ -86,7 +86,7 @@ def eligibility_cccap(screen):
 
 def value_cccap(screen):
     cccap_children = num_cccap_children(screen)
-    value = 500 * 12 * cccap_children
+    value = 712.50 * 12 * cccap_children
 
     return value
 
