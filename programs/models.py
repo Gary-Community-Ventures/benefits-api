@@ -5,6 +5,7 @@ from programs.programs.lifeline.lifeline import calculate_lifeline
 from programs.programs.tanf.tanf import calculate_tanf
 from programs.programs.rtdlive.rtdlive import calculate_rtdlive
 from programs.programs.cccap.cccap import calculate_cccap
+from programs.programs.mydenver.mydenver import calculate_mydenver
 
 class Program(models.Model):
 
