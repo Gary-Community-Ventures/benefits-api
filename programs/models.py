@@ -4,6 +4,7 @@ from programs.programs.acp.acp import calculate_acp
 from programs.programs.lifeline.lifeline import calculate_lifeline
 from programs.programs.tanf.tanf import calculate_tanf
 from programs.programs.rtdlive.rtdlive import calculate_rtdlive
+from programs.programs.cccap.cccap import calculate_cccap
 
 class Program(models.Model):
 
