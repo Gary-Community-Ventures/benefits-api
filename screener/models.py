@@ -41,7 +41,7 @@ class Screen(models.Model):
 
         return total_expense
 
-    def num_children(self, age_min = 0, age_max = 18, include_pregnant = True):
+    def num_children(self, age_min = 0, age_max = 18, include_pregnant = False):
         children = 0
         child_relationship = ['child', 'fosterChild']
 
@@ -51,7 +51,7 @@ class Screen(models.Model):
                     household_member.age <= age_max and \
                     household_member.relationship in child_relationship:
                 children += 1
-            elif household_member.pregnant:
+            elif household_member.pregnant and household_member.age > age_max:
                 children += 1
 
         return children
