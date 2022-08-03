@@ -65,7 +65,7 @@ class EligibilityView(views.APIView):
             skip = False
             # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
             if program.name_abbreviated not in pe_programs:
-                eligibility = program.eligibility(screen)
+                eligibility = program.eligibility(screen, data)
             else:
                 # skip = True
                 eligibility = pe_eligibility[program.name_abbreviated]
@@ -75,6 +75,7 @@ class EligibilityView(views.APIView):
                     {
                         "description_short": program.description_short,
                         "name": program.name,
+                        "short_name": program.name_abbreviated,
                         "description": program.description,
                         "learn_more_link": program.learn_more_link,
                         "apply_button_link": program.apply_button_link,
