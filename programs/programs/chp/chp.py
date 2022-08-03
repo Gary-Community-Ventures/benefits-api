@@ -1,13 +1,10 @@
-from decimal import Decimal
-from programs.co_county_zips import counties_from_zip
 from django.conf import settings
 import math
-import json
 
 
-def calculate_rtdlive(screen):
-    eligibility = eligibility_rtdlive(screen)
-    value = value_rtdlive(screen)
+def calculate_chp(screen, data):
+    eligibility = eligibility_chp(screen, data)
+    value = value_chp(screen)
 
     calculation = {
         'eligibility': eligibility,
@@ -17,7 +14,7 @@ def calculate_rtdlive(screen):
     return calculation
 
 
-def eligibility_rtdlive(screen):
+def eligibility_chp(screen, data):
     eligible = True
 
     eligibility = {
@@ -26,29 +23,32 @@ def eligibility_rtdlive(screen):
         "failed": []
     }
 
-    eligible_counties = ['Adams County', 'Arapahoe County', 'Boulder County', 'Broomfield County', 'Denver County',
-                         'Douglas County', 'Jefferson County']
+    # Children age 18 and under and pregnant women age 19 and over.
+    # Applicants with household income under 260% of the Federal Poverty Level (FPL).
+    # Colorado Residents
+    # Lawfully residing children and pregnant women with no five year waiting period
+    # Applicants not eligible for Health First Colorado
+    # Applicants who do not have other health insurance
+    child_age_limit = 18
     frequency = "yearly"
 
-    # INCOME TEST -- you can apply for RTD Live with only pay stubs, so we limit to wages here
-    income_limit = 1.85*settings.FPL[screen.household_size]
+    # MEDICAID eligibility test
+    for row in data:
+        if row['short_name'] == 'medicaid':
+            if row['eligible'] == True:
+                eligibility["eligible"] = False
+                eligibility["failed"].append("Individuals who are eligible for Health First Colorado (MEDICAID) are not eligible for CHP+")
+
+    # Child or Pregnant Test
+    eligible_children = screen.num_children(age_max=child_age_limit, include_pregnant=True)
+    if eligible_children < 1:
+        eligibility["eligible"] = False
+        eligibility["failed"].append("Children age 18 and under and pregnant women age 19 and over.")
+
+    # INCOME TEST
+    income_limit = 2.6*settings.FPL[screen.household_size]
     income_types = ["wages", "selfEmployment"]
     gross_income = screen.calc_gross_income(frequency, income_types)
-
-    # geography test
-    county_eligible = False
-    counties = counties_from_zip(screen.zipcode)
-    for county in counties:
-        if county in eligible_counties:
-            county_eligible = True
-
-    if not county_eligible:
-        eligibility["eligible"] = False
-        eligibility["failed"].append("To qualify for RTD live you must live in the RTD service area.")
-    else:
-        eligibility["passed"].append("The zipcode "\
-                +screen.zipcode\
-                +" is within the RTD service area.")
 
     # income test
     if gross_income > income_limit:
@@ -69,7 +69,9 @@ def eligibility_rtdlive(screen):
 
     return eligibility
 
-def value_rtdlive(screen):
-    value = 750
+def value_chp(screen):
+    child_age_limit = 18
+    eligible_children = screen.num_children(age_max=child_age_limit, include_pregnant=True)
+    value = 200 * eligible_children
 
     return value

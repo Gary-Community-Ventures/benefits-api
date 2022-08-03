@@ -2,7 +2,7 @@ from decimal import Decimal
 import math
 from programs.co_county_zips import counties_from_zip
 
-def calculate_mydenver(screen):
+def calculate_mydenver(screen, data):
     eligibility = eligibility_mydenver(screen)
     value = value_mydenver(screen)
 

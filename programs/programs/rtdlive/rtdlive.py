@@ -5,7 +5,7 @@ import math
 import json
 
 
-def calculate_rtdlive(screen):
+def calculate_rtdlive(screen, data):
     eligibility = eligibility_rtdlive(screen)
     value = value_rtdlive(screen)
 

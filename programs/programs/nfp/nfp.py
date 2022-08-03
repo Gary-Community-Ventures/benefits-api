@@ -5,9 +5,9 @@ import math
 import json
 
 
-def calculate_rtdlive(screen):
-    eligibility = eligibility_rtdlive(screen)
-    value = value_rtdlive(screen)
+def calculate_nfp(screen, data):
+    eligibility = eligibility_nfp(screen)
+    value = value_nfp(screen)
 
     calculation = {
         'eligibility': eligibility,
@@ -17,7 +17,7 @@ def calculate_rtdlive(screen):
     return calculation
 
 
-def eligibility_rtdlive(screen):
+def eligibility_nfp(screen):
     eligible = True
 
     eligibility = {
@@ -26,29 +26,12 @@ def eligibility_rtdlive(screen):
         "failed": []
     }
 
-    eligible_counties = ['Adams County', 'Arapahoe County', 'Boulder County', 'Broomfield County', 'Denver County',
-                         'Douglas County', 'Jefferson County']
     frequency = "yearly"
 
     # INCOME TEST -- you can apply for RTD Live with only pay stubs, so we limit to wages here
-    income_limit = 1.85*settings.FPL[screen.household_size]
+    income_limit = 2*settings.FPL[screen.household_size]
     income_types = ["wages", "selfEmployment"]
     gross_income = screen.calc_gross_income(frequency, income_types)
-
-    # geography test
-    county_eligible = False
-    counties = counties_from_zip(screen.zipcode)
-    for county in counties:
-        if county in eligible_counties:
-            county_eligible = True
-
-    if not county_eligible:
-        eligibility["eligible"] = False
-        eligibility["failed"].append("To qualify for RTD live you must live in the RTD service area.")
-    else:
-        eligibility["passed"].append("The zipcode "\
-                +screen.zipcode\
-                +" is within the RTD service area.")
 
     # income test
     if gross_income > income_limit:
@@ -69,7 +52,7 @@ def eligibility_rtdlive(screen):
 
     return eligibility
 
-def value_rtdlive(screen):
+def value_nfp(screen):
     value = 750
 
     return value

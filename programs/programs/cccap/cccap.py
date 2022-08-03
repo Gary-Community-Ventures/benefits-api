@@ -5,7 +5,7 @@ import re
 import math
 
 
-def calculate_cccap(screen):
+def calculate_cccap(screen, data):
     eligibility = eligibility_cccap(screen)
     value = value_cccap(screen)
 

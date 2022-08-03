@@ -1,7 +1,7 @@
 from decimal import Decimal
 import math
 
-def calculate_acp(screen):
+def calculate_acp(screen, data):
     eligibility = eligibility_acp(screen)
     value = value_acp(screen)
 

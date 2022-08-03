@@ -18,4 +18,4 @@ class PolicyEngineTestCase(TestCase):
         screen = create_single_parent_two_children_household(annual_income=fpl_limit)
         eligibility = eligibility_policy_engine(screen)
         self.assertTrue(eligibility['medicaid']['eligible'])
-        self.assertTrue(expected_fpl_value[3]['min'] <= eligibility['medicaid']['estimated_value'] <= expected_fpl_value[3]['max'])
+        self.assertTrue(eligibility['medicaid']['estimated_value'] == 8520)

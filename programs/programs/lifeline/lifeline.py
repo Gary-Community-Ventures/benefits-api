@@ -1,7 +1,7 @@
 from decimal import Decimal
 import math
 
-def calculate_lifeline(screen):
+def calculate_lifeline(screen, data):
     eligibility = eligibility_lifeline(screen)
     value = value_lifeline(screen)
 

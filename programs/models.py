@@ -6,6 +6,7 @@ from programs.programs.tanf.tanf import calculate_tanf
 from programs.programs.rtdlive.rtdlive import calculate_rtdlive
 from programs.programs.cccap.cccap import calculate_cccap
 from programs.programs.mydenver.mydenver import calculate_mydenver
+from programs.programs.chp.chp import calculate_chp
 
 class Program(models.Model):
 
@@ -19,10 +20,10 @@ class Program(models.Model):
     estimated_delivery_time = models.CharField(max_length=320)
     legal_status_required = models.CharField(max_length=120)
 
-    def eligibility(self, screen):
+    def eligibility(self, screen, data):
 
         calculation_func_name = "calculate_" + self.name_abbreviated
-        calculation = eval(calculation_func_name + "(screen)")
+        calculation = eval(calculation_func_name + "(screen,data)")
 
         eligibility = calculation['eligibility']
         if eligibility['eligible']:
