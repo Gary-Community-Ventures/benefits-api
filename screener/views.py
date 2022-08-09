@@ -53,46 +53,50 @@ class ExpenseViewSet(viewsets.ModelViewSet):
 class EligibilityView(views.APIView):
 
     def get(self, request, id):
-        all_programs = Program.objects.all()
-        screen = Screen.objects.get(pk=id)
-        filterset_fields = ['eligible']
-        data = []
-
-        pe_eligibility = eligibility_policy_engine(screen)
-        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid']
-
-        for program in all_programs:
-            skip = False
-            # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
-            if program.name_abbreviated not in pe_programs:
-                eligibility = program.eligibility(screen, data)
-            else:
-                # skip = True
-                eligibility = pe_eligibility[program.name_abbreviated]
-
-            if not skip:
-                data.append(
-                    {
-                        "description_short": program.description_short,
-                        "name": program.name,
-                        "short_name": program.name_abbreviated,
-                        "description": program.description,
-                        "learn_more_link": program.learn_more_link,
-                        "apply_button_link": program.apply_button_link,
-                        "estimated_value": eligibility["estimated_value"],
-                        "estimated_delivery_time": program.estimated_delivery_time,
-                        "legal_status_required": program.legal_status_required,
-                        "eligible": eligibility["eligible"],
-                        "failed_tests": eligibility["failed"],
-                        "passed_tests": eligibility["passed"]
-                    }
-                )
-
-            eligible_programs = []
-            for program in data:
-                clean_program = program
-                clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
-                eligible_programs.append(clean_program)
-
-        results = EligibilitySerializer(eligible_programs, many=True).data
+        data = eligibility_results(id)
+        results = EligibilitySerializer(data, many=True).data
         return Response(results)
+
+
+def eligibility_results(screen_id):
+    all_programs = Program.objects.all()
+    screen = Screen.objects.get(pk=screen_id)
+    data = []
+
+    pe_eligibility = eligibility_policy_engine(screen)
+    pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid']
+
+    for program in all_programs:
+        skip = False
+        # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
+        if program.name_abbreviated not in pe_programs:
+            eligibility = program.eligibility(screen, data)
+        else:
+            # skip = True
+            eligibility = pe_eligibility[program.name_abbreviated]
+
+        if not skip:
+            data.append(
+                {
+                    "name": program.name,
+                    "estimated_value": eligibility["estimated_value"],
+                    "estimated_delivery_time": program.estimated_delivery_time,
+                    "description_short": program.description_short,
+                    "short_name": program.name_abbreviated,
+                    "description": program.description,
+                    "learn_more_link": program.learn_more_link,
+                    "apply_button_link": program.apply_button_link,
+                    "legal_status_required": program.legal_status_required,
+                    "eligible": eligibility["eligible"],
+                    "failed_tests": eligibility["failed"],
+                    "passed_tests": eligibility["passed"]
+                }
+            )
+
+    eligible_programs = []
+    for program in data:
+        clean_program = program
+        clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
+        eligible_programs.append(clean_program)
+
+    return eligible_programs
