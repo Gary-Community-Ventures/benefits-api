@@ -7,6 +7,7 @@ from programs.programs.rtdlive.rtdlive import calculate_rtdlive
 from programs.programs.cccap.cccap import calculate_cccap
 from programs.programs.mydenver.mydenver import calculate_mydenver
 from programs.programs.chp.chp import calculate_chp
+from programs.programs.cocb.cocb import calculate_cocb
 
 class Program(models.Model):
 

@@ -58,11 +58,12 @@ class Screen(models.Model):
 
     def num_adults(self, age_max = 19):
         adults = 0
-
         household_members = self.household_members.all()
         for household_member in household_members:
             if household_member.age >= age_max:
                 adults += 1
+        return adults
+
 
     def num_guardians(self):
         parents = 0
