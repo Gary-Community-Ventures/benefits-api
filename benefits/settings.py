@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'programs.apps.ProgramsConfig',
     'rest_framework',
     'rest_framework.authtoken',
+    'phonenumber_field',
     'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
