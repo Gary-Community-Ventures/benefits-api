@@ -62,7 +62,8 @@ class ScreenSerializer(serializers.ModelSerializer):
             'household_assets',
             'housing_situation',
             'household_members',
-            'last_email_request_date'
+            'last_email_request_date',
+            'user'
         )
 
 

@@ -17,7 +17,5 @@ def send_screener_email(sender, instance, created, **kwargs):
     if not created:
         if instance.last_email_request_date:
             is_date_updated = instance.prev_last_email_request_date != instance.last_email_request_date
-            if is_date_updated:
-                user = instance.users.first()
-                if user:
-                    email_pdf(user.email, instance.id)
+            if is_date_updated and instance.user:
+                email_pdf(instance.user.email, instance.id)
