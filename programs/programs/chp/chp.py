@@ -72,6 +72,6 @@ def eligibility_chp(screen, data):
 def value_chp(screen):
     child_age_limit = 18
     eligible_children = screen.num_children(age_max=child_age_limit, include_pregnant=True)
-    value = 200 * eligible_children
+    value = 200 * 12 * eligible_children
 
     return value
