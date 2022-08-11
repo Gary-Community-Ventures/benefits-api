@@ -8,6 +8,7 @@ class Screen(models.Model):
     household_size = models.IntegerField()
     household_assets = models.DecimalField(decimal_places=2, max_digits=10)
     housing_situation = models.CharField(max_length=30)
+    last_email_request_date = models.DateTimeField(blank=True, null=True)
 
 
     def calc_gross_income(self, frequency, types):
