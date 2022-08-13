@@ -55,6 +55,6 @@ def value_mydenver(screen):
     child_age_min = 5
     child_age_max = 18
     children = screen.num_children(age_max=child_age_max, age_min=child_age_min)
-    value = children * 300
+    value = children * 150
 
     return value
