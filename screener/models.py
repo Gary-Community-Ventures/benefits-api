@@ -4,6 +4,7 @@ from authentication.models import User
 
 class Screen(models.Model):
     submission_date = models.DateTimeField(auto_now=True)
+    start_date = models.DateTimeField(blank=True, null=True)
     agree_to_tos = models.BooleanField()
     zipcode = models.CharField(max_length=5)
     household_size = models.IntegerField()
