@@ -6,8 +6,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 class User(AbstractUser):
     username = None
     email_or_cell = models.CharField(max_length=320, unique=True)
-    cell = PhoneNumberField(unique=True, blank=True)
-    email = models.EmailField(_('email address'), unique=True, blank=True)
+    cell = PhoneNumberField(unique=True, blank=True, null=True)
+    email = models.EmailField(_('email address'), unique=True, blank=True, null=True)
     tcpa_consent = models.BooleanField()
 
     USERNAME_FIELD = 'email_or_cell'
