@@ -101,7 +101,7 @@ def eligibility_policy_engine(screen):
     #COEITC
     if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
         eligibility['coeitc']['eligible'] = True
-        eligibility['coeitc']['estimated_value'] = .15 * benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
+        eligibility['coeitc']['estimated_value'] = .10 * benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
 
     #CTC
     if benefit_data['tax_units']['tax_unit']['ctc']['2022'] > 0:
