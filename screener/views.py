@@ -20,6 +20,9 @@ class ScreenViewSet(viewsets.ModelViewSet):
     serializer_class = ScreenSerializer
     permission_classes = [permissions.IsAuthenticated]
     filterset_fields = ['agree_to_tos', 'is_test']
+    paginate_by = 10
+    paginate_by_param = 'page_size'
+    max_paginate_by = 100
 
 class HouseholdMemberViewSet(viewsets.ModelViewSet):
     """
