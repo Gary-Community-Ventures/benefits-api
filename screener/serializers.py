@@ -50,6 +50,7 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
 class ScreenSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     household_members = HouseholdMemberSerializer(read_only=True, many=True)
+    max_paginate_by = 20
 
     class Meta:
         model = Screen
