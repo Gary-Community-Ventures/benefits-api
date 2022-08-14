@@ -87,6 +87,7 @@ def eligibility_results(screen_id):
                     "description_short": program.description_short,
                     "short_name": program.name_abbreviated,
                     "description": program.description,
+                    "value_type": program.value_type,
                     "learn_more_link": program.learn_more_link,
                     "apply_button_link": program.apply_button_link,
                     "legal_status_required": program.legal_status_required,
