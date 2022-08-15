@@ -15,6 +15,13 @@ def email_pdf(target_email, screen_id):
         item.pop('passed_tests', None)
         item.pop('short_name', None)
         item.pop('apply_button_link', None)
+        #human friendly value type translation
+        if item['value_type'] == 'unrestricted':
+            item['value_type'] = 'cash'
+        elif item['value_type'] == 'non-discretionary':
+            item['value_type'] = 'reduced expenses'
+        elif item['value_type'] == 'discretionary':
+            item['value_type'] = 'reduced cost services'
         if item['eligible']:
             item.pop('eligible', None)
             data_reduced.append(item)
