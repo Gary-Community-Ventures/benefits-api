@@ -1,5 +1,12 @@
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense
+from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
 from rest_framework import serializers
+
+class MessageSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Message
+        fields = '__all__'
 
 
 class IncomeStreamSerializer(serializers.ModelSerializer):

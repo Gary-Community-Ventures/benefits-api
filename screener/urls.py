@@ -9,6 +9,7 @@ router.register(r'screens', views.ScreenViewSet)
 router.register(r'householdmembers', views.HouseholdMemberViewSet)
 router.register(r'incomestreams', views.IncomeStreamViewSet)
 router.register(r'expenses', views.ExpenseViewSet)
+router.register(r'messages', views.MessageViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
