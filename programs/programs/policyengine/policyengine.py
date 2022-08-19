@@ -50,7 +50,6 @@ def eligibility_policy_engine(screen):
     }
 
     benefit_data = policy_engine_calculate(screen)
-
     #WIC & MEDICAID
     for pkey, pvalue in benefit_data['people'].items():
         #WIC
@@ -94,19 +93,24 @@ def eligibility_policy_engine(screen):
         eligibility['nslp']['estimated_value'] = 160 * benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022']
 
     #EITC
-    if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
+    if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021'] > 0:
         eligibility['eitc']['eligible'] = True
-        eligibility['eitc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
+        eligibility['eitc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021']
 
     #COEITC
-    if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
+    if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021'] > 0:
         eligibility['coeitc']['eligible'] = True
-        eligibility['coeitc']['estimated_value'] = .10 * benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
+        eligibility['coeitc']['estimated_value'] = .10 * benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021']
 
     #CTC
-    if benefit_data['tax_units']['tax_unit']['ctc']['2022'] > 0:
+    if benefit_data['tax_units']['tax_unit']['ctc']['2021'] > 0:
         eligibility['ctc']['eligible'] = True
-        eligibility['ctc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['ctc']['2022']
+        for pkey, pvalue in benefit_data['people'].items():
+            if pvalue['age']['2021'] <= 5:
+                eligibility['ctc']['estimated_value'] += 3600
+            elif pvalue['age']['2021'] > 5 and pvalue['age']['2021'] <= 17:
+                eligibility['ctc']['estimated_value'] += 3000
+        # eligibility['ctc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['ctc']['2021']
     return eligibility
 
 # PolicyEngine currently supports SNAP and WIC for CO
@@ -130,8 +134,8 @@ def policy_engine_prepare_params(screen):
             "tax_units": {
                 "tax_unit": {
                     "members": [],
-                    "earned_income_tax_credit": {"2022": None},
-                    "ctc": {"2022": None}
+                    "earned_income_tax_credit": {"2021": None},
+                    "ctc": {"2021": None}
                 }
             },
             "families": {
@@ -171,10 +175,11 @@ def policy_engine_prepare_params(screen):
 
         policy_engine_params['household']['people'][member_id] = {
             "employment_income": {
-                "2022": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
+                "2022": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment'])),
+                "2021": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
             },
-            "age": { "2022": household_member.age },
-            "is_tax_unit_head": { "2022": is_tax_unit_head },
+            "age": { "2022": household_member.age, "2021": household_member.age },
+            "is_tax_unit_head": { "2022": is_tax_unit_head, "2021": is_tax_unit_head },
             "wic": { "2022": None },
             "medicaid": {"2022": None }
         }
