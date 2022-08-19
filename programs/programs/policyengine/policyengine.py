@@ -1,6 +1,7 @@
 import requests
 import json
 from decimal import Decimal
+from django.conf import settings
 
 def eligibility_policy_engine(screen):
 
@@ -120,13 +121,21 @@ def policy_engine_calculate(screen):
         "https://policyengine.org/us/api/calculate",
         json = policy_engine_params
     )
-
     data = response.json()
     return data
 
 # TODO: add medicical expense deduction for over 60 snap
 def policy_engine_prepare_params(screen):
     household_members = screen.household_members.all()
+
+    # We have to manually calculate SNAP gross eligibility as colorado uses 200% vs the 130% used by policy engine
+    gross_limit = 2 * settings.FPL2021[screen.household_size]
+    gross_income = screen.calc_gross_income('yearly', ['wages', 'selfEmployment'])
+    if gross_income < gross_limit:
+        meets_snap_gross_income_test = True
+    else:
+        meets_snap_gross_income_test = False
+
     policy_engine_params = {
         "snap_earned_income_deduction": 0,
         "household": {
@@ -154,8 +163,13 @@ def policy_engine_prepare_params(screen):
                     "members": [],
                     "snap_child_support_deduction": {"2022": int(screen.calc_expenses("yearly", ["childSupport"]))},
                     "snap_dependent_care_deduction": {"2022": int(screen.calc_expenses("yearly", ["childCare", "dependentCare"]))},
-                    "snap_excess_shelter_expense_deduction": {"2022": int(screen.calc_expenses("yearly", ["rent", "mortgage"]) * 12) },
+                    "snap_excess_shelter_expense_deduction": {"2022": int(screen.calc_expenses("yearly", ["rent", "mortgage"])) },
                     "snap_assets": {"2022": int(screen.household_assets) },
+                    "meets_snap_net_income_test": {"2022": None },
+                    "meets_snap_gross_income_test": {"2022": meets_snap_gross_income_test },
+                    "meets_snap_asset_test": {"2022": True},
+                    "is_snap_eligible": {"2022": None},
+                    "meets_snap_categorical_eligibility": {"2022": None},
                     "snap": {"2022": None },
                     "acp": {"2022": None },
                     "school_meal_daily_subsidy": {"2022": None},
