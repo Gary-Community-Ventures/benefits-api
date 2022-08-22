@@ -15,6 +15,7 @@ class Screen(models.Model):
     last_email_request_date = models.DateTimeField(blank=True, null=True)
     is_test = models.BooleanField(default=False, blank=True)
     user = models.ForeignKey(User, related_name='screens', on_delete=models.CASCADE, blank=True, null=True)
+    external_id = models.CharField(max_length=120, blank=True, null=True)
 
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
