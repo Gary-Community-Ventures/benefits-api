@@ -28,7 +28,10 @@ def eligibility_tanf(screen, children, guardians):
         "failed": []
     }
     frequency = "monthly"
-    earned_income_types = ["wages", "selfEmployment"]
+    eligibility_income_types = ["wages", "selfEmployment", "unemployment", "cashAssistance", "disabilityMedicaid",
+                           "sSI", "sSDependent", "sSDisability", "sSSurvivor", "sSRetirement", "cOSDisability",
+                           "veteran", "pension", "deferredComp", "workersComp", "alimony", "boarder", "gifts",
+                           "rental", "investment"]
 
     one_parent_income_bands = {
         1: 331,
@@ -87,8 +90,8 @@ def eligibility_tanf(screen, children, guardians):
         income_bands = two_parent_income_bands
 
     income_limit = income_bands[children]
-    earned_income = screen.calc_gross_income(frequency, earned_income_types)
-    tanf_earned_income = Decimal(.33)*earned_income
+    earned_income = screen.calc_gross_income(frequency, eligibility_income_types)
+    tanf_earned_income = earned_income-90
 
     clabel = "children"
     glabel = "guardians"
@@ -118,6 +121,12 @@ def eligibility_tanf(screen, children, guardians):
 
 
 def value_tanf(screen, children, guardians):
+    frequency = "monthly"
+    unearned_income_types = ["unemployment", "cashAssistance", "disabilityMedicaid",
+                           "sSI", "sSDependent", "sSDisability", "sSSurvivor", "sSRetirement", "cOSDisability",
+                           "veteran", "pension", "deferredComp", "workersComp", "alimony", "boarder", "gifts",
+                           "rental", "investment"]
+    earned_income_types = ["wages", "selfEmployment"]
 
     child_only_value_bands = {
         1: 141,
@@ -165,5 +174,9 @@ def value_tanf(screen, children, guardians):
     elif guardians >= 2:
         value_band = two_parent_value_bands
 
-    value = value_band[children] * 12
+    earned_income = screen.calc_gross_income(frequency, earned_income_types)
+    tanf_earned_income = Decimal(.33) * earned_income
+    unearned_income = screen.calc_gross_income(frequency, unearned_income_types)
+    monthly_value = value_band[children]-tanf_earned_income-unearned_income
+    value = monthly_value * 12
     return value
