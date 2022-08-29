@@ -9,7 +9,7 @@ class ProgramViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows programs to be viewed or edited.
     """
-    queryset = Program.objects.all().order_by('-name')
+    queryset = Program.objects.all()
     serializer_class = ProgramSerializer
     permission_classes = [permissions.IsAuthenticated]
-    filterset_fields = ['dollar_value']
+    # filterset_fields = ['dollar_value']

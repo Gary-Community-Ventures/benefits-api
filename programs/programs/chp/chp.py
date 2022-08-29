@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.utils.translation import gettext as _
 import math
 
 
@@ -37,13 +38,13 @@ def eligibility_chp(screen, data):
         if row['short_name'] == 'medicaid':
             if row['eligible'] == True:
                 eligibility["eligible"] = False
-                eligibility["failed"].append("Individuals who are eligible for Health First Colorado (MEDICAID) are not eligible for CHP+")
+                eligibility["failed"].append(_("Individuals who are eligible for Health First Colorado (MEDICAID) are not eligible for CHP+"))
 
     # Child or Pregnant Test
     eligible_children = screen.num_children(age_max=child_age_limit, include_pregnant=True)
     if eligible_children < 1:
         eligibility["eligible"] = False
-        eligibility["failed"].append("Children age 18 and under and pregnant women age 19 and over.")
+        eligibility["failed"].append(_("Children age 18 and under and pregnant women age 19 and over."))
 
     # INCOME TEST
     income_limit = 2.6*settings.FPL[screen.household_size]
@@ -53,18 +54,18 @@ def eligibility_chp(screen, data):
     # income test
     if gross_income > income_limit:
         eligibility["eligible"] = False
-        eligibility["failed"].append("Calculated income of "\
-            +str(math.trunc(gross_income))+" for a household with "\
+        eligibility["failed"].append(_("Calculated income of ")\
+            +str(math.trunc(gross_income))+_(" for a household with ")\
             +str(screen.household_size)\
-            +" members is above the income limit of "\
+            +_(" members is above the income limit of ")\
             +str(income_limit))
     else:
         eligibility["passed"].append(
-            "Calculated income of "\
+            _("Calculated income of ")\
             +str(math.trunc(gross_income))\
-            +" for a household with "\
+            +_(" for a household with ")\
             +str(screen.household_size)\
-            +" members is below the income limit of "\
+            +_(" members is below the income limit of ")\
             +str(income_limit))
 
     return eligibility

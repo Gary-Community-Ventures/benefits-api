@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from decimal import Decimal
 import math
 
@@ -70,12 +71,12 @@ def eligibility_tanf(screen, children, guardians):
 
     # CHILD TEST
     if children < 1:
-        eligibility["failed"].append("Households must have at least one dependent child under the age of 18, "\
-                                     +"and have primary (more than 50%) custody of that child.")
+        eligibility["failed"].append(_("Households must have at least one dependent child under the age of 18, ")\
+                                     +_("and have primary (more than 50%) custody of that child."))
         eligibility["eligible"] = False
         return eligibility
     else:
-        eligibility["passed"].append("Household has at least one dependent child under the age of 18")
+        eligibility["passed"].append(_("Household has at least one dependent child under the age of 18"))
 
     # SET INCOME LIMIT DEPENDING ON HOUSEHOLD COMPOSITION
     if guardians == 0:
@@ -97,13 +98,13 @@ def eligibility_tanf(screen, children, guardians):
         clabel = "child"
 
     # INCOME TEST
-    income_test_description = "Households with "\
+    income_test_description = _("Households with ")\
         +str(guardians)+" "+glabel\
-        +" and "\
+        +_(" and ")\
         +str(children)+" "+clabel\
-        +" must have a monthly household income below "\
+        +_(" must have a monthly household income below ")\
         +str(income_limit)\
-        +". Your TANF qualifying household income is "\
+        +_(". Your TANF qualifying household income is ")\
         +str(math.trunc(tanf_earned_income))\
         +"."
 

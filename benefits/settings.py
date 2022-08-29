@@ -16,6 +16,7 @@ import os
 from decouple import config
 
 from pathlib import Path
+from django.utils.translation import gettext_lazy as _
 
 # 2022 FPL Levels for use across the site
 FPL = {
@@ -84,6 +85,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'phonenumber_field',
+    'parler',
     'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -165,6 +167,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
+LANGUAGES = (
+    ('en-us', _("US English")),
+    ('es', _('Spanish')),
+)
+
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
@@ -172,7 +179,17 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
+PARLER_DEFAULT_ACTIVATE = True
+PARLER_LANGUAGES = {
+    None: (
+        {'code': 'en-us',},
+        {'code': 'es',},
+    ),
+    'default': {
+        'fallbacks': ['en-us'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE
+        'hide_untranslated': False,   # the default; let .active_translations() return fallbacks too.
+    }
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

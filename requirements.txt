@@ -10,6 +10,8 @@ Django==4.0.5
 django-cors-headers==3.13.0
 django-filter==21.1
 django-heroku==0.3.1
+django-parler==2.3
+django-parler-rest==2.2
 django-phonenumber-field==6.3.0
 django-sesame==3.1
 djangorestframework==3.13.1
