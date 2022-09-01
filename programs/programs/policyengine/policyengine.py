@@ -200,7 +200,7 @@ def policy_engine_prepare_params(screen):
             policy_engine_params['household']['people'][member_id]['is_pregnant'] = {'2022': True}
         if household_member.visually_impaired:
             policy_engine_params['household']['people'][member_id]['is_blind'] = {'2022': True}
-        if household_member.disabled:
+        if household_member.disabled and household_member.age >= 18:
             policy_engine_params['household']['people'][member_id]['is_ssi_disabled'] = {'2022': True}
 
         policy_engine_params['household']['tax_units']['tax_unit']['members'].append(member_id)
