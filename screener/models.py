@@ -57,7 +57,7 @@ class Screen(models.Model):
                     household_member.age <= age_max and \
                     household_member.relationship in child_relationship:
                 children += 1
-            elif household_member.pregnant and household_member.age > age_max:
+            if household_member.pregnant and include_pregnant:
                 children += 1
 
         return children
