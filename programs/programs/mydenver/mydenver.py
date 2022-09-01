@@ -26,7 +26,7 @@ def eligibility_mydenver(screen):
     eligible_counties = ['Denver County']
     child_age_min = 5
     child_age_max = 18
-    child_relationship = ['child', 'fosterChild', 'stepChild', 'grandChild', 'relatedOther']
+    child_relationship = ['child', 'fosterChild', 'stepChild', 'grandChild', 'relatedOther', 'headOfHousehold']
     frequency = "yearly"
 
     # geography test
