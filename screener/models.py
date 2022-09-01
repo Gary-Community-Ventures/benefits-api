@@ -76,6 +76,7 @@ class Screen(models.Model):
         child_relationship = ['child', 'fosterChild']
         guardian_relationship = ['parent', 'fosterParent']
         child_exists = False
+        hoh_child_exists = False
 
         household_members = self.household_members.all()
         for household_member in household_members:
@@ -88,12 +89,12 @@ class Screen(models.Model):
                 parents += 1
             elif household_member.relationship in guardian_relationship:
                 parents += 1
-            elif hoh_child_exists and household_member.relationship == 'spouse':
-                parents += 1
 
-        # account for head of household as a parent
-        if hoh_child_exists:
-            parents += 1
+        for household_member in household_members:
+            if hoh_child_exists and household_member.relationship == 'spouse':
+                parents += 1
+            elif hoh_child_exists and household_member.relationship == 'headOfHousehold':
+                parents += 1
 
         return parents
 
