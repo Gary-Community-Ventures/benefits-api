@@ -48,9 +48,8 @@ class Screen(models.Model):
 
         return total_expense
 
-    def num_children(self, age_min = 0, age_max = 18, include_pregnant = False):
+    def num_children(self, age_min = 0, age_max = 18, include_pregnant = False, child_relationship = ['child', 'fosterChild']):
         children = 0
-        child_relationship = ['child', 'fosterChild']
 
         household_members = self.household_members.all()
         for household_member in household_members:
