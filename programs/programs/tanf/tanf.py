@@ -5,7 +5,8 @@ import math
 def calculate_tanf(screen, data):
     value = 0
     child_age_limit = 19
-    children = screen.num_children(age_max=child_age_limit, include_pregnant=True)
+    children = screen.num_children(age_max=child_age_limit, include_pregnant=True, child_relationship = ['child'])
+    
     guardians = screen.num_guardians()
 
     eligibility = eligibility_tanf(screen, children, guardians)
