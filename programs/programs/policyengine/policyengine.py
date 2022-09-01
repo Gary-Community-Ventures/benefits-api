@@ -89,7 +89,7 @@ def eligibility_policy_engine(screen):
 
     if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] > 0 and num_children > 0:
         eligibility['nslp']['eligible'] = True
-        eligibility['nslp']['estimated_value'] = 160 * benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] * num_children
+        eligibility['nslp']['estimated_value'] = 680 * num_children
 
     #EITC
     if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021'] > 0:
