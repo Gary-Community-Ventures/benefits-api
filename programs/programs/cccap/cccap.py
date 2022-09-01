@@ -86,8 +86,20 @@ def eligibility_cccap(screen):
 
 
 def value_cccap(screen):
-    cccap_children = num_cccap_children(screen)
-    value = 712.50 * 12 * cccap_children
+    value = 0
+    preschool_value = 6000
+    afterschool_value = 1700
+
+    household_members = screen.household_members.all()
+    for household_member in household_members:
+        if household_member.age <= 4:
+            value += preschool_value
+        elif household_member.age < 13:
+            value += afterschool_value
+        elif household_member.age >= 13 and \
+                household_member.age <= 19 and \
+                household_member.disabled:
+            value += afterschool_value
 
     return value
 
@@ -125,8 +137,7 @@ def num_cccap_children(screen):
 
     household_members = screen.household_members.all()
     for household_member in household_members:
-        if household_member.age <= 12 and \
-                household_member.relationship in child_relationship:
+        if household_member.age <= 12:
             children += 1
         elif household_member.age >= 13 and \
                 household_member.age <= 19 and \
