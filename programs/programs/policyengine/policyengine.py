@@ -86,7 +86,7 @@ def eligibility_policy_engine(screen):
     household_members = screen.household_members.all()
     children = False
     for household_member in household_members:
-        if household_member.age <= 18:
+        if household_member.age <= 18 and household_member.age >= 3:
             children = True
 
     if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] > 0 and children:
