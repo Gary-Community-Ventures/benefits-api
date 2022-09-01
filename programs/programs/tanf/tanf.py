@@ -92,6 +92,8 @@ def eligibility_tanf(screen, children, guardians):
     income_limit = income_bands[children]
     earned_income = screen.calc_gross_income(frequency, eligibility_income_types)
     tanf_earned_income = earned_income-90
+    if tanf_earned_income < 0:
+        tanf_earned_income = 0
 
     clabel = "children"
     glabel = "guardians"
