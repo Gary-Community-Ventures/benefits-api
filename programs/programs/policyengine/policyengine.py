@@ -51,6 +51,7 @@ def eligibility_policy_engine(screen):
     }
 
     benefit_data = policy_engine_calculate(screen)
+
     #WIC & MEDICAID
     for pkey, pvalue in benefit_data['people'].items():
         #WIC
@@ -84,14 +85,11 @@ def eligibility_policy_engine(screen):
 
     #NSLP
     household_members = screen.household_members.all()
-    children = False
-    for household_member in household_members:
-        if household_member.age <= 18 and household_member.age >= 3:
-            children = True
+    num_children = screen.num_children(3, 18)
 
-    if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] > 0 and children:
+    if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] > 0 and num_children > 0:
         eligibility['nslp']['eligible'] = True
-        eligibility['nslp']['estimated_value'] = 160 * benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022']
+        eligibility['nslp']['estimated_value'] = 160 * benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] * num_children
 
     #EITC
     if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021'] > 0:
