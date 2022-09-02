@@ -71,6 +71,7 @@ def eligibility_rtdlive(screen):
     return eligibility
 
 def value_rtdlive(screen):
-    value = 750
+    adults = screen.num_adults()
+    value = 750 * adults
 
     return value
