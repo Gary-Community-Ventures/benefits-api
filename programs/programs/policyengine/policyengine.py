@@ -86,10 +86,10 @@ def eligibility_policy_engine(screen):
     #NSLP
     household_members = screen.household_members.all()
     num_children = screen.num_children(3, 18)
-
     if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] > 0 and num_children > 0:
-        eligibility['nslp']['eligible'] = True
-        eligibility['nslp']['estimated_value'] = 680 * num_children
+        if benefit_data['spm_units']['spm_unit']['school_meal_tier']['2022'] != 'PAID':
+            eligibility['nslp']['eligible'] = True
+            eligibility['nslp']['estimated_value'] = 680 * num_children
 
     #EITC
     if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021'] > 0:
@@ -115,7 +115,6 @@ def eligibility_policy_engine(screen):
 # PolicyEngine currently supports SNAP and WIC for CO
 def policy_engine_calculate(screen):
     policy_engine_params = policy_engine_prepare_params(screen)
-    print(policy_engine_params)
     response = requests.post(
         "https://policyengine.org/us/api/calculate",
         json = policy_engine_params
@@ -173,6 +172,8 @@ def policy_engine_prepare_params(screen):
                     "snap": {"2022": None },
                     "acp": {"2022": None },
                     "school_meal_daily_subsidy": {"2022": None},
+                    "school_meal_tier": {"2022": None},
+                    "meets_school_meal_categorical_eligibility": {"2022": None},
                     "lifeline": {"2022": None},
                 }
             }
