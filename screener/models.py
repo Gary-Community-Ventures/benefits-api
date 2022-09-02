@@ -98,7 +98,13 @@ class Screen(models.Model):
 
         return parents
 
-
+    def is_joint(self):
+        is_joint = False
+        household_members = self.household_members.all()
+        for household_member in household_members:
+            if household_member.relationship == 'spouse':
+                is_joint = True
+        return is_joint
 
     def calc_net_income(self, frequency, income_types, expense_types):
         net_income = None

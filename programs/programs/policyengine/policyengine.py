@@ -115,6 +115,7 @@ def eligibility_policy_engine(screen):
 # PolicyEngine currently supports SNAP and WIC for CO
 def policy_engine_calculate(screen):
     policy_engine_params = policy_engine_prepare_params(screen)
+    print(policy_engine_params)
     response = requests.post(
         "https://policyengine.org/us/api/calculate",
         json = policy_engine_params
@@ -142,7 +143,8 @@ def policy_engine_prepare_params(screen):
                 "tax_unit": {
                     "members": [],
                     "earned_income_tax_credit": {"2021": None},
-                    "ctc": {"2021": None}
+                    "ctc": {"2021": None},
+                    "tax_unit_is_joint": {"2021": screen.is_joint()}
                 }
             },
             "families": {
