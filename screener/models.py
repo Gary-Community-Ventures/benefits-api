@@ -10,6 +10,7 @@ class Screen(models.Model):
     agree_to_tos = models.BooleanField()
     zipcode = models.CharField(max_length=5)
     household_size = models.IntegerField()
+    last_tax_filing_year = models.CharField(max_length=120, default=None, blank=True, null=True)
     household_assets = models.DecimalField(decimal_places=2, max_digits=10)
     housing_situation = models.CharField(max_length=30)
     last_email_request_date = models.DateTimeField(blank=True, null=True)
