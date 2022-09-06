@@ -12,7 +12,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {'fields': ('email_or_cell', 'password')}),
         ('Personal info', {'fields': ('email','cell')}),
-        ('Permissions', {'fields': ('is_staff','tcpa_consent')}),
+        ('Permissions', {'fields': ('is_staff','tcpa_consent', 'groups')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
