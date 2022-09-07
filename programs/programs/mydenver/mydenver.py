@@ -38,19 +38,23 @@ def eligibility_mydenver(screen):
 
     if not county_eligible:
         eligibility["eligible"] = False
-        eligibility["failed"].append(_("To qualify for the My Denver card must live in Denver County or have a child who attends a DPS school."))
+        eligibility["failed"].append((
+            "To qualify for the My Denver card must live in Denver County or have a child who attends a DPS school."))
     else:
-        eligibility["passed"].append(_("The zipcode ")\
-                +screen.zipcode\
-                +_(" is within Denver County."))
+        eligibility["passed"].append((
+            "The zipcode ",
+            screen.zipcode,
+            " is within Denver County."))
 
 
     children = screen.num_children(age_max=child_age_max, age_min=child_age_min, child_relationship=child_relationship)
     if children < 1:
         eligibility['eligible'] = False
-        eligibility['failed'].append(_("The My Denver card is limited to youth aged 5-18."))
+        eligibility['failed'].append((
+            "The My Denver card is limited to youth aged 5-18."))
     else:
-        eligibility['passed'].append(_("The My Denver card is limited to youth aged 5-18."))
+        eligibility['passed'].append((
+            "The My Denver card is limited to youth aged 5-18."))
     return eligibility
 
 def value_mydenver(screen):

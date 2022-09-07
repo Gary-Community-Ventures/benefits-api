@@ -1,13 +1,17 @@
 from django.shortcuts import render
+from django.conf import settings
 from django.http import HttpResponse
+from django.utils.translation import gettext as _
+from django.utils.translation import override
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
 from rest_framework import viewsets, views
 from rest_framework import permissions
 from rest_framework.response import Response
-from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, ExpenseSerializer, EligibilitySerializer, MessageSerializer
+from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, ExpenseSerializer, EligibilitySerializer, EligibilityTranslationSerializer, MessageSerializer
 from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import math
+import copy
 
 def index(request):
     return HttpResponse("Colorado Benefits Screener API")
@@ -32,6 +36,7 @@ class HouseholdMemberViewSet(viewsets.ModelViewSet):
     serializer_class = HouseholdMemberSerializer
     permission_classes = [permissions.IsAuthenticated]
     filterset_fields = ['has_income']
+
 
 class IncomeStreamViewSet(viewsets.ModelViewSet):
     """
@@ -60,6 +65,17 @@ class EligibilityView(views.APIView):
         results = EligibilitySerializer(data, many=True).data
         return Response(results)
 
+class EligibilityTranslationView(views.APIView):
+
+    def get(self, request, id):
+        data = {}
+        eligibility = eligibility_results(id)
+
+        for language in settings.LANGUAGES:
+            eligibility = eligibility_results(id)
+            translated_eligibility = eligibility_results_translation(eligibility, language[0])
+            data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
+        return Response({"translations": data})
 
 class MessageViewSet(viewsets.ModelViewSet):
     """
@@ -90,6 +106,7 @@ def eligibility_results(screen_id):
         if not skip:
             data.append(
                 {
+                    "program_id": program.id,
                     "name": program.name,
                     "estimated_value": eligibility["estimated_value"],
                     "estimated_delivery_time": program.estimated_delivery_time,
@@ -113,3 +130,32 @@ def eligibility_results(screen_id):
         eligible_programs.append(clean_program)
 
     return eligible_programs
+
+
+def eligibility_results_translation(results, language):
+    translated_results = copy.deepcopy(results)
+    with override(language):
+        for k, v in enumerate(results):
+            translated_program = Program.objects.get(pk=translated_results[k]['program_id'])
+            translated_results[k]['name'] = translated_program.name
+            translated_results[k]['estimated_delivery_time'] = translated_program.estimated_delivery_time
+            translated_results[k]['description_short'] = translated_program.description_short
+            translated_results[k]['description'] = translated_program.description
+            translated_results[k]['learn_more_link'] = translated_program.learn_more_link
+            translated_results[k]['apply_button_link'] = translated_program.apply_button_link
+            translated_results[k]['passed_tests'] = []
+            translated_results[k]['failed_tests'] = []
+
+            for passed_test in results[k]['passed_tests']:
+                translated_message = ''
+                for part in passed_test:
+                    translated_message += _(part)
+                translated_results[k]['passed_tests'].append(translated_message)
+
+            for failed_test in results[k]['failed_tests']:
+                translated_message = ''
+                for part in failed_test:
+                    translated_message += _(part)
+                translated_results[k]['failed_tests'].append(translated_message)
+
+    return translated_results

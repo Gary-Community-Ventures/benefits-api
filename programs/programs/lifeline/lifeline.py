@@ -44,19 +44,21 @@ def eligibility_lifeline(screen):
 
     if lifeline_income > income_limit:
         eligibility["eligible"] = False
-        eligibility["failed"].append(_("Calculated income of ")\
-            +str(math.trunc(lifeline_income))+_(" for a household with ")\
-            +str(screen.household_size)\
-            +_(" members is above the income limit of ")\
-            +str(income_limit))
+        eligibility["failed"].append((
+            "Calculated income of ",
+            str(math.trunc(lifeline_income)),
+            " for a household with ",
+            str(screen.household_size),
+            " members is above the income limit of ",
+            str(income_limit)))
     else:
-        eligibility["passed"].append(
-            _("Calculated income of ")\
-            +str(math.trunc(lifeline_income))\
-            +_(" for a household with ")\
-            +str(screen.household_size)\
-            +_(" members is below the income limit of ")\
-            +str(income_limit))
+        eligibility["passed"].append((
+            "Calculated income of ",
+            str(math.trunc(lifeline_income)),
+            " for a household with ",
+            str(screen.household_size),
+            " members is below the income limit of ",
+            str(income_limit)))
 
     return eligibility
 
