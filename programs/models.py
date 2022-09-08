@@ -21,6 +21,7 @@ class Program(TranslatableModel):
         dollar_value = models.IntegerField(),
         value_type = models.CharField(max_length=120, ),
         estimated_delivery_time = models.CharField(max_length=320),
+        estimated_application_time = models.CharField(max_length=320, blank=True, null=True, default=None),
         legal_status_required = models.CharField(max_length=120),
     )
 
