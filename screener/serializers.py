@@ -87,6 +87,7 @@ class EligibilitySerializer(serializers.Serializer):
     apply_button_link = serializers.CharField()
     estimated_value = serializers.IntegerField()
     estimated_delivery_time = serializers.CharField()
+    estimated_application_time = serializers.CharField()
     legal_status_required = serializers.BooleanField
     eligible = serializers.BooleanField()
     failed_tests = serializers.ListField()
