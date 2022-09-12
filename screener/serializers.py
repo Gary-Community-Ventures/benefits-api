@@ -74,7 +74,22 @@ class ScreenSerializer(serializers.ModelSerializer):
             'household_members',
             'last_email_request_date',
             'user',
-            'external_id'
+            'external_id',
+            'has_tanf',
+            'has_wic',
+            'has_snap',
+            'has_lifeline',
+            'has_acp',
+            'has_eitc',
+            'has_coeitc',
+            'has_nslp',
+            'has_ctc',
+            'has_medicaid',
+            'has_rtdlive',
+            'has_cccap',
+            'has_mydenver',
+            'has_chp',
+            'has_ccb'
         )
 
 

@@ -17,6 +17,23 @@ class Screen(models.Model):
     is_test = models.BooleanField(default=False, blank=True)
     user = models.ForeignKey(User, related_name='screens', on_delete=models.CASCADE, blank=True, null=True)
     external_id = models.CharField(max_length=120, blank=True, null=True)
+    has_tanf = models.BooleanField(default=False, blank=True, null=True)
+    has_wic = models.BooleanField(default=False, blank=True, null=True)
+    has_snap = models.BooleanField(default=False, blank=True, null=True)
+    has_lifeline = models.BooleanField(default=False, blank=True, null=True)
+    has_acp = models.BooleanField(default=False, blank=True, null=True)
+    has_eitc = models.BooleanField(default=False, blank=True, null=True)
+    has_coeitc = models.BooleanField(default=False, blank=True, null=True)
+    has_nslp = models.BooleanField(default=False, blank=True, null=True)
+    has_ctc = models.BooleanField(default=False, blank=True, null=True)
+    has_medicaid = models.BooleanField(default=False, blank=True, null=True)
+    has_rtdlive = models.BooleanField(default=False, blank=True, null=True)
+    has_cccap = models.BooleanField(default=False, blank=True, null=True)
+    has_mydenver = models.BooleanField(default=False, blank=True, null=True)
+    has_chp = models.BooleanField(default=False, blank=True, null=True)
+    has_ccb = models.BooleanField(default=False, blank=True, null=True)
+
+
 
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
