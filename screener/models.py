@@ -155,8 +155,8 @@ class HouseholdMember(models.Model):
     visually_impaired = models.BooleanField()
     disabled = models.BooleanField()
     veteran = models.BooleanField()
-    medicaid = models.BooleanField()
-    disability_medicaid = models.BooleanField()
+    medicaid = models.BooleanField(blank=True, null=True)
+    disability_medicaid = models.BooleanField(blank=True, null=True)
     has_income = models.BooleanField()
     has_expenses = models.BooleanField()
 
