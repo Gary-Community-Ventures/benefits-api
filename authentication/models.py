@@ -9,6 +9,8 @@ class User(AbstractUser):
     cell = PhoneNumberField(unique=True, blank=True, null=True)
     email = models.EmailField(_('email address'), unique=True, blank=True, null=True)
     tcpa_consent = models.BooleanField()
+    send_offers = models.BooleanField(default=False)
+    send_updates = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email_or_cell'
 

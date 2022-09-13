@@ -16,5 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'email_or_cell',
-            'tcpa_consent'
+            'tcpa_consent',
+            'send_offers',
+            'send_updates'
         )
