@@ -73,6 +73,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'housing_situation',
             'household_members',
             'last_email_request_date',
+            'last_tax_filing_year',
             'user',
             'external_id',
             'has_tanf',
