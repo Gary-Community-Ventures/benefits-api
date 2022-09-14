@@ -8,6 +8,8 @@ class User(AbstractUser):
     email_or_cell = models.CharField(max_length=320, unique=True)
     cell = PhoneNumberField(unique=True, blank=True, null=True)
     email = models.EmailField(_('email address'), unique=True, blank=True, null=True)
+    first_name = models.CharField(max_length=320, blank=True, null=True)
+    last_name = models.CharField(max_length=320, blank=True, null=True)
     tcpa_consent = models.BooleanField()
     send_offers = models.BooleanField(default=False)
     send_updates = models.BooleanField(default=False)
