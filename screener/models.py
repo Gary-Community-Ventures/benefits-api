@@ -141,6 +141,7 @@ class Message(models.Model):
     cell = PhoneNumberField(blank=True, null=True)
     email = models.EmailField(_('email address'), blank=True, null=True)
     content = models.CharField(max_length=320, blank=True, null=True)
+    uid = models.IntegerField(blank=True, null=True)
 
 
 class HouseholdMember(models.Model):
