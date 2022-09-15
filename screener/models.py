@@ -12,7 +12,7 @@ class Screen(models.Model):
     zipcode = models.CharField(max_length=5)
     household_size = models.IntegerField()
     last_tax_filing_year = models.CharField(max_length=120, default=None, blank=True, null=True)
-    household_assets = models.DecimalField(decimal_places=2, max_digits=10)
+    household_assets = models.DecimalField(decimal_places=2, max_digits=10, default=None, blank=True, null=True)
     housing_situation = models.CharField(max_length=30, blank=True, null=True, default=None)
     last_email_request_date = models.DateTimeField(blank=True, null=True)
     is_test = models.BooleanField(default=False, blank=True)
