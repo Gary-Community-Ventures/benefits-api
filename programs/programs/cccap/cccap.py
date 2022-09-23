@@ -61,7 +61,7 @@ def eligibility_cccap(screen):
             " was not found in the list of known counties."))
         return eligibility
 
-    income_types = ["wages", "selfEmployment"]
+    income_types = ['all']
     gross_income = screen.calc_gross_income(frequency, income_types)
     if cccap_children >= 1:
         income_limit = cccap_county_data[screen.household_size] * 12

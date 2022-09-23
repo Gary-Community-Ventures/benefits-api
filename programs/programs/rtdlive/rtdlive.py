@@ -31,9 +31,9 @@ def eligibility_rtdlive(screen):
                          'Douglas County', 'Jefferson County']
     frequency = "yearly"
 
-    # INCOME TEST -- you can apply for RTD Live with only pay stubs, so we limit to wages here
+    # INCOME TEST
     income_limit = 1.85*settings.FPL[screen.household_size]
-    income_types = ["wages", "selfEmployment"]
+    income_types = ['all']
     gross_income = screen.calc_gross_income(frequency, income_types)
 
     # geography test
