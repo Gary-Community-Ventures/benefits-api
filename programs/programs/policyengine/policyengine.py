@@ -127,9 +127,9 @@ def policy_engine_prepare_params(screen):
     household_members = screen.household_members.all()
 
     # We have to manually calculate SNAP gross eligibility as colorado uses 200% vs the 130% used by policy engine
-    gross_limit = 2 * settings.FPL2021[screen.household_size]
-    gross_income = screen.calc_gross_income('yearly', ['wages', 'selfEmployment'])
-    if gross_income < gross_limit:
+    snap_gross_limit = 2 * settings.FPL2021[screen.household_size]
+    snap_gross_income = screen.calc_gross_income('yearly', ['wages', 'selfEmployment', 'unemployment', 'childSupport', 'disabilityMedicaid', 'sSI', 'sSDependent', 'sSDisability', 'sSSurvivor', 'sSRetirement', 'cOSDisability', 'veteran', 'pension', 'deferredComp', 'workersComp', 'alimony', 'boarder', 'gifts', 'rental', 'investment'])
+    if snap_gross_income < snap_gross_limit:
         meets_snap_gross_income_test = True
     else:
         meets_snap_gross_income_test = False
@@ -164,6 +164,7 @@ def policy_engine_prepare_params(screen):
                     "snap_dependent_care_deduction": {"2022": int(screen.calc_expenses("yearly", ["childCare", "dependentCare"]))},
                     "snap_excess_shelter_expense_deduction": {"2022": int(screen.calc_expenses("yearly", ["rent", "mortgage"])) },
                     "snap_assets": {"2022": int(screen.household_assets) },
+                    "snap_gross_income": {"2022": int(snap_gross_income) },
                     "meets_snap_net_income_test": {"2022": None },
                     "meets_snap_gross_income_test": {"2022": meets_snap_gross_income_test },
                     "meets_snap_asset_test": {"2022": True},
