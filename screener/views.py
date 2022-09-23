@@ -72,7 +72,6 @@ class EligibilityTranslationView(views.APIView):
         eligibility = eligibility_results(id)
 
         for language in settings.LANGUAGES:
-            eligibility = eligibility_results(id)
             translated_eligibility = eligibility_results_translation(eligibility, language[0])
             data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
         return Response({"translations": data})

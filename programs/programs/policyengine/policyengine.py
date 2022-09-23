@@ -129,6 +129,7 @@ def policy_engine_prepare_params(screen):
     # We have to manually calculate SNAP gross eligibility as colorado uses 200% vs the 130% used by policy engine
     snap_gross_limit = 2 * settings.FPL2021[screen.household_size]
     snap_gross_income = screen.calc_gross_income('yearly', ['wages', 'selfEmployment', 'unemployment', 'childSupport', 'disabilityMedicaid', 'sSI', 'sSDependent', 'sSDisability', 'sSSurvivor', 'sSRetirement', 'cOSDisability', 'veteran', 'pension', 'deferredComp', 'workersComp', 'alimony', 'boarder', 'gifts', 'rental', 'investment'])
+
     if snap_gross_income < snap_gross_limit:
         meets_snap_gross_income_test = True
     else:
@@ -169,7 +170,7 @@ def policy_engine_prepare_params(screen):
                     "meets_snap_gross_income_test": {"2022": meets_snap_gross_income_test },
                     "meets_snap_asset_test": {"2022": True},
                     "is_snap_eligible": {"2022": None},
-                    "meets_snap_categorical_eligibility": {"2022": None},
+                    "meets_snap_categorical_eligibility": {"2022": False},
                     "snap": {"2022": None },
                     "acp": {"2022": None },
                     "school_meal_daily_subsidy": {"2022": None},
@@ -204,8 +205,9 @@ def policy_engine_prepare_params(screen):
             policy_engine_params['household']['people'][member_id]['is_pregnant'] = {'2022': True}
         if household_member.visually_impaired:
             policy_engine_params['household']['people'][member_id]['is_blind'] = {'2022': True}
-        if household_member.disabled and household_member.age >= 18:
-            policy_engine_params['household']['people'][member_id]['is_ssi_disabled'] = {'2022': True}
+        # TODO: this check should use the SSI disabled income as determination
+        # if household_member.disabled and household_member.age >= 18:
+            # policy_engine_params['household']['people'][member_id]['is_ssi_disabled'] = {'2022': True}
 
         policy_engine_params['household']['tax_units']['tax_unit']['members'].append(member_id)
         policy_engine_params['household']['families']['family']['members'].append(member_id)
