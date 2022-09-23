@@ -10,6 +10,7 @@ class Screen(models.Model):
     referral_source = models.CharField(max_length=320, default=None, blank=True, null=True)
     agree_to_tos = models.BooleanField()
     zipcode = models.CharField(max_length=5)
+    county = models.CharField(max_length=120, default=None, blank=True, null=True)
     household_size = models.IntegerField()
     last_tax_filing_year = models.CharField(max_length=120, default=None, blank=True, null=True)
     household_assets = models.DecimalField(decimal_places=2, max_digits=10, default=None, blank=True, null=True)
