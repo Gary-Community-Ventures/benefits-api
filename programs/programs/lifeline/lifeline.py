@@ -39,7 +39,7 @@ def eligibility_lifeline(screen):
     income_limit = income_bands[screen.household_size]
 
     # INCOME TEST -- you can apply to Lifeline with only pay stubs, so we limit to wages here
-    income_types = ["wages", "selfEmployment"]
+    income_types = ['all']
     lifeline_income = screen.calc_gross_income(frequency, income_types)
 
     if lifeline_income > income_limit:
