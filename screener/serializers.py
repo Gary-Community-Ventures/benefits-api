@@ -68,6 +68,8 @@ class ScreenSerializer(serializers.ModelSerializer):
             'submission_date',
             'agree_to_tos',
             'zipcode',
+            'county',
+            'referral_source',
             'household_size',
             'household_assets',
             'housing_situation',
