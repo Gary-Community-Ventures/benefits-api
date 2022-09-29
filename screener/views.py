@@ -107,6 +107,7 @@ def eligibility_results(screen_id):
                 {
                     "program_id": program.id,
                     "name": program.name,
+                    "name_abbreviated": program.name_abbreviated,
                     "estimated_value": eligibility["estimated_value"],
                     "estimated_delivery_time": program.estimated_delivery_time,
                     "estimated_application_time": program.estimated_application_time,
@@ -138,6 +139,7 @@ def eligibility_results_translation(results, language):
         for k, v in enumerate(results):
             translated_program = Program.objects.get(pk=translated_results[k]['program_id'])
             translated_results[k]['name'] = translated_program.name
+            translated_results[k]['name_abbreviated'] = translated_program.name_abbreviated
             translated_results[k]['estimated_delivery_time'] = translated_program.estimated_delivery_time
             translated_results[k]['estimated_application_time'] = translated_program.estimated_application_time
             translated_results[k]['description_short'] = translated_program.description_short

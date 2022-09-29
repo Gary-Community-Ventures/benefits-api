@@ -99,6 +99,7 @@ class ScreenSerializer(serializers.ModelSerializer):
 class EligibilitySerializer(serializers.Serializer):
     description_short = serializers.CharField()
     name = serializers.CharField()
+    name_abbreviated = serializers.CharField()
     description = serializers.CharField()
     value_type = serializers.CharField()
     learn_more_link = serializers.CharField()
