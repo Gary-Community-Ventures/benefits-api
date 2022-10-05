@@ -1,14 +1,17 @@
 from django.utils.translation import gettext as _
+from django.utils.translation import override
 from decouple import config
 import sendgrid
 import csv
 from io import StringIO
 from sendgrid.helpers.mail import Mail, Email, To, Content, Attachment, FileContent, FileName, FileType, Disposition
 import base64
-from screener.views import eligibility_results
+from screener.views import eligibility_results, eligibility_results_translation
 
-def email_pdf(target_email, screen_id):
-    data = eligibility_results(screen_id)
+def email_pdf(target_email, screen_id, language):
+    raw_data = eligibility_results(screen_id)
+    data = eligibility_results_translation(raw_data, language)
+
     data_reduced = []
     for item in data:
         item.pop('legal_status_required', None)
