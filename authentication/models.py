@@ -17,5 +17,9 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email_or_cell'
 
+    def save(self, **kwargs):
+        self.cell = self.cell or None
+        super().save(**kwargs)
+
     def __str__(self):
         return self.email_or_cell
