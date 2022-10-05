@@ -1,8 +1,12 @@
 from django.db import models
 from decimal import Decimal
+import json
+import math
 from authentication.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
+from programs.models import Program
+from programs.programs.policyengine.policyengine import eligibility_policy_engine
 
 class Screen(models.Model):
     submission_date = models.DateTimeField(auto_now=True)
@@ -37,7 +41,6 @@ class Screen(models.Model):
     has_ccb = models.BooleanField(default=False, blank=True, null=True)
 
 
-
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
         gross_income = 0
@@ -52,7 +55,6 @@ class Screen(models.Model):
                         gross_income += income_stream.yearly()
 
         return gross_income
-
 
     def calc_expenses(self, frequency, types):
         household_members = self.household_members.all()
@@ -90,7 +92,6 @@ class Screen(models.Model):
             if household_member.age >= age_max:
                 adults += 1
         return adults
-
 
     def num_guardians(self):
         parents = 0
@@ -135,6 +136,52 @@ class Screen(models.Model):
             net_income = gross_income - expenses
 
         return net_income
+
+    def program_eligibility(self):
+        all_programs = Program.objects.all()
+        data = []
+
+        pe_eligibility = eligibility_policy_engine(self)
+        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid']
+
+        for program in all_programs:
+            skip = False
+            # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
+            if program.name_abbreviated not in pe_programs:
+                eligibility = program.eligibility(self, data)
+            else:
+                # skip = True
+                eligibility = pe_eligibility[program.name_abbreviated]
+
+            if not skip:
+                data.append(
+                    {
+                        "program_id": program.id,
+                        "name": program.name,
+                        "name_abbreviated": program.name_abbreviated,
+                        "estimated_value": eligibility["estimated_value"],
+                        "estimated_delivery_time": program.estimated_delivery_time,
+                        "estimated_application_time": program.estimated_application_time,
+                        "description_short": program.description_short,
+                        "short_name": program.name_abbreviated,
+                        "description": program.description,
+                        "value_type": program.value_type,
+                        "learn_more_link": program.learn_more_link,
+                        "apply_button_link": program.apply_button_link,
+                        "legal_status_required": program.legal_status_required,
+                        "eligible": eligibility["eligible"],
+                        "failed_tests": eligibility["failed"],
+                        "passed_tests": eligibility["passed"]
+                    }
+                )
+
+        eligible_programs = []
+        for program in data:
+            clean_program = program
+            clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
+            eligible_programs.append(clean_program)
+
+        return eligible_programs
 
 
 class Message(models.Model):
@@ -269,3 +316,40 @@ class Expense(models.Model):
             yearly = self.amount
 
         return yearly
+
+
+class EligibilitySnapshot(models.Model):
+    screen = models.ForeignKey(Screen, related_name='eligibility_snapshots', on_delete=models.CASCADE)
+    submission_date = models.DateTimeField(auto_now=True)
+
+    def generate_program_snapshots(self):
+        eligibility = self.screen.program_eligibility()
+        for item in eligibility:
+            program_snapshot = ProgramEligibilitySnapshot(
+                eligibility_snapshot=self,
+                name=item['name'],
+                name_abbreviated=item['name_abbreviated'],
+                value_type=item['value_type'],
+                estimated_value=item['estimated_value'],
+                estimated_delivery_time=item['estimated_delivery_time'],
+                estimated_application_time=item['estimated_application_time'],
+                legal_status_required=item['legal_status_required'],
+                eligible=item['eligible'],
+                failed_tests=json.dumps(item['failed_tests']),
+                passed_tests=json.dumps(item['passed_tests'])
+            )
+            program_snapshot.save()
+
+
+class ProgramEligibilitySnapshot(models.Model):
+    eligibility_snapshot = models.ForeignKey(EligibilitySnapshot, related_name='program_snapshots', on_delete=models.CASCADE)
+    name = models.CharField(max_length=320)
+    name_abbreviated = models.CharField(max_length=32)
+    value_type = models.CharField(max_length=120)
+    estimated_value = models.DecimalField(decimal_places=2, max_digits=10)
+    estimated_delivery_time = models.CharField(max_length=120, blank=True, null=True)
+    estimated_application_time = models.CharField(max_length=120, blank=True, null=True)
+    legal_status_required = models.CharField(max_length=120, blank=True, null=True)
+    eligible = models.BooleanField()
+    failed_tests = models.JSONField(blank=True, null=True)
+    passed_tests = models.JSONField(blank=True, null=True)
