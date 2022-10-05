@@ -21,6 +21,15 @@ def eligibility_cocb(screen):
         "failed": []
     }
 
+    adults = screen.num_adults(age_max=18)
+    if adults < 1:
+        eligibility["eligible"] = False
+        eligibility["failed"].append((
+            "Colorado Cash Back is available to individuals 18+"))
+    else:
+        eligibility["passed"].append((
+            "Colorado Cash Back is available to individuals 18+"))
+
     return eligibility
 
 
