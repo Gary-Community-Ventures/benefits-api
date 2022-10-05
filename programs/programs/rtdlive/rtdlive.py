@@ -36,6 +36,13 @@ def eligibility_rtdlive(screen):
     income_types = ['all']
     gross_income = screen.calc_gross_income(frequency, income_types)
 
+    # adults in household test
+    qualifying_adults = 0
+    household_members = screen.household_members.all()
+    for household_member in household_members:
+        if household_member.age >= 20 or household_member.age <= 64:
+            qualifying_adults += 1
+
     # geography test
     county_eligible = False
     if not screen.county:
@@ -48,6 +55,14 @@ def eligibility_rtdlive(screen):
     for county in counties:
         if county in eligible_counties:
             county_eligible = True
+
+    if qualifying_adults < 1:
+        eligibility["eligible"] = False
+        eligibility["failed"].append((
+            "RTD Live is available to adults ages 20-64."))
+    else:
+        eligibility["passed"].append((
+            "RTD Live is available to adults ages 20-64."))
 
     if not county_eligible:
         eligibility["eligible"] = False
@@ -80,7 +95,12 @@ def eligibility_rtdlive(screen):
     return eligibility
 
 def value_rtdlive(screen):
-    adults = screen.num_adults()
-    value = 750 * adults
+    qualifying_adults = 0
+    household_members = screen.household_members.all()
+    for household_member in household_members:
+        if household_member.age >= 20 or household_member.age <= 64:
+            qualifying_adults += 1
+
+    value = 750 * qualifying_adults
 
     return value
