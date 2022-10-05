@@ -31,9 +31,14 @@ def eligibility_mydenver(screen):
 
     # geography test
     county_eligible = False
-    counties = counties_from_zip(screen.zipcode)
-    for county in counties:
-        if county in eligible_counties:
+
+    if not screen.county:
+        counties = counties_from_zip(screen.zipcode)
+        for county in counties:
+            if county in eligible_counties:
+                county_eligible = True
+    else:
+        if screen.county in eligible_counties:
             county_eligible = True
 
     if not county_eligible:

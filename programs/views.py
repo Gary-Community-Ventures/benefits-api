@@ -12,4 +12,4 @@ class ProgramViewSet(viewsets.ModelViewSet):
     queryset = Program.objects.all()
     serializer_class = ProgramSerializer
     permission_classes = [permissions.IsAuthenticated]
-    # filterset_fields = ['dollar_value']
+    # filterset_fields = ['legal_status_required', 'value_type']

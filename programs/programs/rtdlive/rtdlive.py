@@ -38,7 +38,13 @@ def eligibility_rtdlive(screen):
 
     # geography test
     county_eligible = False
-    counties = counties_from_zip(screen.zipcode)
+    if not screen.county:
+        counties = counties_from_zip(screen.zipcode)
+        display_location = screen.zipcode
+    else:
+        counties = [screen.county]
+        display_location = screen.county
+
     for county in counties:
         if county in eligible_counties:
             county_eligible = True
@@ -49,8 +55,7 @@ def eligibility_rtdlive(screen):
             "To qualify for RTD live you must live in the RTD service area."))
     else:
         eligibility["passed"].append((
-            "The zipcode ",
-            screen.zipcode,
+            display_location,
             " is within the RTD service area."))
 
     # income test
