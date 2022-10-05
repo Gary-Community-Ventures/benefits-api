@@ -40,7 +40,7 @@ def eligibility_rtdlive(screen):
     qualifying_adults = 0
     household_members = screen.household_members.all()
     for household_member in household_members:
-        if household_member.age >= 20 or household_member.age <= 64:
+        if household_member.age >= 20 and household_member.age <= 64:
             qualifying_adults += 1
 
     # geography test
@@ -98,7 +98,7 @@ def value_rtdlive(screen):
     qualifying_adults = 0
     household_members = screen.household_members.all()
     for household_member in household_members:
-        if household_member.age >= 20 or household_member.age <= 64:
+        if household_member.age >= 20 and household_member.age <= 64:
             qualifying_adults += 1
 
     value = 750 * qualifying_adults
