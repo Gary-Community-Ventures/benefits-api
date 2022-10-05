@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from decouple import config
 import sendgrid
 import csv
@@ -15,13 +16,6 @@ def email_pdf(target_email, screen_id):
         item.pop('passed_tests', None)
         item.pop('short_name', None)
         item.pop('apply_button_link', None)
-        #human friendly value type translation
-        if item['value_type'] == 'unrestricted':
-            item['value_type'] = 'cash'
-        elif item['value_type'] == 'non-discretionary':
-            item['value_type'] = 'reduced expenses'
-        elif item['value_type'] == 'discretionary':
-            item['value_type'] = 'reduced cost services'
         if item['eligible']:
             item.pop('eligible', None)
             data_reduced.append(item)
@@ -39,8 +33,8 @@ def email_pdf(target_email, screen_id):
     sg = sendgrid.SendGridAPIClient(api_key=config('SENDGRID'))
     from_email = Email("screener@garycommunity.org")  # Change to your verified sender
     to_email = To(target_email)  # Change to your recipient
-    subject = "Your Screener Results"
-    content = Content("text/plain", "Thank you for testing our benefits screener. Your results are attached as a csv file that can be opened in any spreadsheet software.")
+    subject = _("Screener Results from My Friend Ben")
+    content = Content("text/plain", _("Thank you for using our benefits screener. Your results are attached as a csv file that can be opened in any spreadsheet software."))
     mail = Mail(from_email, to_email, subject, content)
     attachment = Attachment()
     attachment.file_content = FileContent(encoded)

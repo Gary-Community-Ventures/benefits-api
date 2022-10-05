@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-25 18:00-0600\n"
+"POT-Creation-Date: 2022-10-05 09:37-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,134 +15,120 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: authentication/models.py:10 screener/models.py:111
+#: authentication/models.py:10 screener/models.py:144
 msgid "email address"
 msgstr "Correo electrónico"
 
-#: benefits/settings.py:171
+#: benefits/settings.py:175
 msgid "US English"
 msgstr "Inglés de Estados Unidos"
 
-#: benefits/settings.py:172
+#: benefits/settings.py:176
 msgid "Spanish"
 msgstr "Español"
 
-#: programs/programs/acp/acp.py:48 programs/programs/acp/acp.py:55
-#: programs/programs/cccap/cccap.py:67 programs/programs/cccap/cccap.py:76
-#: programs/programs/chp/chp.py:57 programs/programs/chp/chp.py:64
-#: programs/programs/lifeline/lifeline.py:47
-#: programs/programs/lifeline/lifeline.py:54 programs/programs/nfp/nfp.py:40
-#: programs/programs/nfp/nfp.py:47 programs/programs/rtdlive/rtdlive.py:57
-#: programs/programs/rtdlive/rtdlive.py:64
+#: programs/programs/nfp/nfp.py:40 programs/programs/nfp/nfp.py:47
 msgid "Calculated income of "
 msgstr "Los ingresos calculados de "
 
-#: programs/programs/acp/acp.py:49 programs/programs/acp/acp.py:57
-#: programs/programs/cccap/cccap.py:68 programs/programs/cccap/cccap.py:78
-#: programs/programs/chp/chp.py:58 programs/programs/chp/chp.py:66
-#: programs/programs/lifeline/lifeline.py:48
-#: programs/programs/lifeline/lifeline.py:56 programs/programs/nfp/nfp.py:41
-#: programs/programs/nfp/nfp.py:49 programs/programs/rtdlive/rtdlive.py:58
-#: programs/programs/rtdlive/rtdlive.py:66
+#: programs/programs/nfp/nfp.py:41 programs/programs/nfp/nfp.py:49
 msgid " for a household with "
 msgstr " para un hogar con "
 
-#: programs/programs/acp/acp.py:51 programs/programs/cccap/cccap.py:70
-#: programs/programs/chp/chp.py:60 programs/programs/lifeline/lifeline.py:50
-#: programs/programs/nfp/nfp.py:43 programs/programs/rtdlive/rtdlive.py:60
+#: programs/programs/nfp/nfp.py:43
 msgid " members is above the income limit of "
 msgstr " miembros está por encima del límite de ingresos de "
 
-#: programs/programs/acp/acp.py:59 programs/programs/cccap/cccap.py:80
-#: programs/programs/chp/chp.py:68 programs/programs/lifeline/lifeline.py:58
-#: programs/programs/nfp/nfp.py:51 programs/programs/rtdlive/rtdlive.py:68
+#: programs/programs/nfp/nfp.py:51
 msgid " members is below the income limit of "
 msgstr " miembros está por debajo del límite de ingresos de "
 
-#: programs/programs/cccap/cccap.py:40 programs/programs/cccap/cccap.py:43
-msgid "To qualify for CCCAP a family must have at least one child under 13 "
-msgstr "Para reunir los requisitos para participar en el programa CCCAP, la familia debe tener por lo menos un hijo menor de 13 "
+#: screener/email.py:36
+msgid "Screener Results from My Friend Ben"
+msgstr "Resultados de la evaluación de My Friend Ben"
 
-#: programs/programs/cccap/cccap.py:41 programs/programs/cccap/cccap.py:44
-msgid "years old (19 years old if special needs or disability)."
-msgstr "años (19 años en caso de tener necesidades especiales o alguna discapacidad)."
-
-#: programs/programs/cccap/cccap.py:56
-msgid "To qualify for CCCAP a family must reside in Colorado. "
-msgstr "Para reunir los requisitos para participar en el programa CCCAP, la familia debe residir en Colorado. "
-
-#: programs/programs/cccap/cccap.py:58
-msgid " was not found in the list of known counties."
-msgstr " no se encontró en la lista de condados conocidos."
-
-#: programs/programs/cccap/cccap.py:72 programs/programs/cccap/cccap.py:82
-msgid " for "
-msgstr " para "
-
-#: programs/programs/chp/chp.py:41
+#: screener/email.py:37
 msgid ""
-"Individuals who are eligible for Health First Colorado (MEDICAID) are not "
-"eligible for CHP+"
-msgstr ""
-"Las personas que reúnen los requisitos para Health First Colorado (MEDICAID) no son elegibles para CHP+"
+"Thank you for using our benefits screener. Your results are attached as a "
+"csv file that can be opened in any spreadsheet software."
+msgstr "¡Gracias por usar nuestra evaluación de beneficios. Sus resultados se adjuntan como un archivo de CSV que se puede abrir en cualquier software de hoja de cálculo!"
 
-#: programs/programs/chp/chp.py:47
-msgid "Children age 18 and under and pregnant women age 19 and over."
-msgstr "Niños de 18 años o menores y las embarazadas de 19 años o mayores."
+#~ msgid "To qualify for CCCAP a family must have at least one child under 13 "
+#~ msgstr ""
+#~ "Para reunir los requisitos para participar en el programa CCCAP, la "
+#~ "familia debe tener por lo menos un hijo menor de 13 "
 
-#: programs/programs/mydenver/mydenver.py:40
-msgid ""
-"To qualify for the My Denver card must live in Denver County or have a child "
-"who attends a DPS school."
-msgstr ""
-"Para ara reunir los requisitos para la tarjeta My Denver, debe vivir en el condado de Denver o tener un hijo que concurra a una escuela de DPS."
+#~ msgid "years old (19 years old if special needs or disability)."
+#~ msgstr ""
+#~ "años (19 años en caso de tener necesidades especiales o alguna "
+#~ "discapacidad)."
 
-#: programs/programs/mydenver/mydenver.py:42
-#: programs/programs/rtdlive/rtdlive.py:50
-msgid "The zipcode "
-msgstr "El código postal "
+#~ msgid "To qualify for CCCAP a family must reside in Colorado. "
+#~ msgstr ""
+#~ "Para reunir los requisitos para participar en el programa CCCAP, la "
+#~ "familia debe residir en Colorado. "
 
-#: programs/programs/mydenver/mydenver.py:44
-msgid " is within Denver County."
-msgstr " está dentro del condado de Denver."
+#~ msgid " was not found in the list of known counties."
+#~ msgstr " no se encontró en la lista de condados conocidos."
 
-#: programs/programs/mydenver/mydenver.py:50
-#: programs/programs/mydenver/mydenver.py:52
-msgid "The My Denver card is limited to youth aged 5-18."
-msgstr "Los beneficiarios de la tarjeta MY Denver deben tener entre 5 y 18 años."
+#~ msgid " for "
+#~ msgstr " para "
 
-#: programs/programs/rtdlive/rtdlive.py:48
-msgid "To qualify for RTD live you must live in the RTD service area."
-msgstr "Para reunir los requisitos para RTD LiVE, debe vivir en el área de servicio de RTD."
+#~ msgid ""
+#~ "Individuals who are eligible for Health First Colorado (MEDICAID) are not "
+#~ "eligible for CHP+"
+#~ msgstr ""
+#~ "Las personas que reúnen los requisitos para Health First Colorado "
+#~ "(MEDICAID) no son elegibles para CHP+"
 
-#: programs/programs/rtdlive/rtdlive.py:52
-msgid " is within the RTD service area."
-msgstr " está dentro del área de servicio de RTD."
+#~ msgid "Children age 18 and under and pregnant women age 19 and over."
+#~ msgstr "Niños de 18 años o menores y las embarazadas de 19 años o mayores."
 
-#: programs/programs/tanf/tanf.py:74
-msgid "Households must have at least one dependent child under the age of 18, "
-msgstr "Los hogares deben tener al menos un hijo dependiente menor de 18 años, "
+#~ msgid ""
+#~ "To qualify for the My Denver card must live in Denver County or have a "
+#~ "child who attends a DPS school."
+#~ msgstr ""
+#~ "Para ara reunir los requisitos para la tarjeta My Denver, debe vivir en "
+#~ "el condado de Denver o tener un hijo que concurra a una escuela de DPS."
 
-#: programs/programs/tanf/tanf.py:75
-msgid "and have primary (more than 50%) custody of that child."
-msgstr "y tener la custodia principal (más del 50 %) de ese hijo."
+#~ msgid "The zipcode "
+#~ msgstr "El código postal "
 
-#: programs/programs/tanf/tanf.py:79
-msgid "Household has at least one dependent child under the age of 18"
-msgstr "El hogar tiene al menos un hijo dependiente menor de 18 años"
+#~ msgid " is within Denver County."
+#~ msgstr " está dentro del condado de Denver."
 
-#: programs/programs/tanf/tanf.py:101
-msgid "Households with "
-msgstr "Los hogares con "
+#~ msgid "The My Denver card is limited to youth aged 5-18."
+#~ msgstr ""
+#~ "Los beneficiarios de la tarjeta MY Denver deben tener entre 5 y 18 años."
 
-#: programs/programs/tanf/tanf.py:103
-msgid " and "
-msgstr " y "
+#~ msgid "To qualify for RTD live you must live in the RTD service area."
+#~ msgstr ""
+#~ "Para reunir los requisitos para RTD LiVE, debe vivir en el área de "
+#~ "servicio de RTD."
 
-#: programs/programs/tanf/tanf.py:105
-msgid " must have a monthly household income below "
-msgstr " deben tener ingresos mensuales por debajo de "
+#~ msgid " is within the RTD service area."
+#~ msgstr " está dentro del área de servicio de RTD."
 
-#: programs/programs/tanf/tanf.py:107
-msgid ". Your TANF qualifying household income is "
-msgstr ". Los ingresos del hogar elegibles para el programa TANF ascienden a "
+#~ msgid ""
+#~ "Households must have at least one dependent child under the age of 18, "
+#~ msgstr ""
+#~ "Los hogares deben tener al menos un hijo dependiente menor de 18 años, "
+
+#~ msgid "and have primary (more than 50%) custody of that child."
+#~ msgstr "y tener la custodia principal (más del 50 %) de ese hijo."
+
+#~ msgid "Household has at least one dependent child under the age of 18"
+#~ msgstr "El hogar tiene al menos un hijo dependiente menor de 18 años"
+
+#~ msgid "Households with "
+#~ msgstr "Los hogares con "
+
+#~ msgid " and "
+#~ msgstr " y "
+
+#~ msgid " must have a monthly household income below "
+#~ msgstr " deben tener ingresos mensuales por debajo de "
+
+#~ msgid ". Your TANF qualifying household income is "
+#~ msgstr ""
+#~ ". Los ingresos del hogar elegibles para el programa TANF ascienden a "
