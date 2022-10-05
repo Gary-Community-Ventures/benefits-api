@@ -78,6 +78,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'last_tax_filing_year',
             'user',
             'external_id',
+            'request_language_code',
             'has_tanf',
             'has_wic',
             'has_snap',
