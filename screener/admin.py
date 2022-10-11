@@ -34,3 +34,16 @@ def generate_bwf_snapshots():
         eligibility_snapshot.generate_program_snapshots()
         count += 1
         print("Snapshot "+str(count)+"/"+str(total_screens)+" generated for "+str(screen.external_id))
+
+def generate_nav_snapshots():
+    nav_ids = ['3171', '3183', '3200', '3230', '3233', '3243', '3245', '3248', '3260', '3373', '3374', '3375', '3376', '3377', '3300', '3301', '3310', '3312', '3313', '3316', '3343', '3363', '3364', '3365', '3368', '3397', '3398', '3399', '2686', '2693', '2690', '2688', '2694', '2707', '2715', '2710', '2711', '2709', '2713']
+    screens = Screen.objects.filter(id__in=nav_ids)
+    total_screens = screens.count()
+
+    count = 0
+    for screen in screens:
+        eligibility_snapshot = EligibilitySnapshot(screen=screen)
+        eligibility_snapshot.save()
+        eligibility_snapshot.generate_program_snapshots()
+        count += 1
+        print("Snapshot "+str(count)+"/"+str(total_screens)+" generated for "+str(screen.id))
