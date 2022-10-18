@@ -126,9 +126,10 @@ def eligibility_results(screen_id):
 
     eligible_programs = []
     for program in data:
-        clean_program = program
-        clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
-        eligible_programs.append(clean_program)
+        if program.active:
+            clean_program = program
+            clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
+            eligible_programs.append(clean_program)
 
     return eligible_programs
 
