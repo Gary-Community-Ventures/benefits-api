@@ -98,11 +98,11 @@ def eligibility_results(screen_id):
         # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
         if program.name_abbreviated not in pe_programs and program.active:
             eligibility = program.eligibility(screen, data)
-        else:
+        elif program.active:
             # skip = True
             eligibility = pe_eligibility[program.name_abbreviated]
 
-        if not skip:
+        if not skip and program.active:
             data.append(
                 {
                     "program_id": program.id,
