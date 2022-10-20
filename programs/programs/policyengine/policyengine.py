@@ -58,9 +58,6 @@ def eligibility_policy_engine(screen):
         if pvalue['wic']['2022'] > 0:
             eligibility['wic']['eligible'] = True
             eligibility['wic']['estimated_value'] += pvalue['wic']['2022']
-        elif screen.has_medicaid == True or screen.has_tanf == True or screen.has_snap == True:
-            eligibility['wic']['eligible'] = True
-            eligibility['wic']['estimated_value'] += pvalue['wic']['2022']
 
         #MEDICAID
         if pvalue['medicaid']['2022'] > 0:
@@ -80,6 +77,12 @@ def eligibility_policy_engine(screen):
                 medicaid_estimated_value = co_aged_medicaid_average
 
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
+
+    #WIC PRESUMPTIVE ELIGIBILITY
+    if eligibility['wic']['eligible'] == False:
+        if screen.has_medicaid == True or screen.has_tanf == True or screen.has_snap == True:
+            eligibility['wic']['eligible'] = True
+            eligibility['wic']['estimated_value'] = 74*12
 
     #SNAP
     if benefit_data['spm_units']['spm_unit']['snap']['2022'] > 0:
