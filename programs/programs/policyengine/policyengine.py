@@ -58,6 +58,9 @@ def eligibility_policy_engine(screen):
         if pvalue['wic']['2022'] > 0:
             eligibility['wic']['eligible'] = True
             eligibility['wic']['estimated_value'] += pvalue['wic']['2022']
+        elif screen.has_medicaid == True or screen.has_tanf == True or screen.has_snap == True:
+            eligibility['wic']['eligible'] = True
+            eligibility['wic']['estimated_value'] += pvalue['wic']['2022']
 
         #MEDICAID
         if pvalue['medicaid']['2022'] > 0:
