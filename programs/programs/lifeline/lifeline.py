@@ -64,6 +64,6 @@ def eligibility_lifeline(screen):
 
 
 def value_lifeline(screen):
-    value = 9.25*12
+    value = 9.25 * 12
 
     return value

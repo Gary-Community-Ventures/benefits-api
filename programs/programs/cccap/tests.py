@@ -13,7 +13,7 @@ class CCCAPTestCase(TestCase):
             }
         }
 
-        fpl_limit = 2*settings.FPL[3]
+        fpl_limit = 2 * settings.FPL[3]
         screen = create_single_parent_two_children_household(
             annual_income=fpl_limit)
         data = []

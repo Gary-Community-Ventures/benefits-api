@@ -65,9 +65,9 @@ def eligibility_policy_engine(screen):
             # here we need to adjust for children as policy engine
             # just uses the average which skews very high for adults and
             # aged adults
-            co_child_medicaid_average = 200*12
-            co_adult_medicaid_average = 310*12
-            co_aged_medicaid_average = 170*12
+            co_child_medicaid_average = 200 * 12
+            co_adult_medicaid_average = 310 * 12
+            co_aged_medicaid_average = 170 * 12
 
             if pvalue['age']['2022'] <= 18:
                 medicaid_estimated_value = co_child_medicaid_average
@@ -76,8 +76,7 @@ def eligibility_policy_engine(screen):
             elif pvalue['age']['2022'] >= 65:
                 medicaid_estimated_value = co_aged_medicaid_average
 
-            eligibility['medicaid']['estimated_value'] += \
-                medicaid_estimated_value
+            eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
 
     # WIC PRESUMPTIVE ELIGIBILITY
     if eligibility['wic']['eligible'] is False:
@@ -85,7 +84,7 @@ def eligibility_policy_engine(screen):
                 or screen.has_tanf is True \
                 or screen.has_snap is True:
             eligibility['wic']['eligible'] = True
-            eligibility['wic']['estimated_value'] = 74*12
+            eligibility['wic']['estimated_value'] = 74 * 12
 
     # SNAP
     if benefit_data['spm_units']['spm_unit']['snap']['2022'] > 0:

@@ -184,8 +184,8 @@ USE_TZ = True
 PARLER_DEFAULT_ACTIVATE = True
 PARLER_LANGUAGES = {
     None: (
-        {'code': 'en-us',},
-        {'code': 'es',},
+        {'code': 'en-us'},
+        {'code': 'es'},
     ),
     'default': {
         'fallbacks': ['en-us'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE

@@ -37,7 +37,7 @@ def generate_bwf_snapshots():
                '46001', '41201', '40701', '40101']
     screens = Screen.objects.filter(external_id__in=bwf_ids).order_by('-submission_date')
     total_screens = screens.count()
-    print("Total BWF Screens found: "+str(total_screens))
+    print("Total BWF Screens found: " + str(total_screens))
 
     screens_without_snapshots = []
     screen_eids = []
@@ -48,14 +48,14 @@ def generate_bwf_snapshots():
             screen_eids.append(screen.external_id)
 
     total_screens_without_snapshots = len(screens_without_snapshots)
-    print("Total BWF screens without snapshots found: "+str(total_screens_without_snapshots))
+    print("Total BWF screens without snapshots found: " + str(total_screens_without_snapshots))
     count = 0
     for screen in screens_without_snapshots:
         eligibility_snapshot = EligibilitySnapshot(screen=screen)
         eligibility_snapshot.save()
         eligibility_snapshot.generate_program_snapshots()
         count += 1
-        print("Snapshot "+str(count)+"/"+str(total_screens_without_snapshots)+" generated for "+str(screen.external_id))
+        print("Snapshot " + str(count) + "/" + str(total_screens_without_snapshots) + " generated for " + str(screen.external_id))
 
 
 def generate_nav_snapshots():
@@ -71,4 +71,4 @@ def generate_nav_snapshots():
         eligibility_snapshot.save()
         eligibility_snapshot.generate_program_snapshots()
         count += 1
-        print("Snapshot "+str(count)+"/"+str(total_screens)+" generated for "+str(screen.id))
+        print("Snapshot " + str(count) + "/" + str(total_screens) + " generated for " + str(screen.id))

@@ -15,7 +15,7 @@ def sheets_get_data(spreadsheet_id, range_name):
         result = sheet.values().get(spreadsheetId=spreadsheet_id,
                                     range=range_name).execute()
         values = result.get('values', [])
-    except HttpError as err:
+    except HttpError:
         values = False
 
     return values

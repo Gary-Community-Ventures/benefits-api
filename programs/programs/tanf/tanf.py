@@ -100,7 +100,7 @@ def eligibility_tanf(screen, children, guardians):
     income_limit = income_bands[children]
     earned_income = screen.calc_gross_income(frequency,
                                              eligibility_income_types)
-    tanf_earned_income = earned_income-90
+    tanf_earned_income = earned_income - 90
     if tanf_earned_income < 0:
         tanf_earned_income = 0
 
@@ -114,9 +114,9 @@ def eligibility_tanf(screen, children, guardians):
     # INCOME TEST
     income_test_description = ((
         "Households with ",
-        str(guardians)+" "+glabel,
+        str(guardians) + " " + glabel,
         " and ",
-        str(children)+" "+clabel,
+        str(children) + " " + clabel,
         " must have a monthly household income below ",
         str(income_limit),
         ". Your TANF qualifying household income is ",
@@ -192,6 +192,6 @@ def value_tanf(screen, children, guardians):
     tanf_earned_income = Decimal(.33) * earned_income
     unearned_income = screen.calc_gross_income(frequency,
                                                unearned_income_types)
-    monthly_value = value_band[children]-tanf_earned_income-unearned_income
+    monthly_value = value_band[children] - tanf_earned_income - unearned_income
     value = monthly_value * 12
     return value

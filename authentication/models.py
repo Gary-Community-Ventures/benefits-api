@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
+
 class User(AbstractUser):
     username = None
     email_or_cell = models.CharField(max_length=320, unique=True)

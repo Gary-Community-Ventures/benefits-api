@@ -64,6 +64,6 @@ def eligibility_acp(screen):
 
 
 def value_acp(screen):
-    value = 30*12
+    value = 30 * 12
 
     return value

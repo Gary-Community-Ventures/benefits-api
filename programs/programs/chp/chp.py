@@ -51,7 +51,7 @@ def eligibility_chp(screen, data):
                                       "women age 19 and over."))
 
     # INCOME TEST
-    income_limit = 2.6*settings.FPL[screen.household_size]
+    income_limit = 2.6 * settings.FPL[screen.household_size]
     income_types = ["wages", "selfEmployment"]
     gross_income = screen.calc_gross_income(frequency, income_types)
 

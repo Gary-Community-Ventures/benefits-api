@@ -41,7 +41,6 @@ class Screen(models.Model):
     has_chp = models.BooleanField(default=False, blank=True, null=True)
     has_ccb = models.BooleanField(default=False, blank=True, null=True)
 
-
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
         gross_income = 0
@@ -86,7 +85,7 @@ class Screen(models.Model):
 
         return children
 
-    def num_adults(self, age_max = 19):
+    def num_adults(self, age_max=19):
         adults = 0
         household_members = self.household_members.all()
         for household_member in household_members:
@@ -223,7 +222,6 @@ class HouseholdMember(models.Model):
                     gross_income += income_stream.yearly()
         return gross_income
 
-
     def calc_expenses(self, frequency, types):
         total_expense = 0
 
@@ -235,7 +233,6 @@ class HouseholdMember(models.Model):
                 elif frequency == "yearly":
                     total_expense += expense.yearly()
         return total_expense
-
 
     def calc_net_income(self, frequency, income_types, expense_types):
         net_income = None

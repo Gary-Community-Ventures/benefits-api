@@ -27,14 +27,15 @@ def eligibility_nfp(screen):
 
     # INCOME TEST -- you can apply for RTD Live with only pay stubs,
     # so we limit to wages here
-    income_limit = 2*settings.FPL[screen.household_size]
+    income_limit = 2 * settings.FPL[screen.household_size]
     income_types = ["wages", "selfEmployment"]
     gross_income = screen.calc_gross_income(frequency, income_types)
 
     # income test
     if gross_income > income_limit:
         eligibility["eligible"] = False
-        eligibility["failed"].append(_("Calculated income of ")
+        eligibility["failed"].append(
+            _("Calculated income of ")
             + str(math.trunc(gross_income)) + _(" for a household with ")
             + str(screen.household_size)
             + _(" members is above the income limit of ")

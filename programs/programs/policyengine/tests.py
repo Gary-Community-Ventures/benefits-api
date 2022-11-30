@@ -8,7 +8,7 @@ class PolicyEngineTestCase(TestCase):
     def test_medicaid_single_parent_two_children(self):
         # medicaid
         # child_fpl_limit = 1.41*settings.FPL[3]
-        fpl_limit = .66*settings.FPL[3]
+        fpl_limit = .66 * settings.FPL[3]
         screen = create_single_parent_two_children_household(
             annual_income=fpl_limit)
         eligibility = eligibility_policy_engine(screen)
