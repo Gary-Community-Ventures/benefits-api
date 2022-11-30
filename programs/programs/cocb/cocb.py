@@ -13,7 +13,6 @@ def calculate_cocb(screen, data):
 
 
 def eligibility_cocb(screen):
-    eligible = True
 
     eligibility = {
         "eligible": True,

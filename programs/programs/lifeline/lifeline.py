@@ -1,6 +1,5 @@
-from decimal import Decimal
-from django.utils.translation import gettext as _
 import math
+
 
 def calculate_lifeline(screen, data):
     eligibility = eligibility_lifeline(screen)
@@ -13,8 +12,8 @@ def calculate_lifeline(screen, data):
 
     return calculation
 
+
 def eligibility_lifeline(screen):
-    eligible = True
 
     eligibility = {
         "eligible": True,
@@ -38,7 +37,8 @@ def eligibility_lifeline(screen):
 
     income_limit = income_bands[screen.household_size]
 
-    # INCOME TEST -- you can apply to Lifeline with only pay stubs, so we limit to wages here
+    # INCOME TEST -- you can apply to Lifeline with only pay stubs,
+    # so we limit to wages here
     income_types = ['all']
     lifeline_income = screen.calc_gross_income(frequency, income_types)
 
@@ -61,6 +61,7 @@ def eligibility_lifeline(screen):
             str(income_limit)))
 
     return eligibility
+
 
 def value_lifeline(screen):
     value = 9.25*12

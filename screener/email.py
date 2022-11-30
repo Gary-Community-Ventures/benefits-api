@@ -1,5 +1,4 @@
 from django.utils.translation import gettext as _
-from django.utils.translation import override
 from decouple import config
 import sendgrid
 import csv
@@ -7,6 +6,7 @@ from io import StringIO
 from sendgrid.helpers.mail import Mail, Email, To, Content, Attachment, FileContent, FileName, FileType, Disposition
 import base64
 from screener.views import eligibility_results, eligibility_results_translation
+
 
 def email_pdf(target_email, screen_id, language):
     raw_data = eligibility_results(screen_id)
@@ -32,7 +32,7 @@ def email_pdf(target_email, screen_id, language):
     f = StringIO()
     csv.writer(f).writerows(cell_text)
     encoded = base64.b64encode(f.getvalue().encode())
-    encoded = str(encoded,'utf-8')
+    encoded = str(encoded, 'utf-8')
     sg = sendgrid.SendGridAPIClient(api_key=config('SENDGRID'))
     from_email = Email("screener@garycommunity.org")  # Change to your verified sender
     to_email = To(target_email)  # Change to your recipient
@@ -46,4 +46,4 @@ def email_pdf(target_email, screen_id, language):
     attachment.disposition = Disposition('attachment')
     mail.add_attachment(attachment)
 
-    response = sg.client.mail.send.post(request_body=mail.get())
+    sg.client.mail.send.post(request_body=mail.get())

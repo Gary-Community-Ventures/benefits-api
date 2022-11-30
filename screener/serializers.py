@@ -1,6 +1,6 @@
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
 from rest_framework import serializers
-from django.conf import settings
+
 
 class MessageSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
@@ -14,7 +14,7 @@ class IncomeStreamSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
 
     class Meta:
-        model = IncomeStream 
+        model = IncomeStream
         fields = '__all__'
 
 
@@ -123,7 +123,3 @@ class EligibilityTranslationSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('translations')
-
-
-    # get languages
-    # loop through languages to tack eligibility serializer on

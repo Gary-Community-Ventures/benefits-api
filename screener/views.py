@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils.translation import gettext as _
@@ -7,14 +6,17 @@ from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Mess
 from rest_framework import viewsets, views
 from rest_framework import permissions
 from rest_framework.response import Response
-from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, ExpenseSerializer, EligibilitySerializer, EligibilityTranslationSerializer, MessageSerializer
+from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, \
+    ExpenseSerializer, EligibilitySerializer, MessageSerializer
 from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import math
 import copy
 
+
 def index(request):
     return HttpResponse("Colorado Benefits Screener API")
+
 
 class ScreenViewSet(viewsets.ModelViewSet):
     """
@@ -27,6 +29,7 @@ class ScreenViewSet(viewsets.ModelViewSet):
     paginate_by = 10
     paginate_by_param = 'page_size'
     max_paginate_by = 100
+
 
 class HouseholdMemberViewSet(viewsets.ModelViewSet):
     """
@@ -65,6 +68,7 @@ class EligibilityView(views.APIView):
         results = EligibilitySerializer(data, many=True).data
         return Response(results)
 
+
 class EligibilityTranslationView(views.APIView):
 
     def get(self, request, id):
@@ -75,6 +79,7 @@ class EligibilityTranslationView(views.APIView):
             translated_eligibility = eligibility_results_translation(eligibility, language[0])
             data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
         return Response({"translations": data})
+
 
 class MessageViewSet(viewsets.ModelViewSet):
     """

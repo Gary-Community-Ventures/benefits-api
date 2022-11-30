@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.utils.translation import gettext as _
 import math
 
 
@@ -16,7 +15,6 @@ def calculate_chp(screen, data):
 
 
 def eligibility_chp(screen, data):
-    eligible = True
 
     eligibility = {
         "eligible": True,
@@ -25,9 +23,11 @@ def eligibility_chp(screen, data):
     }
 
     # Children age 18 and under and pregnant women age 19 and over.
-    # Applicants with household income under 260% of the Federal Poverty Level (FPL).
+    # Applicants with household income under 260% of the Federal
+    # Poverty Level (FPL).
     # Colorado Residents
-    # Lawfully residing children and pregnant women with no five year waiting period
+    # Lawfully residing children and pregnant women with no five year
+    # waiting period
     # Applicants not eligible for Health First Colorado
     # Applicants who do not have other health insurance
     child_age_limit = 18
@@ -36,16 +36,19 @@ def eligibility_chp(screen, data):
     # MEDICAID eligibility test
     for row in data:
         if row['short_name'] == 'medicaid':
-            if row['eligible'] == True:
+            if row['eligible'] is True:
                 eligibility["eligible"] = False
                 eligibility["failed"].append((
-                    "Individuals who are eligible for Health First Colorado (MEDICAID) are not eligible for CHP+"))
+                    "Individuals who are eligible for Health First Colorado "
+                    "(MEDICAID) are not eligible for CHP+"))
 
     # Child or Pregnant Test
-    eligible_children = screen.num_children(age_max=child_age_limit, include_pregnant=True)
+    eligible_children = screen.num_children(age_max=child_age_limit,
+                                            include_pregnant=True)
     if eligible_children < 1:
         eligibility["eligible"] = False
-        eligibility["failed"].append(("Children age 18 and under and pregnant women age 19 and over."))
+        eligibility["failed"].append(("Children age 18 and under and pregnant "
+                                      "women age 19 and over."))
 
     # INCOME TEST
     income_limit = 2.6*settings.FPL[screen.household_size]
@@ -73,9 +76,11 @@ def eligibility_chp(screen, data):
 
     return eligibility
 
+
 def value_chp(screen):
     child_age_limit = 18
-    eligible_children = screen.num_children(age_max=child_age_limit, include_pregnant=True)
+    eligible_children = screen.num_children(age_max=child_age_limit,
+                                            include_pregnant=True)
     value = 200 * 12 * eligible_children
 
     return value

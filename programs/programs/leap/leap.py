@@ -1,6 +1,5 @@
-from decimal import Decimal
-from django.utils.translation import gettext as _
 import math
+
 
 def calculate_leap(screen, data):
     eligibility = eligibility_leap(screen)
@@ -13,8 +12,8 @@ def calculate_leap(screen, data):
 
     return calculation
 
+
 def eligibility_leap(screen):
-    eligible = True
 
     eligibility = {
         "eligible": True,
@@ -61,6 +60,7 @@ def eligibility_leap(screen):
             str(income_limit)))
 
     return eligibility
+
 
 def value_leap(screen):
     value = 362

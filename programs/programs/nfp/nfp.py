@@ -1,9 +1,6 @@
 from django.utils.translation import gettext as _
-from decimal import Decimal
-from programs.co_county_zips import counties_from_zip
 from django.conf import settings
 import math
-import json
 
 
 def calculate_nfp(screen, data):
@@ -19,7 +16,6 @@ def calculate_nfp(screen, data):
 
 
 def eligibility_nfp(screen):
-    eligible = True
 
     eligibility = {
         "eligible": True,
@@ -29,7 +25,8 @@ def eligibility_nfp(screen):
 
     frequency = "yearly"
 
-    # INCOME TEST -- you can apply for RTD Live with only pay stubs, so we limit to wages here
+    # INCOME TEST -- you can apply for RTD Live with only pay stubs,
+    # so we limit to wages here
     income_limit = 2*settings.FPL[screen.household_size]
     income_types = ["wages", "selfEmployment"]
     gross_income = screen.calc_gross_income(frequency, income_types)
@@ -37,21 +34,22 @@ def eligibility_nfp(screen):
     # income test
     if gross_income > income_limit:
         eligibility["eligible"] = False
-        eligibility["failed"].append(_("Calculated income of ")\
-            +str(math.trunc(gross_income))+_(" for a household with ")\
-            +str(screen.household_size)\
-            +_(" members is above the income limit of ")\
-            +str(income_limit))
+        eligibility["failed"].append(_("Calculated income of ")
+            + str(math.trunc(gross_income)) + _(" for a household with ")
+            + str(screen.household_size)
+            + _(" members is above the income limit of ")
+            + str(income_limit))
     else:
         eligibility["passed"].append(
-            _("Calculated income of ")\
-            +str(math.trunc(gross_income))\
-            +_(" for a household with ")\
-            +str(screen.household_size)\
-            +_(" members is below the income limit of ")\
-            +str(income_limit))
+            _("Calculated income of ")
+            + str(math.trunc(gross_income))
+            + _(" for a household with ")
+            + str(screen.household_size)
+            + _(" members is below the income limit of ")
+            + str(income_limit))
 
     return eligibility
+
 
 def value_nfp(screen):
     value = 750

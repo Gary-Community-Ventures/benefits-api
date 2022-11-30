@@ -1,7 +1,5 @@
-from django.utils.translation import gettext as _
 from programs.sheets import sheets_get_data
 from programs.co_county_zips import counties_from_zip
-
 import re
 import math
 
@@ -19,7 +17,6 @@ def calculate_cccap(screen, data):
 
 
 def eligibility_cccap(screen):
-    eligible = True
 
     eligibility = {
         "eligible": True,
@@ -27,9 +24,10 @@ def eligibility_cccap(screen):
         "failed": []
     }
 
-    #Family must have at least one child under 13 years old (19 years old if special needs or disability).
-    #county level income requirements
-    #are working, seeking employment, or participating in training/education
+    # Family must have at least one child under 13 years old (19 years
+    # old if special needs or disability).
+    # county level income requirements
+    # are working, seeking employment, or participating in training/education
 
     # CHILD TEST
     # todo: support children with special needs
@@ -38,12 +36,12 @@ def eligibility_cccap(screen):
     if cccap_children < 1:
         eligibility["eligible"] = False
         eligibility["failed"].append((
-            "To qualify for CCCAP a family must have at least one child under 13 ",
-            "years old (19 years old if special needs or disability)."))
+            "To qualify for CCCAP a family must have at least one child under",
+            " 13 years old (19 years old if special needs or disability)."))
     else:
         eligibility["passed"].append((
-            "To qualify for CCCAP a family must have at least one child under 13 ",
-            "years old (19 years old if special needs or disability)."))
+            "To qualify for CCCAP a family must have at least one child under",
+            " 13 years old (19 years old if special needs or disability)."))
 
     # WORKING TEST
     # todo: support families seeking work
@@ -138,7 +136,6 @@ def cccap_county_values(county_name):
 
 def num_cccap_children(screen):
     children = 0
-    child_relationship = ['child', 'fosterChild']
 
     household_members = screen.household_members.all()
     for household_member in household_members:

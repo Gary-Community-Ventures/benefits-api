@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 
+
 class Screen(models.Model):
     submission_date = models.DateTimeField(auto_now=True)
     start_date = models.DateTimeField(blank=True, null=True)
@@ -71,7 +72,7 @@ class Screen(models.Model):
 
         return total_expense
 
-    def num_children(self, age_min = 0, age_max = 18, include_pregnant = False, child_relationship = ['child', 'fosterChild']):
+    def num_children(self, age_min=0, age_max=18, include_pregnant=False, child_relationship=['child', 'fosterChild']):
         children = 0
 
         household_members = self.household_members.all()
@@ -97,7 +98,6 @@ class Screen(models.Model):
         parents = 0
         child_relationship = ['child', 'fosterChild']
         guardian_relationship = ['parent', 'fosterParent']
-        child_exists = False
         hoh_child_exists = False
 
         household_members = self.household_members.all()

@@ -2,11 +2,10 @@ from decouple import config
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.oauth2 import service_account
-
 import json
 
+
 def sheets_get_data(spreadsheet_id, range_name):
-    values = None
     info = json.loads(config('SHEETS'))
     creds = service_account.Credentials.from_service_account_info(info)
 

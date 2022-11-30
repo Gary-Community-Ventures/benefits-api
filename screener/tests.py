@@ -1,5 +1,6 @@
 from django.test import TestCase
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense
+from screener.models import Screen
+
 
 class ScreenTestCase(TestCase):
     def test_create_single_parent_two_children_household(self):
@@ -27,19 +28,22 @@ def create_default_household_member(screen, relationship='headOfHousehold', age=
 
     return default
 
+
 # 1 parent 25 years old
 # 2 children, 4 & 6 years old
 # 1900 in monthly expenses between childcare and rent
 # no assets
 def create_single_parent_two_children_household(annual_income):
-    screen = Screen.objects.create(household_assets=0,household_size=3,zipcode='80204',agree_to_tos=True,housing_situation='renting')
+    screen = Screen.objects.create(household_assets=0, household_size=3,
+                                   zipcode='80204', agree_to_tos=True,
+                                   housing_situation='renting')
 
     parent = create_default_household_member(screen)
-    parent_rent = parent.expenses.create(type='rent',amount='1200',frequency='monthly',screen=screen)
-    parent_childcare = parent.expenses.create(type='childCare',amount='700',frequency='monthly',screen=screen)
-    parent_wages = parent.income_streams.create(type='wages',amount=annual_income,frequency='yearly',screen=screen)
+    parent.expenses.create(type='rent', amount='1200', frequency='monthly', screen=screen)
+    parent.expenses.create(type='childCare', amount='700', frequency='monthly', screen=screen)
+    parent.income_streams.create(type='wages', amount=annual_income, frequency='yearly', screen=screen)
 
-    child_one = create_default_household_member(screen, relationship='child', age=4)
-    child_two = create_default_household_member(screen, relationship='child', age=6)
+    create_default_household_member(screen, relationship='child', age=4)
+    create_default_household_member(screen, relationship='child', age=6)
 
     return screen

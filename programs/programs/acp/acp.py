@@ -1,6 +1,5 @@
-from decimal import Decimal
 import math
-from django.utils.translation import gettext as _
+
 
 def calculate_acp(screen, data):
     eligibility = eligibility_acp(screen)
@@ -15,7 +14,6 @@ def calculate_acp(screen, data):
 
 
 def eligibility_acp(screen):
-    eligible = True
 
     eligibility = {
         "eligible": True,
@@ -39,7 +37,8 @@ def eligibility_acp(screen):
 
     income_limit = income_bands[screen.household_size]
 
-    # INCOME TEST -- you can apply to ACP with only pay stubs, so we limit to wages here
+    # INCOME TEST -- you can apply to ACP with only pay stubs, so we
+    # limit to wages here
     income_types = ['all']
     acp_income = screen.calc_gross_income(frequency, income_types)
 
@@ -62,6 +61,7 @@ def eligibility_acp(screen):
             str(income_limit)))
 
     return eligibility
+
 
 def value_acp(screen):
     value = 30*12

@@ -1,9 +1,6 @@
-from decimal import Decimal
 from programs.co_county_zips import counties_from_zip
 from django.conf import settings
-from django.utils.translation import gettext as _
 import math
-import json
 
 
 def calculate_rtdlive(screen, data):
@@ -19,7 +16,6 @@ def calculate_rtdlive(screen, data):
 
 
 def eligibility_rtdlive(screen):
-    eligible = True
 
     eligibility = {
         "eligible": True,
@@ -27,7 +23,8 @@ def eligibility_rtdlive(screen):
         "failed": []
     }
 
-    eligible_counties = ['Adams County', 'Arapahoe County', 'Boulder County', 'Broomfield County', 'Denver County',
+    eligible_counties = ['Adams County', 'Arapahoe County', 'Boulder County',
+                         'Broomfield County', 'Denver County',
                          'Douglas County', 'Jefferson County']
     frequency = "yearly"
 
@@ -93,6 +90,7 @@ def eligibility_rtdlive(screen):
             str(income_limit)))
 
     return eligibility
+
 
 def value_rtdlive(screen):
     qualifying_adults = 0

@@ -1,7 +1,6 @@
 import requests
-import json
-from decimal import Decimal
 from django.conf import settings
+
 
 def eligibility_policy_engine(screen):
 
@@ -52,19 +51,20 @@ def eligibility_policy_engine(screen):
 
     benefit_data = policy_engine_calculate(screen)
 
-    #WIC & MEDICAID
+    # WIC & MEDICAID
     for pkey, pvalue in benefit_data['people'].items():
-        #WIC
+        # WIC
         if pvalue['wic']['2022'] > 0:
             eligibility['wic']['eligible'] = True
             eligibility['wic']['estimated_value'] += pvalue['wic']['2022']
 
-        #MEDICAID
+        # MEDICAID
         if pvalue['medicaid']['2022'] > 0:
             eligibility['medicaid']['eligible'] = True
 
-            # here we need to adjust for children as policy engine just uses the average
-            # which skews very high for adults and aged adults
+            # here we need to adjust for children as policy engine
+            # just uses the average which skews very high for adults and
+            # aged adults
             co_child_medicaid_average = 200*12
             co_adult_medicaid_average = 310*12
             co_aged_medicaid_average = 170*12
@@ -76,38 +76,41 @@ def eligibility_policy_engine(screen):
             elif pvalue['age']['2022'] >= 65:
                 medicaid_estimated_value = co_aged_medicaid_average
 
-            eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
+            eligibility['medicaid']['estimated_value'] += \
+                medicaid_estimated_value
 
-    #WIC PRESUMPTIVE ELIGIBILITY
-    if eligibility['wic']['eligible'] == False:
-        if screen.has_medicaid == True or screen.has_tanf == True or screen.has_snap == True:
+    # WIC PRESUMPTIVE ELIGIBILITY
+    if eligibility['wic']['eligible'] is False:
+        if screen.has_medicaid is True \
+                or screen.has_tanf is True \
+                or screen.has_snap is True:
             eligibility['wic']['eligible'] = True
             eligibility['wic']['estimated_value'] = 74*12
 
-    #SNAP
+    # SNAP
     if benefit_data['spm_units']['spm_unit']['snap']['2022'] > 0:
         eligibility['snap']['eligible'] = True
-        eligibility['snap']['estimated_value'] = benefit_data['spm_units']['spm_unit']['snap']['2022']
+        eligibility['snap']['estimated_value'] = \
+            benefit_data['spm_units']['spm_unit']['snap']['2022']
 
-    #NSLP
-    household_members = screen.household_members.all()
+    # NSLP
     num_children = screen.num_children(3, 18)
     if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2022'] > 0 and num_children > 0:
         if benefit_data['spm_units']['spm_unit']['school_meal_tier']['2022'] != 'PAID':
             eligibility['nslp']['eligible'] = True
             eligibility['nslp']['estimated_value'] = 680 * num_children
 
-    #EITC
+    # EITC
     if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021'] > 0:
         eligibility['eitc']['eligible'] = True
         eligibility['eitc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021']
 
-    #COEITC
+    # COEITC
     if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021'] > 0:
         eligibility['coeitc']['eligible'] = True
         eligibility['coeitc']['estimated_value'] = .10 * benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2021']
 
-    #CTC
+    # CTC
     if benefit_data['tax_units']['tax_unit']['ctc']['2021'] > 0:
         eligibility['ctc']['eligible'] = True
         for pkey, pvalue in benefit_data['people'].items():
@@ -115,24 +118,26 @@ def eligibility_policy_engine(screen):
                 eligibility['ctc']['estimated_value'] += 3600
             elif pvalue['age']['2021'] > 5 and pvalue['age']['2021'] <= 17:
                 eligibility['ctc']['estimated_value'] += 3000
-        # eligibility['ctc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['ctc']['2021']
     return eligibility
+
 
 # PolicyEngine currently supports SNAP and WIC for CO
 def policy_engine_calculate(screen):
     policy_engine_params = policy_engine_prepare_params(screen)
     response = requests.post(
         "https://policyengine.org/us/api/calculate",
-        json = policy_engine_params
+        json=policy_engine_params
     )
     data = response.json()
     return data
+
 
 # TODO: add medicical expense deduction for over 60 snap
 def policy_engine_prepare_params(screen):
     household_members = screen.household_members.all()
 
-    # We have to manually calculate SNAP gross eligibility as colorado uses 200% vs the 130% used by policy engine
+    # We have to manually calculate SNAP gross eligibility as colorado uses
+    # 200% vs the 130% used by policy engine
     snap_gross_limit = 2 * settings.FPL2021[screen.household_size]
     snap_gross_income = screen.calc_gross_income('yearly', ['all'])
 
@@ -174,16 +179,16 @@ def policy_engine_prepare_params(screen):
                     "snap_standard_deduction": {"2022": None},
                     "snap_net_income_pre_shelter": {"2022": None},
                     "snap_excess_shelter_expense_deduction": {"2022": None},
-                    "housing_cost": {"2022": int(screen.calc_expenses("yearly", ["rent", "mortgage"])) },
-                    "snap_assets": {"2022": int(screen.household_assets) },
-                    "snap_gross_income": {"2022": int(snap_gross_income) },
-                    "meets_snap_net_income_test": {"2022": None },
-                    "meets_snap_gross_income_test": {"2022": meets_snap_gross_income_test },
+                    "housing_cost": {"2022": int(screen.calc_expenses("yearly", ["rent", "mortgage"]))},
+                    "snap_assets": {"2022": int(screen.household_assets)},
+                    "snap_gross_income": {"2022": int(snap_gross_income)},
+                    "meets_snap_net_income_test": {"2022": None},
+                    "meets_snap_gross_income_test": {"2022": meets_snap_gross_income_test},
                     "meets_snap_asset_test": {"2022": True},
                     "is_snap_eligible": {"2022": None},
                     "meets_snap_categorical_eligibility": {"2022": False},
-                    "snap": {"2022": None },
-                    "acp": {"2022": None },
+                    "snap": {"2022": None},
+                    "acp": {"2022": None},
                     "school_meal_daily_subsidy": {"2022": None},
                     "school_meal_tier": {"2022": None},
                     "meets_school_meal_categorical_eligibility": {"2022": None},
@@ -206,10 +211,10 @@ def policy_engine_prepare_params(screen):
                 "2022": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment'])),
                 "2021": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
             },
-            "age": { "2022": household_member.age, "2021": household_member.age },
-            "is_tax_unit_head": { "2022": is_tax_unit_head, "2021": is_tax_unit_head },
-            "wic": { "2022": None },
-            "medicaid": {"2022": None }
+            "age": {"2022": household_member.age, "2021": household_member.age},
+            "is_tax_unit_head": {"2022": is_tax_unit_head, "2021": is_tax_unit_head},
+            "wic": {"2022": None},
+            "medicaid": {"2022": None}
         }
 
         if household_member.pregnant:

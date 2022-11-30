@@ -1,7 +1,5 @@
 from django.urls import include, path
 from rest_framework import routers
-from screener import views
-
 from . import views
 
 router = routers.DefaultRouter()
@@ -15,5 +13,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('eligibility/<int:id>', views.EligibilityTranslationView.as_view(), name='translated screen eligibility endpoint')
+    path('eligibility/<int:id>', views.EligibilityTranslationView.as_view(),
+         name='translated screen eligibility endpoint')
 ]
