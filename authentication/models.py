@@ -4,6 +4,9 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 
+# Users are created by the screener when someone signs up to provide feedback
+# or be notified of future benefits that are available to them. The unique id
+# can be either a cell phone number or email address.
 class User(AbstractUser):
     username = None
     email_or_cell = models.CharField(max_length=320, unique=True)

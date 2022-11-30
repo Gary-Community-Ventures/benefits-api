@@ -9,6 +9,10 @@ from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 
 
+# The screen is the top most container for all information collected in the
+# app and is synonymous with a household model. In addition to general
+# application fields like submission_date, it also contains non-individual
+# household fields. Screen -> HouseholdMember -> IncomeStream & Expense
 class Screen(models.Model):
     submission_date = models.DateTimeField(auto_now=True)
     start_date = models.DateTimeField(blank=True, null=True)
@@ -183,6 +187,7 @@ class Screen(models.Model):
         return eligible_programs
 
 
+# Log table for any messages sent by the application via text or email
 class Message(models.Model):
     sent = models.DateTimeField(auto_now=True)
     type = models.CharField(max_length=30)
@@ -193,6 +198,8 @@ class Message(models.Model):
     uid = models.IntegerField(blank=True, null=True)
 
 
+# Table of fields specific to individual household members. Parent model is the
+# Screen
 class HouseholdMember(models.Model):
     screen = models.ForeignKey(Screen, related_name='household_members', on_delete=models.CASCADE)
     relationship = models.CharField(max_length=30)
@@ -244,6 +251,7 @@ class HouseholdMember(models.Model):
         return net_income
 
 
+# HouseholdMember income streams
 class IncomeStream(models.Model):
     screen = models.ForeignKey(Screen, related_name='income_streams', on_delete=models.CASCADE)
     household_member = models.ForeignKey(HouseholdMember, related_name='income_streams', on_delete=models.CASCADE)
@@ -280,6 +288,7 @@ class IncomeStream(models.Model):
         return yearly
 
 
+# HouseholdMember expenses
 class Expense(models.Model):
     screen = models.ForeignKey(Screen, related_name='expenses', on_delete=models.CASCADE)
     household_member = models.ForeignKey(HouseholdMember, related_name='expenses', on_delete=models.CASCADE)
@@ -315,6 +324,9 @@ class Expense(models.Model):
         return yearly
 
 
+# A point in time log table to capture the exact eligibility and value results
+# for a completed screen. This table is currently used primarily for analytics
+# but will eventually drive new benefit update notifications
 class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name='eligibility_snapshots', on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
@@ -338,6 +350,8 @@ class EligibilitySnapshot(models.Model):
             program_snapshot.save()
 
 
+# Eligibility results for each specific program per screen. These are
+# aggregated per screen using the EligibilitySnapshot id
 class ProgramEligibilitySnapshot(models.Model):
     eligibility_snapshot = models.ForeignKey(EligibilitySnapshot, related_name='program_snapshots', on_delete=models.CASCADE)
     name = models.CharField(max_length=320)

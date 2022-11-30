@@ -11,6 +11,9 @@ from programs.programs.cocb.cocb import calculate_cocb # noqa
 from programs.programs.leap.leap import calculate_leap # noqa
 
 
+# This model describes all of the benefit programs available in the screener
+# results. Each program has a specific folder in /programs where the specific
+# logic for eligibility and value is stored.
 class Program(TranslatableModel):
 
     translations = TranslatedFields(
@@ -23,12 +26,16 @@ class Program(TranslatableModel):
         dollar_value=models.IntegerField(),
         value_type=models.CharField(max_length=120, ),
         estimated_delivery_time=models.CharField(max_length=320),
-        estimated_application_time=models.CharField(
-            max_length=320, blank=True, null=True, default=None),
+        estimated_application_time=models.CharField(max_length=320, blank=True, null=True, default=None),
         legal_status_required=models.CharField(max_length=120),
         active=models.BooleanField(blank=True, null=False, default=True)
     )
 
+    # This function provides eligibility calculation for any benefit program
+    # in the system when passed the screen. As some benefits depend on
+    # eligibility for others, data is passed to eligibility functions which
+    # contains the eligibility information and values for all currently
+    # calculated benefits in the chain.
     def eligibility(self, screen, data):
 
         calculation_func_name = "calculate_" + self.name_abbreviated
