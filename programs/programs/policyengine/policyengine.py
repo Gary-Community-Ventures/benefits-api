@@ -137,7 +137,7 @@ def policy_engine_prepare_params(screen):
 
     # We have to manually calculate SNAP gross eligibility as colorado uses
     # 200% vs the 130% used by policy engine
-    snap_gross_limit = 2 * settings.FPL2021[screen.household_size]
+    snap_gross_limit = 2 * settings.FPL2022[screen.household_size]
     snap_gross_income = screen.calc_gross_income('yearly', ['all'])
 
     if snap_gross_income < snap_gross_limit:

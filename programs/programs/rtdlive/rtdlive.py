@@ -29,7 +29,7 @@ def eligibility_rtdlive(screen):
     frequency = "yearly"
 
     # INCOME TEST
-    income_limit = 1.85 * settings.FPL[screen.household_size]
+    income_limit = 1.85 * settings.FPL2022[screen.household_size]
     income_types = ['all']
     gross_income = screen.calc_gross_income(frequency, income_types)
 

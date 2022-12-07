@@ -18,7 +18,7 @@ from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
 # 2022 FPL Levels for use across the site
-FPL = {
+FPL2022 = {
     1: 13590,
     2: 18130,
     3: 23030,
