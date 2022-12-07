@@ -37,9 +37,18 @@ class Program(TranslatableModel):
     # contains the eligibility information and values for all currently
     # calculated benefits in the chain.
     def eligibility(self, screen, data):
-
-        calculation_func_name = "calculate_" + self.name_abbreviated
-        calculation = eval(calculation_func_name + "(screen,data)")
+        calculators = {
+            "acp": calculate_acp,
+            "lifeline": calculate_lifeline,
+            "tanf": calculate_tanf,
+            "rtdlive": calculate_rtdlive,
+            "cccap": calculate_cccap,
+            "mydenver": calculate_mydenver,
+            "chp": calculate_chp,
+            "cocb": calculate_cocb,
+            "leap": calculate_leap
+        }
+        calculation = calculators[self.name_abbreviated.lower()](screen, data)
 
         eligibility = calculation['eligibility']
         if eligibility['eligible']:
