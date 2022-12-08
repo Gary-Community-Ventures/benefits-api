@@ -71,7 +71,7 @@ class Navigator(TranslatableModel):
     translations = TranslatedFields(
         program=models.ManyToManyField(Program),
         name=models.CharField(max_length=120),
-        cell=PhoneNumberField(blank=True, null=True),
+        cell=PhoneNumberField(),
         email=models.EmailField(_('email address'), blank=True, null=True),
         assistance_link=models.CharField(
             max_length=320, blank=True, null=False),
