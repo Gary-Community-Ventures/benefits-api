@@ -69,13 +69,14 @@ class Program(TranslatableModel):
 
 
 class Navigator(TranslatableModel):
+    program = models.ManyToManyField(Program, related_name='navigator')
+    phone_number = PhoneNumberField()
     translations = TranslatedFields(
-        program=models.ManyToManyField(Program, related_name='navigator'),
         name=models.CharField(max_length=120),
-        phone_number=PhoneNumberField(),
         email=models.EmailField(_('email address'), blank=True, null=True),
-        assistance_link=models.CharField(max_length=320, blank=True, null=False),
-        description=models.TextField(),
+        assistance_link=models.CharField(
+            max_length=320, blank=True, null=False),
+        description=models.TextField()
     )
 
     def __str__(self):
