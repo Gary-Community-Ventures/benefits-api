@@ -56,7 +56,8 @@ class Screen(models.Model):
                 include_all = "all" in types
                 specific_match = income_stream.type in types
                 earned_income_match = "earned" in types and income_stream.type in earned_income_types
-                if include_all or earned_income_match or specific_match:
+                unearned_income_match = "unearned" in types and income_stream.type not in earned_income_types
+                if include_all or earned_income_match or unearned_income_match or specific_match:
                     if frequency == "monthly":
                         gross_income += income_stream.monthly()
                     elif frequency == "yearly":
