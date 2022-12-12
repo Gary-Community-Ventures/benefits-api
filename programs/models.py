@@ -1,5 +1,8 @@
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
+from phonenumber_field.modelfields import PhoneNumberField
+from django.utils.translation import gettext_lazy as _
+
 from programs.programs.acp.acp import calculate_acp # noqa
 from programs.programs.lifeline.lifeline import calculate_lifeline # noqa
 from programs.programs.tanf.tanf import calculate_tanf # noqa
@@ -62,4 +65,19 @@ class Program(TranslatableModel):
         return self.name
 
     def __unicode__(self):
+        return self.name
+
+
+class Navigator(TranslatableModel):
+    program = models.ManyToManyField(Program, related_name='navigator')
+    phone_number = PhoneNumberField()
+    translations = TranslatedFields(
+        name=models.CharField(max_length=120),
+        email=models.EmailField(_('email address'), blank=True, null=True),
+        assistance_link=models.CharField(
+            max_length=320, blank=True, null=False),
+        description=models.TextField()
+    )
+
+    def __str__(self):
         return self.name

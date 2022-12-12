@@ -1,5 +1,6 @@
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
 from rest_framework import serializers
+from programs.serializers import NavigatorSerializer
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -113,6 +114,7 @@ class EligibilitySerializer(serializers.Serializer):
     failed_tests = serializers.ListField()
     passed_tests = serializers.ListField()
     estimated_value = serializers.IntegerField()
+    navigators = NavigatorSerializer(many=True)
 
     class Meta:
         fields = '__all__'
@@ -122,4 +124,4 @@ class EligibilityTranslationSerializer(serializers.Serializer):
     translations = serializers.DictField()
 
     class Meta:
-        fields = ('translations')
+        fields = ('translations',)

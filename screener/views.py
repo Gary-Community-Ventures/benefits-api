@@ -107,6 +107,8 @@ def eligibility_results(screen_id):
             # skip = True
             eligibility = pe_eligibility[program.name_abbreviated]
 
+        navigators = program.navigator.all()
+
         if not skip and program.active:
             data.append(
                 {
@@ -125,7 +127,8 @@ def eligibility_results(screen_id):
                     "legal_status_required": program.legal_status_required,
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
-                    "passed_tests": eligibility["passed"]
+                    "passed_tests": eligibility["passed"],
+                    "navigators": navigators
                 }
             )
 
@@ -153,6 +156,7 @@ def eligibility_results_translation(results, language):
             translated_results[k]['apply_button_link'] = translated_program.apply_button_link
             translated_results[k]['passed_tests'] = []
             translated_results[k]['failed_tests'] = []
+            translated_results[k]['navigators'] = translated_results[k]['navigators'].language(language).all()
 
             for passed_test in results[k]['passed_tests']:
                 translated_message = ''
