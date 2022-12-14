@@ -88,7 +88,7 @@ def eligibility_policy_engine(screen):
         #SSI
         if pvalue['ssi']['2022'] > 0:
             eligibility['ssi']['eligible'] = True
-            eligibility['ssi']['estimated_value'] = pvalue['ssi']['2022']
+            eligibility['ssi']['estimated_value'] += pvalue['ssi']['2022']
 
     # WIC PRESUMPTIVE ELIGIBILITY
     if eligibility['wic']['eligible'] is False:
