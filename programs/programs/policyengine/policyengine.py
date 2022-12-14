@@ -213,7 +213,11 @@ def policy_engine_prepare_params(screen):
             "age": {"2022": household_member.age, "2021": household_member.age},
             "is_tax_unit_head": {"2022": is_tax_unit_head, "2021": is_tax_unit_head},
             "wic": {"2022": None},
-            "medicaid": {"2022": None}
+            "medicaid": {"2022": None},
+            "ssi": {"2022": None},
+            "ssi_earned_income": {"2022": int(household_member.calc_gross_income('yearly', ['earned']))},
+            "ssi_unearned_income": {"2022": int(household_member.calc_gross_income('yearly', ['unearned']))},
+            "is_ssi_disabled": {"2022": household_member.disabled or household_member.visually_impaired}
         }
 
         if household_member.pregnant:
