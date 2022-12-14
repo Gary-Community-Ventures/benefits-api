@@ -47,9 +47,16 @@ def eligibility_policy_engine(screen):
             "failed": [],
             "estimated_value": 0
         },
+        "ssi": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
     }
 
     benefit_data = policy_engine_calculate(screen)
+    print(benefit_data['people'])
 
     # WIC & MEDICAID
     for pkey, pvalue in benefit_data['people'].items():
@@ -77,6 +84,11 @@ def eligibility_policy_engine(screen):
                 medicaid_estimated_value = co_aged_medicaid_average
 
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
+        
+        #SSI
+        if pvalue['ssi']['2022'] > 0:
+            eligibility['ssi']['eligible'] = True
+            eligibility['ssi']['estimated_value'] = pvalue['ssi']['2022']
 
     # WIC PRESUMPTIVE ELIGIBILITY
     if eligibility['wic']['eligible'] is False:
