@@ -223,10 +223,15 @@ class HouseholdMember(models.Model):
 
     def calc_gross_income(self, frequency, types):
         gross_income = 0
+        earned_income_types = ["wages", "selfEmployment", "investment"]
 
         income_streams = self.income_streams.all()
         for income_stream in income_streams:
-            if "all" in types or income_stream.type in types:
+            include_all = "all" in types
+            specific_match = income_stream.type in types
+            earned_income_match = "earned" in types and income_stream.type in earned_income_types
+            unearned_income_match = "unearned" in types and income_stream.type not in earned_income_types
+            if include_all or earned_income_match or unearned_income_match or specific_match:
                 if frequency == "monthly":
                     gross_income += income_stream.monthly()
                 elif frequency == "yearly":
