@@ -24,8 +24,6 @@ class Andso():
 
         self.calc_eligibility()
 
-        self.calc_total_countable_income()
-
         self.calc_value()
 
     def calc_eligibility(self):
@@ -36,7 +34,7 @@ class Andso():
                         "Does not receive SSI")
 
         # No TANIF
-        tanf_eligible = calculate_tanf(self.screen)["eligibility"]["eligible"]
+        tanf_eligible = calculate_tanf(self.screen, None)["eligibility"]["eligible"]
         self._condition(not (self.screen.has_tanf or tanf_eligible),
                         "Must not be eligible for TANF",
                         "Is not eligible for TANF")
@@ -69,24 +67,28 @@ class Andso():
                         "A member of the house hold is with a disability is between the ages of 18-59 (0-59 for blindness)")
 
         #Income
-        self.posible_eligble_members = map(self._calc_total_countable_income, self.posible_eligble_members)
 
-        self.posible_eligble_members = filter(lambda m: m["countable_income"] < 248)
+        def calc_total_countable_income(member):
+            earned = member.calc_gross_income("monthly", ["earned"])
+            countable_earned = max(0, (earned - 65) / 2)
+
+            unearned = member.calc_gross_income("monthly", ["unearned"])
+            countable_unearned = max(0, unearned - 20)
+
+            total_countable = countable_earned + countable_unearned
+
+            return {"member": member, "countable_income": total_countable}
+
+        self.posible_eligble_members = map(
+            calc_total_countable_income, self.posible_eligble_members)
+
+        self.posible_eligble_members = list(filter(
+            lambda m: m["countable_income"] < 248, self.posible_eligble_members))
 
         self._condition(len(self.posible_eligble_members) >= 1,
                         "No member of the household with a disability makes less than $248 a month",
                         "A member of the house hold is with a disability makes less than $248 a month")
 
-    def _calc_total_countable_income(self, member):
-        earned = member.calc_gross_income("monthly", ["earned"])
-        countable_earned = max(0, (earned - 65)/2)
-
-        unearned = member.calc_gross_income("monthly", ["unearned"])
-        countable_unearned = max(0, unearned - 20)
-
-        total_countable = countable_earned + countable_unearned
-
-        return {"member": member, "countable_income": total_countable}
 
     def calc_value(self):
         self.value = 0
