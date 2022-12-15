@@ -21,9 +21,9 @@ class Andso():
             "failed": []
         }
 
-        self.calc_eligibility()
-
         self.calc_value()
+
+        self.calc_eligibility()
 
     def calc_eligibility(self):
 
@@ -67,7 +67,9 @@ class Andso():
         # Meets income qualifications
 
     def calc_value(self):
-        self.value = 0
+        earned_income = self.screen
+        self.actual_value = 0
+        self.value = max(0, self.actual_value)
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
