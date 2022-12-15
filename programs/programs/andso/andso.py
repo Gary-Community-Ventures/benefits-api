@@ -68,10 +68,14 @@ class Andso():
 
         # Meets income qualifications
 
+        return self.eligibility
+
     def calc_value(self):
         earned_income = self.screen
         self.actual_value = 0
         self.value = max(0, self.actual_value)
+
+        return self.value
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
