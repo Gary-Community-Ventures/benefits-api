@@ -47,6 +47,12 @@ def eligibility_policy_engine(screen):
             "failed": [],
             "estimated_value": 0
         },
+        "ssi": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
     }
 
     benefit_data = policy_engine_calculate(screen)['result']
@@ -77,6 +83,11 @@ def eligibility_policy_engine(screen):
                 medicaid_estimated_value = co_aged_medicaid_average
 
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
+        
+        #SSI
+        if pvalue['ssi']['2022'] > 0:
+            eligibility['ssi']['eligible'] = True
+            eligibility['ssi']['estimated_value'] += pvalue['ssi']['2022']
 
     # WIC PRESUMPTIVE ELIGIBILITY
     if eligibility['wic']['eligible'] is False:
@@ -213,7 +224,11 @@ def policy_engine_prepare_params(screen):
             "age": {"2023": household_member.age, "2022": household_member.age},
             "is_tax_unit_head": {"2023": is_tax_unit_head, "2022": is_tax_unit_head},
             "wic": {"2023": None},
-            "medicaid": {"2023": None}
+            "medicaid": {"2023": None},
+            "ssi": {"2023": None},
+            "ssi_earned_income": {"2023": int(household_member.calc_gross_income('yearly', ['earned']))},
+            "ssi_unearned_income": {"2023": int(household_member.calc_gross_income('yearly', ['unearned']))},
+            "is_ssi_disabled": {"2023": household_member.disabled or household_member.visually_impaired}
         }
 
         if household_member.pregnant:
