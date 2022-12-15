@@ -98,7 +98,7 @@ class Andso():
         for member in self.posible_eligble_members:
             member_value = max(0, 248 - member["countable_income"])
             self.value += member_value
-        self.value #*= 12
+        self.value *= 12
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
