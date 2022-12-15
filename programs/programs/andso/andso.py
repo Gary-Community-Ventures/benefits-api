@@ -69,7 +69,7 @@ class Andso():
                         "A member of the house hold is with a disability is between the ages of 18-59 (0-59 for blindness)")
 
         #Income
-        self.posible_eligble_members = map(self.calc_total_countable_income, self.posible_eligble_members)
+        self.posible_eligble_members = map(self._calc_total_countable_income, self.posible_eligble_members)
 
         self.posible_eligble_members = filter(lambda m: m["countable_income"] < 248)
 
@@ -77,9 +77,7 @@ class Andso():
                         "No member of the household with a disability makes less than $248 a month",
                         "A member of the house hold is with a disability makes less than $248 a month")
 
-        return self.eligibility
-
-    def calc_total_countable_income(self, member):
+    def _calc_total_countable_income(self, member):
         earned = member.calc_gross_income("monthly", ["earned"])
         countable_earned = max(0, (earned - 65)/2)
 
@@ -91,11 +89,10 @@ class Andso():
         return {"member": member, "countable_income": total_countable}
 
     def calc_value(self):
-        self.actual_value = 0
-        
-        self.value = max(0, self.actual_value)
-
-        return self.value
+        self.value = 0
+        for member in self.posible_eligble_members:
+            member_value = max(0, 248 - member["countable_income"])
+            self.value += member_value
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
