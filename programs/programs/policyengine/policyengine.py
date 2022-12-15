@@ -85,9 +85,9 @@ def eligibility_policy_engine(screen):
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
         
         #SSI
-        if pvalue['ssi']['2022'] > 0:
+        if pvalue['ssi']['2023'] > 0:
             eligibility['ssi']['eligible'] = True
-            eligibility['ssi']['estimated_value'] += pvalue['ssi']['2022']
+            eligibility['ssi']['estimated_value'] += pvalue['ssi']['2023']
 
     # WIC PRESUMPTIVE ELIGIBILITY
     if eligibility['wic']['eligible'] is False:
