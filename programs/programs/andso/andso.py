@@ -50,12 +50,19 @@ class Andso():
                 member_has_blindness = True
                 posible_eligble_members.append(member)
         self._condition(member_has_blindness or member_has_disability,
-                        "No one in your household has a disability or blindness",
-                        "Someone in your household has a disability or blindness")
+                        "No one in the household has a disability or blindness",
+                        "Someone in the household has a disability or blindness")
 
         # Right age
+        min_age = 0 if member_has_blindness else 18
 
-        # Has disability/blindness
+        for member in posible_eligble_members:
+            is_in_age_range = self._between(member.age, min_age, 59)
+            if not is_in_age_range:
+                posible_eligble_members.remove(member)
+        self._condition(len(posible_eligble_members) >= 0, 
+                        "No member of the household with a disability is between the ages of 18-59 (0-59 for blindness)",
+                        "A member of the house hold is with a disability is between the ages of 18-59 (0-59 for blindness)")
 
         # Meets income qualifications
 
