@@ -58,3 +58,6 @@ class Andso():
             self._passed(pass_msg)
         else:
             self._failed(failed_msg)
+
+    def _between(self, value, min_val, max_val):
+        return min_val <= value <= max_val
