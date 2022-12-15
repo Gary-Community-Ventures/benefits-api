@@ -1,3 +1,4 @@
+from programs.programs.tanf.tanf import calculate_tanf
 
 def calculate_andso(screen, data):
     andso = Andso(screen)
@@ -33,7 +34,8 @@ class Andso():
                         "Does not receive SSI")
 
         # No TANIF
-        self._condition(not self.screen.has_tanf,
+        tanf_eligible = calculate_tanf(self.screen)["eligibility"]["eligible"]
+        self._condition(not (self.screen.has_tanf or tanf_eligible),
                         "Must not be eligible for TANF",
                         "Is not eligible for TANF")
 
