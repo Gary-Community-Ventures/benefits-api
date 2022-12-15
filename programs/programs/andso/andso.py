@@ -21,6 +21,10 @@ class Andso():
             "failed": []
         }
 
+        self.calc_eligibility()
+
+        self.calc_value()
+
     def calc_eligibility(self):
 
         #No SSI
@@ -41,10 +45,6 @@ class Andso():
 
     def calc_value(self):
         self.value = 0
-    
-        self.calc_eligibility()
-
-        self.calc_value()
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
