@@ -45,11 +45,14 @@ class Andso():
         self.posible_eligble_members = []
 
         for member in self.screen.household_members.all():
+            eligible = False
             if member.disabled:
                 member_has_disability = True
-                self.posible_eligble_members.append(member)
+                eligible = True
             if member.visually_impaired:
                 member_has_blindness = True
+                eligible = True
+            if eligible:
                 self.posible_eligble_members.append(member)
         self._condition(member_has_blindness or member_has_disability,
                         "No one in the household has a disability or blindness",
@@ -95,7 +98,7 @@ class Andso():
         for member in self.posible_eligble_members:
             member_value = max(0, 248 - member["countable_income"])
             self.value += member_value
-        self.value *= 12
+        self.value #*= 12
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
