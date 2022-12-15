@@ -44,6 +44,7 @@ class Screen(models.Model):
     has_mydenver = models.BooleanField(default=False, blank=True, null=True)
     has_chp = models.BooleanField(default=False, blank=True, null=True)
     has_ccb = models.BooleanField(default=False, blank=True, null=True)
+    has_ssi = models.BooleanField(default=False, blank=True, null=True)
 
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
