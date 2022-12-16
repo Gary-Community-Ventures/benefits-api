@@ -150,7 +150,7 @@ class Screen(models.Model):
         data = []
 
         pe_eligibility = eligibility_policy_engine(self)
-        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid']
+        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid', 'ssi']
 
         for program in all_programs:
             skip = False
