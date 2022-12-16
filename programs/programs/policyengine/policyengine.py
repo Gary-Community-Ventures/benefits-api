@@ -90,7 +90,11 @@ def eligibility_policy_engine(screen):
             eligibility['ssi']['estimated_value'] += pvalue['ssi']['2023']
 
     # WIC PRESUMPTIVE ELIGIBILITY
-    if eligibility['wic']['eligible'] is False:
+    in_wic_demographic = False
+    for member in screen.household_members.all():
+        if member.pregnant is True or member.age <= 5:
+            in_wic_demographic = True
+    if eligibility['wic']['eligible'] is False and in_wic_demographic:
         if screen.has_medicaid is True \
                 or screen.has_tanf is True \
                 or screen.has_snap is True:
