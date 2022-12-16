@@ -71,8 +71,8 @@ class Andso():
             if not is_in_age_range:
                 self.posible_eligble_members.remove(member)
         self._condition(len(self.posible_eligble_members) >= 1, 
-                        "No member of the household with a disability is between the ages of 18-59 (0-59 for blindness)",
-                        "A member of the house hold is with a disability is between the ages of 18-59 (0-59 for blindness)")
+                        f"No member of the household with a disability is between the ages of 18-{Andso.max_age} (0-{Andso.max_age} for blindness)",
+                        f"A member of the house hold is with a disability is between the ages of 18-{Andso.max_age} (0-{Andso.max_age} for blindness)")
 
         #Income
         def calc_total_countable_income(member):
@@ -93,8 +93,10 @@ class Andso():
             lambda m: m["countable_income"] < Andso.grant_standard, self.posible_eligble_members))
 
         self._condition(len(self.posible_eligble_members) >= 1,
-                        "No member of the household with a disability makes less than $248 a month",
-                        "A member of the house hold is with a disability makes less than $248 a month")
+                        f"""No member of the household with a disability has a total
+                         countable income less than ${Andso.grant_standard} a month""",
+                        f"""A member of the house hold is with a disability has a total
+                         countable income less than ${Andso.grant_standard} a month""")
 
 
     def calc_value(self):

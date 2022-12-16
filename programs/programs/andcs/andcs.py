@@ -18,6 +18,7 @@ class Andcs():
     grant_standard = 841
     earned_standard_deduction = 65
     unearned_standard_deduction = 20
+    max_assets = 2000
     min_age = 0
     max_age = 59
 
@@ -65,8 +66,8 @@ class Andcs():
             if not is_in_age_range:
                 self.posible_eligble_members.remove(member)
         self._condition(len(self.posible_eligble_members) >= 1,
-                        "No member of the household with a disability is between the ages of 0-59",
-                        "A member of the house hold is with a disability is between the ages of 0-59")
+                        f"No member of the household with a disability is between the ages of {Andcs.min_age}-{Andcs.max_age}",
+                        f"A member of the house hold is with a disability is between the ages of {Andcs.min_age}-{Andcs.max_age}")
 
         # Income
         def calc_total_countable_income(member):
@@ -84,11 +85,12 @@ class Andcs():
             calc_total_countable_income, self.posible_eligble_members)
 
         self.posible_eligble_members = list(filter(
-            lambda m: m["countable_income"] < Andcs.grant_standard, self.posible_eligble_members))
+            lambda m: m["countable_income"] < Andcs.grant_standard and self.household_assets < Andcs.max_assets,
+             self.posible_eligble_members))
 
         self._condition(len(self.posible_eligble_members) >= 1,
-                        "No member of the household with a disability makes less than $248 a month",
-                        "A member of the house hold is with a disability makes less than $248 a month")
+                        f"No member of the household with a disability makes less than ${Andcs.grant_standard} a month",
+                        f"A member of the house hold is with a disability makes less than ${Andcs.grant_standard} a month")
 
     def calc_value(self):
         self.value = 0
