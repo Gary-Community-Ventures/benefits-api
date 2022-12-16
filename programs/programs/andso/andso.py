@@ -90,7 +90,8 @@ class Andso():
             calc_total_countable_income, self.posible_eligble_members)
 
         self.posible_eligble_members = list(filter(
-            lambda m: m["countable_income"] < Andso.grant_standard, self.posible_eligble_members))
+            lambda m: m["countable_income"] < Andso.grant_standard and self.household_assets < Andso.max_assets,
+            self.posible_eligble_members))
 
         self._condition(len(self.posible_eligble_members) >= 1,
                         f"""No member of the household with a disability has a total
