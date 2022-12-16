@@ -13,6 +13,11 @@ def calculate_andso(screen, data):
     return calculation
 
 class Andso():
+    grant_standard = 248
+    earned_standard_deduction = 65
+    unearned_standard_deduction = 20
+    max_age = 59
+
     def __init__(self, screen):
         self.screen = screen
 
@@ -62,7 +67,7 @@ class Andso():
         min_age = 0 if member_has_blindness else 18
 
         for member in self.posible_eligble_members:
-            is_in_age_range = self._between(member.age, min_age, 59)
+            is_in_age_range = self._between(member.age, min_age, Andso.max_age)
             if not is_in_age_range:
                 self.posible_eligble_members.remove(member)
         self._condition(len(self.posible_eligble_members) >= 1, 
@@ -70,13 +75,12 @@ class Andso():
                         "A member of the house hold is with a disability is between the ages of 18-59 (0-59 for blindness)")
 
         #Income
-
         def calc_total_countable_income(member):
             earned = member.calc_gross_income("monthly", ["earned"])
-            countable_earned = max(0, (earned - 65) / 2)
+            countable_earned = max(0, (earned - Andso.earned_standard_deduction) / 2)
 
             unearned = member.calc_gross_income("monthly", ["unearned"])
-            countable_unearned = max(0, unearned - 20)
+            countable_unearned = max(0, unearned - Andso.unearned_standard_deduction)
 
             total_countable = countable_earned + countable_unearned
 
@@ -86,7 +90,7 @@ class Andso():
             calc_total_countable_income, self.posible_eligble_members)
 
         self.posible_eligble_members = list(filter(
-            lambda m: m["countable_income"] < 248, self.posible_eligble_members))
+            lambda m: m["countable_income"] < Andso.grant_standard, self.posible_eligble_members))
 
         self._condition(len(self.posible_eligble_members) >= 1,
                         "No member of the household with a disability makes less than $248 a month",
@@ -96,7 +100,7 @@ class Andso():
     def calc_value(self):
         self.value = 0
         for member in self.posible_eligble_members:
-            member_value = max(0, 248 - member["countable_income"])
+            member_value = max(0, Andso.grant_standard - member["countable_income"])
             self.value += member_value
         self.value *= 12
 
