@@ -259,6 +259,15 @@ class HouseholdMember(models.Model):
             net_income = gross_income - expenses
 
         return net_income
+    
+    def is_married(self):
+        if self.relationship in ('spouse', 'domesticPartner'): return True
+        if self.relationship == 'headOfHousehold':
+            all_household_members = HouseholdMember.objects.all().filter(screen=self.screen)
+            for member in all_household_members:
+                if member.relationship in ('spouse', 'domesticPartner'):
+                    return True
+        return False
 
 
 # HouseholdMember income streams
