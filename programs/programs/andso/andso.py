@@ -49,7 +49,7 @@ class Andso():
         # Has disability/blindness
         member_has_blindness = False
         member_has_disability = False
-        self.posible_eligble_members = []
+        self.possible_eligible_members = []
 
         for member in self.screen.household_members.all():
             eligible = False
@@ -60,18 +60,18 @@ class Andso():
                 member_has_blindness = True
                 eligible = True
             if eligible:
-                self.posible_eligble_members.append(member)
+                self.possible_eligible_members.append(member)
         self._condition(member_has_blindness or member_has_disability,
                         "Someone in the household must have a disability or blindness")
 
         # Right age
         min_age = 0 if member_has_blindness else 18
 
-        for member in self.posible_eligble_members:
+        for member in self.possible_eligible_members:
             is_in_age_range = self._between(member.age, min_age, Andso.max_age)
             if not is_in_age_range:
-                self.posible_eligble_members.remove(member)
-        self._condition(len(self.posible_eligble_members) >= 1, 
+                self.possible_eligible_members.remove(member)
+        self._condition(len(self.possible_eligible_members) >= 1, 
                         f"A member of the house hold with a disability must be between the ages of 18-{Andso.max_age} (0-{Andso.max_age} for blindness)")
 
         #Income
@@ -86,13 +86,13 @@ class Andso():
 
             return {"member": member, "countable_income": total_countable}
 
-        self.posible_eligble_members = map(
-            calc_total_countable_income, self.posible_eligble_members)
+        self.possible_eligible_members = map(
+            calc_total_countable_income, self.possible_eligible_members)
 
-        self.posible_eligble_members = list(filter(
-            lambda m: m["countable_income"] < Andso.grant_standard, self.posible_eligble_members))
+        self.possible_eligible_members = list(filter(
+            lambda m: m["countable_income"] < Andso.grant_standard, self.possible_eligible_members))
 
-        self._condition(len(self.posible_eligble_members) >= 1,
+        self._condition(len(self.possible_eligible_members) >= 1,
                         f"A member of the house hold with a disability must have a total countable income less than ${Andso.grant_standard} a month")
 
 
@@ -101,7 +101,7 @@ class Andso():
 
         #remove any possible couples
         possible_couples = set()
-        for possible_eligible_member in self.posible_eligble_members:
+        for possible_eligible_member in self.possible_eligible_members:
             member = possible_eligible_member['member']
             countable_income = possible_eligible_member['countable_income']
             
@@ -110,7 +110,7 @@ class Andso():
                 # This means that AND-SO might be inacurate for couples
 
                 if member.relationship == 'headOfHousehold':
-                    for household_member in self.posible_eligble_members:
+                    for household_member in self.possible_eligible_members:
                         if household_member['member'].relationship in ('spouse', 'domesticPartner'):
                             # head of house married to this person
                             possible_couples.add(household_member['member'].id)
@@ -121,7 +121,7 @@ class Andso():
                         self.screen.household_members.filter(relationship='headOfHousehold')[0].id)
                 elif member.relationship in ('parent', 'fosterParent', 'stepParent', 'grandParent'):
                     # might be married to someone with same relationship to head of house
-                    for person in self.posible_eligble_members:
+                    for person in self.possible_eligible_members:
                         person = person['member']
                         if person.relationship == member.relationship and person.id != member.id:
                             # first other person with same relationship is excluded
