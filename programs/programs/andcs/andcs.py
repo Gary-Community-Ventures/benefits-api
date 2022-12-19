@@ -107,7 +107,7 @@ class Andcs():
 
             if member.id not in possible_couples:
                 # Check if there is a couple, and only count SSI for one couple
-                # This means that AND-SO might be inacurate for couples
+                # This means that AND-CS might be inacurate for couples
 
                 if member.relationship == 'headOfHousehold':
                     for household_member in self.posible_eligble_members:
