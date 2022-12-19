@@ -52,8 +52,8 @@ class OldAge():
         self.posible_eligble_members = []
 
         for member in self.screen.household_members.all():
-            if not member.age >= OldAge.min_age:
-                self.posible_eligble_members.remove(member)
+            if member.age >= OldAge.min_age:
+                self.posible_eligble_members.append(member)
         self._condition(len(self.posible_eligble_members) >= 1,
                         f"No one in the household is {OldAge.min_age} or older",
                         f"Someone in the household is {OldAge.min_age} or older")
@@ -79,8 +79,8 @@ class OldAge():
             lambda m: m["countable_income"] < OldAge.grant_standard, self.posible_eligble_members))
 
         self._condition(len(self.posible_eligble_members) >= 1,
-                        f"No member of the household over the age of 60 makes less than ${OldAge.grant_standard} a month",
-                        f"A member of the house hold is over the age of 60 makes less than ${OldAge.grant_standard} a month")
+                        f"No member of the household over the age of {OldAge.min_age} makes less than ${OldAge.grant_standard} a month",
+                        f"A member of the house hold is over the age of {OldAge.min_age} makes less than ${OldAge.grant_standard} a month")
 
     def calc_value(self):
         self.value = 0
