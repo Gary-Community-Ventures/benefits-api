@@ -41,7 +41,7 @@ class Cpcr():
 
         #Someone is old enough
         #TODO: if surviving spouse, min age = 58
-        someone_old_enough = self.screen.num_adults(max_age=65)
+        someone_old_enough = self.screen.num_adults(age_max=65)
 
         if someone_old_enough:
             self._passed(f"Someone in your househould is over the age of {Cpcr.min_age}")
@@ -53,8 +53,8 @@ class Cpcr():
         #TODO: add income limit for maried
         gross_income = self.screen.calc_gross_income('yearly', ['all'])
         self._condition(gross_income <= Cpcr.income_limit,
-                        f"Gross income must be less than {Cpcr.income_limit}",
-                        f"Gross income is less than {Cpcr.income_limit}")
+                        f"Gross anual income must be less than {Cpcr.income_limit}",
+                        f"Gross anual income is less than {Cpcr.income_limit}")
 
     def calc_value(self):
         self.value = Cpcr.amount
