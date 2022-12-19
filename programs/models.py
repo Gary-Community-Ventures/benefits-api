@@ -14,6 +14,7 @@ from programs.programs.cocb.cocb import calculate_cocb # noqa
 from programs.programs.leap.leap import calculate_leap # noqa
 from programs.programs.andso.andso import calculate_andso
 from programs.programs.andcs.andcs import calculate_andcs
+from programs.programs.oap.oap import calculate_oap
 
 
 # This model describes all of the benefit programs available in the screener
@@ -53,7 +54,8 @@ class Program(TranslatableModel):
             "cocb": calculate_cocb,
             "leap": calculate_leap,
             "andso": calculate_andso,
-            "andcs": calculate_andcs
+            "andcs": calculate_andcs,
+            "oap": calculate_oap
         }
         calculation = calculators[self.name_abbreviated.lower()](screen, data)
 
