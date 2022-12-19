@@ -16,6 +16,7 @@ class Andso():
     grant_standard = 248
     earned_standard_deduction = 65
     unearned_standard_deduction = 20
+    asset_limit = 2000
     max_age = 59
 
     def __init__(self, screen):
@@ -43,6 +44,10 @@ class Andso():
         self._condition(not (self.screen.has_tanf or tanf_eligible),
                         "Must not be eligible for TANF",
                         "Is not eligible for TANF")
+        #Assets less than limit
+        self._condition(self.screen.household_assets < Andso.asset_limit,
+                        f"Household assets must not exceed {Andso.asset_limit}",
+                        f"Assets are less than the limit of {Andso.asset_limit}")
 
         # Has disability/blindness
         member_has_blindness = False
@@ -90,8 +95,7 @@ class Andso():
             calc_total_countable_income, self.posible_eligble_members)
 
         self.posible_eligble_members = list(filter(
-            lambda m: m["countable_income"] < Andso.grant_standard and self.household_assets < Andso.max_assets,
-            self.posible_eligble_members))
+            lambda m: m["countable_income"] < Andso.grant_standard, self.posible_eligble_members))
 
         self._condition(len(self.posible_eligble_members) >= 1,
                         f"""No member of the household with a disability has a total

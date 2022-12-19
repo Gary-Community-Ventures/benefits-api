@@ -18,7 +18,7 @@ class Andcs():
     grant_standard = 841
     earned_standard_deduction = 65
     unearned_standard_deduction = 20
-    max_assets = 2000
+    asset_limit = 2000
     min_age = 0
     max_age = 59
 
@@ -48,6 +48,11 @@ class Andcs():
         self._condition(not (self.screen.has_tanf or tanf_eligible),
                         "Must not be eligible for TANF",
                         "Is not eligible for TANF")
+
+        #Asset test
+        self._condition(self.screen.household_assets < Andcs.asset_limit,
+                        f"Household assets must not exceed {Andcs.asset_limit}",
+                        f"Assets are less than the limit of {Andcs.asset_limit}")
 
         # Has disability/blindness
         self.posible_eligble_members = []
@@ -85,8 +90,7 @@ class Andcs():
             calc_total_countable_income, self.posible_eligble_members)
 
         self.posible_eligble_members = list(filter(
-            lambda m: m["countable_income"] < Andcs.grant_standard and self.household_assets < Andcs.max_assets,
-             self.posible_eligble_members))
+            lambda m: m["countable_income"] < Andcs.grant_standard, self.posible_eligble_members))
 
         self._condition(len(self.posible_eligble_members) >= 1,
                         f"No member of the household with a disability makes less than ${Andcs.grant_standard} a month",
