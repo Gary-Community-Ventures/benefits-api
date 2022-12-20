@@ -12,7 +12,7 @@ def calculate_trua(screen, data):
 
 
 class Trua():
-    average_amount = 4000
+    average_amount = 5568 + 382.83 + 235.68
     income_bands = {
         1: 65680,
         2: 75040,
