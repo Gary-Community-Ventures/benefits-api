@@ -55,22 +55,22 @@ class Andcs():
                         f"Assets are less than the limit of {Andcs.asset_limit}")
 
         # Has disability/blindness
-        self.posible_eligble_members = []
+        self.possible_eligible_members = []
 
         for member in self.screen.household_members.all():
             if member.disabled is True or member.visually_impaired is True:
-                self.posible_eligble_members.append(member)
+                self.possible_eligible_members.append(member)
                 
-        self._condition(len(self.posible_eligble_members) >= 1,
+        self._condition(len(self.possible_eligible_members) >= 1,
                         "No one in the household has a disability or blindness",
                         "Someone in the household has a disability or blindness")
 
         # Right age
-        for member in self.posible_eligble_members:
+        for member in self.possible_eligible_members:
             is_in_age_range = self._between(member.age, Andcs.min_age, Andcs.max_age)
             if not is_in_age_range:
-                self.posible_eligble_members.remove(member)
-        self._condition(len(self.posible_eligble_members) >= 1,
+                self.possible_eligible_members.remove(member)
+        self._condition(len(self.possible_eligible_members) >= 1,
                         f"No member of the household with a disability is between the ages of {Andcs.min_age}-{Andcs.max_age}",
                         f"A member of the house hold is with a disability is between the ages of {Andcs.min_age}-{Andcs.max_age}")
 
@@ -86,13 +86,13 @@ class Andcs():
 
             return {"member": member, "countable_income": total_countable}
 
-        self.posible_eligble_members = map(
-            calc_total_countable_income, self.posible_eligble_members)
+        self.possible_eligible_members = map(
+            calc_total_countable_income, self.possible_eligible_members)
 
-        self.posible_eligble_members = list(filter(
-            lambda m: m["countable_income"] < Andcs.grant_standard, self.posible_eligble_members))
+        self.possible_eligible_members = list(filter(
+            lambda m: m["countable_income"] < Andcs.grant_standard, self.possible_eligible_members))
 
-        self._condition(len(self.posible_eligble_members) >= 1,
+        self._condition(len(self.possible_eligible_members) >= 1,
                         f"No member of the household with a disability makes less than ${Andcs.grant_standard} a month",
                         f"A member of the house hold is with a disability makes less than ${Andcs.grant_standard} a month")
 
@@ -101,7 +101,7 @@ class Andcs():
 
         # remove any possible couples
         possible_couples = set()
-        for possible_eligible_member in self.posible_eligble_members:
+        for possible_eligible_member in self.possible_eligible_members:
             member = possible_eligible_member['member']
             countable_income = possible_eligible_member['countable_income']
 
@@ -110,7 +110,7 @@ class Andcs():
                 # This means that AND-CS might be inacurate for couples
 
                 if member.relationship == 'headOfHousehold':
-                    for household_member in self.posible_eligble_members:
+                    for household_member in self.possible_eligible_members:
                         if household_member['member'].relationship in ('spouse', 'domesticPartner'):
                             # head of house married to this person
                             possible_couples.add(household_member['member'].id)
@@ -121,7 +121,7 @@ class Andcs():
                         self.screen.household_members.filter(relationship='headOfHousehold')[0].id)
                 elif member.relationship in ('parent', 'fosterParent', 'stepParent', 'grandParent'):
                     # might be married to someone with same relationship to head of house
-                    for person in self.posible_eligble_members:
+                    for person in self.possible_eligible_members:
                         person = person['member']
                         if person.relationship == member.relationship and person.id != member.id:
                             # first other person with same relationship is excluded
