@@ -53,8 +53,7 @@ class Cpcr():
         #TODO: add income limit for maried
         gross_income = self.screen.calc_gross_income('yearly', ['all'])
         self._condition(gross_income <= Cpcr.income_limit,
-                        f"Gross anual income must be less than {Cpcr.income_limit}",
-                        f"Gross anual income is less than {Cpcr.income_limit}")
+                        f"Gross anual income must be less than {Cpcr.income_limit}")
 
     def calc_value(self):
         self.value = Cpcr.amount
@@ -66,11 +65,11 @@ class Cpcr():
     def _passed(self, msg):
         self.eligibility["passed"].append(msg)
 
-    def _condition(self, condition, failed_msg, pass_msg):
+    def _condition(self, condition, msg):
         if condition is True:
-            self._passed(pass_msg)
+            self._passed(msg)
         else:
-            self._failed(failed_msg)
+            self._failed(msg)
 
     def _between(self, value, min_val, max_val):
         return min_val <= value <= max_val
