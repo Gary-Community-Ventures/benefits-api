@@ -99,39 +99,20 @@ class Andso():
     def calc_value(self):
         self.value = 0
 
-        #remove any possible couples
-        possible_couples = set()
-        for possible_eligible_member in self.possible_eligible_members:
-            member = possible_eligible_member['member']
-            countable_income = possible_eligible_member['countable_income']
+        relationship_map = self.screen.relationship_map()
+        eligible_members = self.possible_eligible_members
+        while len(eligible_members) > 0:
+            eligible_member = eligible_members.pop()
+            member = eligible_member['member']
+            countable_income = eligible_member['countable_income']
             
-            if member.id not in possible_couples:
-                # Check if there is a couple, and only count SSI for one couple
-                # This means that AND-SO might be inacurate for couples
-
-                if member.relationship == 'headOfHousehold':
-                    for household_member in self.possible_eligible_members:
-                        if household_member['member'].relationship in ('spouse', 'domesticPartner'):
-                            # head of house married to this person
-                            possible_couples.add(household_member['member'].id)
-                            break
-                elif member.relationship in ('spouse', 'domesticPartner'):
-                    # married to head of house
-                    possible_couples.add(
-                        self.screen.household_members.filter(relationship='headOfHousehold')[0].id)
-                elif member.relationship in ('parent', 'fosterParent', 'stepParent', 'grandParent'):
-                    # might be married to someone with same relationship to head of house
-                    for person in self.possible_eligible_members:
-                        person = person['member']
-                        if person.relationship == member.relationship and person.id != member.id:
-                            # first other person with same relationship is excluded
-                            # only works for first couple
-                            possible_couples.add(person.id)
-                            break
-                            
-                #add to total AND-SO value
-                member_value = max(0, Andso.grant_standard - countable_income)
-                self.value += member_value
+            for other_member in eligible_members:
+                if other_member['member'].id == relationship_map[member.id]:
+                    eligible_members.remove(other_member)
+            
+            #add to total AND-SO value
+            member_value = max(0, Andso.grant_standard - countable_income)
+            self.value += member_value
             
         self.value *= 12
 
