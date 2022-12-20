@@ -39,20 +39,17 @@ class Andcs():
 
         # Has SSI
         self._condition(self.screen.has_ssi,
-                        "Must be receiving SSI",
-                        "Is receive SSI")
+                        "Must be receiving SSI")
 
         # No TANIF
         tanf_eligible = calculate_tanf(self.screen, None)[
             "eligibility"]["eligible"]
         self._condition(not (self.screen.has_tanf or tanf_eligible),
-                        "Must not be eligible for TANF",
-                        "Is not eligible for TANF")
+                        "Must not be eligible for TANF")
 
         #Asset test
         self._condition(self.screen.household_assets < Andcs.asset_limit,
-                        f"Household assets must not exceed {Andcs.asset_limit}",
-                        f"Assets are less than the limit of {Andcs.asset_limit}")
+                        f"Household assets must not exceed {Andcs.asset_limit}")
 
         # Has disability/blindness
         self.possible_eligible_members = []
@@ -62,8 +59,7 @@ class Andcs():
                 self.possible_eligible_members.append(member)
                 
         self._condition(len(self.possible_eligible_members) >= 1,
-                        "No one in the household has a disability or blindness",
-                        "Someone in the household has a disability or blindness")
+                        "Someone in the household must have a disability or blindness")
 
         # Right age
         for member in self.possible_eligible_members:
@@ -71,8 +67,7 @@ class Andcs():
             if not is_in_age_range:
                 self.possible_eligible_members.remove(member)
         self._condition(len(self.possible_eligible_members) >= 1,
-                        f"No member of the household with a disability is between the ages of {Andcs.min_age}-{Andcs.max_age}",
-                        f"A member of the house hold is with a disability is between the ages of {Andcs.min_age}-{Andcs.max_age}")
+                        f"A member of the house hold with a disability must be between the ages of {Andcs.min_age}-{Andcs.max_age}")
 
         # Income
         def calc_total_countable_income(member):
@@ -93,8 +88,7 @@ class Andcs():
             lambda m: m["countable_income"] < Andcs.grant_standard, self.possible_eligible_members))
 
         self._condition(len(self.possible_eligible_members) >= 1,
-                        f"No member of the household with a disability makes less than ${Andcs.grant_standard} a month",
-                        f"A member of the house hold is with a disability makes less than ${Andcs.grant_standard} a month")
+                        f"A member of the household with a disability must make less than ${Andcs.grant_standard} a month")
 
     def calc_value(self):
         self.value = 0
@@ -143,11 +137,11 @@ class Andcs():
     def _passed(self, msg):
         self.eligibility["passed"].append(msg)
 
-    def _condition(self, condition, failed_msg, pass_msg):
+    def _condition(self, condition, msg):
         if condition is True:
-            self._passed(pass_msg)
+            self._passed(msg)
         else:
-            self._failed(failed_msg)
+            self._failed(msg)
 
     def _between(self, value, min_val, max_val):
         return min_val <= value <= max_val
