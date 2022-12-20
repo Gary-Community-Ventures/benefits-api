@@ -44,6 +44,7 @@ class Screen(models.Model):
     has_mydenver = models.BooleanField(default=False, blank=True, null=True)
     has_chp = models.BooleanField(default=False, blank=True, null=True)
     has_ccb = models.BooleanField(default=False, blank=True, null=True)
+    has_ssi = models.BooleanField(default=False, blank=True, null=True)
 
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
@@ -144,12 +145,48 @@ class Screen(models.Model):
 
         return net_income
 
+    def relationship_map(self):
+        relationship_map = {}
+
+        all_members = self.household_members.values()
+        for member in all_members:
+            if member['id'] in relationship_map:
+                if relationship_map[member['id']] != None:
+                    continue
+            
+            relationship = member['relationship']
+            probabable_spouse = None
+            
+            if relationship == 'headOfHousehold':
+                for other_member in all_members:
+                    if other_member['relationship'] in ('spouse', 'domesticPartner') and\
+                            other_member['id'] not in relationship_map:
+                        probabable_spouse = other_member['id']
+                        break
+            elif relationship in ('spouse', 'domesticPartner'):
+                for other_member in all_members:
+                    if other_member['relationship'] == 'headOfHousehold' and\
+                            other_member['id'] not in relationship_map:
+                        probabable_spouse = other_member['id']
+                        break
+            elif relationship in ('parent', 'fosterParent', 'stepParent', 'grandParent'):
+                for other_member in all_members:
+                    if other_member['relationship'] == relationship and\
+                            other_member['id'] != member['id'] and\
+                            other_member['id'] not in relationship_map:
+                        probabable_spouse = other_member['id']
+                        break
+            relationship_map[member['id']] = probabable_spouse
+            if probabable_spouse != None:
+                relationship_map[probabable_spouse] = member['id']
+        return relationship_map
+
     def program_eligibility(self):
         all_programs = Program.objects.all()
         data = []
 
         pe_eligibility = eligibility_policy_engine(self)
-        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid']
+        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid', 'ssi']
 
         for program in all_programs:
             skip = False
@@ -258,6 +295,17 @@ class HouseholdMember(models.Model):
             net_income = gross_income - expenses
 
         return net_income
+    
+    def is_married(self):
+        if self.relationship in ('spouse', 'domesticPartner'):
+            head_of_house = HouseholdMember.objects.all().filter(screen=self.screen, relationship='headOfHousehold')[0]
+            return {"is_married": True, "married_to": head_of_house}
+        if self.relationship == 'headOfHousehold':
+            all_household_members = HouseholdMember.objects.all().filter(screen=self.screen)
+            for member in all_household_members:
+                if member.relationship in ('spouse', 'domesticPartner'):
+                    return {"is_married": True, "married_to": member}
+        return {"is_married": False}
 
 
 # HouseholdMember income streams
