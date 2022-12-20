@@ -16,7 +16,7 @@ def calculate_cpcr(screen, data):
 class Cpcr():
     amount = 976
     min_age = 65
-    income_limit = 15831
+    income_limit = {"single": 15831, "maried": 21381}
 
     def __init__(self, screen):
         self.screen = screen
@@ -40,7 +40,7 @@ class Cpcr():
             self._passed("Someone in the household is disabled")
 
         #Someone is old enough
-        #TODO: if surviving spouse, min age = 58
+        #TODO: if surviving spouse, min age = 58       I don't know if we can add this one
         someone_old_enough = self.screen.num_adults(age_max=65)
 
         if someone_old_enough:
@@ -50,10 +50,14 @@ class Cpcr():
             self._failed(f"Someone in the household must be disabled or over the age of {Cpcr.min_age}")
 
         #Income test
-        #TODO: add income limit for maried
+        relationship_status = 'single'
+        for member_id, maried_to in self.screen.relationship_map().items():
+            if maried_to != None:
+                relationship_status = 'maried'
+
         gross_income = self.screen.calc_gross_income('yearly', ['all'])
-        self._condition(gross_income <= Cpcr.income_limit,
-                        f"Gross anual income must be less than {Cpcr.income_limit}")
+        self._condition(gross_income <= Cpcr.income_limit[relationship_status],
+                        f"Gross anual income must be less than {Cpcr.income_limit[relationship_status]}")
 
     def calc_value(self):
         self.value = Cpcr.amount
