@@ -109,6 +109,7 @@ class Andso():
             for other_member in eligible_members:
                 if other_member['member'].id == relationship_map[member.id]:
                     eligible_members.remove(other_member)
+                    break
             
             #add to total AND-SO value
             member_value = max(0, Andso.grant_standard - countable_income)
