@@ -40,23 +40,20 @@ class OldAge():
         tanf_eligible = calculate_tanf(self.screen, None)[
             "eligibility"]["eligible"]
         self._condition(not (self.screen.has_tanf or tanf_eligible),
-                        "Must not be eligible for TANF",
-                        "Is not eligible for TANF")
+                        "Must not be eligible for TANF")
 
         #asset test
         self._condition(self.screen.household_assets < OldAge.asset_limit,
-                        f"Household assets must not exceed {OldAge.asset_limit}",
-                        f"Assets are less than the limit of {OldAge.asset_limit}")
+                        f"Household assets must not exceed {OldAge.asset_limit}")
 
         # Right age
-        self.posible_eligble_members = []
+        self.possible_eligible_members = []
 
         for member in self.screen.household_members.all():
             if member.age >= OldAge.min_age:
-                self.posible_eligble_members.append(member)
-        self._condition(len(self.posible_eligble_members) >= 1,
-                        f"No one in the household is {OldAge.min_age} or older",
-                        f"Someone in the household is {OldAge.min_age} or older")
+                self.possible_eligible_members.append(member)
+        self._condition(len(self.possible_eligible_members) >= 1,
+                        f"Someone in the household must be {OldAge.min_age} or older")
 
         # Income
         def calc_total_countable_income(member):
@@ -72,22 +69,21 @@ class OldAge():
 
             return {"member": member, "countable_income": total_countable}
 
-        self.posible_eligble_members = map(
-            calc_total_countable_income, self.posible_eligble_members)
+        self.possible_eligible_members = map(
+            calc_total_countable_income, self.possible_eligible_members)
 
-        self.posible_eligble_members = list(filter(
-            lambda m: m["countable_income"] < OldAge.grant_standard, self.posible_eligble_members))
+        self.possible_eligible_members = list(filter(
+            lambda m: m["countable_income"] < OldAge.grant_standard, self.possible_eligible_members))
 
-        self._condition(len(self.posible_eligble_members) >= 1,
-                        f"No member of the household over the age of {OldAge.min_age} makes less than ${OldAge.grant_standard} a month",
-                        f"A member of the house hold is over the age of {OldAge.min_age} makes less than ${OldAge.grant_standard} a month")
+        self._condition(len(self.possible_eligible_members) >= 1,
+                        f"A member of the house hold over the age of {OldAge.min_age} must make less than ${OldAge.grant_standard} a month")
 
     def calc_value(self):
         self.value = 0
 
         # remove any possible couples
         possible_couples = set()
-        for possible_eligible_member in self.posible_eligble_members:
+        for possible_eligible_member in self.possible_eligible_members:
             member = possible_eligible_member['member']
             countable_income = possible_eligible_member['countable_income']
 
@@ -96,7 +92,7 @@ class OldAge():
                 # This means that the Old Age Pension might be inacurate for couples
 
                 if member.relationship == 'headOfHousehold':
-                    for household_member in self.posible_eligble_members:
+                    for household_member in self.possible_eligible_members:
                         if household_member['member'].relationship in ('spouse', 'domesticPartner'):
                             # head of house married to this person
                             possible_couples.add(household_member['member'].id)
@@ -107,7 +103,7 @@ class OldAge():
                         self.screen.household_members.filter(relationship='headOfHousehold')[0].id)
                 elif member.relationship in ('parent', 'fosterParent', 'stepParent', 'grandParent'):
                     # might be married to someone with same relationship to head of house
-                    for person in self.posible_eligble_members:
+                    for person in self.possible_eligible_members:
                         person = person['member']
                         if person.relationship == member.relationship and person.id != member.id:
                             # first other person with same relationship is excluded
@@ -128,8 +124,8 @@ class OldAge():
     def _passed(self, msg):
         self.eligibility["passed"].append(msg)
 
-    def _condition(self, condition, failed_msg, pass_msg):
+    def _condition(self, condition, msg):
         if condition is True:
-            self._passed(pass_msg)
+            self._passed(msg)
         else:
-            self._failed(failed_msg)
+            self._failed(msg)
