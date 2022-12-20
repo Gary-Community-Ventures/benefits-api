@@ -145,6 +145,42 @@ class Screen(models.Model):
 
         return net_income
 
+    def relationship_map(self):
+        relationship_map = {}
+
+        all_members = self.household_members.values()
+        for member in all_members:
+            if member['id'] in relationship_map:
+                if relationship_map[member['id']] != None:
+                    continue
+            
+            relationship = member['relationship']
+            probabable_spouse = None
+            
+            if relationship == 'headOfHousehold':
+                for other_member in all_members:
+                    if other_member['relationship'] in ('spouse', 'domesticPartner') and\
+                            other_member['id'] not in relationship_map:
+                        probabable_spouse = other_member['id']
+                        break
+            elif relationship in ('spouse', 'domesticPartner'):
+                for other_member in all_members:
+                    if other_member['relationship'] == 'headOfHousehold' and\
+                            other_member['id'] not in relationship_map:
+                        probabable_spouse = other_member['id']
+                        break
+            elif relationship in ('parent', 'fosterParent', 'stepParent', 'grandParent'):
+                for other_member in all_members:
+                    if other_member['relationship'] == relationship and\
+                            other_member['id'] != member['id'] and\
+                            other_member['id'] not in relationship_map:
+                        probabable_spouse = other_member['id']
+                        break
+            relationship_map[member['id']] = probabable_spouse
+            if probabable_spouse != None:
+                relationship_map[probabable_spouse] = member['id']
+        return relationship_map
+
     def program_eligibility(self):
         all_programs = Program.objects.all()
         data = []
