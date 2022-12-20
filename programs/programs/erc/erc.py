@@ -42,8 +42,7 @@ class Erc():
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
         income_band = Erc.income_bands[self.screen.household_size]
         self._condition(gross_income <= income_band,
-                        f"Household makes ${gross_income} per month which is more than ${income_band}",
-                        f"Household makes ${gross_income} per month which is less than ${income_band}")
+                        f"Household makes ${gross_income} per month which must be less than ${income_band}")
 
     def calc_value(self):
         self.value = Erc.average_amount
@@ -55,11 +54,11 @@ class Erc():
     def _passed(self, msg):
         self.eligibility["passed"].append(msg)
 
-    def _condition(self, condition, failed_msg, pass_msg):
+    def _condition(self, condition, msg):
         if condition is True:
-            self._passed(pass_msg)
+            self._passed(msg)
         else:
-            self._failed(failed_msg)
+            self._failed(msg)
 
     def _between(self, value, min_val, max_val):
         return min_val <= value <= max_val
