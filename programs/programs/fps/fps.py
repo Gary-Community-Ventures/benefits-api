@@ -33,7 +33,7 @@ class Fps():
     def calc_eligibility(self):
         #Medicade eligibility
         #TODO: check if they are eligible for Medicare
-        self._condition(self.screen.has_medicaid is True,
+        self._condition(not self.screen.has_medicaid is True,
                         "Must not be eligible for Medicaid")
 
         #Child or Pregnant
@@ -43,9 +43,9 @@ class Fps():
                         f"Must have a child under the age of {Fps.child_max_age} or have someone who is pregnant")
 
         #Income
-        income_limit = 2.6 * settings.FPL2022[self.screen.household_size]
+        income_limit = int(2.6 * settings.FPL2022[self.screen.household_size])
         income_types = ["wages", "selfEmployment"]
-        gross_income = self.screen.calc_gross_income('yearly', income_types)
+        gross_income = int(self.screen.calc_gross_income('yearly', income_types))
 
         self._condition(gross_income < income_limit,
                         f"Income of {gross_income} must be less than {income_limit}")
@@ -65,6 +65,3 @@ class Fps():
             self._passed(msg)
         else:
             self._failed(msg)
-
-    def _between(self, value, min_val, max_val):
-        return min_val <= value <= max_val
