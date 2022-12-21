@@ -42,7 +42,7 @@ class Chs():
         gross_income = int(self.screen.calc_gross_income('yearly', ['all']))
 
         self._condition(gross_income < income_limit,
-                        f"Income of ${gross_income} must be less than {income_limit}")
+                        f"Income of ${gross_income} must be less than ${income_limit}")
 
     def calc_value(self):
         self.value = Chs.amount
