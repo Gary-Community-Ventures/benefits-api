@@ -76,7 +76,7 @@ class OldAge():
             lambda m: m["countable_income"] < OldAge.grant_standard, self.possible_eligible_members))
 
         self._condition(len(self.possible_eligible_members) >= 1,
-                        f"A member of the house hold over the age of {OldAge.min_age} must make less than ${OldAge.grant_standard} a month")
+                        f"A member of the house hold over the age of {OldAge.min_age} must have a countable income less than ${OldAge.grant_standard} a month")
 
     def calc_value(self):
         self.value = 0
