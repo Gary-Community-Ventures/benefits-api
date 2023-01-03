@@ -53,6 +53,7 @@ class TestDpp(TestCase):
 
         self.assertTrue(eligibility["eligible"])
         self.assertIn(f"Must have a child between the ages of {Dpp.min_age} and {Dpp.max_age}", eligibility['passed'])
+        self.assertIn(f"Must live in Denver", eligibility['passed'])
         self.assertEqual(len(eligibility['failed']), 0)
     
     def test_dpp_doesnt_have_preschooler(self):
@@ -63,4 +64,4 @@ class TestDpp(TestCase):
 
         self.assertFalse(eligibility["eligible"])
         self.assertIn(f"Must have a child between the ages of {Dpp.min_age} and {Dpp.max_age}", eligibility['failed'])
-        self.assertEqual(len(eligibility['passed']), 0)
+        self.assertEqual(len(eligibility['passed']), 1)

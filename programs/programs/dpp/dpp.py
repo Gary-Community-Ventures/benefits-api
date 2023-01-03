@@ -37,7 +37,11 @@ class Dpp():
         self._condition(num_children >= 1,
                         f"Must have a child between the ages of {Dpp.min_age} and {Dpp.max_age}")
 
-        #TODO: add location test
+        #Lives in Denver
+        location = self.screen.county
+
+        self._condition(location == "Denver County",
+                        "Must live in Denver")
 
     def calc_value(self):
         self.value = Dpp.amount
