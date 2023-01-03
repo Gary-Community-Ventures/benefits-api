@@ -38,8 +38,8 @@ class Chs():
                         f"Must have a child age {Chs.max_age} or less")
 
         #income
-        income_limit = int(settings.FPL2022[self.screen.household_size])
-        gross_income = int(self.screen.calc_gross_income('yearly', ['all']))
+        income_limit = int(settings.FPL2022[self.screen.household_size]/12)
+        gross_income = int(self.screen.calc_gross_income('monthly', ['all']))
 
         self._condition(gross_income < income_limit,
                         f"Income of ${gross_income} must be less than ${income_limit}")
