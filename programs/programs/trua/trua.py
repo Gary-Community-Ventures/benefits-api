@@ -44,6 +44,12 @@ class Trua():
         self._condition(gross_income <= income_band,
                         f"Household makes ${gross_income} per month which must be less than ${income_band}")
 
+        #Location test
+        location = self.screen.county
+
+        self._condition(location == "Denver County",
+                        "Must live in Denver")
+
     def calc_value(self):
         self.value = Trua.average_amount
 
