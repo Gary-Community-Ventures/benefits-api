@@ -74,6 +74,3 @@ class Cpcr():
             self._passed(msg)
         else:
             self._failed(msg)
-
-    def _between(self, value, min_val, max_val):
-        return min_val <= value <= max_val
