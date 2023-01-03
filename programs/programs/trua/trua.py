@@ -40,7 +40,7 @@ class Trua():
     def calc_eligibility(self):
         # Income test
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
-        income_band = Trua.income_bands[self.screen.household_size]
+        income_band = int(Trua.income_bands[self.screen.household_size]/12)
         self._condition(gross_income <= income_band,
                         f"Household makes ${gross_income} per month which must be less than ${income_band}")
 
