@@ -49,12 +49,12 @@ class Fps():
                         f"Must have a child under the age of {Fps.child_max_age} or have someone who is pregnant")
 
         #Income
-        income_limit = int(2.6 * settings.FPL2022[self.screen.household_size])
+        income_limit = int(2.6 * settings.FPL2022[self.screen.household_size]/12)
         income_types = ["wages", "selfEmployment"]
-        gross_income = int(self.screen.calc_gross_income('yearly', income_types))
+        gross_income = int(self.screen.calc_gross_income('monthly', income_types))
 
         self._condition(gross_income < income_limit,
-                        f"Income of {gross_income} must be less than {income_limit}")
+                        f"Income of ${gross_income} must be less than ${income_limit}")
 
     def calc_value(self):
         self.value = Fps.amount
