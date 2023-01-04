@@ -1,7 +1,7 @@
 from django.conf import settings
 
 def calculate_fps(screen, data):
-    fps = Fps(screen)
+    fps = Fps(screen, data)
     eligibility = fps.eligibility
     value = fps.value
 
@@ -17,8 +17,9 @@ class Fps():
     amount = 404
     child_max_age = 18
 
-    def __init__(self, screen):
+    def __init__(self, screen, data):
         self.screen = screen
+        self.data = data
 
         self.eligibility = {
             "eligible": True,
@@ -32,8 +33,13 @@ class Fps():
 
     def calc_eligibility(self):
         #Medicade eligibility
-        #TODO: check if they are eligible for Medicare
-        self._condition(not self.screen.has_medicaid is True,
+        is_medicaid_eligibile = False
+        for benifit in self.data:
+            if benifit["name_abbreviated"] == 'medicaid':
+                is_medicaid_eligibile = benifit["eligible"]
+                break
+
+        self._condition(not (self.screen.has_medicaid or is_medicaid_eligibile),
                         "Must not be eligible for Medicaid")
 
         #Child or Pregnant
