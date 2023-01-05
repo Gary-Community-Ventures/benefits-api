@@ -28,7 +28,7 @@ class TestTruaPension(TestCase):
             has_expenses=False,
         )
 
-    def test_trua_visualy_impaired_is_eligible(self):
+    def test_trua_passed_all_conditions(self):
         trua = Trua(self.screen1)
         eligibility = trua.eligibility
 
