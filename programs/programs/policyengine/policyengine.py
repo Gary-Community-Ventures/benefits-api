@@ -233,7 +233,7 @@ def policy_engine_prepare_params(screen):
             "ssi_earned_income": {"2023": int(household_member.calc_gross_income('yearly', ['earned']))},
             "ssi_unearned_income": {"2023": int(household_member.calc_gross_income('yearly', ['unearned']))},
             "is_ssi_disabled": {"2023": household_member.disabled or household_member.visually_impaired},
-            "ssi_countable_resources": {"2023": int(screen.household_assets)},
+            "ssi_countable_resources": {"2023": int(screen.household_assets / screen.household_size)},
             "ssi_amount_if_eligible": {"2023": None}
         }
 
