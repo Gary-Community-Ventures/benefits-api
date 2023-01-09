@@ -15,7 +15,7 @@ def calculate_oap(screen, data):
 
 
 class OldAgePension():
-    grant_standard = 879
+    grant_standard = 952
     earned_standard_deduction = 65
     unearned_standard_deduction = 20
     asset_limit = 2000
