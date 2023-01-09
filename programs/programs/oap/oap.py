@@ -42,7 +42,7 @@ class OldAgePension():
         self._condition(not (self.screen.has_tanf or tanf_eligible),
                         "Must not be eligible for TANF")
 
-        #asset test
+        # Asset test
         self._condition(self.screen.household_assets < OldAgePension.asset_limit,
                         f"Household assets must not exceed {OldAgePension.asset_limit}")
 

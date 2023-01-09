@@ -30,10 +30,6 @@ class TestOldAgePension(TestCase):
             has_expenses=False,
         )
 
-    def test_screen_exits(self):
-        self.assertEqual(self.screen1.agree_to_tos, True)
-        self.assertEqual(self.person1.screen, self.screen1)
-
     def test_oap_visualy_impaired_is_eligible(self):
         oap = OldAge(self.screen1)
         eligibility = oap.eligibility
