@@ -1,3 +1,6 @@
+from django.conf import settings
+from programs.programs.cfhc.tax_credit_value import tax_credit_by_county
+
 def calculate_health_insurance(screen, data):
     cfhc = Cfhc(screen)
     eligibility = cfhc.eligibility
@@ -12,6 +15,8 @@ def calculate_health_insurance(screen, data):
 
 
 class Cfhc():
+    health_credit_value = 313
+
     def __init__(self, screen):
         self.screen = screen
 
@@ -31,8 +36,15 @@ class Cfhc():
         self._condition(has_no_hi,
                         "Someone in the household must not have health insurance")
 
+        #Income
+        income_band = int(settings.FPL2022[self.screen.household_size]/12)
+        gross_income = int(self.screen.calc_gross_income('yearly', ("all",))/12)
+        self._condition( gross_income < income_band,
+                        f"Household makes ${gross_income} per month which must be less than ${income_band}")
+
     def calc_value(self):
-        self.value = 0
+        # https://stackoverflow.com/questions/6266727/python-cut-off-the-last-word-of-a-sentence
+        self.value = tax_credit_by_county[self.screen.county.rsplit(' ', 1)[0]]
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
