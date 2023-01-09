@@ -1,7 +1,7 @@
 from django.conf import settings
 from programs.programs.cfhc.tax_credit_value import tax_credit_by_county
 
-def calculate_health_insurance(screen, data):
+def calculate_cfhc(screen, data):
     cfhc = Cfhc(screen)
     eligibility = cfhc.eligibility
     value = cfhc.value
