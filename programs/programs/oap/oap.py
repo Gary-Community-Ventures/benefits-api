@@ -2,7 +2,7 @@ from programs.programs.tanf.tanf import calculate_tanf
 
 
 def calculate_oap(screen, data):
-    old_age_pension = OldAge(screen)
+    old_age_pension = OldAgePension(screen)
     eligibility = old_age_pension.eligibility
     value = old_age_pension.value
 
@@ -14,7 +14,7 @@ def calculate_oap(screen, data):
     return calculation
 
 
-class OldAge():
+class OldAgePension():
     grant_standard = 879
     earned_standard_deduction = 65
     unearned_standard_deduction = 20
@@ -43,27 +43,27 @@ class OldAge():
                         "Must not be eligible for TANF")
 
         #asset test
-        self._condition(self.screen.household_assets < OldAge.asset_limit,
-                        f"Household assets must not exceed {OldAge.asset_limit}")
+        self._condition(self.screen.household_assets < OldAgePension.asset_limit,
+                        f"Household assets must not exceed {OldAgePension.asset_limit}")
 
         # Right age
         self.possible_eligible_members = []
 
         for member in self.screen.household_members.all():
-            if member.age >= OldAge.min_age:
+            if member.age >= OldAgePension.min_age:
                 self.possible_eligible_members.append(member)
         self._condition(len(self.possible_eligible_members) >= 1,
-                        f"Someone in the household must be {OldAge.min_age} or older")
+                        f"Someone in the household must be {OldAgePension.min_age} or older")
 
         # Income
         def calc_total_countable_income(member):
             earned = member.calc_gross_income("monthly", ["earned"])
             countable_earned = max(
-                0, (earned - OldAge.earned_standard_deduction) / 2)
+                0, (earned - OldAgePension.earned_standard_deduction) / 2)
 
             unearned = member.calc_gross_income("monthly", ["unearned"])
             countable_unearned = max(
-                0, unearned - OldAge.unearned_standard_deduction)
+                0, unearned - OldAgePension.unearned_standard_deduction)
 
             total_countable = countable_earned + countable_unearned
 
@@ -73,10 +73,10 @@ class OldAge():
             calc_total_countable_income, self.possible_eligible_members)
 
         self.possible_eligible_members = list(filter(
-            lambda m: m["countable_income"] < OldAge.grant_standard, self.possible_eligible_members))
+            lambda m: m["countable_income"] < OldAgePension.grant_standard, self.possible_eligible_members))
 
         self._condition(len(self.possible_eligible_members) >= 1,
-                        f"A member of the house hold over the age of {OldAge.min_age} must have a countable income less than ${OldAge.grant_standard} a month")
+                        f"A member of the house hold over the age of {OldAgePension.min_age} must have a countable income less than ${OldAgePension.grant_standard} a month")
 
     def calc_value(self):
         self.value = 0
@@ -94,7 +94,7 @@ class OldAge():
                     break
 
             # add to total OAP value
-            member_value = max(0, OldAge.grant_standard - countable_income)
+            member_value = max(0, OldAgePension.grant_standard - countable_income)
             self.value += member_value
 
         self.value *= 12
