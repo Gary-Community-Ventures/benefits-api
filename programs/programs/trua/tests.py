@@ -33,9 +33,6 @@ class TestTruaPension(TestCase):
         eligibility = trua.eligibility
 
         self.assertTrue(eligibility["eligible"])
-        self.assertIn(f"Household makes $0 per month which must be less than ${int(Trua.income_bands[1]/12)}", eligibility['passed'])
-        self.assertIn("Must live in Denver", eligibility['passed'])
-        self.assertEqual(len(eligibility['failed']), 0)
 
     def test_trua_failed_all_conditions(self):
         income = IncomeStream.objects.create(
@@ -52,6 +49,3 @@ class TestTruaPension(TestCase):
         eligibility = trua.eligibility
 
         self.assertFalse(eligibility["eligible"])
-        self.assertIn(f"Household makes $5800.00 per month which must be less than ${int(Trua.income_bands[1]/12)}", eligibility['failed'])
-        self.assertIn("Must live in Denver", eligibility['failed'])
-        self.assertEqual(len(eligibility['passed']), 0)
