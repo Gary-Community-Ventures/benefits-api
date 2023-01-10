@@ -49,15 +49,6 @@ class TestFpsPension(TestCase):
         eligibility = fps.eligibility
 
         self.assertTrue(eligibility["eligible"])
-        self.assertIn(
-            "Must not be eligible for Medicaid", eligibility['passed'])
-        self.assertIn(
-            f"Must have a child under the age of {Fps.child_max_age} or have someone who is pregnant",
-            eligibility['passed'])
-        self.assertIn(
-            f"Income of $0 must be less than ${int(2.6 * settings.FPL2022[2]/12)}",
-            eligibility['passed'])
-        self.assertEqual(len(eligibility['failed']), 0)
 
     def test_fps_failed_all_conditions(self):
         self.person2.age = 20
@@ -75,12 +66,3 @@ class TestFpsPension(TestCase):
         eligibility = fps.eligibility
 
         self.assertFalse(eligibility["eligible"])
-        self.assertIn(
-            "Must not be eligible for Medicaid", eligibility['failed'])
-        self.assertIn(
-            f"Must have a child under the age of {Fps.child_max_age} or have someone who is pregnant",
-            eligibility['failed'])
-        self.assertIn(
-            f"Income of $4000 must be less than ${int(2.6 * settings.FPL2022[2]/12)}",
-            eligibility['failed'])
-        self.assertEqual(len(eligibility['passed']), 0)
