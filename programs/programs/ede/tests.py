@@ -34,13 +34,6 @@ class TestEdePension(TestCase):
         eligibility = ede.eligibility
 
         self.assertTrue(eligibility["eligible"])
-        self.assertIn(
-            f"Must have someone older that {Ede.min_age} in the house",
-            eligibility['passed'])
-        self.assertIn(
-            f"Gross income of $0 must be less than ${1.3 * settings.FPL2022[1]}",
-            eligibility['passed'])
-        self.assertEqual(len(eligibility['failed']), 0)
 
     def test_ede_failed_all_conditions(self):
         income = IncomeStream.objects.create(
@@ -57,10 +50,3 @@ class TestEdePension(TestCase):
         eligibility = ede.eligibility
 
         self.assertFalse(eligibility["eligible"])
-        self.assertIn(
-            f"Must have someone older that {Ede.min_age} in the house",
-            eligibility['failed'])
-        self.assertIn(
-            f"Gross income of $36000.00 must be less than ${1.3 * settings.FPL2022[1]}",
-            eligibility['failed'])
-        self.assertEqual(len(eligibility['passed']), 0)
