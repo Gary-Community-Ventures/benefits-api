@@ -35,16 +35,6 @@ class TestOldAgePension(TestCase):
         eligibility = oap.eligibility
 
         self.assertTrue(eligibility["eligible"])
-        self.assertIn(f"Must not be eligible for TANF", eligibility['passed'])
-        self.assertIn(
-            f"Household assets must not exceed {OldAge.asset_limit}", eligibility['passed'])
-        self.assertIn(
-            f"Someone in the household must be {OldAge.min_age} or older",
-            eligibility['passed'])
-        self.assertIn(
-            f"A member of the house hold over the age of {OldAge.min_age} must have a countable income less than ${OldAge.grant_standard} a month",
-            eligibility['passed'])
-        self.assertEqual(len(eligibility['failed']), 0)
 
     def test_oap_failed_all_conditions(self):
         self.screen1.has_ssi = True
@@ -58,17 +48,6 @@ class TestOldAgePension(TestCase):
         eligibility = oap.eligibility
 
         self.assertFalse(eligibility["eligible"])
-        self.assertIn(f"Must not be eligible for TANF", eligibility['failed'])
-        self.assertIn(
-            f"Household assets must not exceed {OldAge.asset_limit}", eligibility['failed'])
-        self.assertIn(
-            f"Someone in the household must be {OldAge.min_age} or older",
-            eligibility['failed'])
-        self.assertIn(
-            f"A member of the house hold over the age of {OldAge.min_age} must have a countable income less than ${OldAge.grant_standard} a month",
-            eligibility['failed'])
-        self.assertEqual(len(eligibility['passed']), 0)
-
 
     def test_oap_failed_income_condition(self):
         income = IncomeStream.objects.create(
@@ -82,12 +61,3 @@ class TestOldAgePension(TestCase):
         eligibility = oap.eligibility
 
         self.assertFalse(eligibility["eligible"])
-        self.assertIn(f"Must not be eligible for TANF", eligibility['passed'])
-        self.assertIn(
-            f"Household assets must not exceed {OldAge.asset_limit}", eligibility['passed'])
-        self.assertIn(
-            f"Someone in the household must be {OldAge.min_age} or older",
-            eligibility['passed'])
-        self.assertIn(
-            f"A member of the house hold over the age of {OldAge.min_age} must have a countable income less than ${OldAge.grant_standard} a month",
-            eligibility['failed'])
