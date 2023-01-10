@@ -1,5 +1,5 @@
 from django.test import TestCase
-from programs.programs.oap.oap import OldAge
+from programs.programs.oap.oap import OldAgePension
 from screener.models import Screen, HouseholdMember, IncomeStream
 
 
@@ -31,7 +31,7 @@ class TestOldAgePension(TestCase):
         )
 
     def test_oap_visualy_impaired_is_eligible(self):
-        oap = OldAge(self.screen1)
+        oap = OldAgePension(self.screen1)
         eligibility = oap.eligibility
 
         self.assertTrue(eligibility["eligible"])
@@ -44,7 +44,7 @@ class TestOldAgePension(TestCase):
         self.person1.age = 30
         self.person1.save()
 
-        oap = OldAge(self.screen1)
+        oap = OldAgePension(self.screen1)
         eligibility = oap.eligibility
 
         self.assertFalse(eligibility["eligible"])
@@ -57,7 +57,7 @@ class TestOldAgePension(TestCase):
             amount=2000,
             frequency='monthly'
         )
-        oap = OldAge(self.screen1)
+        oap = OldAgePension(self.screen1)
         eligibility = oap.eligibility
 
         self.assertFalse(eligibility["eligible"])
