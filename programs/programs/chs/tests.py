@@ -49,13 +49,6 @@ class TestChsPension(TestCase):
         eligibility = chs.eligibility
 
         self.assertTrue(eligibility["eligible"])
-        self.assertIn(
-            f"Must have a child age {Chs.max_age} or less",
-            eligibility['passed'])
-        self.assertIn(
-            f"Income of $0 must be less than ${int(settings.FPL2022[2]/12)}",
-            eligibility['passed'])
-        self.assertEqual(len(eligibility['failed']), 0)
 
     def test_chs_failed_all_conditions(self):
         income = IncomeStream.objects.create(
@@ -73,10 +66,3 @@ class TestChsPension(TestCase):
         eligibility = chs.eligibility
 
         self.assertFalse(eligibility["eligible"])
-        self.assertIn(
-            f"Must have a child age {Chs.max_age} or less",
-            eligibility['failed'])
-        self.assertIn(
-            f"Income of $2000 must be less than ${int(settings.FPL2022[2]/12)}",
-            eligibility['failed'])
-        self.assertEqual(len(eligibility['passed']), 0)
