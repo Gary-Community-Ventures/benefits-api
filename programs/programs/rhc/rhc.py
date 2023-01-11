@@ -2,7 +2,7 @@ from programs.programs.tanf.tanf import calculate_tanf
 
 
 def calculate_rhc(screen, data):
-    rhc = Rhc(screen)
+    rhc = Rhc(screen, data)
     eligibility = rhc.eligibility
     value = rhc.value
 
@@ -17,8 +17,9 @@ def calculate_rhc(screen, data):
 class Rhc():
     amount = 268
 
-    def __init__(self, screen):
+    def __init__(self, screen, data):
         self.screen = screen
+        self.screen = data
 
         self.eligibility = {
             "eligible": True,
@@ -36,8 +37,13 @@ class Rhc():
         self._condition(has_no_hi,
                         "Someone in the household must not have health insurance")
 
-        #Eligible for Medicaid
-        
+        # Medicade eligibility
+        is_medicaid_eligibile = False
+        for benifit in self.data:
+            if benifit["name_abbreviated"] == 'medicaid':
+                is_medicaid_eligibile = benifit["eligible"]
+                break
+
     def calc_value(self):
         self.value = Rhc.amount
 
