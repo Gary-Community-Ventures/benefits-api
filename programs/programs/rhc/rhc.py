@@ -31,8 +31,13 @@ class Rhc():
         self.calc_value()
 
     def calc_eligibility(self):
-        pass
+        #No health insurance
+        has_no_hi = self.screen.has_types_of_hi(['none'])
+        self._condition(has_no_hi,
+                        "Someone in the household must not have health insurance")
 
+        #Eligible for Medicaid
+        
     def calc_value(self):
         self.value = Rhc.amount
 
@@ -49,5 +54,3 @@ class Rhc():
         else:
             self._failed(msg)
 
-    def _between(self, value, min_val, max_val):
-        return min_val <= value <= max_val
