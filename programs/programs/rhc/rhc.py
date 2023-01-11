@@ -19,7 +19,7 @@ class Rhc():
 
     def __init__(self, screen, data):
         self.screen = screen
-        self.screen = data
+        self.data = data
 
         self.eligibility = {
             "eligible": True,
@@ -43,6 +43,9 @@ class Rhc():
             if benifit["name_abbreviated"] == 'medicaid':
                 is_medicaid_eligibile = benifit["eligible"]
                 break
+
+        self._condition(is_medicaid_eligibile,
+                        "Must be eligible for Medicaid")
 
     def calc_value(self):
         self.value = Rhc.amount
