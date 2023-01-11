@@ -1,6 +1,3 @@
-from programs.programs.tanf.tanf import calculate_tanf
-
-
 def calculate_rhc(screen, data):
     rhc = Rhc(screen, data)
     eligibility = rhc.eligibility
