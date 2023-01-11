@@ -1,7 +1,7 @@
 from django.conf import settings
 
 def calculate_cdhcs(screen, data):
-    cdhcs = Cdhcs(screen, data)
+    cdhcs = Cdhcs(screen)
     eligibility = cdhcs.eligibility
     value = cdhcs.value
 
@@ -17,9 +17,8 @@ class Cdhcs():
     amount = 80
     min_age = 60
 
-    def __init__(self, screen, data):
+    def __init__(self, screen):
         self.screen = screen
-        self.data = data
 
         self.eligibility = {
             "eligible": True,
