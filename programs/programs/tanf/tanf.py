@@ -37,7 +37,7 @@ def eligibility_tanf(screen, children, guardians):
                                 "sSSurvivor", "sSRetirement", "cOSDisability",
                                 "veteran", "pension", "deferredComp",
                                 "workersComp", "alimony", "boarder", "gifts",
-                                "rental", "investment"]
+                                "rental", "investment", "childSupport"]
 
     one_parent_income_bands = {
         1: 331,
