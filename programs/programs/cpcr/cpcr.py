@@ -36,18 +36,12 @@ class Cpcr():
         people_disabled = self.screen.household_members.filter(Q(disabled=True) | Q(visually_impaired=True))
         someone_disabled = len(people_disabled) >= 1
 
-        if someone_disabled:
-            self._passed("Someone in the household is disabled")
-
         #Someone is old enough
         #TODO: if surviving spouse, min age = 58       I don't know if we can add this one
         someone_old_enough = self.screen.num_adults(age_max=65)
 
-        if someone_old_enough:
-            self._passed(f"Someone in your househould is over the age of {Cpcr.min_age}")
-        
-        if not (someone_disabled or someone_old_enough):
-            self._failed(f"Someone in the household must be disabled or over the age of {Cpcr.min_age}")
+        self._condition(someone_disabled or someone_old_enough,
+                        f"Someone in the household must be disabled or over the age of {Cpcr.min_age}")
 
         #Income test
         relationship_status = 'single'
