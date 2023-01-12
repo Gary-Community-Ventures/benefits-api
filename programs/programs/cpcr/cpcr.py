@@ -16,7 +16,7 @@ def calculate_cpcr(screen, data):
 class Cpcr():
     amount = 976
     min_age = 65
-    income_limit = {"single": 15831, "maried": 21381}
+    income_limit = {"single": 15831, "married": 21381}
 
     def __init__(self, screen):
         self.screen = screen
@@ -51,9 +51,9 @@ class Cpcr():
 
         #Income test
         relationship_status = 'single'
-        for member_id, maried_to in self.screen.relationship_map().items():
-            if maried_to != None:
-                relationship_status = 'maried'
+        for member_id, married_to in self.screen.relationship_map().items():
+            if married_to != None:
+                relationship_status = 'married'
 
         gross_income = self.screen.calc_gross_income('yearly', ['all'])
         self._condition(gross_income <= Cpcr.income_limit[relationship_status],
