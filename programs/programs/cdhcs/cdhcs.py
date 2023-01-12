@@ -31,9 +31,10 @@ class Cdhcs():
         self.calc_value()
 
     def calc_eligibility(self):
-        # No health insurance
-        has_no_hi = self.screen.has_types_of_hi(['none'])
-        self._condition(has_no_hi,
+        # Health insurance
+        has_valid_hi = self.screen.has_types_of_hi(['none', 'employer', 'chp'])
+        has_medicaid = self.screen.has_medicaid
+        self._condition(has_valid_hi and not has_medicaid,
                         "Someone in the household must not have health insurance")
 
         # Age
