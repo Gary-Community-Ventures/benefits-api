@@ -39,6 +39,8 @@ class TestCdhcsPension(TestCase):
     def test_cdhcs_failed_all_conditions(self):
         self.person1.age = 20
         self.person1.save()
+        self.screen1.has_medicaid = True
+        self.screen1.save()
         IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,

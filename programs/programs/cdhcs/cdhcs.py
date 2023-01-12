@@ -35,7 +35,7 @@ class Cdhcs():
         has_valid_hi = self.screen.has_types_of_hi(['none', 'employer', 'chp'])
         has_medicaid = self.screen.has_medicaid
         self._condition(has_valid_hi and not has_medicaid,
-                        "Someone in the household must not have health insurance")
+                        "Someone in the household must not have medicaid")
 
         # Age
         self._condition(self.screen.num_adults(age_max=Cdhcs.min_age)>=1,
@@ -43,7 +43,7 @@ class Cdhcs():
 
         # Income test
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
-        income_band = 2.5 * settings.FPL2022[self.screen.household_size]
+        income_band = int(2.5 * settings.FPL2022[self.screen.household_size]/12)
         self._condition(gross_income <= income_band,
                         f"Household makes ${gross_income} per month which must be less than ${income_band}")
 
