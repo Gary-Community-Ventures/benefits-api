@@ -43,8 +43,10 @@ class OmniSalud():
 
     def calc_value(self):
         child_value = OmniSalud.amount['child'] * self.screen.num_children()
-        adult_value = OmniSalud.amount['adult'] * self.screen.num_adults()
-        senior_value = OmniSalud.amount['senior'] * self.screen.num_adults(age_max=65)
+        num_seniors = self.screen.num_adults(age_max=65)
+        senior_value = OmniSalud.amount['senior'] * num_seniors
+        adult_value = OmniSalud.amount['adult'] * (self.screen.num_adults() - num_seniors)
+
         self.value = child_value + adult_value + senior_value
 
     def _failed(self, msg):
