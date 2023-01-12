@@ -220,6 +220,10 @@ def policy_engine_prepare_params(screen):
         else:
             is_tax_unit_head = False
 
+        ssi_assets = 0
+        if household_member.age >= 19:
+            ssi_assets = screen.household_assets / screen.num_adults()
+
         policy_engine_params['household']['people'][member_id] = {
             "employment_income": {
                 "2023": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment'])),
@@ -233,7 +237,7 @@ def policy_engine_prepare_params(screen):
             "ssi_earned_income": {"2023": int(household_member.calc_gross_income('yearly', ['earned']))},
             "ssi_unearned_income": {"2023": int(household_member.calc_gross_income('yearly', ['unearned']))},
             "is_ssi_disabled": {"2023": household_member.disabled or household_member.visually_impaired},
-            "ssi_countable_resources": {"2023": int(screen.household_assets / screen.household_size)},
+            "ssi_countable_resources": {"2023": int(ssi_assets)},
             "ssi_amount_if_eligible": {"2023": None}
         }
 
