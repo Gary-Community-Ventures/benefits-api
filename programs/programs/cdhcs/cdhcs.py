@@ -42,7 +42,7 @@ class Cdhcs():
                         f"Someone in the household must be {Cdhcs.min_age} or older")
 
         # Income test
-        gross_income = self.screen.calc_gross_income("monthly", ["all"])
+        gross_income = int(self.screen.calc_gross_income("monthly", ["all"]))
         income_band = int(2.5 * settings.FPL2022[self.screen.household_size]/12)
         self._condition(gross_income <= income_band,
                         f"Household makes ${gross_income} per month which must be less than ${income_band}")
