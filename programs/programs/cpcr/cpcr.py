@@ -51,7 +51,7 @@ class Cpcr():
 
         gross_income = self.screen.calc_gross_income('yearly', ['all'])
         self._condition(gross_income <= Cpcr.income_limit[relationship_status],
-                        f"Gross anual income must be less than {Cpcr.income_limit[relationship_status]}")
+                        f"Gross annual income must be less than {Cpcr.income_limit[relationship_status]}")
 
     def calc_value(self):
         self.value = Cpcr.amount
