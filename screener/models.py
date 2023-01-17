@@ -45,6 +45,11 @@ class Screen(models.Model):
     has_chp = models.BooleanField(default=False, blank=True, null=True)
     has_ccb = models.BooleanField(default=False, blank=True, null=True)
     has_ssi = models.BooleanField(default=False, blank=True, null=True)
+    has_employer_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_private_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_medicaid_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_chp_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_no_hi = models.BooleanField(default=False, blank=True, null=True)
 
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
