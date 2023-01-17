@@ -90,7 +90,11 @@ def eligibility_policy_engine(screen):
             eligibility['ssi']['estimated_value'] += pvalue['ssi']['2023']
 
     # WIC PRESUMPTIVE ELIGIBILITY
-    if eligibility['wic']['eligible'] is False:
+    in_wic_demographic = False
+    for member in screen.household_members.all():
+        if member.pregnant is True or member.age <= 5:
+            in_wic_demographic = True
+    if eligibility['wic']['eligible'] is False and in_wic_demographic:
         if screen.has_medicaid is True \
                 or screen.has_tanf is True \
                 or screen.has_snap is True:
@@ -118,7 +122,7 @@ def eligibility_policy_engine(screen):
     # COEITC
     if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
         eligibility['coeitc']['eligible'] = True
-        eligibility['coeitc']['estimated_value'] = .10 * benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
+        eligibility['coeitc']['estimated_value'] = .20 * benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
 
     # CTC
     if benefit_data['tax_units']['tax_unit']['ctc']['2022'] > 0:
