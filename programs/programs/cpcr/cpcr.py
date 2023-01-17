@@ -38,7 +38,7 @@ class Cpcr():
 
         #Someone is old enough
         #TODO: if surviving spouse, min age = 58       I don't know if we can add this one
-        someone_old_enough = self.screen.num_adults(age_max=65)
+        someone_old_enough = self.screen.num_adults(age_max=65) >= 1
 
         self._condition(someone_disabled or someone_old_enough,
                         f"Someone in the household must be disabled or over the age of {Cpcr.min_age}")
