@@ -15,6 +15,8 @@ from programs.programs.leap.leap import calculate_leap # noqa
 from programs.programs.andso.andso import calculate_andso
 from programs.programs.andcs.andcs import calculate_andcs
 from programs.programs.cpcr.cpcr import calculate_cpcr
+from programs.programs.oap.oap import calculate_oap
+from programs.programs.erc.erc import calculate_erc
 
 
 # This model describes all of the benefit programs available in the screener
@@ -55,7 +57,9 @@ class Program(TranslatableModel):
             "leap": calculate_leap,
             "andso": calculate_andso,
             "andcs": calculate_andcs,
-            "cpcr": calculate_cpcr
+            "cpcr": calculate_cpcr,
+            "oap": calculate_oap,
+            "erc": calculate_erc,
         }
         calculation = calculators[self.name_abbreviated.lower()](screen, data)
 
