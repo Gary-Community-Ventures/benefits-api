@@ -94,7 +94,13 @@ class ScreenSerializer(serializers.ModelSerializer):
             'has_cccap',
             'has_mydenver',
             'has_chp',
-            'has_ccb'
+            'has_ccb',
+            'has_ssi',
+            'has_employer_hi',
+            'has_private_hi',
+            'has_medicaid_hi',
+            'has_chp_hi',
+            'has_no_hi',
         )
 
 
