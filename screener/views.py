@@ -98,6 +98,17 @@ def eligibility_results(screen_id):
     pe_eligibility = eligibility_policy_engine(screen)
     pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid', 'ssi']
 
+    def sort_first(program):
+        calc_first = ('tanf', 'ssi', 'medicaid')
+
+        if program.name_abbreviated in calc_first:
+            return 0
+        else:
+            return 1
+
+    # make certain benifits calculate first so that they can be used in other benefits
+    all_programs = sorted(all_programs, key=sort_first)
+
     for program in all_programs:
         skip = False
         # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
