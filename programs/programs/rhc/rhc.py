@@ -35,8 +35,8 @@ class Rhc():
                         "Someone in the household must not have health insurance")
 
         # Medicade eligibility
-        is_medicaid_eligibile = False
-        for benifit in self.data:
+        is_medicaid_eligible = False
+        for benefit in self.data:
             if benifit["name_abbreviated"] == 'medicaid':
                 is_medicaid_eligibile = benifit["eligible"]
                 break
