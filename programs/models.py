@@ -15,6 +15,7 @@ from programs.programs.leap.leap import calculate_leap # noqa
 from programs.programs.andso.andso import calculate_andso
 from programs.programs.andcs.andcs import calculate_andcs
 from programs.programs.ede.ede import calculate_ede
+from programs.programs.trua.trua import calculate_trua
 from programs.programs.cpcr.cpcr import calculate_cpcr
 from programs.programs.oap.oap import calculate_oap
 from programs.programs.erc.erc import calculate_erc
@@ -59,6 +60,7 @@ class Program(TranslatableModel):
             "andso": calculate_andso,
             "andcs": calculate_andcs,
             "ede": calculate_ede,
+            "trua": calculate_trua,
             "cpcr": calculate_cpcr,
             "oap": calculate_oap,
             "erc": calculate_erc,
