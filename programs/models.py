@@ -26,7 +26,6 @@ from programs.programs.ede.ede import calculate_ede
 from programs.programs.trua.trua import calculate_trua
 from programs.programs.cpcr.cpcr import calculate_cpcr
 from programs.programs.oap.oap import calculate_oap
-from programs.programs.erc.erc import calculate_erc
 
 # This model describes all of the benefit programs available in the screener
 # results. Each program has a specific folder in /programs where the specific
