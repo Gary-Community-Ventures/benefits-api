@@ -186,6 +186,28 @@ class Screen(models.Model):
                 relationship_map[probabable_spouse] = member['id']
         return relationship_map
 
+    def has_types_of_hi(self, types, only=False):
+        """
+        Returns True if family has an insurance in types.
+        If only=True then will return False if the family has an insurance that is not in types.
+        """
+        types_of_hi = {
+            'employer': self.has_employer_hi,
+            'private': self.has_private_hi,
+            'medicaid': self.has_medicaid_hi,
+            'chp': self.has_chp_hi,
+            'none': self.has_no_hi
+        }
+
+        has_type = False
+        for insurance in types_of_hi:
+            if not types_of_hi[insurance]: continue
+            if insurance in types:
+                has_type = True
+            elif only:
+                return False
+        return has_type
+
     def program_eligibility(self):
         all_programs = Program.objects.all()
         data = []
