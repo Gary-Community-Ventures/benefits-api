@@ -58,7 +58,7 @@ class Program(TranslatableModel):
             "leap": calculate_leap,
             "andso": calculate_andso,
             "andcs": calculate_andcs,
-            "rhc": calculate_rhc
+            "rhc": calculate_rhc,
             "cpcr": calculate_cpcr,
             "oap": calculate_oap,
             "erc": calculate_erc,
