@@ -44,7 +44,7 @@ class Cfhc():
 
     def calc_value(self):
         # https://stackoverflow.com/questions/6266727/python-cut-off-the-last-word-of-a-sentence
-        self.value = tax_credit_by_county[self.screen.county.rsplit(' ', 1)[0]]
+        self.value = tax_credit_by_county[self.screen.county.rsplit(' ', 1)[0]] * 12
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False

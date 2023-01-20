@@ -13,8 +13,8 @@ def calculate_dpp(screen, data):
 
 
 class Dpp():
-    amount = 788
-    min_age = 2
+    amount = 788 * 12
+    min_age = 3
     max_age = 4
 
     def __init__(self, screen):

@@ -48,7 +48,7 @@ class Cdhcs():
                         f"Household makes ${gross_income} per month which must be less than ${income_band}")
 
     def calc_value(self):
-        self.value = Cdhcs.amount * self.screen.num_adults(age_max=Cdhcs.min_age)
+        self.value = Cdhcs.amount * self.screen.num_adults(age_max=Cdhcs.min_age) * 12
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
