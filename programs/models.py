@@ -15,10 +15,14 @@ from programs.programs.leap.leap import calculate_leap # noqa
 from programs.programs.andso.andso import calculate_andso
 from programs.programs.andcs.andcs import calculate_andcs
 from programs.programs.cfhc.cfhc import calculate_cfhc
+from programs.programs.fps.fps import calculate_fps
+from programs.programs.dpp.dpp import calculate_dpp
+from programs.programs.chs.chs import calculate_chs
+from programs.programs.ede.ede import calculate_ede
+from programs.programs.trua.trua import calculate_trua
 from programs.programs.cpcr.cpcr import calculate_cpcr
 from programs.programs.oap.oap import calculate_oap
 from programs.programs.erc.erc import calculate_erc
-
 
 # This model describes all of the benefit programs available in the screener
 # results. Each program has a specific folder in /programs where the specific
@@ -59,6 +63,11 @@ class Program(TranslatableModel):
             "andso": calculate_andso,
             "andcs": calculate_andcs,
             "cfhc": calculate_cfhc,
+            "fps": calculate_fps,
+            "chs": calculate_chs,
+            "dpp": calculate_dpp,
+            "ede": calculate_ede,
+            "trua": calculate_trua,
             "cpcr": calculate_cpcr,
             "oap": calculate_oap,
             "erc": calculate_erc,
