@@ -37,7 +37,7 @@ def eligibility_tanf(screen, children, guardians):
                                 "sSSurvivor", "sSRetirement", "cOSDisability",
                                 "veteran", "pension", "deferredComp",
                                 "workersComp", "alimony", "boarder", "gifts",
-                                "rental", "investment"]
+                                "rental", "investment", "childSupport"]
 
     one_parent_income_bands = {
         1: 331,
@@ -143,42 +143,42 @@ def value_tanf(screen, children, guardians):
     earned_income_types = ["wages", "selfEmployment"]
 
     child_only_value_bands = {
-        1: 141,
-        2: 296,
-        3: 444,
-        4: 593,
-        5: 711,
-        6: 821,
-        7: 915,
-        8: 1004,
-        9: 1095,
-        10: 1195
+        1: 156,
+        2: 326,
+        3: 489,
+        4: 653,
+        5: 783,
+        6: 904,
+        7: 1007,
+        8: 1105,
+        9: 1205,
+        10: 1315,
     }
 
     one_parent_value_bands = {
-        1: 400,
-        2: 508,
-        3: 617,
-        4: 732,
-        5: 844,
-        6: 932,
-        7: 1022,
-        8: 1113,
-        9: 1201,
-        10: 1289
+        1: 440,
+        2: 559,
+        3: 679,
+        4: 806,
+        5: 929,
+        6: 1026,
+        7: 1125,
+        8: 1225,
+        9: 1322,
+        10: 1418,
     }
 
     two_parent_value_bands = {
-        1: 531,
-        2: 645,
-        3: 760,
-        4: 866,
-        5: 952,
-        6: 1042,
-        7: 1135,
-        8: 1222,
-        9: 1309,
-        10: 1398
+        1: 585,
+        2: 710,
+        3: 836,
+        4: 953,
+        5: 1048,
+        6: 1147,
+        7: 1249,
+        8: 1345,
+        9: 1440,
+        10: 1538,
     }
 
     if guardians < 1:
