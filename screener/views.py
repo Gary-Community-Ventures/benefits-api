@@ -100,10 +100,13 @@ def eligibility_results(screen_id):
 
     def sort_first(program):
         calc_first = ('tanf', 'ssi', 'medicaid')
-        if program.name_abbreviated in calc_first: return 0
-        else: return 1
-    
-    #make certain benifits calculate first so that they can be used in other benifits
+
+        if program.name_abbreviated in calc_first:
+            return 0
+        else:
+            return 1
+
+    # make certain benifits calculate first so that they can be used in other benefits
     all_programs = sorted(all_programs, key=sort_first)
 
     for program in all_programs:

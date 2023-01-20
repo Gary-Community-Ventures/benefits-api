@@ -14,6 +14,7 @@ from programs.programs.cocb.cocb import calculate_cocb # noqa
 from programs.programs.leap.leap import calculate_leap # noqa
 from programs.programs.andso.andso import calculate_andso
 from programs.programs.andcs.andcs import calculate_andcs
+from programs.programs.rhc.rhc import calculate_rhc
 from programs.programs.cfhc.cfhc import calculate_cfhc
 from programs.programs.fps.fps import calculate_fps
 from programs.programs.dpp.dpp import calculate_dpp
@@ -62,6 +63,7 @@ class Program(TranslatableModel):
             "leap": calculate_leap,
             "andso": calculate_andso,
             "andcs": calculate_andcs,
+            "rhc": calculate_rhc,
             "cfhc": calculate_cfhc,
             "fps": calculate_fps,
             "chs": calculate_chs,
