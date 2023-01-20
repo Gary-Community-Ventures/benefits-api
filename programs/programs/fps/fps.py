@@ -1,5 +1,6 @@
 from django.conf import settings
 
+
 def calculate_fps(screen, data):
     fps = Fps(screen, data)
     eligibility = fps.eligibility
@@ -32,23 +33,23 @@ class Fps():
         self.calc_value()
 
     def calc_eligibility(self):
-        #Medicade eligibility
-        is_medicaid_eligibile = False
-        for benifit in self.data:
-            if benifit["name_abbreviated"] == 'medicaid':
-                is_medicaid_eligibile = benifit["eligible"]
+        # Medicade eligibility
+        is_medicaid_eligible = False
+        for benefit in self.data:
+            if benefit["name_abbreviated"] == 'medicaid':
+                is_medicaid_eligible = benefit["eligible"]
                 break
 
-        self._condition(not (self.screen.has_medicaid or is_medicaid_eligibile),
+        self._condition(not (self.screen.has_medicaid or is_medicaid_eligible),
                         "Must not be eligible for Medicaid")
 
-        #Child or Pregnant
+        # Child or Pregnant
         eligible_children = self.screen.num_children(age_max=Fps.child_max_age,
-                                                include_pregnant=True)
+                                                     include_pregnant=True)
         self._condition(eligible_children >= 1,
                         f"Must have a child under the age of {Fps.child_max_age} or have someone who is pregnant")
 
-        #Income
+        # Income
         income_limit = int(2.6 * settings.FPL2022[self.screen.household_size]/12)
         income_types = ["wages", "selfEmployment"]
         gross_income = int(self.screen.calc_gross_income('monthly', income_types))
