@@ -37,11 +37,11 @@ class Rhc():
         # Medicade eligibility
         is_medicaid_eligible = False
         for benefit in self.data:
-            if benifit["name_abbreviated"] == 'medicaid':
-                is_medicaid_eligibile = benifit["eligible"]
+            if benefit["name_abbreviated"] == 'medicaid':
+                is_medicaid_eligible = benefit["eligible"]
                 break
 
-        self._condition(is_medicaid_eligibile,
+        self._condition(is_medicaid_eligible,
                         "Must be eligible for Medicaid")
 
     def calc_value(self):
