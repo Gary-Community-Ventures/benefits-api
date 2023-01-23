@@ -77,7 +77,6 @@ class Program(TranslatableModel):
             "trua": calculate_trua,
             "cpcr": calculate_cpcr,
             "oap": calculate_oap,
-            "erc": calculate_erc,
         }
         calculation = calculators[self.name_abbreviated.lower()](screen, data)
 
