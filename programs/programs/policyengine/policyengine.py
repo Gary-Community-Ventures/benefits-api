@@ -55,7 +55,7 @@ def eligibility_policy_engine(screen):
         },
     }
 
-    benefit_data = policy_engine_calculate(screen)
+    benefit_data = policy_engine_calculate(screen)['result']
 
     # WIC & MEDICAID & SSI
     for pkey, pvalue in benefit_data['people'].items():
