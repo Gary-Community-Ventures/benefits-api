@@ -71,6 +71,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'zipcode',
             'county',
             'referral_source',
+            'referrer_code',
             'household_size',
             'household_assets',
             'housing_situation',
