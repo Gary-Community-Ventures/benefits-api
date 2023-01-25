@@ -97,7 +97,7 @@ class Program(TranslatableModel):
 
 class Navigator(TranslatableModel):
     program = models.ManyToManyField(Program, related_name='navigator')
-    phone_number = PhoneNumberField()
+    phone_number = PhoneNumberField(blank=True, null=True)
     translations = TranslatedFields(
         name=models.CharField(max_length=120),
         email=models.EmailField(_('email address'), blank=True, null=True),
