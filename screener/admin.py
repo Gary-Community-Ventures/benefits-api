@@ -72,3 +72,17 @@ def generate_nav_snapshots():
         eligibility_snapshot.generate_program_snapshots()
         count += 1
         print("Snapshot " + str(count) + "/" + str(total_screens) + " generated for " + str(screen.id))
+
+
+def generate_bia_sample_snapshot():
+    nav_ids = ['4097']
+    screens = Screen.objects.filter(id__in=nav_ids)
+    total_screens = screens.count()
+
+    count = 0
+    for screen in screens:
+        eligibility_snapshot = EligibilitySnapshot(screen=screen)
+        eligibility_snapshot.save()
+        eligibility_snapshot.generate_program_snapshots()
+        count += 1
+        print("Snapshot " + str(count) + "/" + str(total_screens) + " generated for " + str(screen.id))
