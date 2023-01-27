@@ -102,6 +102,12 @@ class ScreenSerializer(serializers.ModelSerializer):
             'has_medicaid_hi',
             'has_chp_hi',
             'has_no_hi',
+            'needs_food',
+            'needs_baby_supplies',
+            'needs_housing_help',
+            'needs_mental_health_help',
+            'needs_child_dev_help',
+            'needs_funeral_help',
         )
 
 
