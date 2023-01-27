@@ -7,7 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
-from programs.views import eligibility_results
+from screener.views import eligibility_results
 
 
 # The screen is the top most container for all information collected in the
