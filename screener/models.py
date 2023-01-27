@@ -51,6 +51,12 @@ class Screen(models.Model):
     has_medicaid_hi = models.BooleanField(default=False, blank=True, null=True)
     has_chp_hi = models.BooleanField(default=False, blank=True, null=True)
     has_no_hi = models.BooleanField(default=False, blank=True, null=True)
+    needs_food = models.BooleanField(default=False, blank=True, null=True)
+    needs_baby_supplies = models.BooleanField(default=False, blank=True, null=True)
+    needs_housing_help = models.BooleanField(default=False, blank=True, null=True)
+    needs_mental_health_help = models.BooleanField(default=False, blank=True, null=True)
+    needs_child_dev_help = models.BooleanField(default=False, blank=True, null=True)
+    needs_funeral_help = models.BooleanField(default=False, blank=True, null=True)
 
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
