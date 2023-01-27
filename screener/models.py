@@ -7,7 +7,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
-from screener.views import eligibility_results
 
 
 # The screen is the top most container for all information collected in the
@@ -209,23 +208,37 @@ class Screen(models.Model):
                 return False
         return has_type
 
-    def program_eligibility(self):
+    def eligibility_results(self):
         all_programs = Program.objects.all()
+        screen = self
         data = []
 
-        pe_eligibility = eligibility_policy_engine(self)
+        pe_eligibility = eligibility_policy_engine(screen)
         pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid', 'ssi']
+
+        def sort_first(program):
+            calc_first = ('tanf', 'ssi', 'medicaid')
+
+            if program.name_abbreviated in calc_first:
+                return 0
+            else:
+                return 1
+
+        # make certain benifits calculate first so that they can be used in other benefits
+        all_programs = sorted(all_programs, key=sort_first)
 
         for program in all_programs:
             skip = False
             # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
-            if program.name_abbreviated not in pe_programs:
-                eligibility = program.eligibility(self, data)
-            else:
+            if program.name_abbreviated not in pe_programs and program.active:
+                eligibility = program.eligibility(screen, data)
+            elif program.active:
                 # skip = True
                 eligibility = pe_eligibility[program.name_abbreviated]
 
-            if not skip:
+            navigators = program.navigator.all()
+
+            if not skip and program.active:
                 data.append(
                     {
                         "program_id": program.id,
@@ -243,14 +256,16 @@ class Screen(models.Model):
                         "legal_status_required": program.legal_status_required,
                         "eligible": eligibility["eligible"],
                         "failed_tests": eligibility["failed"],
-                        "passed_tests": eligibility["passed"]
+                        "passed_tests": eligibility["passed"],
+                        "navigators": navigators
                     }
                 )
 
         eligible_programs = []
         for program in data:
             clean_program = program
-            clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
+            clean_program['estimated_value'] = math.trunc(
+                clean_program['estimated_value'])
             eligible_programs.append(clean_program)
 
         return eligible_programs
@@ -417,7 +432,7 @@ class EligibilitySnapshot(models.Model):
     submission_date = models.DateTimeField(auto_now=True)
 
     def generate_program_snapshots(self):
-        eligibility = eligibility_results(self.screen.id)
+        eligibility = self.screen.eligibility_results(self.screen.id)
         for item in eligibility:
             program_snapshot = ProgramEligibilitySnapshot(
                 eligibility_snapshot=self,
