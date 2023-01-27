@@ -432,7 +432,7 @@ class EligibilitySnapshot(models.Model):
     submission_date = models.DateTimeField(auto_now=True)
 
     def generate_program_snapshots(self):
-        eligibility = self.screen.eligibility_results(self.screen.id)
+        eligibility = self.screen.eligibility_results()
         for item in eligibility:
             program_snapshot = ProgramEligibilitySnapshot(
                 eligibility_snapshot=self,
