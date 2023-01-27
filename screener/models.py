@@ -7,6 +7,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
+from programs.views import eligibility_results
 
 
 # The screen is the top most container for all information collected in the
@@ -416,7 +417,7 @@ class EligibilitySnapshot(models.Model):
     submission_date = models.DateTimeField(auto_now=True)
 
     def generate_program_snapshots(self):
-        eligibility = self.screen.program_eligibility()
+        eligibility = eligibility_results(self.screen.id)
         for item in eligibility:
             program_snapshot = ProgramEligibilitySnapshot(
                 eligibility_snapshot=self,
