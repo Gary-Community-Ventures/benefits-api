@@ -136,7 +136,7 @@ def eligibility_results(screen_id):
                     "learn_more_link": program.learn_more_link,
                     "apply_button_link": program.apply_button_link,
                     "legal_status_required": program.legal_status_required,
-                    "catagory": program.catagory,
+                    "catagory": program.category,
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],

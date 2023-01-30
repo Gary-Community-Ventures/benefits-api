@@ -123,7 +123,7 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_delivery_time = serializers.CharField()
     estimated_application_time = serializers.CharField()
     legal_status_required = serializers.CharField()
-    catagory = serializers.CharField()
+    category = serializers.CharField()
     eligible = serializers.BooleanField()
     failed_tests = serializers.ListField()
     passed_tests = serializers.ListField()
