@@ -83,8 +83,8 @@ def eligibility_policy_engine(screen):
                 medicaid_estimated_value = co_aged_medicaid_average
 
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
-        
-        #SSI
+
+        # SSI
         if pvalue['ssi']['2023'] > 0:
             eligibility['ssi']['eligible'] = True
             eligibility['ssi']['estimated_value'] += pvalue['ssi']['2023']
@@ -127,11 +127,8 @@ def eligibility_policy_engine(screen):
     # CTC
     if benefit_data['tax_units']['tax_unit']['ctc']['2022'] > 0:
         eligibility['ctc']['eligible'] = True
-        for pkey, pvalue in benefit_data['people'].items():
-            if pvalue['age']['2022'] <= 5:
-                eligibility['ctc']['estimated_value'] += 3600
-            elif pvalue['age']['2022'] > 5 and pvalue['age']['2022'] <= 17:
-                eligibility['ctc']['estimated_value'] += 3000
+        eligibility['ctc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['ctc']['2022']
+
     return eligibility
 
 
