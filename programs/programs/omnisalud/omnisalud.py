@@ -37,7 +37,7 @@ class OmniSalud():
                         f"Household makes ${gross_income} per month which must be less than ${income_band}")
 
         # No health insurance
-        has_no_hi = self.screen.has_types_of_hi(['none'])
+        has_no_hi = self.screen.has_types_of_insurance(['none'])
         self._condition(has_no_hi,
                         "Someone in the household must not have health insurance")
 

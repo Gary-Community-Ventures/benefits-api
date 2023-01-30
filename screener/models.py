@@ -193,7 +193,7 @@ class Screen(models.Model):
                 relationship_map[probabable_spouse] = member['id']
         return relationship_map
 
-    def has_types_of_hi(self, types, only=False):
+    def has_types_of_insurance(self, types, only=False):
         """
         Returns True if family has an insurance in types.
         If only=True then will return False if the family has an insurance that is not in types.

@@ -29,7 +29,7 @@ class Rhc():
         self.calc_value()
 
     def calc_eligibility(self):
-        #No health insurance
+        # No health insurance
         has_no_hi = self.screen.has_types_of_hi(['none'])
         self._condition(has_no_hi,
                         "Someone in the household must not have health insurance")
@@ -59,4 +59,3 @@ class Rhc():
             self._passed(msg)
         else:
             self._failed(msg)
-
