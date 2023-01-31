@@ -3,7 +3,7 @@ from parler.models import TranslatableModel, TranslatedFields
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 
-from programs.programs.acp.acp import calculate_acp # noqa
+from programs.programs.acp.acp import affordable_connectivity # noqa
 from programs.programs.lifeline.lifeline import calculate_lifeline # noqa
 from programs.programs.tanf.tanf import calculate_tanf # noqa
 from programs.programs.rtdlive.rtdlive import calculate_rtdlive # noqa
@@ -55,7 +55,7 @@ class Program(TranslatableModel):
     # calculated benefits in the chain.
     def eligibility(self, screen, data):
         calculators = {
-            "acp": calculate_acp,
+            "acp": affordable_connectivity,
             "lifeline": calculate_lifeline,
             "tanf": calculate_tanf,
             "rtdlive": calculate_rtdlive,

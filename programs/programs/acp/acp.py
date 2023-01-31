@@ -1,9 +1,9 @@
 import math
 
 
-def calculate_acp(screen, data):
-    eligibility = eligibility_acp(screen)
-    value = value_acp(screen)
+def affordable_connectivity(screen, data):
+    eligibility = eligibility_affordable_connectivity(screen)
+    value = value_affordable_connectivity(screen)
 
     calculation = {
         'eligibility': eligibility,
@@ -13,7 +13,7 @@ def calculate_acp(screen, data):
     return calculation
 
 
-def eligibility_acp(screen):
+def eligibility_affordable_connectivity(screen):
 
     eligibility = {
         "eligible": True,
@@ -63,7 +63,7 @@ def eligibility_acp(screen):
     return eligibility
 
 
-def value_acp(screen):
+def value_affordable_connectivity(screen):
     value = 30 * 12
 
     return value
