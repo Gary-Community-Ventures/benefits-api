@@ -1,8 +1,8 @@
 from programs.programs.tanf.tanf import calculate_tanf
 
 
-def calculate_andcs(screen, data):
-    andcs = Andcs(screen)
+def calculate_aid_for_disabled_blind(screen, data):
+    andcs = AidForDisabledBlind(screen)
     eligibility = andcs.eligibility
     value = andcs.value
 
@@ -14,7 +14,7 @@ def calculate_andcs(screen, data):
     return calculation
 
 
-class Andcs():
+class AidForDisabledBlind():
     grant_standard = 841
     earned_standard_deduction = 65
     unearned_standard_deduction = 20
@@ -47,9 +47,9 @@ class Andcs():
         self._condition(not (self.screen.has_tanf or tanf_eligible),
                         "Must not be eligible for TANF")
 
-        #Asset test
-        self._condition(self.screen.household_assets < Andcs.asset_limit,
-                        f"Household assets must not exceed {Andcs.asset_limit}")
+        # Asset test
+        self._condition(self.screen.household_assets < AidForDisabledBlind.asset_limit,
+                        f"Household assets must not exceed {AidForDisabledBlind.asset_limit}")
 
         # Has disability/blindness
         self.possible_eligible_members = []
@@ -57,25 +57,25 @@ class Andcs():
         for member in self.screen.household_members.all():
             if member.disabled is True or member.visually_impaired is True:
                 self.possible_eligible_members.append(member)
-                
+
         self._condition(len(self.possible_eligible_members) >= 1,
                         "Someone in the household must have a disability or blindness")
 
         # Right age
         for member in self.possible_eligible_members:
-            is_in_age_range = self._between(member.age, Andcs.min_age, Andcs.max_age)
+            is_in_age_range = self._between(member.age, AidForDisabledBlind.min_age, AidForDisabledBlind.max_age)
             if not is_in_age_range:
                 self.possible_eligible_members.remove(member)
         self._condition(len(self.possible_eligible_members) >= 1,
-                        f"A member of the house hold with a disability must be between the ages of {Andcs.min_age}-{Andcs.max_age}")
+                        f"A member of the house hold with a disability must be between the ages of {AidForDisabledBlind.min_age}-{AidForDisabledBlind.max_age}")
 
         # Income
         def calc_total_countable_income(member):
             earned = member.calc_gross_income("monthly", ["earned"])
-            countable_earned = max(0, (earned - Andcs.earned_standard_deduction) / 2)
+            countable_earned = max(0, (earned - AidForDisabledBlind.earned_standard_deduction) / 2)
 
             unearned = member.calc_gross_income("monthly", ["unearned"])
-            countable_unearned = max(0, unearned - Andcs.unearned_standard_deduction)
+            countable_unearned = max(0, unearned - AidForDisabledBlind.unearned_standard_deduction)
 
             total_countable = countable_earned + countable_unearned
 
@@ -85,10 +85,10 @@ class Andcs():
             calc_total_countable_income, self.possible_eligible_members)
 
         self.possible_eligible_members = list(filter(
-            lambda m: m["countable_income"] < Andcs.grant_standard, self.possible_eligible_members))
+            lambda m: m["countable_income"] < AidForDisabledBlind.grant_standard, self.possible_eligible_members))
 
         self._condition(len(self.possible_eligible_members) >= 1,
-                        f"A member of the household with a disability must make less than ${Andcs.grant_standard} a month")
+                        f"A member of the household with a disability must make less than ${AidForDisabledBlind.grant_standard} a month")
 
     def calc_value(self):
         self.value = 0
@@ -104,13 +104,12 @@ class Andcs():
                 if other_member['member'].id == relationship_map[member.id]:
                     eligible_members.remove(other_member)
                     break
-            
+
             # add to total AND-CS value
-            member_value = max(0, Andcs.grant_standard - countable_income)
+            member_value = max(0, AidForDisabledBlind.grant_standard - countable_income)
             self.value += member_value
 
         self.value *= 12
-
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False

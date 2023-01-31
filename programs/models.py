@@ -13,7 +13,7 @@ from programs.programs.chp.chp import calculate_chp # noqa
 from programs.programs.cocb.cocb import calculate_cocb # noqa
 from programs.programs.leap.leap import calculate_leap # noqa
 from programs.programs.andso.andso import calculate_andso
-from programs.programs.andcs.andcs import calculate_andcs
+from programs.programs.andcs.andcs import calculate_aid_for_disabled_blind
 from programs.programs.erc.erc import calculate_erc
 from programs.programs.omnisalud.omnisalud import calculate_omnisalud
 from programs.programs.cdhcs.cdhcs import calculate_cdhcs
@@ -65,7 +65,7 @@ class Program(TranslatableModel):
             "cocb": calculate_cocb,
             "leap": calculate_leap,
             "andso": calculate_andso,
-            "andcs": calculate_andcs,
+            "andcs": calculate_aid_for_disabled_blind,
             "erc": calculate_erc,
             "omnisalud": calculate_omnisalud,
             "cdhcs": calculate_cdhcs,
