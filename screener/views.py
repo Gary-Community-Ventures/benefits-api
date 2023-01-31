@@ -11,6 +11,7 @@ from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, In
 from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 from programs.models import UrgentNeed
+from programs.serializers import UrgentNeedSerializer
 import math
 import copy
 
@@ -75,12 +76,12 @@ class EligibilityTranslationView(views.APIView):
     def get(self, request, id):
         data = {}
         eligibility = eligibility_results(id)
-        urgent_need = urgent_needs(id)
+        urgent_need = UrgentNeedSerializer(urgent_needs(id), many=True).data
 
         for language in settings.LANGUAGES:
             translated_eligibility = eligibility_results_translation(eligibility, language[0])
             data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
-        return Response({"translations": data})
+        return Response({"programs": {"translations": data}, "urgent needs": urgent_need})
 
 
 class MessageViewSet(viewsets.ModelViewSet):

@@ -18,6 +18,8 @@ class ProgramSerializer(TranslatableModelSerializer):
 
 
 class UrgentNeedSerializer(TranslatableModelSerializer):
+    translations = TranslatedFieldsField(shared_model=UrgentNeed)
+
     class Meta:
         model = UrgentNeed
         fields = '__all__'
