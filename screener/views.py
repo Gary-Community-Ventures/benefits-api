@@ -76,12 +76,15 @@ class EligibilityTranslationView(views.APIView):
     def get(self, request, id):
         data = {}
         eligibility = eligibility_results(id)
-        urgent_need = UrgentNeedSerializer(urgent_needs(id), many=True).data
+        urgent_need_programs = {}
 
         for language in settings.LANGUAGES:
             translated_eligibility = eligibility_results_translation(eligibility, language[0])
             data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
-        return Response({"programs": {"translations": data}, "urgent needs": urgent_need})
+            urgent_need_programs[language[0]] = UrgentNeedSerializer(
+                urgent_needs(id).language(language[0]).all(), many=True
+                ).data
+        return Response({"programs": data, "urgent needs": urgent_need_programs})
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -205,6 +208,6 @@ def urgent_needs(screen_id):
         if has_need:
             list_of_needs.append(need)
 
-    urgent_need_resources = UrgentNeed.objects.filter(type_short__in=list_of_needs)
+    urgent_need_resources = UrgentNeed.objects.filter(type_short__in=list_of_needs, active=True)
 
     return urgent_need_resources
