@@ -2,7 +2,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import override
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
+from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, EligibilitySnapshot, ProgramEligibilitySnapshot
 from rest_framework import viewsets, views
 from rest_framework import permissions
 from rest_framework.response import Response
@@ -12,6 +12,7 @@ from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import math
 import copy
+import json
 
 
 def index(request):
@@ -93,6 +94,7 @@ class MessageViewSet(viewsets.ModelViewSet):
 def eligibility_results(screen_id):
     all_programs = Program.objects.all()
     screen = Screen.objects.get(pk=screen_id)
+    snapshot = EligibilitySnapshot.objects.create(screen=screen)
     data = []
 
     pe_eligibility = eligibility_policy_engine(screen)
@@ -121,6 +123,19 @@ def eligibility_results(screen_id):
         navigators = program.navigator.all()
 
         if not skip and program.active:
+            ProgramEligibilitySnapshot.objects.create(
+                eligibility_snapshot=snapshot,
+                name=program.name,
+                name_abbreviated=program.name_abbreviated,
+                value_type=program.value_type,
+                estimated_value=eligibility["estimated_value"],
+                estimated_delivery_time=program.estimated_delivery_time,
+                estimated_application_time=program.estimated_application_time,
+                legal_status_required=program.legal_status_required,
+                eligible=eligibility["eligible"],
+                failed_tests=json.dumps(eligibility["failed"]),
+                passed_tests=json.dumps(eligibility["passed"])
+            )
             data.append(
                 {
                     "program_id": program.id,
