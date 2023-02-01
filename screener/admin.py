@@ -75,7 +75,7 @@ def generate_nav_snapshots():
 
 
 def generate_bia_sample_snapshot():
-    nav_ids = ['4097', '4147']
+    nav_ids = ['4097', '4147', '4148']
     screens = Screen.objects.filter(id__in=nav_ids)
     total_screens = screens.count()
 
