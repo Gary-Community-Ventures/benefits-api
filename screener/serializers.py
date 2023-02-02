@@ -100,6 +100,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'has_employer_hi',
             'has_private_hi',
             'has_medicaid_hi',
+            'has_medicare_hi',
             'has_chp_hi',
             'has_no_hi',
             'needs_food',

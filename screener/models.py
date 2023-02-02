@@ -49,6 +49,7 @@ class Screen(models.Model):
     has_employer_hi = models.BooleanField(default=False, blank=True, null=True)
     has_private_hi = models.BooleanField(default=False, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_medicare_hi = models.BooleanField(default=False, blank=True, null=True)
     has_chp_hi = models.BooleanField(default=False, blank=True, null=True)
     has_no_hi = models.BooleanField(default=False, blank=True, null=True)
     needs_food = models.BooleanField(default=False, blank=True, null=True)
@@ -165,10 +166,10 @@ class Screen(models.Model):
             if member['id'] in relationship_map:
                 if relationship_map[member['id']] != None:
                     continue
-            
+
             relationship = member['relationship']
             probabable_spouse = None
-            
+
             if relationship == 'headOfHousehold':
                 for other_member in all_members:
                     if other_member['relationship'] in ('spouse', 'domesticPartner') and\
@@ -202,6 +203,7 @@ class Screen(models.Model):
             'employer': self.has_employer_hi,
             'private': self.has_private_hi,
             'medicaid': self.has_medicaid_hi,
+            'medicare': self.has_medicare_hi,
             'chp': self.has_chp_hi,
             'none': self.has_no_hi
         }
@@ -345,7 +347,7 @@ class HouseholdMember(models.Model):
             net_income = gross_income - expenses
 
         return net_income
-    
+
     def is_married(self):
         if self.relationship in ('spouse', 'domesticPartner'):
             head_of_house = HouseholdMember.objects.all().filter(screen=self.screen, relationship='headOfHousehold')[0]
