@@ -84,7 +84,7 @@ class EligibilityTranslationView(views.APIView):
             urgent_need_programs[language[0]] = UrgentNeedSerializer(
                 urgent_needs(id).language(language[0]).all(), many=True
                 ).data
-        return Response({"programs": data, "urgent needs": urgent_need_programs})
+        return Response({"programs": data, "urgent_needs": urgent_need_programs})
 
 
 class MessageViewSet(viewsets.ModelViewSet):
