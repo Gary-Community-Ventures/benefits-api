@@ -151,6 +151,7 @@ def eligibility_results(screen_id):
                     "learn_more_link": program.learn_more_link,
                     "apply_button_link": program.apply_button_link,
                     "legal_status_required": program.legal_status_required,
+                    "category": program.category,
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],
@@ -178,6 +179,7 @@ def eligibility_results_translation(results, language):
             translated_results[k]['estimated_application_time'] = translated_program.estimated_application_time
             translated_results[k]['description_short'] = translated_program.description_short
             translated_results[k]['description'] = translated_program.description
+            translated_results[k]['category'] = translated_program.category
             translated_results[k]['learn_more_link'] = translated_program.learn_more_link
             translated_results[k]['apply_button_link'] = translated_program.apply_button_link
             translated_results[k]['passed_tests'] = []

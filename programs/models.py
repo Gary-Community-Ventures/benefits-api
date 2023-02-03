@@ -44,6 +44,7 @@ class Program(TranslatableModel):
         estimated_delivery_time=models.CharField(max_length=320),
         estimated_application_time=models.CharField(max_length=320, blank=True, null=True, default=None),
         legal_status_required=models.CharField(max_length=120),
+        category=models.CharField(max_length=120),
         active=models.BooleanField(blank=True, null=False, default=True)
     )
 
