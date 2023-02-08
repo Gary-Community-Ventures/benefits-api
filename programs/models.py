@@ -25,7 +25,7 @@ from programs.programs.chs.chs import calculate_head_start
 from programs.programs.ede.ede import calculate_every_day_eats
 from programs.programs.trua.trua import calculate_trua
 from programs.programs.cpcr.cpcr import calculate_property_credit_rebate
-from programs.programs.oap.oap import calculate_oap
+from programs.programs.oap.oap import calculate_old_age_pension
 
 
 # This model describes all of the benefit programs available in the screener
@@ -78,7 +78,7 @@ class Program(TranslatableModel):
             "ede": calculate_every_day_eats,
             "trua": calculate_trua,
             "cpcr": calculate_property_credit_rebate,
-            "oap": calculate_oap,
+            "oap": calculate_old_age_pension,
         }
         calculation = calculators[self.name_abbreviated.lower()](screen, data)
 

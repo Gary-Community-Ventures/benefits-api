@@ -1,7 +1,7 @@
 from programs.programs.tanf.tanf import calculate_tanf
 
 
-def calculate_oap(screen, data):
+def calculate_old_age_pension(screen, data):
     old_age_pension = OldAgePension(screen)
     eligibility = old_age_pension.eligibility
     value = old_age_pension.value

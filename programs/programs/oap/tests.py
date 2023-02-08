@@ -30,13 +30,13 @@ class TestOldAgePension(TestCase):
             has_expenses=False,
         )
 
-    def test_oap_visualy_impaired_is_eligible(self):
+    def test_old_age_pension_visualy_impaired_is_eligible(self):
         oap = OldAgePension(self.screen1)
         eligibility = oap.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_oap_failed_all_conditions(self):
+    def test_old_age_pension_failed_all_conditions(self):
         self.screen1.has_ssi = True
         self.screen1.has_tanf = True
         self.screen1.household_assets = 2000
@@ -49,7 +49,7 @@ class TestOldAgePension(TestCase):
 
         self.assertFalse(eligibility["eligible"])
 
-    def test_oap_failed_income_condition(self):
+    def test_old_age_pension_failed_income_condition(self):
         income = IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
