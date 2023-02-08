@@ -1,9 +1,9 @@
 from django.test import TestCase
-from programs.programs.erc.erc import Erc
+from programs.programs.erc.erc import EnergyResourceCenter
 from screener.models import Screen, HouseholdMember, IncomeStream
 
 
-class TestErcPension(TestCase):
+class TestEnergyResourceCenterPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -28,13 +28,13 @@ class TestErcPension(TestCase):
             has_expenses=False,
         )
 
-    def test_erc_visualy_impaired_is_eligible(self):
-        erc = Erc(self.screen1)
+    def test_energy_resource_center_visualy_impaired_is_eligible(self):
+        erc = EnergyResourceCenter(self.screen1)
         eligibility = erc.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_erc_failed_income_condition(self):
+    def test_energy_resource_center_failed_income_condition(self):
         income = IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
@@ -42,7 +42,7 @@ class TestErcPension(TestCase):
             amount=3000,
             frequency='monthly'
         )
-        erc = Erc(self.screen1)
+        erc = EnergyResourceCenter(self.screen1)
         eligibility = erc.eligibility
 
         self.assertFalse(eligibility["eligible"])

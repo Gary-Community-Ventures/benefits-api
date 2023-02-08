@@ -1,5 +1,5 @@
-def calculate_erc(screen, data):
-    erc = Erc(screen)
+def calculate_energy_resource_center(screen, data):
+    erc = EnergyResourceCenter(screen)
     eligibility = erc.eligibility
     value = erc.value
 
@@ -11,7 +11,7 @@ def calculate_erc(screen, data):
     return calculation
 
 
-class Erc():
+class EnergyResourceCenter():
     average_amount = 4000
     income_bands = {
         1: 2880,
@@ -38,14 +38,14 @@ class Erc():
         self.calc_value()
 
     def calc_eligibility(self):
-        #Income test
+        # Income test
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
-        income_band = Erc.income_bands[self.screen.household_size]
+        income_band = EnergyResourceCenter.income_bands[self.screen.household_size]
         self._condition(gross_income <= income_band,
                         f"Household makes ${gross_income} per month which must be less than ${income_band}")
 
     def calc_value(self):
-        self.value = Erc.average_amount
+        self.value = EnergyResourceCenter.average_amount
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False

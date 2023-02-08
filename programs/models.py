@@ -14,7 +14,7 @@ from programs.programs.cocb.cocb import calculate_chash_back # noqa
 from programs.programs.leap.leap import calculate_leap # noqa
 from programs.programs.andso.andso import calculate_andso
 from programs.programs.andcs.andcs import calculate_aid_for_disabled_blind
-from programs.programs.erc.erc import calculate_erc
+from programs.programs.erc.erc import calculate_energy_resource_center
 from programs.programs.omnisalud.omnisalud import calculate_omnisalud
 from programs.programs.cdhcs.cdhcs import calculate_dental_health_care_seniors
 from programs.programs.rhc.rhc import calculate_rhc
@@ -67,7 +67,7 @@ class Program(TranslatableModel):
             "leap": calculate_leap,
             "andso": calculate_andso,
             "andcs": calculate_aid_for_disabled_blind,
-            "erc": calculate_erc,
+            "erc": calculate_energy_resource_center,
             "omnisalud": calculate_omnisalud,
             "cdhcs": calculate_dental_health_care_seniors,
             "rhc": calculate_rhc,
