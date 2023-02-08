@@ -20,7 +20,7 @@ from programs.programs.cdhcs.cdhcs import calculate_dental_health_care_seniors
 from programs.programs.rhc.rhc import calculate_rhc
 from programs.programs.cfhc.cfhc import calculate_connect_for_health
 from programs.programs.fps.fps import calculate_fps
-from programs.programs.dpp.dpp import calculate_dpp
+from programs.programs.dpp.dpp import calculate_denver_preshool_program
 from programs.programs.chs.chs import calculate_head_start
 from programs.programs.ede.ede import calculate_ede
 from programs.programs.trua.trua import calculate_trua
@@ -74,7 +74,7 @@ class Program(TranslatableModel):
             "cfhc": calculate_connect_for_health,
             "fps": calculate_fps,
             "chs": calculate_head_start,
-            "dpp": calculate_dpp,
+            "dpp": calculate_denver_preshool_program,
             "ede": calculate_ede,
             "trua": calculate_trua,
             "cpcr": calculate_property_credit_rebate,
