@@ -6,7 +6,11 @@ from .models import Message, Screen, EligibilitySnapshot
 from django.dispatch import receiver
 from .models import IncomeStream
 
-admin.site.register(Screen)
+
+class screenAdmin(admin.ModelAdmin):
+    search_fields = ('id',)
+
+admin.site.register(Screen, screenAdmin)
 admin.site.register(Message)
 admin.site.register(IncomeStream)
 
