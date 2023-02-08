@@ -1,5 +1,5 @@
-def calculate_rhc(screen, data):
-    rhc = Rhc(screen, data)
+def calculate_reproductive_health_care(screen, data):
+    rhc = ReproductiveHealthCare(screen, data)
     eligibility = rhc.eligibility
     value = rhc.value
 
@@ -11,7 +11,7 @@ def calculate_rhc(screen, data):
     return calculation
 
 
-class Rhc():
+class ReproductiveHealthCare():
     amount = 268
 
     def __init__(self, screen, data):
@@ -29,7 +29,7 @@ class Rhc():
         self.calc_value()
 
     def calc_eligibility(self):
-        #No health insurance
+        # No health insurance
         has_no_hi = self.screen.has_types_of_hi(['none'])
         self._condition(has_no_hi,
                         "Someone in the household must not have health insurance")
@@ -45,7 +45,7 @@ class Rhc():
                         "Must be eligible for Medicaid")
 
     def calc_value(self):
-        self.value = Rhc.amount
+        self.value = ReproductiveHealthCare.amount
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
@@ -59,4 +59,3 @@ class Rhc():
             self._passed(msg)
         else:
             self._failed(msg)
-

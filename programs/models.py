@@ -17,7 +17,7 @@ from programs.programs.andcs.andcs import calculate_aid_for_disabled_blind
 from programs.programs.erc.erc import calculate_energy_resource_center
 from programs.programs.omnisalud.omnisalud import calculate_omnisalud
 from programs.programs.cdhcs.cdhcs import calculate_dental_health_care_seniors
-from programs.programs.rhc.rhc import calculate_rhc
+from programs.programs.rhc.rhc import calculate_reproductive_health_care
 from programs.programs.cfhc.cfhc import calculate_connect_for_health
 from programs.programs.fps.fps import calculate_family_planning_services
 from programs.programs.dpp.dpp import calculate_denver_preshool_program
@@ -70,7 +70,7 @@ class Program(TranslatableModel):
             "erc": calculate_energy_resource_center,
             "omnisalud": calculate_omnisalud,
             "cdhcs": calculate_dental_health_care_seniors,
-            "rhc": calculate_rhc,
+            "rhc": calculate_reproductive_health_care,
             "cfhc": calculate_connect_for_health,
             "fps": calculate_family_planning_services,
             "chs": calculate_head_start,

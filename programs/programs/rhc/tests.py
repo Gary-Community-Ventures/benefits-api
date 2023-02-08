@@ -1,10 +1,10 @@
 from django.test import TestCase
-from programs.programs.rhc.rhc import Rhc
+from programs.programs.rhc.rhc import ReproductiveHealthCare
 from screener.models import Screen, HouseholdMember, IncomeStream
 from django.conf import settings
 
 
-class TestRhcPension(TestCase):
+class TestReproductiveHealthCarePension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -30,18 +30,18 @@ class TestRhcPension(TestCase):
             has_expenses=False,
         )
 
-    def test_rhc_pass_all_conditions(self):
-        rhc = Rhc(self.screen1, [
+    def test_reproductive_health_care_pass_all_conditions(self):
+        rhc = ReproductiveHealthCare(self.screen1, [
                   {"name_abbreviated": 'medicaid', "eligible": True}])
         eligibility = rhc.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_rhc_failed_all_conditions(self):
+    def test_reproductive_health_care_failed_all_conditions(self):
         self.person1.has_no_hi = False
         self.person1.save()
 
-        rhc = Rhc(self.screen1,
+        rhc = ReproductiveHealthCare(self.screen1,
                   [{"name_abbreviated": 'medicaid', "eligible": False}])
         eligibility = rhc.eligibility
 
