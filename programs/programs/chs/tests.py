@@ -1,10 +1,10 @@
 from django.test import TestCase
-from programs.programs.chs.chs import Chs
+from programs.programs.chs.chs import HeadStart
 from screener.models import Screen, HouseholdMember, IncomeStream
 from django.conf import settings
 
 
-class TestChsPension(TestCase):
+class TestHeadStartPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -44,13 +44,13 @@ class TestChsPension(TestCase):
             has_expenses=False,
         )
 
-    def test_chs_visualy_impaired_is_eligible(self):
-        chs = Chs(self.screen1)
+    def test_head_start_visualy_impaired_is_eligible(self):
+        chs = HeadStart(self.screen1)
         eligibility = chs.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_chs_failed_all_conditions(self):
+    def test_head_start_failed_all_conditions(self):
         income = IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
@@ -62,7 +62,7 @@ class TestChsPension(TestCase):
         self.person2.age=6
         self.person2.save()
 
-        chs = Chs(self.screen1)
+        chs = HeadStart(self.screen1)
         eligibility = chs.eligibility
 
         self.assertFalse(eligibility["eligible"])

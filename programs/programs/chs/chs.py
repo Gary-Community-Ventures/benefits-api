@@ -1,7 +1,8 @@
 from django.conf import settings
 
-def calculate_chs(screen, data):
-    chs = Chs(screen)
+
+def calculate_head_start(screen, data):
+    chs = HeadStart(screen)
     eligibility = chs.eligibility
     value = chs.value
 
@@ -13,7 +14,7 @@ def calculate_chs(screen, data):
     return calculation
 
 
-class Chs():
+class HeadStart():
     amount = 17200
     max_age = 5
     min_age = 3
@@ -32,13 +33,13 @@ class Chs():
         self.calc_value()
 
     def calc_eligibility(self):
-        #has young child
-        num_children = self.screen.num_children(age_min=Chs.min_age, age_max=Chs.max_age)
+        # has young child
+        num_children = self.screen.num_children(age_min=HeadStart.min_age, age_max=HeadStart.max_age)
 
         self._condition(num_children >= 1,
-                        f"Must have a child between the ages of {Chs.min_age} and {Chs.max_age}")
+                        f"Must have a child between the ages of {HeadStart.min_age} and {HeadStart.max_age}")
 
-        #income
+        # income
         income_limit = int(settings.FPL2022[self.screen.household_size]/12)
         gross_income = int(self.screen.calc_gross_income('monthly', ['all']))
 
@@ -46,7 +47,7 @@ class Chs():
                         f"Income of ${gross_income} must be less than ${income_limit}")
 
     def calc_value(self):
-        self.value = Chs.amount
+        self.value = HeadStart.amount
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False

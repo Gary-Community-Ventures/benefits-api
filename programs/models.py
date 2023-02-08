@@ -21,7 +21,7 @@ from programs.programs.rhc.rhc import calculate_rhc
 from programs.programs.cfhc.cfhc import calculate_connect_for_health
 from programs.programs.fps.fps import calculate_fps
 from programs.programs.dpp.dpp import calculate_dpp
-from programs.programs.chs.chs import calculate_chs
+from programs.programs.chs.chs import calculate_head_start
 from programs.programs.ede.ede import calculate_ede
 from programs.programs.trua.trua import calculate_trua
 from programs.programs.cpcr.cpcr import calculate_cpcr
@@ -73,7 +73,7 @@ class Program(TranslatableModel):
             "rhc": calculate_rhc,
             "cfhc": calculate_connect_for_health,
             "fps": calculate_fps,
-            "chs": calculate_chs,
+            "chs": calculate_head_start,
             "dpp": calculate_dpp,
             "ede": calculate_ede,
             "trua": calculate_trua,
