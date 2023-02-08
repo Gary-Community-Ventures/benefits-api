@@ -4,9 +4,9 @@ import re
 import math
 
 
-def calculate_cccap(screen, data):
-    eligibility = eligibility_cccap(screen)
-    value = value_cccap(screen)
+def calculate_child_care_assistance(screen, data):
+    eligibility = eligibility_child_care_assistance(screen)
+    value = value_child_care_assistance(screen)
 
     calculation = {
         'eligibility': eligibility,
@@ -16,7 +16,7 @@ def calculate_cccap(screen, data):
     return calculation
 
 
-def eligibility_cccap(screen):
+def eligibility_child_care_assistance(screen):
 
     eligibility = {
         "eligible": True,
@@ -88,7 +88,7 @@ def eligibility_cccap(screen):
     return eligibility
 
 
-def value_cccap(screen):
+def value_child_care_assistance(screen):
     value = 0
     preschool_value = 6000
     afterschool_value = 1700

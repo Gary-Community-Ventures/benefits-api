@@ -7,7 +7,7 @@ from programs.programs.acp.acp import calculate_affordable_connectivity # noqa
 from programs.programs.lifeline.lifeline import calculate_lifeline # noqa
 from programs.programs.tanf.tanf import calculate_tanf # noqa
 from programs.programs.rtdlive.rtdlive import calculate_rtdlive # noqa
-from programs.programs.cccap.cccap import calculate_cccap # noqa
+from programs.programs.cccap.cccap import calculate_child_care_assistance # noqa
 from programs.programs.mydenver.mydenver import calculate_mydenver # noqa
 from programs.programs.chp.chp import calculate_chp # noqa
 from programs.programs.cocb.cocb import calculate_cocb # noqa
@@ -60,7 +60,7 @@ class Program(TranslatableModel):
             "lifeline": calculate_lifeline,
             "tanf": calculate_tanf,
             "rtdlive": calculate_rtdlive,
-            "cccap": calculate_cccap,
+            "cccap": calculate_child_care_assistance,
             "mydenver": calculate_mydenver,
             "chp": calculate_chp,
             "cocb": calculate_cocb,
