@@ -1,7 +1,8 @@
 from django.conf import settings
 
-def calculate_cdhcs(screen, data):
-    cdhcs = Cdhcs(screen)
+
+def calculate_dental_health_care_seniors(screen, data):
+    cdhcs = DentalHealthCareSeniors(screen)
     eligibility = cdhcs.eligibility
     value = cdhcs.value
 
@@ -13,7 +14,7 @@ def calculate_cdhcs(screen, data):
     return calculation
 
 
-class Cdhcs():
+class DentalHealthCareSeniors():
     amount = 80
     min_age = 60
 
@@ -38,8 +39,8 @@ class Cdhcs():
                         "Someone in the household must not have medicaid")
 
         # Age
-        self._condition(self.screen.num_adults(age_max=Cdhcs.min_age)>=1,
-                        f"Someone in the household must be {Cdhcs.min_age} or older")
+        self._condition(self.screen.num_adults(age_max=DentalHealthCareSeniors.min_age)>=1,
+                        f"Someone in the household must be {DentalHealthCareSeniors.min_age} or older")
 
         # Income test
         gross_income = int(self.screen.calc_gross_income("monthly", ["all"]))
@@ -48,7 +49,7 @@ class Cdhcs():
                         f"Household makes ${gross_income} per month which must be less than ${income_band}")
 
     def calc_value(self):
-        self.value = Cdhcs.amount * self.screen.num_adults(age_max=Cdhcs.min_age) * 12
+        self.value = DentalHealthCareSeniors.amount * self.screen.num_adults(age_max=DentalHealthCareSeniors.min_age) * 12
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False

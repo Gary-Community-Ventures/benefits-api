@@ -1,10 +1,10 @@
 from django.test import TestCase
-from programs.programs.cfhc.cfhc import Cfhc
+from programs.programs.cfhc.cfhc import ConnectForHealth
 from screener.models import Screen, HouseholdMember, IncomeStream
 from django.conf import settings
 
 
-class TestCfhc(TestCase):
+class TestConnectForHealth(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -35,7 +35,7 @@ class TestCfhc(TestCase):
         )
 
     def test_health_insurance_pass_all_conditions(self):
-        cfhc = Cfhc(self.screen1)
+        cfhc = ConnectForHealth(self.screen1)
         eligibility = cfhc.eligibility
 
         self.assertTrue(eligibility["eligible"])
@@ -51,7 +51,7 @@ class TestCfhc(TestCase):
             frequency='monthly'
         )
 
-        cfhc = Cfhc(self.screen1)
+        cfhc = ConnectForHealth(self.screen1)
         eligibility = cfhc.eligibility
 
         self.assertFalse(eligibility["eligible"])

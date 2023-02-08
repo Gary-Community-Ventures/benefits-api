@@ -16,9 +16,9 @@ from programs.programs.andso.andso import calculate_andso
 from programs.programs.andcs.andcs import calculate_aid_for_disabled_blind
 from programs.programs.erc.erc import calculate_erc
 from programs.programs.omnisalud.omnisalud import calculate_omnisalud
-from programs.programs.cdhcs.cdhcs import calculate_cdhcs
+from programs.programs.cdhcs.cdhcs import calculate_dental_health_care_seniors
 from programs.programs.rhc.rhc import calculate_rhc
-from programs.programs.cfhc.cfhc import calculate_cfhc
+from programs.programs.cfhc.cfhc import calculate_connect_for_health
 from programs.programs.fps.fps import calculate_fps
 from programs.programs.dpp.dpp import calculate_dpp
 from programs.programs.chs.chs import calculate_chs
@@ -69,9 +69,9 @@ class Program(TranslatableModel):
             "andcs": calculate_aid_for_disabled_blind,
             "erc": calculate_erc,
             "omnisalud": calculate_omnisalud,
-            "cdhcs": calculate_cdhcs,
+            "cdhcs": calculate_dental_health_care_seniors,
             "rhc": calculate_rhc,
-            "cfhc": calculate_cfhc,
+            "cfhc": calculate_connect_for_health,
             "fps": calculate_fps,
             "chs": calculate_chs,
             "dpp": calculate_dpp,

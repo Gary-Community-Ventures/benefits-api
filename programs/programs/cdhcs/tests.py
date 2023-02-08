@@ -1,10 +1,10 @@
 from django.test import TestCase
-from programs.programs.cdhcs.cdhcs import Cdhcs
+from programs.programs.cdhcs.cdhcs import DentalHealthCareSeniors
 from screener.models import Screen, HouseholdMember, IncomeStream
 from django.conf import settings
 
 
-class TestCdhcsPension(TestCase):
+class TestDentalHealthCareSeniorsPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -30,13 +30,13 @@ class TestCdhcsPension(TestCase):
             has_expenses=False,
         )
 
-    def test_cdhcs_pass_all_conditions(self):
-        cdhcs = Cdhcs(self.screen1)
+    def test_dental_health_care_seniors_pass_all_conditions(self):
+        cdhcs = DentalHealthCareSeniors(self.screen1)
         eligibility = cdhcs.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_cdhcs_failed_all_conditions(self):
+    def test_dental_health_care_seniors_failed_all_conditions(self):
         self.person1.age = 20
         self.person1.save()
         self.screen1.has_medicaid = True
@@ -49,7 +49,7 @@ class TestCdhcsPension(TestCase):
             frequency='monthly'
         )
 
-        cdhcs = Cdhcs(self.screen1)
+        cdhcs = DentalHealthCareSeniors(self.screen1)
         eligibility = cdhcs.eligibility
 
         self.assertFalse(eligibility["eligible"])

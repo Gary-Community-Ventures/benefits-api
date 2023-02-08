@@ -1,8 +1,9 @@
 from django.conf import settings
 from programs.programs.cfhc.tax_credit_value import tax_credit_by_county
 
-def calculate_cfhc(screen, data):
-    cfhc = Cfhc(screen)
+
+def calculate_connect_for_health(screen, data):
+    cfhc = ConnectForHealth(screen)
     eligibility = cfhc.eligibility
     value = cfhc.value
 
@@ -14,7 +15,7 @@ def calculate_cfhc(screen, data):
     return calculation
 
 
-class Cfhc():
+class ConnectForHealth():
     health_credit_value = 313
 
     def __init__(self, screen):
@@ -31,15 +32,15 @@ class Cfhc():
         self.calc_value()
 
     def calc_eligibility(self):
-        #Someone has no health insurance
+        # Someone has no health insurance
         has_no_hi = self.screen.has_types_of_hi(['none'])
         self._condition(has_no_hi,
                         "Someone in the household must not have health insurance")
 
-        #Income
+        # Income
         income_band = int(settings.FPL2022[self.screen.household_size]/12)
         gross_income = int(self.screen.calc_gross_income('yearly', ("all",))/12)
-        self._condition( gross_income < income_band,
+        self._condition(gross_income < income_band,
                         f"Household makes ${gross_income} per month which must be less than ${income_band}")
 
     def calc_value(self):
