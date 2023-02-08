@@ -25,7 +25,7 @@ class ScreenViewSet(viewsets.ModelViewSet):
     """
     queryset = Screen.objects.all().order_by('-submission_date')
     serializer_class = ScreenSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['agree_to_tos', 'is_test']
     paginate_by = 10
     paginate_by_param = 'page_size'
@@ -38,7 +38,7 @@ class HouseholdMemberViewSet(viewsets.ModelViewSet):
     """
     queryset = HouseholdMember.objects.all()
     serializer_class = HouseholdMemberSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['has_income']
 
 
@@ -48,7 +48,7 @@ class IncomeStreamViewSet(viewsets.ModelViewSet):
     """
     queryset = IncomeStream.objects.all()
     serializer_class = IncomeStreamSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['screen']
 
 
@@ -58,7 +58,7 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     """
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['screen']
 
 
@@ -88,7 +88,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     queryset = Message.objects.all().order_by('-sent')
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
 def eligibility_results(screen_id):
