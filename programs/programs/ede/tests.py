@@ -1,10 +1,10 @@
 from django.test import TestCase
-from programs.programs.ede.ede import Ede
+from programs.programs.ede.ede import EveryDayEats
 from screener.models import Screen, HouseholdMember, IncomeStream
 from django.conf import settings
 
 
-class TestEdePension(TestCase):
+class TestEveryDayEatsPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -29,13 +29,13 @@ class TestEdePension(TestCase):
             has_expenses=False,
         )
 
-    def test_ede_visualy_impaired_is_eligible(self):
-        ede = Ede(self.screen1)
+    def test_every_day_eats_visualy_impaired_is_eligible(self):
+        ede = EveryDayEats(self.screen1)
         eligibility = ede.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_ede_failed_all_conditions(self):
+    def test_every_day_eats_failed_all_conditions(self):
         income = IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
@@ -46,7 +46,7 @@ class TestEdePension(TestCase):
         self.person1.age = 30
         self.person1.save()
 
-        ede = Ede(self.screen1)
+        ede = EveryDayEats(self.screen1)
         eligibility = ede.eligibility
 
         self.assertFalse(eligibility["eligible"])

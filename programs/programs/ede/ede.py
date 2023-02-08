@@ -1,7 +1,8 @@
 from django.conf import settings
 
-def calculate_ede(screen, data):
-    ede = Ede(screen)
+
+def calculate_every_day_eats(screen, data):
+    ede = EveryDayEats(screen)
     eligibility = ede.eligibility
     value = ede.value
 
@@ -13,7 +14,7 @@ def calculate_ede(screen, data):
     return calculation
 
 
-class Ede():
+class EveryDayEats():
     amount = 600
     min_age = 60
 
@@ -31,12 +32,12 @@ class Ede():
         self.calc_value()
 
     def calc_eligibility(self):
-        #Someone older that 60
-        num_seniors = self.screen.num_adults(age_max=Ede.min_age)
+        # Someone older that 60
+        num_seniors = self.screen.num_adults(age_max=EveryDayEats.min_age)
         self._condition(num_seniors >= 1,
-                        f"Must have someone older that {Ede.min_age} in the house")
+                        f"Must have someone older that {EveryDayEats.min_age} in the house")
 
-        #Income
+        # Income
         income_limit = 1.3 * settings.FPL2022[self.screen.household_size]
         gross_income = self.screen.calc_gross_income('yearly', ['all'])
 
@@ -44,7 +45,7 @@ class Ede():
                         f"Gross income of ${gross_income} must be less than ${income_limit}")
 
     def calc_value(self):
-        self.value = Ede.amount
+        self.value = EveryDayEats.amount
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False

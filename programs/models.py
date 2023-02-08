@@ -22,7 +22,7 @@ from programs.programs.cfhc.cfhc import calculate_connect_for_health
 from programs.programs.fps.fps import calculate_fps
 from programs.programs.dpp.dpp import calculate_denver_preshool_program
 from programs.programs.chs.chs import calculate_head_start
-from programs.programs.ede.ede import calculate_ede
+from programs.programs.ede.ede import calculate_every_day_eats
 from programs.programs.trua.trua import calculate_trua
 from programs.programs.cpcr.cpcr import calculate_property_credit_rebate
 from programs.programs.oap.oap import calculate_oap
@@ -75,7 +75,7 @@ class Program(TranslatableModel):
             "fps": calculate_fps,
             "chs": calculate_head_start,
             "dpp": calculate_denver_preshool_program,
-            "ede": calculate_ede,
+            "ede": calculate_every_day_eats,
             "trua": calculate_trua,
             "cpcr": calculate_property_credit_rebate,
             "oap": calculate_oap,
