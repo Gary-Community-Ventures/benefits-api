@@ -1,5 +1,5 @@
 from django.test import TestCase
-from programs.programs.trua.trua import Trua
+from programs.programs.trua.calculator import Trua
 from screener.models import Screen, HouseholdMember, IncomeStream
 
 

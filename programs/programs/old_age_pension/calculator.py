@@ -1,4 +1,4 @@
-from programs.programs.tanf.tanf import calculate_tanf
+from programs.programs.tanf.calculator import calculate_tanf
 
 
 def calculate_old_age_pension(screen, data):

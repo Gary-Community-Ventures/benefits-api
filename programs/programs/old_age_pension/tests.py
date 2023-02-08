@@ -1,9 +1,9 @@
 from django.test import TestCase
-from programs.programs.cpcr.cpcr import PropertyCreditRebate
+from programs.programs.old_age_pension.calculator import OldAgePension
 from screener.models import Screen, HouseholdMember, IncomeStream
 
 
-class TestPropertyCreditRebatePension(TestCase):
+class TestOldAgePension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -17,42 +17,47 @@ class TestPropertyCreditRebatePension(TestCase):
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
             relationship='headOfHousehold',
-            age=65,
+            age=60,
             student=False,
             student_full_time=False,
             pregnant=False,
             unemployed=False,
             worked_in_last_18_mos=True,
             visually_impaired=False,
-            disabled=True,
+            disabled=False,
             veteran=False,
             has_income=False,
             has_expenses=False,
         )
 
-    def test_screen_exits(self):
-        self.assertEqual(self.screen1.agree_to_tos, True)
-        self.assertEqual(self.person1.screen, self.screen1)
-
-    def test_property_credit_rebate_visualy_impaired_is_eligible(self):
-        cpcr = PropertyCreditRebate(self.screen1)
-        eligibility = cpcr.eligibility
+    def test_old_age_pension_visualy_impaired_is_eligible(self):
+        oap = OldAgePension(self.screen1)
+        eligibility = oap.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_property_credit_rebate_failed_all_conditions(self):
+    def test_old_age_pension_failed_all_conditions(self):
+        self.screen1.has_ssi = True
+        self.screen1.has_tanf = True
+        self.screen1.household_assets = 2000
+        self.screen1.save()
         self.person1.age = 30
-        self.person1.disabled = False
         self.person1.save()
-        income = IncomeStream.objects.create(
-                    screen=self.screen1,
-                    household_member=self.person1,
-                    type='wages',
-                    amount=2000,
-                    frequency='monthly'
-                )
 
-        cpcr = PropertyCreditRebate(self.screen1)
-        eligibility = cpcr.eligibility
+        oap = OldAgePension(self.screen1)
+        eligibility = oap.eligibility
+
+        self.assertFalse(eligibility["eligible"])
+
+    def test_old_age_pension_failed_income_condition(self):
+        income = IncomeStream.objects.create(
+            screen=self.screen1,
+            household_member=self.person1,
+            type='wages',
+            amount=2000,
+            frequency='monthly'
+        )
+        oap = OldAgePension(self.screen1)
+        eligibility = oap.eligibility
 
         self.assertFalse(eligibility["eligible"])

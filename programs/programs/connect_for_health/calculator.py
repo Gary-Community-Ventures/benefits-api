@@ -1,5 +1,5 @@
 from django.conf import settings
-from programs.programs.cfhc.tax_credit_value import tax_credit_by_county
+from programs.programs.connect_for_health.tax_credit_value import tax_credit_by_county
 
 
 def calculate_connect_for_health(screen, data):

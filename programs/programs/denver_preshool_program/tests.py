@@ -1,17 +1,15 @@
 from django.test import TestCase
-from programs.programs.chs.chs import HeadStart
-from screener.models import Screen, HouseholdMember, IncomeStream
-from django.conf import settings
+from programs.programs.denver_preshool_program.calculator import DenverPreshoolProgram
+from screener.models import Screen, HouseholdMember
 
 
-class TestHeadStartPension(TestCase):
+class TestDenverPreshoolProgram(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
             zipcode='80205',
             county='Denver County',
-            household_size=2,
-            household_assets=0,
+            household_size=2
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
@@ -31,7 +29,7 @@ class TestHeadStartPension(TestCase):
         self.person2 = HouseholdMember.objects.create(
             screen=self.screen1,
             relationship='child',
-            age=4,
+            age=3,
             student=False,
             student_full_time=False,
             pregnant=False,
@@ -44,25 +42,16 @@ class TestHeadStartPension(TestCase):
             has_expenses=False,
         )
 
-    def test_head_start_visualy_impaired_is_eligible(self):
-        chs = HeadStart(self.screen1)
-        eligibility = chs.eligibility
+    def test_denver_preshool_program_has_preschooler(self):
+        dpp = DenverPreshoolProgram(self.screen1)
+        eligibility = dpp.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_head_start_failed_all_conditions(self):
-        income = IncomeStream.objects.create(
-            screen=self.screen1,
-            household_member=self.person1,
-            type='wages',
-            amount=2000,
-            frequency='monthly'
-        )
-        self.screen1.save()
-        self.person2.age=6
+    def test_denver_preshool_program_doesnt_have_preschooler(self):
+        self.person2.age = 5
         self.person2.save()
-
-        chs = HeadStart(self.screen1)
-        eligibility = chs.eligibility
+        dpp = DenverPreshoolProgram(self.screen1)
+        eligibility = dpp.eligibility
 
         self.assertFalse(eligibility["eligible"])

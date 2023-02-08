@@ -1,10 +1,10 @@
 from django.test import TestCase
-from programs.programs.cfhc.cfhc import ConnectForHealth
+from programs.programs.dental_health_care_seniors.calculator import DentalHealthCareSeniors
 from screener.models import Screen, HouseholdMember, IncomeStream
 from django.conf import settings
 
 
-class TestConnectForHealth(TestCase):
+class TestDentalHealthCareSeniorsPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -12,11 +12,7 @@ class TestConnectForHealth(TestCase):
             county='Denver County',
             household_size=1,
             household_assets=0,
-            has_employer_hi=True,
-            has_private_hi=True,
-            has_medicaid_hi=True,
-            has_chp_hi=True,
-            has_no_hi=True,
+            has_no_hi=True
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
@@ -34,24 +30,26 @@ class TestConnectForHealth(TestCase):
             has_expenses=False,
         )
 
-    def test_health_insurance_pass_all_conditions(self):
-        cfhc = ConnectForHealth(self.screen1)
-        eligibility = cfhc.eligibility
+    def test_dental_health_care_seniors_pass_all_conditions(self):
+        cdhcs = DentalHealthCareSeniors(self.screen1)
+        eligibility = cdhcs.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_health_insurance_failed_all_conditions(self):
-        self.screen1.has_no_hi = False
+    def test_dental_health_care_seniors_failed_all_conditions(self):
+        self.person1.age = 20
+        self.person1.save()
+        self.screen1.has_medicaid = True
         self.screen1.save()
-        income = IncomeStream.objects.create(
+        IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
             type='wages',
-            amount=5800,
+            amount=3000,
             frequency='monthly'
         )
 
-        cfhc = ConnectForHealth(self.screen1)
-        eligibility = cfhc.eligibility
+        cdhcs = DentalHealthCareSeniors(self.screen1)
+        eligibility = cdhcs.eligibility
 
         self.assertFalse(eligibility["eligible"])

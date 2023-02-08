@@ -1,20 +1,22 @@
 from django.test import TestCase
-from programs.programs.dpp.dpp import DenverPreshoolProgram
-from screener.models import Screen, HouseholdMember
+from programs.programs.family_planning_services.calculator import FamilyPlanningServices
+from screener.models import Screen, HouseholdMember, IncomeStream
+from django.conf import settings
 
 
-class TestDenverPreshoolProgram(TestCase):
+class TestFamilyPlanningServicesPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
             zipcode='80205',
             county='Denver County',
-            household_size=2
+            household_size=2,
+            household_assets=0,
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
             relationship='headOfHousehold',
-            age=30,
+            age=60,
             student=False,
             student_full_time=False,
             pregnant=False,
@@ -29,8 +31,8 @@ class TestDenverPreshoolProgram(TestCase):
         self.person2 = HouseholdMember.objects.create(
             screen=self.screen1,
             relationship='child',
-            age=3,
-            student=False,
+            age=10,
+            student=True,
             student_full_time=False,
             pregnant=False,
             unemployed=False,
@@ -42,16 +44,25 @@ class TestDenverPreshoolProgram(TestCase):
             has_expenses=False,
         )
 
-    def test_denver_preshool_program_has_preschooler(self):
-        dpp = DenverPreshoolProgram(self.screen1)
-        eligibility = dpp.eligibility
+    def test_family_planning_services_pass_all_conditions(self):
+        fps = FamilyPlanningServices(self.screen1, [{"name_abbreviated": 'medicaid', "eligible": False}])
+        eligibility = fps.eligibility
 
         self.assertTrue(eligibility["eligible"])
-    
-    def test_denver_preshool_program_doesnt_have_preschooler(self):
-        self.person2.age = 5
+
+    def test_family_planning_services_failed_all_conditions(self):
+        self.person2.age = 20
         self.person2.save()
-        dpp = DenverPreshoolProgram(self.screen1)
-        eligibility = dpp.eligibility
+        IncomeStream.objects.create(
+            screen=self.screen1,
+            household_member=self.person1,
+            type='wages',
+            amount=4000,
+            frequency='monthly'
+        )
+
+        fps = FamilyPlanningServices(self.screen1, 
+                [{"name_abbreviated": 'medicaid', "eligible": True}])
+        eligibility = fps.eligibility
 
         self.assertFalse(eligibility["eligible"])

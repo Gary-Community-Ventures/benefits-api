@@ -1,5 +1,5 @@
 from django.test import TestCase
-from programs.programs.omnisalud.omnisalud import OmniSalud
+from programs.programs.omnisalud.calculator import OmniSalud
 from screener.models import Screen, HouseholdMember, IncomeStream
 
 

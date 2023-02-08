@@ -1,10 +1,10 @@
 from django.test import TestCase
-from programs.programs.cdhcs.cdhcs import DentalHealthCareSeniors
+from programs.programs.every_day_eats.calculator import EveryDayEats
 from screener.models import Screen, HouseholdMember, IncomeStream
 from django.conf import settings
 
 
-class TestDentalHealthCareSeniorsPension(TestCase):
+class TestEveryDayEatsPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -12,7 +12,6 @@ class TestDentalHealthCareSeniorsPension(TestCase):
             county='Denver County',
             household_size=1,
             household_assets=0,
-            has_no_hi=True
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
@@ -30,26 +29,24 @@ class TestDentalHealthCareSeniorsPension(TestCase):
             has_expenses=False,
         )
 
-    def test_dental_health_care_seniors_pass_all_conditions(self):
-        cdhcs = DentalHealthCareSeniors(self.screen1)
-        eligibility = cdhcs.eligibility
+    def test_every_day_eats_visualy_impaired_is_eligible(self):
+        ede = EveryDayEats(self.screen1)
+        eligibility = ede.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_dental_health_care_seniors_failed_all_conditions(self):
-        self.person1.age = 20
-        self.person1.save()
-        self.screen1.has_medicaid = True
-        self.screen1.save()
-        IncomeStream.objects.create(
+    def test_every_day_eats_failed_all_conditions(self):
+        income = IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
             type='wages',
             amount=3000,
             frequency='monthly'
         )
+        self.person1.age = 30
+        self.person1.save()
 
-        cdhcs = DentalHealthCareSeniors(self.screen1)
-        eligibility = cdhcs.eligibility
+        ede = EveryDayEats(self.screen1)
+        eligibility = ede.eligibility
 
         self.assertFalse(eligibility["eligible"])
