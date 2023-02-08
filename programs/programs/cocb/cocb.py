@@ -1,8 +1,8 @@
 
 
-def calculate_cocb(screen, data):
-    eligibility = eligibility_cocb(screen)
-    value = value_cocb(screen)
+def calculate_chash_back(screen, data):
+    eligibility = eligibility_chash_back(screen)
+    value = value_chash_back(screen)
 
     calculation = {
         'eligibility': eligibility,
@@ -12,7 +12,7 @@ def calculate_cocb(screen, data):
     return calculation
 
 
-def eligibility_cocb(screen):
+def eligibility_chash_back(screen):
 
     eligibility = {
         "eligible": True,
@@ -32,7 +32,7 @@ def eligibility_cocb(screen):
     return eligibility
 
 
-def value_cocb(screen):
+def value_chash_back(screen):
     adults = screen.num_adults(age_max=18)
     value = adults * 750
     return value

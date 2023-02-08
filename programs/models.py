@@ -10,7 +10,7 @@ from programs.programs.rtdlive.rtdlive import calculate_rtdlive # noqa
 from programs.programs.cccap.cccap import calculate_child_care_assistance # noqa
 from programs.programs.mydenver.mydenver import calculate_mydenver # noqa
 from programs.programs.chp.chp import calculate_chp # noqa
-from programs.programs.cocb.cocb import calculate_cocb # noqa
+from programs.programs.cocb.cocb import calculate_chash_back # noqa
 from programs.programs.leap.leap import calculate_leap # noqa
 from programs.programs.andso.andso import calculate_andso
 from programs.programs.andcs.andcs import calculate_aid_for_disabled_blind
@@ -63,7 +63,7 @@ class Program(TranslatableModel):
             "cccap": calculate_child_care_assistance,
             "mydenver": calculate_mydenver,
             "chp": calculate_chp,
-            "cocb": calculate_cocb,
+            "cocb": calculate_chash_back,
             "leap": calculate_leap,
             "andso": calculate_andso,
             "andcs": calculate_aid_for_disabled_blind,
