@@ -1,7 +1,7 @@
 import math
 
 
-def affordable_connectivity(screen, data):
+def calculate_affordable_connectivity(screen, data):
     eligibility = eligibility_affordable_connectivity(screen)
     value = value_affordable_connectivity(screen)
 
