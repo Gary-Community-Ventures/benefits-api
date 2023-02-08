@@ -1,9 +1,9 @@
 import math
 
 
-def calculate_leap(screen, data):
-    eligibility = eligibility_leap(screen)
-    value = value_leap(screen)
+def calculate_energy_assistance(screen, data):
+    eligibility = eligibility_energy_assistance(screen)
+    value = value_energy_assistance(screen)
 
     calculation = {
         'eligibility': eligibility,
@@ -13,7 +13,7 @@ def calculate_leap(screen, data):
     return calculation
 
 
-def eligibility_leap(screen):
+def eligibility_energy_assistance(screen):
 
     eligibility = {
         "eligible": True,
@@ -62,7 +62,7 @@ def eligibility_leap(screen):
     return eligibility
 
 
-def value_leap(screen):
+def value_energy_assistance(screen):
     value = 362
 
     return value

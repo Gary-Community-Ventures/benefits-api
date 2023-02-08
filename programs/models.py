@@ -11,7 +11,7 @@ from programs.programs.cccap.cccap import calculate_child_care_assistance # noqa
 from programs.programs.mydenver.mydenver import calculate_mydenver # noqa
 from programs.programs.chp.chp import calculate_chp # noqa
 from programs.programs.cocb.cocb import calculate_chash_back # noqa
-from programs.programs.leap.leap import calculate_leap # noqa
+from programs.programs.leap.leap import calculate_energy_assistance # noqa
 from programs.programs.andso.andso import calculate_andso
 from programs.programs.andcs.andcs import calculate_aid_for_disabled_blind
 from programs.programs.erc.erc import calculate_energy_resource_center
@@ -19,7 +19,7 @@ from programs.programs.omnisalud.omnisalud import calculate_omnisalud
 from programs.programs.cdhcs.cdhcs import calculate_dental_health_care_seniors
 from programs.programs.rhc.rhc import calculate_rhc
 from programs.programs.cfhc.cfhc import calculate_connect_for_health
-from programs.programs.fps.fps import calculate_fps
+from programs.programs.fps.fps import calculate_family_planning_services
 from programs.programs.dpp.dpp import calculate_denver_preshool_program
 from programs.programs.chs.chs import calculate_head_start
 from programs.programs.ede.ede import calculate_every_day_eats
@@ -64,7 +64,7 @@ class Program(TranslatableModel):
             "mydenver": calculate_mydenver,
             "chp": calculate_chp,
             "cocb": calculate_chash_back,
-            "leap": calculate_leap,
+            "leap": calculate_energy_assistance,
             "andso": calculate_andso,
             "andcs": calculate_aid_for_disabled_blind,
             "erc": calculate_energy_resource_center,
@@ -72,7 +72,7 @@ class Program(TranslatableModel):
             "cdhcs": calculate_dental_health_care_seniors,
             "rhc": calculate_rhc,
             "cfhc": calculate_connect_for_health,
-            "fps": calculate_fps,
+            "fps": calculate_family_planning_services,
             "chs": calculate_head_start,
             "dpp": calculate_denver_preshool_program,
             "ede": calculate_every_day_eats,

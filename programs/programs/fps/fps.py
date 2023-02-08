@@ -1,8 +1,8 @@
 from django.conf import settings
 
 
-def calculate_fps(screen, data):
-    fps = Fps(screen, data)
+def calculate_family_planning_services(screen, data):
+    fps = FamilyPlanningServices(screen, data)
     eligibility = fps.eligibility
     value = fps.value
 
@@ -14,7 +14,7 @@ def calculate_fps(screen, data):
     return calculation
 
 
-class Fps():
+class FamilyPlanningServices():
     amount = 404
     child_max_age = 18
 
@@ -44,10 +44,10 @@ class Fps():
                         "Must not be eligible for Medicaid")
 
         # Child or Pregnant
-        eligible_children = self.screen.num_children(age_max=Fps.child_max_age,
+        eligible_children = self.screen.num_children(age_max=FamilyPlanningServices.child_max_age,
                                                      include_pregnant=True)
         self._condition(eligible_children >= 1,
-                        f"Must have a child under the age of {Fps.child_max_age} or have someone who is pregnant")
+                        f"Must have a child under the age of {FamilyPlanningServices.child_max_age} or have someone who is pregnant")
 
         # Income
         income_limit = int(2.6 * settings.FPL2022[self.screen.household_size]/12)
@@ -58,7 +58,7 @@ class Fps():
                         f"Income of ${gross_income} must be less than ${income_limit}")
 
     def calc_value(self):
-        self.value = Fps.amount
+        self.value = FamilyPlanningServices.amount
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False

@@ -1,10 +1,10 @@
 from django.test import TestCase
-from programs.programs.fps.fps import Fps
+from programs.programs.fps.fps import FamilyPlanningServices
 from screener.models import Screen, HouseholdMember, IncomeStream
 from django.conf import settings
 
 
-class TestFpsPension(TestCase):
+class TestFamilyPlanningServicesPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -44,13 +44,13 @@ class TestFpsPension(TestCase):
             has_expenses=False,
         )
 
-    def test_fps_pass_all_conditions(self):
-        fps = Fps(self.screen1, [{"name_abbreviated": 'medicaid', "eligible": False}])
+    def test_family_planning_services_pass_all_conditions(self):
+        fps = FamilyPlanningServices(self.screen1, [{"name_abbreviated": 'medicaid', "eligible": False}])
         eligibility = fps.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_fps_failed_all_conditions(self):
+    def test_family_planning_services_failed_all_conditions(self):
         self.person2.age = 20
         self.person2.save()
         IncomeStream.objects.create(
@@ -61,7 +61,7 @@ class TestFpsPension(TestCase):
             frequency='monthly'
         )
 
-        fps = Fps(self.screen1, 
+        fps = FamilyPlanningServices(self.screen1, 
                 [{"name_abbreviated": 'medicaid', "eligible": True}])
         eligibility = fps.eligibility
 
