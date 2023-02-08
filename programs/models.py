@@ -24,7 +24,7 @@ from programs.programs.dpp.dpp import calculate_dpp
 from programs.programs.chs.chs import calculate_head_start
 from programs.programs.ede.ede import calculate_ede
 from programs.programs.trua.trua import calculate_trua
-from programs.programs.cpcr.cpcr import calculate_cpcr
+from programs.programs.cpcr.cpcr import calculate_property_credit_rebate
 from programs.programs.oap.oap import calculate_oap
 
 
@@ -77,7 +77,7 @@ class Program(TranslatableModel):
             "dpp": calculate_dpp,
             "ede": calculate_ede,
             "trua": calculate_trua,
-            "cpcr": calculate_cpcr,
+            "cpcr": calculate_property_credit_rebate,
             "oap": calculate_oap,
         }
         calculation = calculators[self.name_abbreviated.lower()](screen, data)

@@ -1,9 +1,9 @@
 from django.test import TestCase
-from programs.programs.cpcr.cpcr import Cpcr
+from programs.programs.cpcr.cpcr import PropertyCreditRebate
 from screener.models import Screen, HouseholdMember, IncomeStream
 
 
-class TestCpcrPension(TestCase):
+class TestPropertyCreditRebatePension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -34,13 +34,13 @@ class TestCpcrPension(TestCase):
         self.assertEqual(self.screen1.agree_to_tos, True)
         self.assertEqual(self.person1.screen, self.screen1)
 
-    def test_cpcr_visualy_impaired_is_eligible(self):
-        cpcr = Cpcr(self.screen1)
+    def test_property_credit_rebate_visualy_impaired_is_eligible(self):
+        cpcr = PropertyCreditRebate(self.screen1)
         eligibility = cpcr.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_cpcr_failed_all_conditions(self):
+    def test_property_credit_rebate_failed_all_conditions(self):
         self.person1.age = 30
         self.person1.disabled = False
         self.person1.save()
@@ -52,7 +52,7 @@ class TestCpcrPension(TestCase):
                     frequency='monthly'
                 )
 
-        cpcr = Cpcr(self.screen1)
+        cpcr = PropertyCreditRebate(self.screen1)
         eligibility = cpcr.eligibility
 
         self.assertFalse(eligibility["eligible"])
