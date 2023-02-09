@@ -15,7 +15,7 @@ def calculate_head_start(screen, data):
 
 
 class HeadStart():
-    amount = 17200
+    amount = 10655
     max_age = 5
     min_age = 3
 
