@@ -1,9 +1,10 @@
 from django.test import TestCase
-from programs.programs.omnisalud.calculator import OmniSalud
+from programs.programs.reproductive_health_care.calculator import ReproductiveHealthCare
 from screener.models import Screen, HouseholdMember, IncomeStream
+from django.conf import settings
 
 
-class TestOmniSaludPension(TestCase):
+class TestReproductiveHealthCarePension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -16,7 +17,7 @@ class TestOmniSaludPension(TestCase):
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
             relationship='headOfHousehold',
-            age=20,
+            age=60,
             student=False,
             student_full_time=False,
             pregnant=False,
@@ -29,24 +30,19 @@ class TestOmniSaludPension(TestCase):
             has_expenses=False,
         )
 
-    def test_omnisalud_pass_all_conditions(self):
-        omnisalud = OmniSalud(self.screen1)
-        eligibility = omnisalud.eligibility
+    def test_reproductive_health_care_pass_all_conditions(self):
+        rhc = ReproductiveHealthCare(self.screen1, [
+                  {"name_abbreviated": 'medicaid', "eligible": True}])
+        eligibility = rhc.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_omnisalud_failed_all_conditions(self):
-        self.screen1.has_no_hi = False
-        self.screen1.save()
-        IncomeStream.objects.create(
-            screen=self.screen1,
-            household_member=self.person1,
-            type='wages',
-            amount=2000,
-            frequency='monthly'
-        )
+    def test_reproductive_health_care_failed_all_conditions(self):
+        self.person1.has_no_hi = False
+        self.person1.save()
 
-        omnisalud = OmniSalud(self.screen1)
-        eligibility = omnisalud.eligibility
+        rhc = ReproductiveHealthCare(self.screen1,
+                  [{"name_abbreviated": 'medicaid', "eligible": False}])
+        eligibility = rhc.eligibility
 
         self.assertFalse(eligibility["eligible"])

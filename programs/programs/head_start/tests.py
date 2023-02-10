@@ -1,21 +1,36 @@
 from django.test import TestCase
-from programs.programs.trua.calculator import Trua
+from programs.programs.head_start.calculator import HeadStart
 from screener.models import Screen, HouseholdMember, IncomeStream
 
 
-class TestTruaPension(TestCase):
+class TestHeadStartPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
             zipcode='80205',
             county='Denver County',
-            household_size=1,
+            household_size=2,
             household_assets=0,
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
             relationship='headOfHousehold',
-            age=60,
+            age=30,
+            student=False,
+            student_full_time=False,
+            pregnant=False,
+            unemployed=False,
+            worked_in_last_18_mos=True,
+            visually_impaired=False,
+            disabled=False,
+            veteran=False,
+            has_income=False,
+            has_expenses=False,
+        )
+        self.person2 = HouseholdMember.objects.create(
+            screen=self.screen1,
+            relationship='child',
+            age=4,
             student=False,
             student_full_time=False,
             pregnant=False,
@@ -28,24 +43,25 @@ class TestTruaPension(TestCase):
             has_expenses=False,
         )
 
-    def test_trua_passed_all_conditions(self):
-        trua = Trua(self.screen1)
-        eligibility = trua.eligibility
+    def test_head_start_visually_impaired_is_eligible(self):
+        chs = HeadStart(self.screen1)
+        eligibility = chs.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_trua_failed_all_conditions(self):
+    def test_head_start_failed_all_conditions(self):
         income = IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
             type='wages',
-            amount=5800,
+            amount=2000,
             frequency='monthly'
         )
-        self.screen1.county = ''
         self.screen1.save()
+        self.person2.age=6
+        self.person2.save()
 
-        trua = Trua(self.screen1)
-        eligibility = trua.eligibility
+        chs = HeadStart(self.screen1)
+        eligibility = chs.eligibility
 
         self.assertFalse(eligibility["eligible"])

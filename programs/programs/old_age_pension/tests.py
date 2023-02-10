@@ -1,22 +1,23 @@
 from django.test import TestCase
-from programs.programs.omnisalud.calculator import OmniSalud
+from programs.programs.old_age_pension.calculator import OldAgePension
 from screener.models import Screen, HouseholdMember, IncomeStream
 
 
-class TestOmniSaludPension(TestCase):
+class TestOldAgePension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
             zipcode='80205',
             county='Denver County',
-            household_size=1,
+            household_size=2,
             household_assets=0,
-            has_no_hi=True
+            has_tanf=False,
+            has_ssi=False
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
             relationship='headOfHousehold',
-            age=20,
+            age=60,
             student=False,
             student_full_time=False,
             pregnant=False,
@@ -29,24 +30,34 @@ class TestOmniSaludPension(TestCase):
             has_expenses=False,
         )
 
-    def test_omnisalud_pass_all_conditions(self):
-        omnisalud = OmniSalud(self.screen1)
-        eligibility = omnisalud.eligibility
+    def test_old_age_pension_visually_impaired_is_eligible(self):
+        oap = OldAgePension(self.screen1)
+        eligibility = oap.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_omnisalud_failed_all_conditions(self):
-        self.screen1.has_no_hi = False
+    def test_old_age_pension_failed_all_conditions(self):
+        self.screen1.has_ssi = True
+        self.screen1.has_tanf = True
+        self.screen1.household_assets = 2000
         self.screen1.save()
-        IncomeStream.objects.create(
+        self.person1.age = 30
+        self.person1.save()
+
+        oap = OldAgePension(self.screen1)
+        eligibility = oap.eligibility
+
+        self.assertFalse(eligibility["eligible"])
+
+    def test_old_age_pension_failed_income_condition(self):
+        income = IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
             type='wages',
             amount=2000,
             frequency='monthly'
         )
-
-        omnisalud = OmniSalud(self.screen1)
-        eligibility = omnisalud.eligibility
+        oap = OldAgePension(self.screen1)
+        eligibility = oap.eligibility
 
         self.assertFalse(eligibility["eligible"])

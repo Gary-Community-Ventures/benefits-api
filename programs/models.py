@@ -3,29 +3,8 @@ from parler.models import TranslatableModel, TranslatedFields
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 
-from programs.programs.acp.acp import calculate_acp # noqa
-from programs.programs.lifeline.lifeline import calculate_lifeline # noqa
-from programs.programs.tanf.tanf import calculate_tanf # noqa
-from programs.programs.rtdlive.rtdlive import calculate_rtdlive # noqa
-from programs.programs.cccap.cccap import calculate_cccap # noqa
-from programs.programs.mydenver.mydenver import calculate_mydenver # noqa
-from programs.programs.chp.chp import calculate_chp # noqa
-from programs.programs.cocb.cocb import calculate_cocb # noqa
-from programs.programs.leap.leap import calculate_leap # noqa
-from programs.programs.andso.andso import calculate_andso
-from programs.programs.andcs.andcs import calculate_andcs
-from programs.programs.erc.erc import calculate_erc
-from programs.programs.omnisalud.omnisalud import calculate_omnisalud
-from programs.programs.cdhcs.cdhcs import calculate_cdhcs
-from programs.programs.rhc.rhc import calculate_rhc
-from programs.programs.cfhc.cfhc import calculate_cfhc
-from programs.programs.fps.fps import calculate_fps
-from programs.programs.dpp.dpp import calculate_dpp
-from programs.programs.chs.chs import calculate_chs
-from programs.programs.ede.ede import calculate_ede
-from programs.programs.trua.trua import calculate_trua
-from programs.programs.cpcr.cpcr import calculate_cpcr
-from programs.programs.oap.oap import calculate_oap
+from programs.programs import calculators
+
 
 
 # This model describes all of the benefit programs available in the screener
@@ -55,31 +34,6 @@ class Program(TranslatableModel):
     # contains the eligibility information and values for all currently
     # calculated benefits in the chain.
     def eligibility(self, screen, data):
-        calculators = {
-            "acp": calculate_acp,
-            "lifeline": calculate_lifeline,
-            "tanf": calculate_tanf,
-            "rtdlive": calculate_rtdlive,
-            "cccap": calculate_cccap,
-            "mydenver": calculate_mydenver,
-            "chp": calculate_chp,
-            "cocb": calculate_cocb,
-            "leap": calculate_leap,
-            "andso": calculate_andso,
-            "andcs": calculate_andcs,
-            "erc": calculate_erc,
-            "omnisalud": calculate_omnisalud,
-            "cdhcs": calculate_cdhcs,
-            "rhc": calculate_rhc,
-            "cfhc": calculate_cfhc,
-            "fps": calculate_fps,
-            "chs": calculate_chs,
-            "dpp": calculate_dpp,
-            "ede": calculate_ede,
-            "trua": calculate_trua,
-            "cpcr": calculate_cpcr,
-            "oap": calculate_oap,
-        }
         calculation = calculators[self.name_abbreviated.lower()](screen, data)
 
         eligibility = calculation['eligibility']
