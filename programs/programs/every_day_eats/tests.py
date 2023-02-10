@@ -1,7 +1,6 @@
 from django.test import TestCase
 from programs.programs.every_day_eats.calculator import EveryDayEats
 from screener.models import Screen, HouseholdMember, IncomeStream
-from django.conf import settings
 
 
 class TestEveryDayEatsPension(TestCase):
@@ -29,7 +28,7 @@ class TestEveryDayEatsPension(TestCase):
             has_expenses=False,
         )
 
-    def test_every_day_eats_visualy_impaired_is_eligible(self):
+    def test_every_day_eats_visually_impaired_is_eligible(self):
         ede = EveryDayEats(self.screen1)
         eligibility = ede.eligibility
 

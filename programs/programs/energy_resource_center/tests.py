@@ -28,7 +28,7 @@ class TestEnergyResourceCenterPension(TestCase):
             has_expenses=False,
         )
 
-    def test_energy_resource_center_visualy_impaired_is_eligible(self):
+    def test_energy_resource_center_visually_impaired_is_eligible(self):
         erc = EnergyResourceCenter(self.screen1)
         eligibility = erc.eligibility
 

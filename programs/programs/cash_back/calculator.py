@@ -1,8 +1,8 @@
 
 
-def calculate_chash_back(screen, data):
-    eligibility = eligibility_chash_back(screen)
-    value = value_chash_back(screen)
+def calculate_cash_back(screen, data):
+    eligibility = eligibility_cash_back(screen)
+    value = value_cash_back(screen)
 
     calculation = {
         'eligibility': eligibility,
@@ -12,7 +12,7 @@ def calculate_chash_back(screen, data):
     return calculation
 
 
-def eligibility_chash_back(screen):
+def eligibility_cash_back(screen):
 
     eligibility = {
         "eligible": True,
@@ -32,7 +32,7 @@ def eligibility_chash_back(screen):
     return eligibility
 
 
-def value_chash_back(screen):
+def value_cash_back(screen):
     adults = screen.num_adults(age_max=18)
     value = adults * 750
     return value

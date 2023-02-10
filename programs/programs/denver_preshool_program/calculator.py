@@ -1,6 +1,6 @@
 
-def calculate_denver_preshool_program(screen, data):
-    dpp = DenverPreshoolProgram(screen)
+def calculate_denver_preschool_program(screen, data):
+    dpp = DenverPreschoolProgram(screen)
     eligibility = dpp.eligibility
     value = dpp.value
 
@@ -12,7 +12,7 @@ def calculate_denver_preshool_program(screen, data):
     return calculation
 
 
-class DenverPreshoolProgram():
+class DenverPreschoolProgram():
     amount = 788 * 12
     min_age = 3
     max_age = 4
@@ -32,10 +32,10 @@ class DenverPreshoolProgram():
 
     def calc_eligibility(self):
         #Has a preschool child
-        num_children = self.screen.num_children(age_min=DenverPreshoolProgram.min_age, age_max=DenverPreshoolProgram.max_age)
+        num_children = self.screen.num_children(age_min=DenverPreschoolProgram.min_age, age_max=DenverPreschoolProgram.max_age)
 
         self._condition(num_children >= 1,
-                        f"Must have a child between the ages of {DenverPreshoolProgram.min_age} and {DenverPreshoolProgram.max_age}")
+                        f"Must have a child between the ages of {DenverPreschoolProgram.min_age} and {DenverPreschoolProgram.max_age}")
 
         #Lives in Denver
         location = self.screen.county
@@ -44,7 +44,7 @@ class DenverPreshoolProgram():
                         "Must live in Denver")
 
     def calc_value(self):
-        self.value = DenverPreshoolProgram.amount
+        self.value = DenverPreschoolProgram.amount
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False

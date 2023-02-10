@@ -1,9 +1,9 @@
 from django.test import TestCase
-from programs.programs.denver_preshool_program.calculator import DenverPreshoolProgram
+from programs.programs.denver_preschool_program.calculator import DenverPreschoolProgram
 from screener.models import Screen, HouseholdMember
 
 
-class TestDenverPreshoolProgram(TestCase):
+class TestDenverPreschoolProgram(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
@@ -42,16 +42,16 @@ class TestDenverPreshoolProgram(TestCase):
             has_expenses=False,
         )
 
-    def test_denver_preshool_program_has_preschooler(self):
-        dpp = DenverPreshoolProgram(self.screen1)
+    def test_denver_preschool_program_has_preschooler(self):
+        dpp = DenverPreschoolProgram(self.screen1)
         eligibility = dpp.eligibility
 
         self.assertTrue(eligibility["eligible"])
 
-    def test_denver_preshool_program_doesnt_have_preschooler(self):
+    def test_denver_preschool_program_doesnt_have_preschooler(self):
         self.person2.age = 5
         self.person2.save()
-        dpp = DenverPreshoolProgram(self.screen1)
+        dpp = DenverPreschoolProgram(self.screen1)
         eligibility = dpp.eligibility
 
         self.assertFalse(eligibility["eligible"])

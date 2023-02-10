@@ -30,7 +30,7 @@ class TestOldAgePension(TestCase):
             has_expenses=False,
         )
 
-    def test_old_age_pension_visualy_impaired_is_eligible(self):
+    def test_old_age_pension_visually_impaired_is_eligible(self):
         oap = OldAgePension(self.screen1)
         eligibility = oap.eligibility
 

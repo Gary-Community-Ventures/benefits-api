@@ -34,7 +34,7 @@ class TestPropertyCreditRebatePension(TestCase):
         self.assertEqual(self.screen1.agree_to_tos, True)
         self.assertEqual(self.person1.screen, self.screen1)
 
-    def test_property_credit_rebate_visualy_impaired_is_eligible(self):
+    def test_property_credit_rebate_visually_impaired_is_eligible(self):
         cpcr = PropertyCreditRebate(self.screen1)
         eligibility = cpcr.eligibility
 
