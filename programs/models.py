@@ -27,6 +27,7 @@ from programs.programs.trua.trua import calculate_trua
 from programs.programs.cpcr.cpcr import calculate_cpcr
 from programs.programs.oap.oap import calculate_oap
 
+
 # This model describes all of the benefit programs available in the screener
 # results. Each program has a specific folder in /programs where the specific
 # logic for eligibility and value is stored.
@@ -93,6 +94,21 @@ class Program(TranslatableModel):
         return self.name
 
     def __unicode__(self):
+        return self.name
+
+
+class UrgentNeed(TranslatableModel):
+    translations = TranslatedFields(
+        name=models.CharField(max_length=120),
+        description=models.TextField(),
+        link=models.CharField(max_length=320),
+        type=models.CharField(max_length=120),
+    )
+    phone_number = PhoneNumberField(blank=True, null=True)
+    type_short = models.CharField(max_length=120)
+    active = models.BooleanField(blank=True, null=False, default=True)
+
+    def __str__(self):
         return self.name
 
 

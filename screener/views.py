@@ -10,6 +10,8 @@ from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, In
     ExpenseSerializer, EligibilitySerializer, MessageSerializer
 from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
+from programs.models import UrgentNeed
+from programs.serializers import UrgentNeedSerializer
 import math
 import copy
 import json
@@ -75,11 +77,15 @@ class EligibilityTranslationView(views.APIView):
     def get(self, request, id):
         data = {}
         eligibility = eligibility_results(id)
+        urgent_need_programs = {}
 
         for language in settings.LANGUAGES:
             translated_eligibility = eligibility_results_translation(eligibility, language[0])
             data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
-        return Response({"translations": data})
+            urgent_need_programs[language[0]] = UrgentNeedSerializer(
+                urgent_needs(id).language(language[0]).all(), many=True
+                ).data
+        return Response({"programs": data, "urgent_needs": urgent_need_programs})
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -199,3 +205,24 @@ def eligibility_results_translation(results, language):
                 translated_results[k]['failed_tests'].append(translated_message)
 
     return translated_results
+
+
+def urgent_needs(screen_id):
+    screen = Screen.objects.get(pk=screen_id)
+
+    possible_needs = {'food': screen.needs_food,
+                      'baby supplies': screen.needs_baby_supplies,
+                      'housing': screen.needs_housing_help,
+                      'mental health': screen.needs_mental_health_help,
+                      'child dev': screen.needs_child_dev_help,
+                      'funeral': screen.needs_funeral_help,
+                      }
+
+    list_of_needs = []
+    for need, has_need in possible_needs.items():
+        if has_need:
+            list_of_needs.append(need)
+
+    urgent_need_resources = UrgentNeed.objects.filter(type_short__in=list_of_needs, active=True)
+
+    return urgent_need_resources
