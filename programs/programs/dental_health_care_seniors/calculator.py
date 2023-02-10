@@ -33,7 +33,7 @@ class DentalHealthCareSeniors():
 
     def calc_eligibility(self):
         # Health insurance
-        has_valid_hi = self.screen.has_types_of_hi(['none', 'employer', 'chp'])
+        has_valid_hi = self.screen.has_types_of_insurance(['none', 'employer', 'chp'])
         has_medicaid = self.screen.has_medicaid
         self._condition(has_valid_hi and not has_medicaid,
                         "Someone in the household must not have medicaid")

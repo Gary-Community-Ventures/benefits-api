@@ -2,7 +2,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import override
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
+from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, EligibilitySnapshot, ProgramEligibilitySnapshot
 from rest_framework import viewsets, views
 from rest_framework import permissions
 from rest_framework.response import Response
@@ -10,8 +10,11 @@ from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, In
     ExpenseSerializer, EligibilitySerializer, MessageSerializer
 from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
+from programs.models import UrgentNeed
+from programs.serializers import UrgentNeedSerializer
 import math
 import copy
+import json
 
 
 def index(request):
@@ -24,7 +27,7 @@ class ScreenViewSet(viewsets.ModelViewSet):
     """
     queryset = Screen.objects.all().order_by('-submission_date')
     serializer_class = ScreenSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['agree_to_tos', 'is_test']
     paginate_by = 10
     paginate_by_param = 'page_size'
@@ -37,7 +40,7 @@ class HouseholdMemberViewSet(viewsets.ModelViewSet):
     """
     queryset = HouseholdMember.objects.all()
     serializer_class = HouseholdMemberSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['has_income']
 
 
@@ -47,7 +50,7 @@ class IncomeStreamViewSet(viewsets.ModelViewSet):
     """
     queryset = IncomeStream.objects.all()
     serializer_class = IncomeStreamSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['screen']
 
 
@@ -57,7 +60,7 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     """
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['screen']
 
 
@@ -74,11 +77,15 @@ class EligibilityTranslationView(views.APIView):
     def get(self, request, id):
         data = {}
         eligibility = eligibility_results(id)
+        urgent_need_programs = {}
 
         for language in settings.LANGUAGES:
             translated_eligibility = eligibility_results_translation(eligibility, language[0])
             data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
-        return Response({"translations": data})
+            urgent_need_programs[language[0]] = UrgentNeedSerializer(
+                urgent_needs(id).language(language[0]).all(), many=True
+                ).data
+        return Response({"programs": data, "urgent_needs": urgent_need_programs})
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -87,12 +94,13 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     queryset = Message.objects.all().order_by('-sent')
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
 def eligibility_results(screen_id):
     all_programs = Program.objects.all()
     screen = Screen.objects.get(pk=screen_id)
+    snapshot = EligibilitySnapshot.objects.create(screen=screen)
     data = []
 
     pe_eligibility = eligibility_policy_engine(screen)
@@ -121,6 +129,19 @@ def eligibility_results(screen_id):
         navigators = program.navigator.all()
 
         if not skip and program.active:
+            ProgramEligibilitySnapshot.objects.create(
+                eligibility_snapshot=snapshot,
+                name=program.name,
+                name_abbreviated=program.name_abbreviated,
+                value_type=program.value_type,
+                estimated_value=eligibility["estimated_value"],
+                estimated_delivery_time=program.estimated_delivery_time,
+                estimated_application_time=program.estimated_application_time,
+                legal_status_required=program.legal_status_required,
+                eligible=eligibility["eligible"],
+                failed_tests=json.dumps(eligibility["failed"]),
+                passed_tests=json.dumps(eligibility["passed"])
+            )
             data.append(
                 {
                     "program_id": program.id,
@@ -184,3 +205,24 @@ def eligibility_results_translation(results, language):
                 translated_results[k]['failed_tests'].append(translated_message)
 
     return translated_results
+
+
+def urgent_needs(screen_id):
+    screen = Screen.objects.get(pk=screen_id)
+
+    possible_needs = {'food': screen.needs_food,
+                      'baby supplies': screen.needs_baby_supplies,
+                      'housing': screen.needs_housing_help,
+                      'mental health': screen.needs_mental_health_help,
+                      'child dev': screen.needs_child_dev_help,
+                      'funeral': screen.needs_funeral_help,
+                      }
+
+    list_of_needs = []
+    for need, has_need in possible_needs.items():
+        if has_need:
+            list_of_needs.append(need)
+
+    urgent_need_resources = UrgentNeed.objects.filter(type_short__in=list_of_needs, active=True)
+
+    return urgent_need_resources

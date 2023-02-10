@@ -27,6 +27,7 @@ class Screen(models.Model):
     housing_situation = models.CharField(max_length=30, blank=True, null=True, default=None)
     last_email_request_date = models.DateTimeField(blank=True, null=True)
     is_test = models.BooleanField(default=False, blank=True)
+    is_verified = models.BooleanField(default=False, blank=True)
     user = models.ForeignKey(User, related_name='screens', on_delete=models.CASCADE, blank=True, null=True)
     external_id = models.CharField(max_length=120, blank=True, null=True)
     request_language_code = models.CharField(max_length=12, blank=True, null=True)
@@ -49,6 +50,7 @@ class Screen(models.Model):
     has_employer_hi = models.BooleanField(default=False, blank=True, null=True)
     has_private_hi = models.BooleanField(default=False, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_medicare_hi = models.BooleanField(default=False, blank=True, null=True)
     has_chp_hi = models.BooleanField(default=False, blank=True, null=True)
     has_no_hi = models.BooleanField(default=False, blank=True, null=True)
     needs_food = models.BooleanField(default=False, blank=True, null=True)
@@ -165,10 +167,10 @@ class Screen(models.Model):
             if member['id'] in relationship_map:
                 if relationship_map[member['id']] != None:
                     continue
-            
+
             relationship = member['relationship']
             probabable_spouse = None
-            
+
             if relationship == 'headOfHousehold':
                 for other_member in all_members:
                     if other_member['relationship'] in ('spouse', 'domesticPartner') and\
@@ -193,7 +195,7 @@ class Screen(models.Model):
                 relationship_map[probabable_spouse] = member['id']
         return relationship_map
 
-    def has_types_of_hi(self, types, only=False):
+    def has_types_of_insurance(self, types, only=False):
         """
         Returns True if family has an insurance in types.
         If only=True then will return False if the family has an insurance that is not in types.
@@ -202,6 +204,7 @@ class Screen(models.Model):
             'employer': self.has_employer_hi,
             'private': self.has_private_hi,
             'medicaid': self.has_medicaid_hi,
+            'medicare': self.has_medicare_hi,
             'chp': self.has_chp_hi,
             'none': self.has_no_hi
         }
@@ -345,7 +348,7 @@ class HouseholdMember(models.Model):
             net_income = gross_income - expenses
 
         return net_income
-    
+
     def is_married(self):
         if self.relationship in ('spouse', 'domesticPartner'):
             head_of_house = HouseholdMember.objects.all().filter(screen=self.screen, relationship='headOfHousehold')[0]
@@ -439,7 +442,7 @@ class EligibilitySnapshot(models.Model):
     submission_date = models.DateTimeField(auto_now=True)
 
     def generate_program_snapshots(self):
-        eligibility = self.screen.eligibility_results(self.screen.id)
+        eligibility = self.screen.eligibility_results()
         for item in eligibility:
             program_snapshot = ProgramEligibilitySnapshot(
                 eligibility_snapshot=self,

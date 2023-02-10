@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='programtranslation',
             name='catagory',
-            field=models.CharField(default='no catagory', max_length=120),
+            field=models.CharField(default='no category', max_length=120),
             preserve_default=False,
         ),
     ]
