@@ -1,7 +1,6 @@
 from django.test import TestCase
 from programs.programs.head_start.calculator import HeadStart
 from screener.models import Screen, HouseholdMember, IncomeStream
-from django.conf import settings
 
 
 class TestHeadStartPension(TestCase):
@@ -44,7 +43,7 @@ class TestHeadStartPension(TestCase):
             has_expenses=False,
         )
 
-    def test_head_start_visualy_impaired_is_eligible(self):
+    def test_head_start_visually_impaired_is_eligible(self):
         chs = HeadStart(self.screen1)
         eligibility = chs.eligibility
 
