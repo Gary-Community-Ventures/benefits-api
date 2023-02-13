@@ -6,10 +6,12 @@ from io import StringIO
 from sendgrid.helpers.mail import Mail, Email, To, Content, Attachment, FileContent, FileName, FileType, Disposition
 import base64
 from screener.views import eligibility_results, eligibility_results_translation
+from screener.models import Screen
 
 
 def email_pdf(target_email, screen_id, language):
-    raw_data = eligibility_results(screen_id)
+    screen = Screen.objects.get(pk=screen_id)
+    raw_data = eligibility_results(screen)
     data = eligibility_results_translation(raw_data, language)
 
     data_reduced = []
