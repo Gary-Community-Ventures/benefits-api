@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import override
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, EligibilitySnapshot, ProgramEligibilitySnapshot
-from rest_framework import viewsets, views
+from rest_framework import viewsets, views, status
 from rest_framework import permissions
 from rest_framework.response import Response
 from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, \
@@ -75,17 +75,18 @@ class EligibilityView(views.APIView):
 class EligibilityTranslationView(views.APIView):
 
     def get(self, request, id):
+        screen = Screen.objects.get(uuid=id)
         data = {}
-        eligibility = eligibility_results(id)
+        eligibility = eligibility_results(screen)
         urgent_need_programs = {}
 
         for language in settings.LANGUAGES:
             translated_eligibility = eligibility_results_translation(eligibility, language[0])
             data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
             urgent_need_programs[language[0]] = UrgentNeedSerializer(
-                urgent_needs(id).language(language[0]).all(), many=True
+                urgent_needs(screen).language(language[0]).all(), many=True
                 ).data
-        return Response({"programs": data, "urgent_needs": urgent_need_programs})
+        return Response({"programs": data, "urgent_needs": urgent_need_programs, "screen_id": screen.id})
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -96,10 +97,21 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [permissions.DjangoModelPermissions]
 
+    def create(self, request):
+        body = json.loads(request.body.decode())
+        screen = Screen.objects.get(uuid=body['screen'])
+        Message.objects.create(
+            type=body['type'],
+            screen=screen,
+            email=body['email'] if 'email' in body else None,
+            cell=body['cell'] if 'cell' in body else None,
+            uid=body['uuid'] if 'uuid' in body else None,
+        )
+        return Response({}, status=status.HTTP_201_CREATED)
 
-def eligibility_results(screen_id):
+
+def eligibility_results(screen):
     all_programs = Program.objects.all()
-    screen = Screen.objects.get(pk=screen_id)
     snapshot = EligibilitySnapshot.objects.create(screen=screen)
     data = []
 
@@ -207,9 +219,7 @@ def eligibility_results_translation(results, language):
     return translated_results
 
 
-def urgent_needs(screen_id):
-    screen = Screen.objects.get(pk=screen_id)
-
+def urgent_needs(screen):
     possible_needs = {'food': screen.needs_food,
                       'baby supplies': screen.needs_baby_supplies,
                       'housing': screen.needs_housing_help,

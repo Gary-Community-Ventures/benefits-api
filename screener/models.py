@@ -2,6 +2,7 @@ from django.db import models
 from decimal import Decimal
 import json
 import math
+import uuid
 from authentication.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
@@ -14,6 +15,7 @@ from programs.programs.policyengine.policyengine import eligibility_policy_engin
 # application fields like submission_date, it also contains non-individual
 # household fields. Screen -> HouseholdMember -> IncomeStream & Expense
 class Screen(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False)
     submission_date = models.DateTimeField(auto_now=True)
     start_date = models.DateTimeField(blank=True, null=True)
     referral_source = models.CharField(max_length=320, default=None, blank=True, null=True)

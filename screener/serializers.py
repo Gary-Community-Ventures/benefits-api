@@ -64,6 +64,7 @@ class ScreenSerializer(serializers.ModelSerializer):
         model = Screen
         fields = (
             'id',
+            'uuid',
             'is_test',
             'start_date',
             'submission_date',
