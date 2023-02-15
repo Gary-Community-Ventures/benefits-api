@@ -2,15 +2,15 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import override
+from django.utils import timezone
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, EligibilitySnapshot, ProgramEligibilitySnapshot
 from rest_framework import viewsets, views, status
 from rest_framework import permissions
 from rest_framework.response import Response
 from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, \
     ExpenseSerializer, EligibilitySerializer, MessageSerializer
-from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
-from programs.models import UrgentNeed
+from programs.models import UrgentNeed, Program
 from programs.serializers import UrgentNeedSerializer
 import math
 import copy
@@ -104,7 +104,7 @@ class MessageViewSet(viewsets.ModelViewSet):
             type=body['type'],
             screen=screen,
             email=body['email'] if 'email' in body else None,
-            cell=body['cell'] if 'cell' in body else None,
+            cell=body['phone'] if 'phone' in body else None,
             uid=body['uuid'] if 'uuid' in body else None,
         )
         return Response({}, status=status.HTTP_201_CREATED)
@@ -112,8 +112,39 @@ class MessageViewSet(viewsets.ModelViewSet):
 
 def eligibility_results(screen):
     all_programs = Program.objects.all()
-    snapshot = EligibilitySnapshot.objects.create(screen=screen)
     data = []
+    try:
+        screen_snapshot = EligibilitySnapshot.objects.filter(screen=screen).last()
+        if (timezone.now() - screen_snapshot.submission_date).microseconds < 1000000*60*60*24:
+            # if a new snapshot has been created in the past 24 hours then use the previous snapshot to load results
+            for snapshot in screen_snapshot.program_snapshots.all():
+                program = all_programs.get(translations__name=snapshot.name)
+                data.append(
+                    {
+                        "program_id": program.id,
+                        "name": program.name,
+                        "name_abbreviated": program.name_abbreviated,
+                        "estimated_value": math.trunc(snapshot.estimated_value),
+                        "estimated_delivery_time": program.estimated_delivery_time,
+                        "estimated_application_time": program.estimated_application_time,
+                        "description_short": program.description_short,
+                        "short_name": program.name_abbreviated,
+                        "description": program.description,
+                        "value_type": program.value_type,
+                        "learn_more_link": program.learn_more_link,
+                        "apply_button_link": program.apply_button_link,
+                        "legal_status_required": program.legal_status_required,
+                        "category": program.category,
+                        "eligible": snapshot.eligible,
+                        "failed_tests": snapshot.failed_tests,
+                        "passed_tests": snapshot.passed_tests,
+                        "navigators": program.navigator.all()
+                    })
+            return data
+    except Exception as e:
+        pass
+
+    snapshot = EligibilitySnapshot.objects.create(screen=screen)
 
     pe_eligibility = eligibility_policy_engine(screen)
     pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid', 'ssi']
