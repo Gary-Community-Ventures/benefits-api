@@ -104,7 +104,7 @@ class MessageViewSet(viewsets.ModelViewSet):
             type=body['type'],
             screen=screen,
             email=body['email'] if 'email' in body else None,
-            cell=body['cell'] if 'cell' in body else None,
+            cell=body['phone'] if 'phone' in body else None,
             uid=body['uuid'] if 'uuid' in body else None,
         )
         return Response({}, status=status.HTTP_201_CREATED)

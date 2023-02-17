@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models.signals import post_save
 from django.utils.translation import override
-from screener.email import email_pdf
+from screener.communications import email_pdf, text_link
 from .models import Message, Screen, EligibilitySnapshot
 from django.dispatch import receiver
 from .models import IncomeStream
@@ -29,6 +29,14 @@ def send_screener_email(sender, instance, created, **kwargs):
 
             with override(language):
                 email_pdf(instance.email, instance.screen.id, language)
+    if created and instance.type == 'textScreen':
+        if instance.cell and instance.screen:
+            language = 'en-us'
+            if instance.screen.request_language_code:
+                language = instance.screen.request_language_code
+
+            with override(language):
+                text_link(instance.cell, instance.screen, language)
 
 
 def generate_bwf_snapshots():
