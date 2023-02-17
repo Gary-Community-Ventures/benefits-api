@@ -48,7 +48,7 @@ msgstr " miembros está por debajo del límite de ingresos de "
 
 #: .\screener\communications\cell.py:14 .\screener\communications\email.py:45
 msgid "Thank you for using MyFriendBen. Click here to review your results."
-msgstr "Gracias por usar MyFriendBen. Haga clic aquí para revisar sus resultados."
+msgstr "Gracias por usar MyFriendBen.  Cliquee aqui revisar sus resultados."
 
 #: .\screener\communications\email.py:43
 msgid "Screener Results from My Friend Ben"
