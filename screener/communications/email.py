@@ -38,8 +38,12 @@ def email_pdf(target_email, screen_id, language):
     sg = sendgrid.SendGridAPIClient(api_key=config('SENDGRID'))
     from_email = Email("screener@garycommunity.org")  # Change to your verified sender
     to_email = To(target_email)  # Change to your recipient
+    domain = config("FRONTEND_DOMAIN")
+    url = f"{domain}/results/{screen.uuid}"
     subject = _("Screener Results from My Friend Ben")
-    content = Content("text/plain", _("Thank you for using our benefits screener. Your results are attached as a csv file that can be opened in any spreadsheet software."))
+    content = Content("text/html",
+                      _("Thank you for using MyFriendBen. Click here to review your results.") +
+                      f'<a href="{url}">{url}</a>')
     mail = Mail(from_email, to_email, subject, content)
     attachment = Attachment()
     attachment.file_content = FileContent(encoded)

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 13:22-0700\n"
+"POT-Creation-Date: 2023-02-17 14:01-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,16 +48,10 @@ msgstr ""
 msgid " members is below the income limit of "
 msgstr ""
 
-#: .\screener\communications\cell.py:14
-msgid "Here is a link to your results"
+#: .\screener\communications\cell.py:14 .\screener\communications\email.py:45
+msgid "Thank you for using MyFriendBen. Click here to review your results."
 msgstr ""
 
-#: .\screener\communications\email.py:41
+#: .\screener\communications\email.py:43
 msgid "Screener Results from My Friend Ben"
-msgstr ""
-
-#: .\screener\communications\email.py:42
-msgid ""
-"Thank you for using our benefits screener. Your results are attached as a "
-"csv file that can be opened in any spreadsheet software."
 msgstr ""

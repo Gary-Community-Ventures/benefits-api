@@ -11,12 +11,10 @@ def text_link(cell, screen, language):
     from_phone_number = config("TWILIO_PHONE_NUMBER")
     client = Client(account_sid, auth_token)
     domain = config("FRONTEND_DOMAIN")
-    words = _("Here is a link to your results")
+    words = _("Thank you for using MyFriendBen. Click here to review your results.")
     url = f"{domain}/results/{screen.uuid}"
     message = client.messages.create(
         from_=from_phone_number,
-        body=f"{words}: {url}",
+        body=f"{words} {url}",
         to="+1"+str(cell),
     )
-
-    print(message.body)
