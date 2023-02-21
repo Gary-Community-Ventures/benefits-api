@@ -131,6 +131,7 @@ class EligibilitySerializer(serializers.Serializer):
     passed_tests = serializers.ListField()
     estimated_value = serializers.IntegerField()
     navigators = NavigatorSerializer(many=True)
+    already_has = serializers.BooleanField()
 
     class Meta:
         fields = '__all__'

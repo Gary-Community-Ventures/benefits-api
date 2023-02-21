@@ -1,11 +1,7 @@
 from django.utils.translation import gettext as _
 from decouple import config
 import sendgrid
-import csv
-from io import StringIO
-from sendgrid.helpers.mail import Mail, Email, To, Content, Attachment, FileContent, FileName, FileType, Disposition
-import base64
-from screener.views import eligibility_results, eligibility_results_translation
+from sendgrid.helpers.mail import Mail, Email, To, Content
 from screener.models import Screen
 
 

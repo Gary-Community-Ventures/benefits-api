@@ -136,12 +136,13 @@ def eligibility_results(screen):
                         "legal_status_required": program.legal_status_required,
                         "category": program.category,
                         "eligible": snapshot.eligible,
-                        "failed_tests": snapshot.failed_tests,
-                        "passed_tests": snapshot.passed_tests,
-                        "navigators": program.navigator.all()
+                        "failed_tests": json.loads(snapshot.failed_tests),
+                        "passed_tests": json.loads(snapshot.passed_tests),
+                        "navigators": program.navigator.all(),
+                        "already_has": screen.has_benefit(program.name_abbreviated)
                     })
             return data
-    except Exception as e:
+    except Exception:
         pass
 
     snapshot = EligibilitySnapshot.objects.create(screen=screen)
@@ -204,7 +205,8 @@ def eligibility_results(screen):
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],
-                    "navigators": navigators
+                    "navigators": navigators,
+                    "already_has": screen.has_benefit(program.name_abbreviated)
                 }
             )
 

@@ -220,6 +220,28 @@ class Screen(models.Model):
                 return False
         return has_type
 
+    def has_benefit(self, name_abbreviated):
+        name_map = {
+            'tanf': self.has_tanf,
+            'wic': self.has_wic,
+            'snap': self.has_snap,
+            'lifeline': self.has_lifeline,
+            'acp': self.has_acp,
+            'eitc': self.has_eitc,
+            'coeitc': self.has_coeitc,
+            'nslp': self.has_nslp,
+            'ctc': self.has_ctc,
+            'medicaid': self.has_medicaid or self.has_medicaid_hi,
+            'rtdlive': self.has_rtdlive,
+            'cccap': self.has_cccap,
+            'mydenver': self.has_mydenver,
+            'chp': self.has_chp or self.has_chp_hi,
+            'ccb': self.has_ccb,
+            'ssi': self.has_ssi,
+            'medicare': self.has_medicare_hi,
+        }
+        return name_map[name_abbreviated] if name_abbreviated in name_map else False
+
     def eligibility_results(self):
         all_programs = Program.objects.all()
         screen = self
