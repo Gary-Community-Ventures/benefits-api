@@ -37,6 +37,18 @@ def adult(min_age, max_age):
     )
 
 
+def older_then(min_age):
+    '''
+    Someone in the household must be at least {min_age} years old 
+    '''
+    return (
+        _('Someone in the household must be at least'),
+        f' {min_age} ',
+        _('years old')
+    )
+
+
+
 def must_have_benefit(benefit_name):
     '''
     Household must have {benefit_name}
