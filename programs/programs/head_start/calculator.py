@@ -1,4 +1,5 @@
 from django.conf import settings
+import programs.programs.messages as messages
 
 
 def calculate_head_start(screen, data):
@@ -37,14 +38,14 @@ class HeadStart():
         num_children = self.screen.num_children(age_min=HeadStart.min_age, age_max=HeadStart.max_age)
 
         self._condition(num_children >= 1,
-                        f"Must have a child between the ages of {HeadStart.min_age} and {HeadStart.max_age}")
+                        messages.child(HeadStart.min_age, HeadStart.max_age))
 
         # income
         income_limit = int(settings.FPL2022[self.screen.household_size]/12)
         gross_income = int(self.screen.calc_gross_income('monthly', ['all']))
 
         self._condition(gross_income < income_limit,
-                        f"Income of ${gross_income} must be less than ${income_limit}")
+                        messages.income(gross_income, income_limit))
 
     def calc_value(self):
         self.value = HeadStart.amount

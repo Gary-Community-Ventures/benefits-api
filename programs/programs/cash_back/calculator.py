@@ -1,3 +1,4 @@
+import programs.programs.messages as messages
 
 
 def calculate_cash_back(screen, data):
@@ -24,10 +25,10 @@ def eligibility_cash_back(screen):
     if adults < 1:
         eligibility["eligible"] = False
         eligibility["failed"].append((
-            "Colorado Cash Back is available to individuals 18+"))
+            messages.older_than(18)))
     else:
         eligibility["passed"].append((
-            "Colorado Cash Back is available to individuals 18+"))
+            messages.older_than(18)))
 
     return eligibility
 

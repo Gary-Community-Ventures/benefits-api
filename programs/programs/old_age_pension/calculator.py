@@ -1,4 +1,5 @@
 from programs.programs.tanf.calculator import calculate_tanf
+import programs.programs.messages as messages
 
 
 def calculate_old_age_pension(screen, data):
@@ -40,11 +41,11 @@ class OldAgePension():
         tanf_eligible = calculate_tanf(self.screen, None)[
             "eligibility"]["eligible"]
         self._condition(not (self.screen.has_tanf or tanf_eligible),
-                        "Must not be eligible for TANF")
+                        messages.must_not_have_benefit('TANF'))
 
         # Asset test
         self._condition(self.screen.household_assets < OldAgePension.asset_limit,
-                        f"Household assets must not exceed {OldAgePension.asset_limit}")
+                        messages.assets(OldAgePension.asset_limit))
 
         # Right age
         self.possible_eligible_members = []
@@ -53,7 +54,7 @@ class OldAgePension():
             if member.age >= OldAgePension.min_age:
                 self.possible_eligible_members.append(member)
         self._condition(len(self.possible_eligible_members) >= 1,
-                        f"Someone in the household must be {OldAgePension.min_age} or older")
+                        messages.older_than(OldAgePension.min_age))
 
         # Income
         def calc_total_countable_income(member):
@@ -75,8 +76,11 @@ class OldAgePension():
         self.possible_eligible_members = list(filter(
             lambda m: m["countable_income"] < OldAgePension.grant_standard, self.possible_eligible_members))
 
+        all_members_countable_income = map(calc_total_countable_income, list(self.screen.household_members.all()))
+        lowest_income = min(all_members_countable_income,
+                            key=lambda m: m["countable_income"])["countable_income"]
         self._condition(len(self.possible_eligible_members) >= 1,
-                        f"A member of the house hold over the age of {OldAgePension.min_age} must have a countable income less than ${OldAgePension.grant_standard} a month")
+                        messages.income(lowest_income, OldAgePension.grant_standard))
 
     def calc_value(self):
         self.value = 0

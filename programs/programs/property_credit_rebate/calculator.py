@@ -1,4 +1,5 @@
 from django.db.models import Q
+import programs.programs.messages as messages
 
 
 def calculate_property_credit_rebate(screen, data):
@@ -38,10 +39,13 @@ class PropertyCreditRebate():
         someone_disabled = len(people_disabled) >= 1
 
         # Someone is old enough
-        someone_old_enough = self.screen.num_adults(age_max=65) >= 1
+        someone_old_enough = self.screen.num_adults(age_max=PropertyCreditRebate.min_age) >= 1
 
         self._condition(someone_disabled or someone_old_enough,
-                        f"Someone in the household must be disabled or over the age of {PropertyCreditRebate.min_age}")
+                        messages.has_disability())
+
+        self._condition(someone_disabled or someone_old_enough,
+                        messages.older_than(PropertyCreditRebate.min_age))
 
         # Income test
         relationship_status = 'single'
@@ -51,7 +55,7 @@ class PropertyCreditRebate():
 
         gross_income = self.screen.calc_gross_income('yearly', ['all'])
         self._condition(gross_income <= PropertyCreditRebate.income_limit[relationship_status],
-                        f"Gross annual income must be less than {PropertyCreditRebate.income_limit[relationship_status]}")
+                        messages.income(gross_income, PropertyCreditRebate.income_limit[relationship_status]))
 
     def calc_value(self):
         self.value = PropertyCreditRebate.amount

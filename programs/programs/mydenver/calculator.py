@@ -1,4 +1,5 @@
 from programs.co_county_zips import counties_from_zip
+import programs.programs.messages as messages
 
 
 def calculate_mydenver(screen, data):
@@ -41,25 +42,18 @@ def eligibility_mydenver(screen):
 
     if not county_eligible:
         eligibility["eligible"] = False
-        eligibility["failed"].append((
-            "To qualify for the My Denver card must live in Denver County or "
-            "have a child who attends a DPS school."))
+        eligibility["failed"].append(messages.location())
     else:
-        eligibility["passed"].append((
-            "The zipcode ",
-            screen.zipcode,
-            " is within Denver County."))
+        eligibility["passed"].append(messages.location())
 
     children = screen.num_children(age_max=child_age_max,
                                    age_min=child_age_min,
                                    child_relationship=child_relationship)
     if children < 1:
         eligibility['eligible'] = False
-        eligibility['failed'].append((
-            "The My Denver card is limited to youth aged 5-18."))
+        eligibility['failed'].append(messages.child(min_age=5))
     else:
-        eligibility['passed'].append((
-            "The My Denver card is limited to youth aged 5-18."))
+        eligibility['passed'].append(messages.child(min_age=5))
     return eligibility
 
 

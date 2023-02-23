@@ -1,4 +1,5 @@
 from django.conf import settings
+import programs.programs.messages as messages
 
 
 def calculate_family_planning_services(screen, data):
@@ -41,13 +42,13 @@ class FamilyPlanningServices():
                 break
 
         self._condition(not (self.screen.has_medicaid or is_medicaid_eligible),
-                        "Must not be eligible for Medicaid")
+                        messages.must_not_have_benefit('Medicaid'))
 
         # Child or Pregnant
         eligible_children = self.screen.num_children(age_max=FamilyPlanningServices.child_max_age,
                                                      include_pregnant=True)
         self._condition(eligible_children >= 1,
-                        f"Must have a child under the age of {FamilyPlanningServices.child_max_age} or have someone who is pregnant")
+                        messages.child(0, FamilyPlanningServices.child_max_age))
 
         # Income
         income_limit = int(2.6 * settings.FPL2022[self.screen.household_size]/12)
@@ -55,7 +56,7 @@ class FamilyPlanningServices():
         gross_income = int(self.screen.calc_gross_income('monthly', income_types))
 
         self._condition(gross_income < income_limit,
-                        f"Income of ${gross_income} must be less than ${income_limit}")
+                        messages.income(gross_income, income_limit))
 
     def calc_value(self):
         self.value = FamilyPlanningServices.amount

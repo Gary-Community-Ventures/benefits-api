@@ -1,4 +1,5 @@
 from django.conf import settings
+import programs.programs.messages as messages
 
 
 def calculate_every_day_eats(screen, data):
@@ -35,14 +36,14 @@ class EveryDayEats():
         # Someone older that 60
         num_seniors = self.screen.num_adults(age_max=EveryDayEats.min_age)
         self._condition(num_seniors >= 1,
-                        f"Must have someone older that {EveryDayEats.min_age} in the house")
+                        messages.older_than(EveryDayEats.min_age))
 
         # Income
         income_limit = 1.3 * settings.FPL2022[self.screen.household_size]
         gross_income = self.screen.calc_gross_income('yearly', ['all'])
 
         self._condition(gross_income < income_limit,
-                        f"Gross income of ${gross_income} must be less than ${income_limit}")
+                        messages.income(gross_income, income_limit))
 
     def calc_value(self):
         self.value = EveryDayEats.amount

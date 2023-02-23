@@ -1,5 +1,5 @@
 from decimal import Decimal
-import math
+import programs.programs.messages as messages
 
 
 def calculate_tanf(screen, data):
@@ -80,14 +80,11 @@ def eligibility_tanf(screen, children, guardians):
 
     # CHILD TEST
     if children < 1:
-        eligibility["failed"].append((
-            "Households must have at least one dependent child under the age",
-            " of 18, and have primary (more than 50%) custody of that child."))
+        eligibility["failed"].append(messages.child())
         eligibility["eligible"] = False
         return eligibility
     else:
-        eligibility["passed"].append((
-            "Household has at least one dependent child under the age of 18"))
+        eligibility["passed"].append(messages.child())
 
     # SET INCOME LIMIT DEPENDING ON HOUSEHOLD COMPOSITION
     if guardians == 0:
@@ -104,24 +101,8 @@ def eligibility_tanf(screen, children, guardians):
     if tanf_earned_income < 0:
         tanf_earned_income = 0
 
-    clabel = "children"
-    glabel = "guardians"
-    if guardians == 1:
-        glabel = "guardian"
-    if children == 1:
-        clabel = "child"
-
     # INCOME TEST
-    income_test_description = ((
-        "Households with ",
-        str(guardians) + " " + glabel,
-        " and ",
-        str(children) + " " + clabel,
-        " must have a monthly household income below ",
-        str(income_limit),
-        ". Your TANF qualifying household income is ",
-        str(math.trunc(tanf_earned_income)),
-        "."))
+    income_test_description = (messages.income(tanf_earned_income, income_limit))
 
     if tanf_earned_income <= income_limit:
         eligibility['passed'].append(income_test_description)

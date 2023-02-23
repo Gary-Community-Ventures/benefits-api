@@ -1,3 +1,6 @@
+import programs.programs.messages as messages
+
+
 def calculate_trua(screen, data):
     trua = Trua(screen)
     eligibility = trua.eligibility
@@ -42,13 +45,13 @@ class Trua():
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
         income_band = int(Trua.income_bands[self.screen.household_size]/12)
         self._condition(gross_income <= income_band,
-                        f"Household makes ${gross_income} per month which must be less than ${income_band}")
+                        messages.income(gross_income, income_band))
 
-        #Location test
+        # Location test
         location = self.screen.county
 
         self._condition(location == "Denver County",
-                        "Must live in Denver")
+                        messages.location())
 
     def calc_value(self):
         self.value = Trua.average_amount
@@ -65,4 +68,3 @@ class Trua():
             self._passed(msg)
         else:
             self._failed(msg)
-

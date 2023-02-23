@@ -13,6 +13,16 @@ def income(income, max_income):
     )
 
 
+def assets(asset_limit):
+    '''
+    Household resources must not exceed ${asset_limit}
+    '''
+    return (
+        _('Household resources must not exceed'),
+        f' ${round(asset_limit)}'
+    )
+
+
 def child(min_age=0, max_age=18):
     '''
     Must have a child between the ages of {min_age} and {max_age}
@@ -37,16 +47,15 @@ def adult(min_age, max_age):
     )
 
 
-def older_then(min_age):
+def older_than(min_age):
     '''
-    Someone in the household must be at least {min_age} years old 
+    Someone in the household must be at least {min_age} years old
     '''
     return (
         _('Someone in the household must be at least'),
         f' {min_age} ',
         _('years old')
     )
-
 
 
 def must_have_benefit(benefit_name):

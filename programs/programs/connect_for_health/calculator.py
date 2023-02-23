@@ -1,5 +1,6 @@
 from django.conf import settings
 from programs.programs.connect_for_health.tax_credit_value import tax_credit_by_county
+import programs.programs.messages as messages
 
 
 def calculate_connect_for_health(screen, data):
@@ -35,13 +36,13 @@ class ConnectForHealth():
         # Someone has no health insurance
         has_no_hi = self.screen.has_types_of_insurance(['none'])
         self._condition(has_no_hi,
-                        "Someone in the household must not have health insurance")
+                        messages.has_no_insturance())
 
         # Income
         income_band = int(settings.FPL2022[self.screen.household_size]/12)
         gross_income = int(self.screen.calc_gross_income('yearly', ("all",))/12)
         self._condition(gross_income < income_band,
-                        f"Household makes ${gross_income} per month which must be less than ${income_band}")
+                        messages.income(gross_income, income_band))
 
     def calc_value(self):
         # https://stackoverflow.com/questions/6266727/python-cut-off-the-last-word-of-a-sentence

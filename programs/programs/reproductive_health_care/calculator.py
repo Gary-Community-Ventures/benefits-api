@@ -1,3 +1,6 @@
+import programs.programs.messages as messages
+
+
 def calculate_reproductive_health_care(screen, data):
     rhc = ReproductiveHealthCare(screen, data)
     eligibility = rhc.eligibility
@@ -32,7 +35,7 @@ class ReproductiveHealthCare():
         # No health insurance
         has_no_hi = self.screen.has_types_of_insurance(['none'])
         self._condition(has_no_hi,
-                        "Someone in the household must not have health insurance")
+                        messages.has_no_insturance())
 
         # Medicade eligibility
         is_medicaid_eligible = False
@@ -42,7 +45,7 @@ class ReproductiveHealthCare():
                 break
 
         self._condition(is_medicaid_eligible,
-                        "Must be eligible for Medicaid")
+                        messages.must_have_benefit("Medicaid"))
 
     def calc_value(self):
         self.value = ReproductiveHealthCare.amount
