@@ -73,7 +73,7 @@ def must_not_have_benefit(benefit_name):
     Household must not have {benefit_name}
     '''
     return (
-        _('Household must have'),
+        _('Household must not have'),
         f' {benefit_name}'
     )
 
@@ -92,7 +92,7 @@ def has_disability():
     Someone in the household must have a disability
     '''
     return (
-        _('Someone in the household must have a disability')
+        _('Someone in the household must have a disability'),
     )
 
 
@@ -101,5 +101,5 @@ def has_no_insturance():
     Someone in the household must not have health insurance
     '''
     return (
-        _('Someone in the household must not have health insurance')
+        _('Someone in the household must not have health insurance'),
     )
