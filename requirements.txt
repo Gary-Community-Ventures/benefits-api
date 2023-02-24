@@ -1,6 +1,5 @@
 asgiref==3.5.2
 attrs==21.4.0
-backports.zoneinfo==0.2.1
 cachetools==5.2.0
 certifi==2022.6.15
 charset-normalizer==2.1.0
@@ -40,6 +39,7 @@ psycopg2-binary==2.9.3
 py==1.11.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
+PyJWT==2.6.0
 pyparsing==3.0.9
 python-dateutil==2.8.2
 python-decouple==3.6
@@ -52,8 +52,10 @@ rsa==4.9
 sendgrid==6.9.7
 six==1.16.0
 sqlparse==0.4.2
-starkbank-ecdsa==2.0.3
+starkbank-ecdsa==2.2.0
 tomli==2.0.1
+twilio==7.16.3
+tzdata==2022.7
 uritemplate==4.1.1
 urllib3==1.26.10
 whitenoise==6.2.0

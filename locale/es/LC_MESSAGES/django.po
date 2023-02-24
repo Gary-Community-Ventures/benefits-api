@@ -1,11 +1,11 @@
 # Spanish Eligibility Text.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-05 09:37-0600\n"
+"POT-Creation-Date: 2023-02-17 14:01-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,43 +15,44 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: authentication/models.py:10 screener/models.py:144
+#: .\authentication\models.py:47 .\programs\models.py:74
+#: .\screener\models.py:292
 msgid "email address"
 msgstr "Correo electrónico"
 
-#: benefits/settings.py:175
+#: .\benefits\settings.py:173
 msgid "US English"
 msgstr "Inglés de Estados Unidos"
 
-#: benefits/settings.py:176
+#: .\benefits\settings.py:174
 msgid "Spanish"
 msgstr "Español"
 
-#: programs/programs/nfp/nfp.py:40 programs/programs/nfp/nfp.py:47
+#: .\programs\programs\nfp\calculator.py:38
+#: .\programs\programs\nfp\calculator.py:45
 msgid "Calculated income of "
 msgstr "Los ingresos calculados de "
 
-#: programs/programs/nfp/nfp.py:41 programs/programs/nfp/nfp.py:49
+#: .\programs\programs\nfp\calculator.py:39
+#: .\programs\programs\nfp\calculator.py:47
 msgid " for a household with "
 msgstr " para un hogar con "
 
-#: programs/programs/nfp/nfp.py:43
+#: .\programs\programs\nfp\calculator.py:41
 msgid " members is above the income limit of "
 msgstr " miembros está por encima del límite de ingresos de "
 
-#: programs/programs/nfp/nfp.py:51
+#: .\programs\programs\nfp\calculator.py:49
 msgid " members is below the income limit of "
 msgstr " miembros está por debajo del límite de ingresos de "
 
-#: screener/email.py:36
+#: .\screener\communications\cell.py:14 .\screener\communications\email.py:45
+msgid "Thank you for using MyFriendBen. Click here to review your results."
+msgstr "Gracias por usar MyFriendBen.  Cliquee aqui revisar sus resultados."
+
+#: .\screener\communications\email.py:43
 msgid "Screener Results from My Friend Ben"
 msgstr "Resultados de la evaluación de My Friend Ben"
-
-#: screener/email.py:37
-msgid ""
-"Thank you for using our benefits screener. Your results are attached as a "
-"csv file that can be opened in any spreadsheet software."
-msgstr "¡Gracias por usar nuestra evaluación de beneficios. Sus resultados se adjuntan como un archivo de CSV que se puede abrir en cualquier software de hoja de cálculo!"
 
 #~ msgid "To qualify for CCCAP a family must have at least one child under 13 "
 #~ msgstr ""
