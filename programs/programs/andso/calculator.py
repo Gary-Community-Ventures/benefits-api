@@ -1,5 +1,6 @@
 from programs.programs.tanf.calculator import calculate_tanf
 
+
 def calculate_andso(screen, data):
     andso = Andso(screen)
     eligibility = andso.eligibility
@@ -11,6 +12,7 @@ def calculate_andso(screen, data):
     }
 
     return calculation
+
 
 class Andso():
     grant_standard = 248
@@ -34,7 +36,7 @@ class Andso():
 
     def calc_eligibility(self):
 
-        #No SSI
+        # No SSI
         self._condition(not self.screen.has_ssi,
                         "Must not be receiving SSI")
 
@@ -42,7 +44,7 @@ class Andso():
         tanf_eligible = calculate_tanf(self.screen, None)["eligibility"]["eligible"]
         self._condition(not (self.screen.has_tanf or tanf_eligible),
                         "Must not be eligible for TANF")
-        #Assets less than limit
+        # Assets less than limit
         self._condition(self.screen.household_assets < Andso.asset_limit,
                         f"Household assets must not exceed {Andso.asset_limit}")
 
@@ -74,7 +76,7 @@ class Andso():
         self._condition(len(self.possible_eligible_members) >= 1, 
                         f"A member of the house hold with a disability must be between the ages of 18-{Andso.max_age} (0-{Andso.max_age} for blindness)")
 
-        #Income
+        # Income
         def calc_total_countable_income(member):
             earned = member.calc_gross_income("monthly", ["earned"])
             countable_earned = max(0, (earned - Andso.earned_standard_deduction) / 2)
@@ -95,7 +97,6 @@ class Andso():
         self._condition(len(self.possible_eligible_members) >= 1,
                         f"A member of the house hold with a disability must have a total countable income less than ${Andso.grant_standard} a month")
 
-
     def calc_value(self):
         self.value = 0
 
@@ -105,16 +106,16 @@ class Andso():
             eligible_member = eligible_members.pop()
             member = eligible_member['member']
             countable_income = eligible_member['countable_income']
-            
+
             for other_member in eligible_members:
                 if other_member['member'].id == relationship_map[member.id]:
                     eligible_members.remove(other_member)
                     break
-            
-            #add to total AND-SO value
+
+            # add to total AND-SO value
             member_value = max(0, Andso.grant_standard - countable_income)
             self.value += member_value
-            
+
         self.value *= 12
 
     def _failed(self, msg):

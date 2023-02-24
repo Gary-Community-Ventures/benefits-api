@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 14:01-0700\n"
+"POT-Creation-Date: 2023-02-23 11:11-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: .\authentication\models.py:47 .\programs\models.py:74
-#: .\screener\models.py:292
+#: .\screener\models.py:314
 msgid "email address"
 msgstr ""
 
@@ -28,6 +28,58 @@ msgstr ""
 
 #: .\benefits\settings.py:174
 msgid "Spanish"
+msgstr ""
+
+#: .\programs\programs\messages.py:9
+msgid "Household makes"
+msgstr ""
+
+#: .\programs\programs\messages.py:11
+msgid "per month which must be less than"
+msgstr ""
+
+#: .\programs\programs\messages.py:21
+msgid "Household resources must not exceed"
+msgstr ""
+
+#: .\programs\programs\messages.py:31
+msgid "Must have a child between the ages of"
+msgstr ""
+
+#: .\programs\programs\messages.py:33 .\programs\programs\messages.py:45
+msgid "and"
+msgstr ""
+
+#: .\programs\programs\messages.py:43
+msgid "Someone in the household must be between the ages of"
+msgstr ""
+
+#: .\programs\programs\messages.py:55
+msgid "Someone in the household must be at least"
+msgstr ""
+
+#: .\programs\programs\messages.py:57
+msgid "years old"
+msgstr ""
+
+#: .\programs\programs\messages.py:66
+msgid "Household must have"
+msgstr ""
+
+#: .\programs\programs\messages.py:76
+msgid "Household must not have"
+msgstr ""
+
+#: .\programs\programs\messages.py:86
+msgid "Must live in an eligible location"
+msgstr ""
+
+#: .\programs\programs\messages.py:95
+msgid "Someone in the household must have a disability"
+msgstr ""
+
+#: .\programs\programs\messages.py:104
+msgid "Someone in the household must not have health insurance"
 msgstr ""
 
 #: .\programs\programs\nfp\calculator.py:38
@@ -48,10 +100,10 @@ msgstr ""
 msgid " members is below the income limit of "
 msgstr ""
 
-#: .\screener\communications\cell.py:14 .\screener\communications\email.py:45
+#: .\screener\communications\cell.py:14 .\screener\communications\email.py:18
 msgid "Thank you for using MyFriendBen. Click here to review your results."
 msgstr ""
 
-#: .\screener\communications\email.py:43
+#: .\screener\communications\email.py:16
 msgid "Screener Results from My Friend Ben"
 msgstr ""

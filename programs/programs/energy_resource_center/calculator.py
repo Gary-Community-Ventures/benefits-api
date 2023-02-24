@@ -1,3 +1,6 @@
+import programs.programs.messages as messages
+
+
 def calculate_energy_resource_center(screen, data):
     erc = EnergyResourceCenter(screen)
     eligibility = erc.eligibility
@@ -42,7 +45,7 @@ class EnergyResourceCenter():
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
         income_band = EnergyResourceCenter.income_bands[self.screen.household_size]
         self._condition(gross_income <= income_band,
-                        f"Household makes ${gross_income} per month which must be less than ${income_band}")
+                        messages.income(gross_income, income_band))
 
     def calc_value(self):
         self.value = EnergyResourceCenter.average_amount

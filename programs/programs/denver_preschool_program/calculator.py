@@ -1,3 +1,5 @@
+import programs.programs.messages as messages
+
 
 def calculate_denver_preschool_program(screen, data):
     dpp = DenverPreschoolProgram(screen)
@@ -31,17 +33,18 @@ class DenverPreschoolProgram():
         self.calc_value()
 
     def calc_eligibility(self):
-        #Has a preschool child
+        # Has a preschool child
         num_children = self.screen.num_children(age_min=DenverPreschoolProgram.min_age, age_max=DenverPreschoolProgram.max_age)
 
         self._condition(num_children >= 1,
-                        f"Must have a child between the ages of {DenverPreschoolProgram.min_age} and {DenverPreschoolProgram.max_age}")
+                        messages.child(DenverPreschoolProgram.min_age,
+                                       DenverPreschoolProgram.max_age))
 
-        #Lives in Denver
+        # Lives in Denver
         location = self.screen.county
 
         self._condition(location == "Denver County",
-                        "Must live in Denver")
+                        messages.location())
 
     def calc_value(self):
         self.value = DenverPreschoolProgram.amount

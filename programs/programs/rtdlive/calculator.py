@@ -1,6 +1,6 @@
 from programs.co_county_zips import counties_from_zip
 from django.conf import settings
-import math
+import programs.programs.messages as messages
 
 
 def calculate_rtdlive(screen, data):
@@ -44,10 +44,8 @@ def eligibility_rtdlive(screen):
     county_eligible = False
     if not screen.county:
         counties = counties_from_zip(screen.zipcode)
-        display_location = screen.zipcode
     else:
         counties = [screen.county]
-        display_location = screen.county
 
     for county in counties:
         if county in eligible_counties:
@@ -55,39 +53,22 @@ def eligibility_rtdlive(screen):
 
     if qualifying_adults < 1:
         eligibility["eligible"] = False
-        eligibility["failed"].append((
-            "RTD Live is available to adults ages 20-64."))
+        eligibility["failed"].append(messages.adult(20, 64))
     else:
-        eligibility["passed"].append((
-            "RTD Live is available to adults ages 20-64."))
+        eligibility["passed"].append(messages.adult(20, 64))
 
     if not county_eligible:
         eligibility["eligible"] = False
-        eligibility["failed"].append((
-            "To qualify for RTD live you must live in the RTD service area."))
+        eligibility["failed"].append(messages.location())
     else:
-        eligibility["passed"].append((
-            display_location,
-            " is within the RTD service area."))
+        eligibility["passed"].append(messages.location())
 
     # income test
     if gross_income > income_limit:
         eligibility["eligible"] = False
-        eligibility["failed"].append((
-            "Calculated income of ",
-            str(math.trunc(gross_income)),
-            " for a household with ",
-            str(screen.household_size),
-            " members is above the income limit of ",
-            str(income_limit)))
+        eligibility["failed"].append(messages.income(gross_income, income_limit))
     else:
-        eligibility["passed"].append((
-            "Calculated income of ",
-            str(math.trunc(gross_income)),
-            " for a household with ",
-            str(screen.household_size),
-            " members is below the income limit of ",
-            str(income_limit)))
+        eligibility["passed"].append(messages.income(gross_income, income_limit))
 
     return eligibility
 

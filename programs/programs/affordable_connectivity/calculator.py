@@ -1,4 +1,4 @@
-import math
+import programs.programs.messages as messages
 
 
 def calculate_affordable_connectivity(screen, data):
@@ -44,21 +44,9 @@ def eligibility_affordable_connectivity(screen):
 
     if acp_income > income_limit:
         eligibility["eligible"] = False
-        eligibility["failed"].append((
-            "Calculated income of ",
-            str(math.trunc(acp_income)),
-            " for a household with ",
-            str(screen.household_size),
-            " members is above the income limit of ",
-            str(income_limit)))
+        eligibility["failed"].append(messages.income(acp_income, income_limit))
     else:
-        eligibility["passed"].append((
-            "Calculated income of ",
-            str(math.trunc(acp_income)),
-            " for a household with ",
-            str(screen.household_size),
-            " members is below the income limit of ",
-            str(income_limit)))
+        eligibility["passed"].append(messages.income(acp_income, income_limit))
 
     return eligibility
 

@@ -1,4 +1,5 @@
 from django.conf import settings
+import programs.programs.messages as messages
 
 
 def calculate_dental_health_care_seniors(screen, data):
@@ -36,17 +37,17 @@ class DentalHealthCareSeniors():
         has_valid_hi = self.screen.has_types_of_insurance(['none', 'employer', 'chp'])
         has_medicaid = self.screen.has_medicaid
         self._condition(has_valid_hi and not has_medicaid,
-                        "Someone in the household must not have medicaid")
+                        messages.must_not_have_benefit('Medicaid'))
 
         # Age
-        self._condition(self.screen.num_adults(age_max=DentalHealthCareSeniors.min_age)>=1,
-                        f"Someone in the household must be {DentalHealthCareSeniors.min_age} or older")
+        self._condition(self.screen.num_adults(age_max=DentalHealthCareSeniors.min_age) >= 1,
+                        messages.older_than(DentalHealthCareSeniors.min_age))
 
         # Income test
         gross_income = int(self.screen.calc_gross_income("monthly", ["all"]))
         income_band = int(2.5 * settings.FPL2022[self.screen.household_size]/12)
         self._condition(gross_income <= income_band,
-                        f"Household makes ${gross_income} per month which must be less than ${income_band}")
+                        messages.income(gross_income, income_band))
 
     def calc_value(self):
         self.value = DentalHealthCareSeniors.amount * self.screen.num_adults(age_max=DentalHealthCareSeniors.min_age) * 12

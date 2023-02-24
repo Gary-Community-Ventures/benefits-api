@@ -1,3 +1,6 @@
+import programs.programs.messages as messages
+
+
 def calculate_omnisalud(screen, data):
     omnisalud = OmniSalud(screen)
     eligibility = omnisalud.eligibility
@@ -34,12 +37,12 @@ class OmniSalud():
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
         income_band = OmniSalud.family_4_limit if self.screen.household_size >= 4 else OmniSalud.individual_limit
         self._condition(gross_income <= income_band,
-                        f"Household makes ${gross_income} per month which must be less than ${income_band}")
+                        messages.income(gross_income, income_band))
 
         # No health insurance
         has_no_hi = self.screen.has_types_of_insurance(['none'])
         self._condition(has_no_hi,
-                        "Someone in the household must not have health insurance")
+                        messages.has_no_insturance())
 
     def calc_value(self):
         child_value = OmniSalud.amount['child'] * self.screen.num_children()

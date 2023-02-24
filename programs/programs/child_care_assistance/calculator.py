@@ -1,7 +1,7 @@
 from programs.sheets import sheets_get_data
 from programs.co_county_zips import counties_from_zip
 import re
-import math
+import programs.programs.messages as messages
 
 
 def calculate_child_care_assistance(screen, data):
@@ -35,13 +35,9 @@ def eligibility_child_care_assistance(screen):
 
     if cccap_children < 1:
         eligibility["eligible"] = False
-        eligibility["failed"].append((
-            "To qualify for CCCAP a family must have at least one child under",
-            " 13 years old (19 years old if special needs or disability)."))
+        eligibility["failed"].append(messages.child(min_age=0, max_age=13))
     else:
-        eligibility["passed"].append((
-            "To qualify for CCCAP a family must have at least one child under",
-            " 13 years old (19 years old if special needs or disability)."))
+        eligibility["passed"].append(messages.child(min_age=0, max_age=13))
 
     # WORKING TEST
     # todo: support families seeking work
@@ -53,10 +49,7 @@ def eligibility_child_care_assistance(screen):
     cccap_county_data = cccap_county_values(county_name)
     if not cccap_county_data:
         eligibility["eligible"] = False
-        eligibility["failed"].append((
-            "To qualify for CCCAP a family must reside in Colorado. ",
-            county_name,
-            " was not found in the list of known counties."))
+        eligibility["failed"].append(messages.location())
         return eligibility
 
     income_types = ['all']
@@ -65,25 +58,9 @@ def eligibility_child_care_assistance(screen):
         income_limit = cccap_county_data[screen.household_size] * 12
         if gross_income > income_limit:
             eligibility["eligible"] = False
-            eligibility["failed"].append((
-                "Calculated income of ",
-                str(math.trunc(gross_income)),
-                " for a household with ",
-                str(screen.household_size),
-                " members is above the income limit of ",
-                str(income_limit),
-                " for ",
-                county_name))
+            eligibility["failed"].append(messages.income(gross_income, income_limit))
         else:
-            eligibility["passed"].append((
-                "Calculated income of ",
-                str(math.trunc(gross_income)),
-                " for a household with ",
-                str(screen.household_size),
-                " members is below the income limit of ",
-                str(income_limit),
-                " for ",
-                county_name))
+            eligibility["passed"].append(messages.income(gross_income, income_limit))
 
     return eligibility
 

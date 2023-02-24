@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 14:01-0700\n"
+"POT-Creation-Date: 2023-02-23 11:11-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\authentication\models.py:47 .\programs\models.py:74
-#: .\screener\models.py:292
+#: .\screener\models.py:314
 msgid "email address"
 msgstr "Correo electrónico"
 
@@ -27,6 +27,58 @@ msgstr "Inglés de Estados Unidos"
 #: .\benefits\settings.py:174
 msgid "Spanish"
 msgstr "Español"
+
+#: .\programs\programs\messages.py:9
+msgid "Household makes"
+msgstr "Vivienda genera"
+
+#: .\programs\programs\messages.py:11
+msgid "per month which must be less than"
+msgstr "por mes, que debe ser menor de"
+
+#: .\programs\programs\messages.py:21
+msgid "Household resources must not exceed"
+msgstr "Los recursos del hogar no deben exceder"
+
+#: .\programs\programs\messages.py:31
+msgid "Must have a child between the ages of"
+msgstr "Debe tener hijo entre las edades de"
+
+#: .\programs\programs\messages.py:33 .\programs\programs\messages.py:45
+msgid "and"
+msgstr "y"
+
+#: .\programs\programs\messages.py:43
+msgid "Someone in the household must be between the ages of"
+msgstr "Alguien en el hogar debe estar entre las edades de"
+
+#: .\programs\programs\messages.py:55
+msgid "Someone in the household must be at least"
+msgstr "Alguien en el hogar debe tener al menos"
+
+#: .\programs\programs\messages.py:57
+msgid "years old"
+msgstr "años"
+
+#: .\programs\programs\messages.py:66
+msgid "Household must have"
+msgstr "Vivienda debe tener"
+
+#: .\programs\programs\messages.py:76
+msgid "Household must not have"
+msgstr "Vivienda  no debe tener"
+
+#: .\programs\programs\messages.py:86
+msgid "Must live in an eligible location"
+msgstr "Debe de vivir en localidad elegible"
+
+#: .\programs\programs\messages.py:95
+msgid "Someone in the household must have a disability"
+msgstr "Alguien en el vivienda debe tener una discapacidad"
+
+#: .\programs\programs\messages.py:104
+msgid "Someone in the household must not have health insurance"
+msgstr "Alguien en la vivienda no debe tener seguro médico"
 
 #: .\programs\programs\nfp\calculator.py:38
 #: .\programs\programs\nfp\calculator.py:45
@@ -46,11 +98,11 @@ msgstr " miembros está por encima del límite de ingresos de "
 msgid " members is below the income limit of "
 msgstr " miembros está por debajo del límite de ingresos de "
 
-#: .\screener\communications\cell.py:14 .\screener\communications\email.py:45
+#: .\screener\communications\cell.py:14 .\screener\communications\email.py:18
 msgid "Thank you for using MyFriendBen. Click here to review your results."
 msgstr "Gracias por usar MyFriendBen.  Cliquee aqui revisar sus resultados."
 
-#: .\screener\communications\email.py:43
+#: .\screener\communications\email.py:16
 msgid "Screener Results from My Friend Ben"
 msgstr "Resultados de la evaluación de My Friend Ben"
 
@@ -120,12 +172,6 @@ msgstr "Resultados de la evaluación de My Friend Ben"
 
 #~ msgid "Household has at least one dependent child under the age of 18"
 #~ msgstr "El hogar tiene al menos un hijo dependiente menor de 18 años"
-
-#~ msgid "Households with "
-#~ msgstr "Los hogares con "
-
-#~ msgid " and "
-#~ msgstr " y "
 
 #~ msgid " must have a monthly household income below "
 #~ msgstr " deben tener ingresos mensuales por debajo de "
