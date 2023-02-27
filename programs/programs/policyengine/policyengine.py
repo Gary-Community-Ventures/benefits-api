@@ -138,7 +138,7 @@ def eligibility_policy_engine(screen):
         eligibility['ctc']['estimated_value'] = tax_unit_data['ctc']['2022']
 
     # CO Child Tax Credit
-    if tax_unit_data['ctc']['2022'] > 0:
+    if tax_unit_data['ctc']['2022'] > 0 and screen.num_children(age_max=6):
         income_bands = {
             "single": [{"max": 25000, "percent": .6}, {"max": 50000, "percent": .3}, {"max": 75000, "percent": .1}],
             "maried": [{"max": 35000, "percent": .6}, {"max": 60000, "percent": .3}, {"max": 85000, "percent": .1}]
@@ -151,6 +151,7 @@ def eligibility_policy_engine(screen):
             if income <= band['max']:
                 multiplier = band['percent']
                 break
+
         eligibility['coctc']['eligible'] = multiplier != 0
         eligibility['coctc']['estimated_value'] = tax_unit_data['ctc']['2022'] * multiplier
 
