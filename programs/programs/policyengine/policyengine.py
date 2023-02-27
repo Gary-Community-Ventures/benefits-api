@@ -35,6 +35,12 @@ def eligibility_policy_engine(screen):
             "failed": [],
             "estimated_value": 0
         },
+        "coctc": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
         "coeitc": {
             "eligible": False,
             "passed": [],
@@ -114,20 +120,39 @@ def eligibility_policy_engine(screen):
             eligibility['nslp']['eligible'] = True
             eligibility['nslp']['estimated_value'] = 680 * num_children
 
+    tax_unit_data = benefit_data['tax_units']['tax_unit']
+
     # EITC
-    if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
+    if tax_unit_data['earned_income_tax_credit']['2022'] > 0:
         eligibility['eitc']['eligible'] = True
-        eligibility['eitc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
+        eligibility['eitc']['estimated_value'] = tax_unit_data['earned_income_tax_credit']['2022']
 
     # COEITC
-    if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
+    if tax_unit_data['earned_income_tax_credit']['2022'] > 0:
         eligibility['coeitc']['eligible'] = True
-        eligibility['coeitc']['estimated_value'] = .20 * benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
+        eligibility['coeitc']['estimated_value'] = .20 * tax_unit_data['earned_income_tax_credit']['2022']
 
     # CTC
-    if benefit_data['tax_units']['tax_unit']['ctc']['2022'] > 0:
+    if tax_unit_data['ctc']['2022'] > 0:
         eligibility['ctc']['eligible'] = True
-        eligibility['ctc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['ctc']['2022']
+        eligibility['ctc']['estimated_value'] = tax_unit_data['ctc']['2022']
+
+    # CO Child Tax Credit
+    if tax_unit_data['ctc']['2022'] > 0:
+        income_bands = {
+            "single": [{"max": 25000, "percent": .6}, {"max": 50000, "percent": .3}, {"max": 75000, "percent": .1}],
+            "maried": [{"max": 35000, "percent": .6}, {"max": 60000, "percent": .3}, {"max": 85000, "percent": .1}]
+        }
+        income = screen.calc_gross_income('yearly', ['all'])
+        relationship_status = 'maried' if screen.is_joint() else 'single'
+        multiplier = 0
+        for band in income_bands[relationship_status]:
+            # if the income is less than the band then set the multiplier and break out of the loop
+            if income <= band['max']:
+                multiplier = band['percent']
+                break
+        eligibility['coctc']['eligible'] = multiplier != 0
+        eligibility['coctc']['estimated_value'] = tax_unit_data['ctc']['2022'] * multiplier
 
     return eligibility
 
