@@ -35,7 +35,7 @@ def eligibility_chp(screen, data):
 
     # MEDICAID eligibility test
     for row in data:
-        if row['short_name'] == 'medicaid':
+        if row['name_abbreviated'] == 'medicaid':
             if row['eligible'] is True:
                 eligibility["eligible"] = False
                 eligibility["failed"].append((
