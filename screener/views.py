@@ -143,7 +143,7 @@ def eligibility_results(screen):
                     })
             return data
     except Exception:
-        pass
+        data = []
 
     snapshot = EligibilitySnapshot.objects.create(screen=screen)
 
