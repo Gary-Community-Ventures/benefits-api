@@ -198,6 +198,7 @@ def policy_engine_prepare_params(screen):
                     "meets_snap_asset_test": {"2023": True},
                     "is_snap_eligible": {"2023": None},
                     "meets_snap_categorical_eligibility": {"2023": False},
+                    "snap_emergency_allotment": {"2023": 0},
                     "snap": {"2023": None},
                     "acp": {"2023": None},
                     "school_meal_daily_subsidy": {"2023": None},
