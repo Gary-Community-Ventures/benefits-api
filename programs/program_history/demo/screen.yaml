@@ -4,34 +4,6 @@ screen:
   household_size: 2
   last_tax_filing_year: 2022
   household_assets: 0
-  has_tanf: False
-  has_wic: False
-  has_snap: False
-  has_lifeline: False
-  has_acp: False
-  has_eitc: False
-  has_coeitc: False
-  has_nslp: False
-  has_ctc: False
-  has_medicaid: False
-  has_rtdlive: False
-  has_cccap: False
-  has_mydenver: False
-  has_chp: False
-  has_ccb: False
-  has_ssi: False
-  has_employer_hi: False
-  has_private_hi: False
-  has_medicaid_hi: False
-  has_medicare_hi: False
-  has_chp_hi: False
-  has_no_hi: False
-  needs_food: False
-  needs_baby_supplies: False
-  needs_housing_help: False
-  needs_mental_health_help: False
-  needs_child_dev_help: False
-  needs_funeral_help: False
 household_members:
   - member:
       relationship: headOfHousehold
