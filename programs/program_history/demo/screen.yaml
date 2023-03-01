@@ -16,14 +16,16 @@ household_members:
       visually_impaired: False
       disabled: False
       veteran: False
-    income: 
-      type: wages
-      amount: 500
-      frequency: monthly
+    incomes: 
+      - income:
+          type: wages
+          amount: 500
+          frequency: monthly
     expenses:
-      type: rent
-      amount: 1000
-      frequency: monthly
+      - expense:
+        type: rent
+        amount: 1000
+        frequency: monthly
   - member:
       relationship: child
       age: 5
@@ -35,11 +37,13 @@ household_members:
       visually_impaired: False
       disabled: False
       veteran: False
-    income: 
-      type: wages
-      amount: 1000
-      frequency: monthly
+    incomes: 
+      - income:
+          type: wages
+          amount: 1000
+          frequency: monthly
     expenses:
-      type: rent
-      amount: 500
-      frequency: monthly
+      -expense:
+          type: rent
+          amount: 500
+          frequency: monthly
