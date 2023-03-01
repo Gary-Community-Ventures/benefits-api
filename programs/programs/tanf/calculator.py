@@ -193,5 +193,5 @@ def value_tanf(screen, children, guardians):
     unearned_income = screen.calc_gross_income(frequency,
                                                unearned_income_types)
     monthly_value = value_band[children] - tanf_earned_income - unearned_income
-    value = monthly_value * 12
+    value = int(monthly_value * 12)
     return value

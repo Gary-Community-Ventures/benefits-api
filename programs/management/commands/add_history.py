@@ -14,7 +14,7 @@ class Command(BaseCommand):
         with open(path, 'r') as file:
             screen_dict = yaml.safe_load(file)
         screen = Screen.objects.create(
-            **screen_dict['screen'],
+            **{key: value for key, value in screen_dict.items() if key != 'household_members'},
             agree_to_tos=True,
             is_test=True
             )
@@ -23,19 +23,20 @@ class Command(BaseCommand):
         incomes = []
         expenses = []
         for member in screen_dict['household_members']:
-            has_income = 'income' in member
-            has_expense = 'expenses' in member
-            member_model = HouseholdMember(**member['member'],
+            has_income = len(member['incomes']) >= 1
+            has_expense = len(member['expenses']) >= 1
+            household_member = {key: value for key, value in member.items() if key not in ('incomes', 'expenses')}
+            member_model = HouseholdMember(**household_member,
                                            has_income=has_income,
                                            has_expenses=has_expense,
                                            screen=screen)
             members.append(member_model)
-            if has_income:
-                incomes.append(IncomeStream(**member['income'],
+            for income in member['incomes']:
+                incomes.append(IncomeStream(**income,
                                             screen=screen,
                                             household_member=member_model))
-            if has_expense:
-                expenses.append(Expense(**member['expenses'],
+            for expense in member['expenses']:
+                expenses.append(Expense(**expense,
                                         screen=screen,
                                         household_member=member_model))
 

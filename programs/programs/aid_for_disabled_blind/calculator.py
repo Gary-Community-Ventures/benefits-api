@@ -109,7 +109,7 @@ class AidForDisabledBlind():
             member_value = max(0, AidForDisabledBlind.grant_standard - countable_income)
             self.value += member_value
 
-        self.value *= 12
+        self.value = int(self.value * 12)
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False

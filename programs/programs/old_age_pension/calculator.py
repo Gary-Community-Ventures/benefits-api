@@ -98,6 +98,7 @@ class OldAgePension():
             self.value += member_value
 
         self.value *= 12
+        self.value = int(self.value)
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
