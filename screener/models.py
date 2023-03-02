@@ -65,20 +65,9 @@ class Screen(models.Model):
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
         gross_income = 0
-        earned_income_types = ["wages", "selfEmployment", "investment"]
 
         for household_member in household_members:
-            income_streams = household_member.income_streams.all()
-            for income_stream in income_streams:
-                include_all = "all" in types
-                specific_match = income_stream.type in types
-                earned_income_match = "earned" in types and income_stream.type in earned_income_types
-                unearned_income_match = "unearned" in types and income_stream.type not in earned_income_types
-                if include_all or earned_income_match or unearned_income_match or specific_match:
-                    if frequency == "monthly":
-                        gross_income += income_stream.monthly()
-                    elif frequency == "yearly":
-                        gross_income += income_stream.yearly()
+            gross_income += household_member.calc_gross_income(frequency, types)
         return gross_income
 
     def calc_expenses(self, frequency, types):
