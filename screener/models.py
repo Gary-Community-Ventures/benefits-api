@@ -381,6 +381,7 @@ class IncomeStream(models.Model):
     type = models.CharField(max_length=30)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     frequency = models.CharField(max_length=30)
+    hours_worked = models.IntegerField(null=True)
 
     def monthly(self):
         if self.frequency == "monthly":
@@ -393,6 +394,8 @@ class IncomeStream(models.Model):
             monthly = self.amount * 2
         elif self.frequency == "yearly":
             monthly = self.amount / 12
+        elif self.frequency == "hourly":
+            monthly = self._hour_to_month()
 
         return monthly
 
@@ -407,8 +410,13 @@ class IncomeStream(models.Model):
             yearly = self.amount * 24
         elif self.frequency == "yearly":
             yearly = self.amount
+        elif self.frequency == "hourly":
+            yearly = self._hour_to_month() * 12
 
         return yearly
+
+    def _hour_to_month(self):
+        return self.amount * self.hours_worked * Decimal(4.35)
 
 
 # HouseholdMember expenses
