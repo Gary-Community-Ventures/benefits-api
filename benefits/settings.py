@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'screener.apps.ScreenerConfig',
     'programs.apps.ProgramsConfig',
+    'integrations.apps.IntegrationsConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'phonenumber_field',
