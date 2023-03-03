@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Program, UrgentNeed, Navigator, UrgentNeedFunctions
+from .models import Program, UrgentNeed, Navigator, UrgentNeedFunction
 from parler.admin import TranslatableAdmin
 
 
@@ -11,18 +11,18 @@ class NavigatorAdmin(TranslatableAdmin):
     search_fields = ('translations__name',)
 
 
-class UrgentNeedsAdmin(TranslatableAdmin):
+class UrgentNeedAdmin(TranslatableAdmin):
     search_fields = ('translations__name',)
     fields = ('name', 'description', 'link', 'type',
               'phone_number', 'type_short', 'active', 'functions')
 
 
-class UrgentNeedsFunctionsAdmin(admin.ModelAdmin):
+class UrgentNeedsFunctionAdmin(admin.ModelAdmin):
     search_fields = ('function_name',)
     fields = ('function_name',)
 
 
 admin.site.register(Program, ProgramAdmin)
 admin.site.register(Navigator, NavigatorAdmin)
-admin.site.register(UrgentNeed, UrgentNeedsAdmin)
-admin.site.register(UrgentNeedFunctions, UrgentNeedsFunctionsAdmin)
+admin.site.register(UrgentNeed, UrgentNeedAdmin)
+admin.site.register(UrgentNeedFunction, UrgentNeedsFunctionAdmin)

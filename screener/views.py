@@ -268,4 +268,8 @@ def urgent_needs(screen):
 
     urgent_need_resources = UrgentNeed.objects.filter(type_short__in=list_of_needs, active=True)
 
+    for need in urgent_need_resources:
+        for function in need.functions:
+            print(function)
+
     return urgent_need_resources
