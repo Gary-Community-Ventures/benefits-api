@@ -106,6 +106,9 @@ def generate_bia_sample_snapshot():
 
 
 def add_from_json(new_json_str):
+    '''
+    Add json string from screen endpoint as parameter. Use triple quotes if in shell
+    '''
     new_json = json.loads(new_json_str)
 
     screen = Screen.objects.create(
