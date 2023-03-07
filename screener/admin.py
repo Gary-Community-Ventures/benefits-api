@@ -2,10 +2,11 @@ from django.contrib import admin
 from django.db.models.signals import post_save
 from django.utils.translation import override
 from screener.communications import email_pdf, text_link
-from .models import Message, Screen, EligibilitySnapshot
+from .models import Message, Screen, EligibilitySnapshot, HouseholdMember, IncomeStream, Expense
 from django.dispatch import receiver
 from .models import IncomeStream
 from django.utils import timezone
+import json
 
 
 class screenAdmin(admin.ModelAdmin):
@@ -102,3 +103,40 @@ def generate_bia_sample_snapshot():
         eligibility_snapshot.generate_program_snapshots()
         count += 1
         print("Snapshot " + str(count) + "/" + str(total_screens) + " generated for " + str(screen.id))
+
+
+def add_from_json(new_json_str):
+    '''
+    Add json string from screen endpoint as parameter. Use triple quotes if in shell
+    '''
+    new_json = json.loads(new_json_str)
+
+    screen = Screen.objects.create(
+            **{k: v for k, v in new_json.items() if k not in ('household_members', 'id', 'uuid', 'user')},
+            )
+
+    members = []
+    incomes = []
+    expenses = []
+    for member in new_json['household_members']:
+        household_member = {k: v for k, v in member.items() if k not in ('income_streams', 'expenses', 'screen', 'id')}
+        member_model = HouseholdMember(**household_member, screen=screen)
+        members.append(member_model)
+
+        for income in member['income_streams']:
+            income = {k: v for k, v in member.items() if k not in ('household_member', 'screen', 'id')}
+            incomes.append(IncomeStream(**income,
+                                        screen=screen,
+                                        household_member=member_model))
+        for expense in member['expenses']:
+            expense = {k: v for k, v in member.items() if k not in ('household_member', 'screen', 'id')}
+            expenses.append(Expense(**expense,
+                                    screen=screen,
+                                    household_member=member_model))
+
+    HouseholdMember.objects.bulk_create(members)
+    IncomeStream.objects.bulk_create(incomes)
+    Expense.objects.bulk_create(expenses)
+
+    print('id:', screen.id)
+    print('uuid:', screen.uuid)
