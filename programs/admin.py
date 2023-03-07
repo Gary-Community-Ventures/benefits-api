@@ -18,8 +18,8 @@ class UrgentNeedAdmin(TranslatableAdmin):
 
 
 class UrgentNeedsFunctionAdmin(admin.ModelAdmin):
-    search_fields = ('function_name',)
-    fields = ('function_name',)
+    search_fields = ('name',)
+    fields = ('name',)
 
 
 admin.site.register(Program, ProgramAdmin)

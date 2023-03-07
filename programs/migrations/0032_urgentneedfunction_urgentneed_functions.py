@@ -20,6 +20,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='urgentneed',
             name='functions',
-            field=models.ManyToManyField(related_name='functions', to='programs.urgentneedfunction'),
+            field=models.ManyToManyField(related_name='function', to='programs.urgentneedfunction'),
         ),
     ]

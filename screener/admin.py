@@ -2,9 +2,8 @@ from django.contrib import admin
 from django.db.models.signals import post_save
 from django.utils.translation import override
 from screener.communications import email_pdf, text_link
-from .models import Message, Screen, EligibilitySnapshot
+from .models import Message, Screen, EligibilitySnapshot, IncomeStream
 from django.dispatch import receiver
-from .models import IncomeStream
 from django.utils import timezone
 
 

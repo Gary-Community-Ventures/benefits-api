@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, \
     ExpenseSerializer, EligibilitySerializer, MessageSerializer
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
+from programs.programs.urgent_need_functions import lives_in_denver
 from programs.models import UrgentNeed, Program
 from programs.serializers import UrgentNeedSerializer
 import math
@@ -84,7 +85,7 @@ class EligibilityTranslationView(views.APIView):
             translated_eligibility = eligibility_results_translation(eligibility, language[0])
             data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
             urgent_need_programs[language[0]] = UrgentNeedSerializer(
-                urgent_needs(screen).language(language[0]).all(), many=True
+                urgent_needs(screen, language), many=True
                 ).data
         return Response({"programs": data, "urgent_needs": urgent_need_programs, "screen_id": screen.id})
 
@@ -252,24 +253,36 @@ def eligibility_results_translation(results, language):
     return translated_results
 
 
-def urgent_needs(screen):
-    possible_needs = {'food': screen.needs_food,
-                      'baby supplies': screen.needs_baby_supplies,
-                      'housing': screen.needs_housing_help,
-                      'mental health': screen.needs_mental_health_help,
-                      'child dev': screen.needs_child_dev_help,
-                      'funeral': screen.needs_funeral_help,
-                      }
+def urgent_needs(screen, language):
+    possible_needs = {
+        'food': screen.needs_food,
+        'baby supplies': screen.needs_baby_supplies,
+        'housing': screen.needs_housing_help,
+        'mental health': screen.needs_mental_health_help,
+        'child dev': screen.needs_child_dev_help,
+        'funeral': screen.needs_funeral_help,
+    }
+
+    need_functions = {
+        'denver': lives_in_denver,
+    }
 
     list_of_needs = []
     for need, has_need in possible_needs.items():
         if has_need:
             list_of_needs.append(need)
 
-    urgent_need_resources = UrgentNeed.objects.filter(type_short__in=list_of_needs, active=True)
+    urgent_need_resources = UrgentNeed.objects.filter(
+            type_short__in=list_of_needs, active=True
+        ).language(language[0]).all()
 
+    eligible_urgent_needs = []
     for need in urgent_need_resources:
-        for function in need.functions:
-            print(function)
+        eligible = True
+        for function in need.functions.all():
+            if not need_functions[function.name](screen):
+                eligible = False
+        if eligible:
+            eligible_urgent_needs.append(need)
 
-    return urgent_need_resources
+    return eligible_urgent_needs
