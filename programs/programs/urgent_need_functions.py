@@ -7,7 +7,7 @@ def lives_in_denver(screen):
 
 def helpkitchen_zipcode(screen):
     '''
-    Lives in an Aurora zipcode
+    Lives in a zipcode that is eligible for HelpKitchen
     '''
     zipcodes = [
         '80010',
