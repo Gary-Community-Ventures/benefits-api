@@ -264,7 +264,7 @@ def urgent_needs(screen, language):
     }
 
     need_functions = {
-        'denver': lives_in_denver,
+        'denver': lives_in_denver(screen),
     }
 
     list_of_needs = []
@@ -280,7 +280,7 @@ def urgent_needs(screen, language):
     for need in urgent_need_resources:
         eligible = True
         for function in need.functions.all():
-            if not need_functions[function.name](screen):
+            if not need_functions[function.name]:
                 eligible = False
         if eligible:
             eligible_urgent_needs.append(need)
