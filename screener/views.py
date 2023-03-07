@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, \
     ExpenseSerializer, EligibilitySerializer, MessageSerializer
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
-from programs.programs.urgent_need_functions import lives_in_denver
+import programs.programs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program
 from programs.serializers import UrgentNeedSerializer
 import math
@@ -264,7 +264,8 @@ def urgent_needs(screen, language):
     }
 
     need_functions = {
-        'denver': lives_in_denver(screen),
+        'denver': urgent_need_functions.lives_in_denver(screen),
+        'helpkitchen_zipcode': urgent_need_functions.helpkitchen_zipcode(screen)
     }
 
     list_of_needs = []
