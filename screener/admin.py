@@ -124,12 +124,12 @@ def add_from_json(new_json_str):
         members.append(member_model)
 
         for income in member['income_streams']:
-            income = {k: v for k, v in member.items() if k not in ('household_member', 'screen', 'id')}
+            income = {k: v for k, v in income.items() if k not in ('household_member', 'screen', 'id')}
             incomes.append(IncomeStream(**income,
                                         screen=screen,
                                         household_member=member_model))
         for expense in member['expenses']:
-            expense = {k: v for k, v in member.items() if k not in ('household_member', 'screen', 'id')}
+            expense = {k: v for k, v in expense.items() if k not in ('household_member', 'screen', 'id')}
             expenses.append(Expense(**expense,
                                     screen=screen,
                                     household_member=member_model))
