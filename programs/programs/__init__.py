@@ -1,6 +1,5 @@
 from programs.programs.affordable_connectivity.calculator import calculate_affordable_connectivity
 from programs.programs.lifeline.calculator import calculate_lifeline
-from programs.programs.tanf.calculator import calculate_tanf
 from programs.programs.rtdlive.calculator import calculate_rtdlive
 from programs.programs.child_care_assistance.calculator import calculate_child_care_assistance
 from programs.programs.mydenver.calculator import calculate_mydenver
@@ -23,7 +22,6 @@ from programs.programs.old_age_pension.calculator import calculate_old_age_pensi
 calculators = {
     "acp": calculate_affordable_connectivity,
     "lifeline": calculate_lifeline,
-    "tanf": calculate_tanf,
     "rtdlive": calculate_rtdlive,
     "cccap": calculate_child_care_assistance,
     "mydenver": calculate_mydenver,

@@ -59,6 +59,12 @@ def eligibility_policy_engine(screen):
             "failed": [],
             "estimated_value": 0
         },
+        "tanf": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        }
     }
 
     benefit_data = policy_engine_calculate(screen)['result']
@@ -119,6 +125,11 @@ def eligibility_policy_engine(screen):
         if benefit_data['spm_units']['spm_unit']['school_meal_tier']['2023'] != 'PAID':
             eligibility['nslp']['eligible'] = True
             eligibility['nslp']['estimated_value'] = 680 * num_children
+
+    # TANF
+    if benefit_data['spm_units']['spm_unit']['co_tanf']['2023'] > 0:
+        eligibility['tanf']['eligible'] = True
+        eligibility['tanf']['estimated_value'] = benefit_data['spm_units']['spm_unit']['co_tanf']['2023']
 
     tax_unit_data = benefit_data['tax_units']['tax_unit']
 
@@ -231,6 +242,11 @@ def policy_engine_prepare_params(screen):
                     "school_meal_tier": {"2023": None},
                     "meets_school_meal_categorical_eligibility": {"2023": None},
                     "lifeline": {"2023": None},
+                    "co_tanf_countable_gross_earned_income": {"2023": int(screen.calc_gross_income('yearly', ['earned']))},
+                    "co_tanf_countable_gross_unearned_income": {"2023": int(screen.calc_gross_income('yearly', ['unearned']))},
+                    "co_tanf": {"2023": None},
+                    "co_tanf_grant_standard": {"2023": None},
+                    "co_tanf_countable_earned_income_grant_standard": {"2023": None},
                 }
             }
         }
@@ -254,6 +270,7 @@ def policy_engine_prepare_params(screen):
                 "2022": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
             },
             "age": {"2023": household_member.age, "2022": household_member.age},
+            "is_pregnant": {"2023": household_member.pregnant},
             "is_tax_unit_head": {"2023": is_tax_unit_head, "2022": is_tax_unit_head},
             "wic": {"2023": None},
             "medicaid": {"2023": None},
