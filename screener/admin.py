@@ -4,7 +4,6 @@ from django.utils.translation import override
 from screener.communications import email_pdf, text_link
 from .models import Message, Screen, EligibilitySnapshot, HouseholdMember, IncomeStream, Expense
 from django.dispatch import receiver
-from .models import IncomeStream
 from django.utils import timezone
 import json
 
