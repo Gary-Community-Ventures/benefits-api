@@ -1,9 +1,8 @@
-from programs.programs.tanf.calculator import calculate_tanf
 import programs.programs.messages as messages
 
 
 def calculate_old_age_pension(screen, data):
-    old_age_pension = OldAgePension(screen)
+    old_age_pension = OldAgePension(screen, data)
     eligibility = old_age_pension.eligibility
     value = old_age_pension.value
 
@@ -22,8 +21,9 @@ class OldAgePension():
     asset_limit = 2000
     min_age = 60
 
-    def __init__(self, screen):
+    def __init__(self, screen, data):
         self.screen = screen
+        self.data = data
 
         self.eligibility = {
             "eligible": True,
@@ -37,9 +37,12 @@ class OldAgePension():
 
     def calc_eligibility(self):
 
-        # No TANIF
-        tanf_eligible = calculate_tanf(self.screen, None)[
-            "eligibility"]["eligible"]
+        # No TANF
+        tanf_eligible = False
+        for benefit in self.data:
+            if benefit["name_abbreviated"] == 'tanf':
+                tanf_eligible = benefit["eligible"]
+                break
         self._condition(not (self.screen.has_tanf or tanf_eligible),
                         messages.must_not_have_benefit('TANF'))
 

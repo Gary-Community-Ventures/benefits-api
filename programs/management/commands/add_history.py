@@ -49,7 +49,10 @@ class Command(BaseCommand):
     def eligibility(self, screen):
         eligibility = {}
         for benefit, calculator in calculators.items():
-            raw_result = calculator(screen, [{'name_abbreviated': 'medicaid', 'eligible': True}])
+            raw_result = calculator(screen, [
+                {'name_abbreviated': 'medicaid', 'eligible': True},
+                {'name_abbreviated': 'tanf', 'eligible': False}
+            ])
             eligibility[benefit] = {
                 'eligibility': raw_result['eligibility']['eligible'],
                 'value': raw_result['value']
