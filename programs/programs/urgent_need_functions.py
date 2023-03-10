@@ -32,3 +32,10 @@ def helpkitchen_zipcode(screen):
         '80249',
     ]
     return screen.zipcode in zipcodes
+
+
+def child(screen):
+    '''
+    Return True if someone is younger than 18
+    '''
+    return screen.num_children(child_relationship=['all']) >= 1
