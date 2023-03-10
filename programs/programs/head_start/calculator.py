@@ -1,5 +1,6 @@
 from django.conf import settings
 import programs.programs.messages as messages
+from programs.programs.head_start.eligible_zipcodes import eligible_zipcode
 
 
 def calculate_head_start(screen, data):
@@ -46,6 +47,10 @@ class HeadStart():
 
         self._condition(gross_income < income_limit,
                         messages.income(gross_income, income_limit))
+
+        # location
+        self._condition(self.screen.county in eligible_zipcode,
+                        messages.location())
 
     def calc_value(self):
         self.value = HeadStart.amount

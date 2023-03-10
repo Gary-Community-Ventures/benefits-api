@@ -16,9 +16,9 @@ def calculate_property_credit_rebate(screen, data):
 
 
 class PropertyCreditRebate():
-    amount = 976
+    amount = 1044
     min_age = 65
-    income_limit = {"single": 15831, "married": 21381}
+    income_limit = {"single": 16925, "married": 22858}
 
     def __init__(self, screen):
         self.screen = screen
