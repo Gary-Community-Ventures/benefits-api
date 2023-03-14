@@ -4,7 +4,7 @@ import programs.programs.messages as messages
 
 
 def calculate_connect_for_health(screen, data):
-    cfhc = ConnectForHealth(screen)
+    cfhc = ConnectForHealth(screen, data)
     eligibility = cfhc.eligibility
     value = cfhc.value
 
@@ -19,8 +19,9 @@ def calculate_connect_for_health(screen, data):
 class ConnectForHealth():
     health_credit_value = 313
 
-    def __init__(self, screen):
+    def __init__(self, screen, data):
         self.screen = screen
+        self.data = data
 
         self.eligibility = {
             "eligible": True,
@@ -33,6 +34,16 @@ class ConnectForHealth():
         self.calc_value()
 
     def calc_eligibility(self):
+        # Medicade eligibility
+        is_medicaid_eligible = False
+        for benefit in self.data:
+            if benefit["name_abbreviated"] == 'medicaid':
+                is_medicaid_eligible = benefit["eligible"]
+                break
+
+        self._condition(not is_medicaid_eligible,
+                        messages.must_not_have_benefit("Medicaid"))
+
         # Someone has no health insurance
         has_no_hi = self.screen.has_types_of_insurance(['none'])
         self._condition(has_no_hi,
