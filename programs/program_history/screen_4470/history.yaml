@@ -249,3 +249,65 @@
     rtdlive:
       eligibility: true
       value: 1500
+- date: 03/14/2023 15:51:50
+  eligibility:
+    acp:
+      eligibility: true
+      value: 360
+    andcs:
+      eligibility: false
+      value: 6882
+    cccap:
+      eligibility: false
+      value: 0
+    cdhcs:
+      eligibility: false
+      value: 0
+    cfhc:
+      eligibility: true
+      value: 3756
+    chp:
+      eligibility: false
+      value: 0
+    chs:
+      eligibility: false
+      value: 10655
+    cocb:
+      eligibility: true
+      value: 1500
+    cpcr:
+      eligibility: true
+      value: 1044
+    dpp:
+      eligibility: false
+      value: 9456
+    ede:
+      eligibility: false
+      value: 600
+    erc:
+      eligibility: true
+      value: 4000
+    fps:
+      eligibility: false
+      value: 404
+    leap:
+      eligibility: true
+      value: 362
+    lifeline:
+      eligibility: true
+      value: 111
+    mydenver:
+      eligibility: false
+      value: 0
+    oap:
+      eligibility: false
+      value: 0
+    omnisalud:
+      eligibility: true
+      value: 7440
+    rhc:
+      eligibility: true
+      value: 268
+    rtdlive:
+      eligibility: true
+      value: 1500
