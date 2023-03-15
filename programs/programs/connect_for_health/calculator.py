@@ -50,7 +50,7 @@ class ConnectForHealth():
                         messages.has_no_insturance())
 
         # Income
-        income_band = int(settings.FPL2022[self.screen.household_size]/12)
+        income_band = int(settings.FPL2022[self.screen.household_size]/12 * 4)
         gross_income = int(self.screen.calc_gross_income('yearly', ("all",))/12)
         self._condition(gross_income < income_band,
                         messages.income(gross_income, income_band))
