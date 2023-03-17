@@ -39,7 +39,10 @@ class UniversalPreschool():
         self.calc_value()
 
     def calc_eligibility(self):
-        # Qualifying factors
+        '''
+        If you make less than a certain income, or if there is a foster child
+        then that child can be 3 years old, or if they are 4 or 5, then they can get twice as much UpreK
+        '''
         foster_children = self.screen.num_children(age_min=UniversalPreschool.qualifying_min_age,
                                                    age_max=UniversalPreschool.max_age,
                                                    child_relationship=['fosterChild'])
