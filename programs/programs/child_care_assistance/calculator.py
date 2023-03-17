@@ -98,6 +98,7 @@ def cccap_county_values(county_name):
     for row in sheet_values:
         if row[0] == cccap_county_name:
             match = {
+                1: -1,
                 2: float(non_decimal.sub('', row[2])),
                 3: float(non_decimal.sub('', row[3])),
                 4: float(non_decimal.sub('', row[4])),
