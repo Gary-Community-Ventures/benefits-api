@@ -19,8 +19,16 @@ class Command(BaseCommand):
             return
 
         for key in latest:
-            new_eligible = latest[key]['eligibility']
-            old_eligible = second_latest[key]['eligibility']
+            try:
+                new_eligible = latest[key]['eligibility']
+            except KeyError:
+                print(key, 'was deleted')
+                continue
+            try:
+                old_eligible = second_latest[key]['eligibility']
+            except KeyError:
+                print(key, 'was added')
+                continue
 
             if new_eligible != old_eligible:
                 print(f'    {key}: {old_eligible} => {new_eligible}')

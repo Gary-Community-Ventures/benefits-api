@@ -18,6 +18,7 @@ from programs.programs.head_start.calculator import calculate_head_start
 from programs.programs.every_day_eats.calculator import calculate_every_day_eats
 from programs.programs.property_credit_rebate.calculator import calculate_property_credit_rebate
 from programs.programs.old_age_pension.calculator import calculate_old_age_pension
+from programs.programs.universal_preschool.calculator import calculate_universal_preschool
 
 calculators = {
     "acp": calculate_affordable_connectivity,
@@ -40,4 +41,5 @@ calculators = {
     "ede": calculate_every_day_eats,
     "cpcr": calculate_property_credit_rebate,
     "oap": calculate_old_age_pension,
+    "uprek": calculate_universal_preschool,
 }
