@@ -35,7 +35,7 @@ class ReproductiveHealthCare():
         # No health insurance
         has_no_hi = self.screen.has_types_of_insurance(['none'])
         self._condition(has_no_hi,
-                        messages.has_no_insturance())
+                        messages.has_no_insurance())
 
         # Medicade eligibility
         is_medicaid_eligible = False
