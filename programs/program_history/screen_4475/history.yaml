@@ -311,7 +311,7 @@
     rtdlive:
       eligibility: true
       value: 750
-- date: 03/15/2023 12:00:43
+- date: 03/17/2023 11:59:04
   eligibility:
     acp:
       eligibility: true
@@ -373,6 +373,6 @@
     rtdlive:
       eligibility: true
       value: 750
-    uprek:
+    upk:
       eligibility: false
       value: 0

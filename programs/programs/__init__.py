@@ -41,5 +41,5 @@ calculators = {
     "ede": calculate_every_day_eats,
     "cpcr": calculate_property_credit_rebate,
     "oap": calculate_old_age_pension,
-    "uprek": calculate_universal_preschool,
+    "upk": calculate_universal_preschool,
 }
