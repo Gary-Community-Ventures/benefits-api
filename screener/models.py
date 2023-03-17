@@ -90,9 +90,10 @@ class Screen(models.Model):
 
         household_members = self.household_members.all()
         for household_member in household_members:
+            has_child_relationship = household_member.relationship in child_relationship or 'all' in child_relationship
             if household_member.age >= age_min and \
                     household_member.age <= age_max and \
-                    household_member.relationship in child_relationship:
+                    has_child_relationship:
                 children += 1
             if household_member.pregnant and include_pregnant:
                 children += 1
