@@ -96,7 +96,7 @@ def has_disability():
     )
 
 
-def has_no_insturance():
+def has_no_insurance():
     '''
     Someone in the household must not have health insurance
     '''

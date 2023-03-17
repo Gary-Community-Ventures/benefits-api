@@ -50,7 +50,7 @@ class Command(BaseCommand):
         eligibility = {}
         for benefit, calculator in calculators.items():
             raw_result = calculator(screen, [
-                {'name_abbreviated': 'medicaid', 'eligible': True},
+                {'name_abbreviated': 'medicaid', 'eligible': False if benefit == 'cfhc' else True},
                 {'name_abbreviated': 'tanf', 'eligible': False}
             ])
             eligibility[benefit] = {
