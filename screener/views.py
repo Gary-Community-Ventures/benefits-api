@@ -267,6 +267,7 @@ def urgent_needs(screen, language):
         'mental health': screen.needs_mental_health_help,
         'child dev': screen.needs_child_dev_help,
         'funeral': screen.needs_funeral_help,
+        'family planning': screen.needs_family_planning_help,
     }
 
     need_functions = {

@@ -110,6 +110,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'needs_mental_health_help',
             'needs_child_dev_help',
             'needs_funeral_help',
+            'needs_family_planning_help'
         )
 
 
