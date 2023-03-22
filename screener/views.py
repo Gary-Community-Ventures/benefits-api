@@ -119,37 +119,6 @@ class MessageViewSet(viewsets.ModelViewSet):
 def eligibility_results(screen):
     all_programs = Program.objects.all()
     data = []
-    try:
-        screen_snapshot = EligibilitySnapshot.objects.filter(screen=screen).last()
-        if (timezone.now() - screen_snapshot.submission_date).microseconds < 1000000*60*60*24:
-            # if a new snapshot has been created in the past 24 hours then use the previous snapshot to load results
-            for snapshot in screen_snapshot.program_snapshots.all():
-                program = all_programs.get(translations__name=snapshot.name)
-                data.append(
-                    {
-                        "program_id": program.id,
-                        "name": program.name,
-                        "name_abbreviated": program.name_abbreviated,
-                        "estimated_value": math.trunc(snapshot.estimated_value),
-                        "estimated_delivery_time": program.estimated_delivery_time,
-                        "estimated_application_time": program.estimated_application_time,
-                        "description_short": program.description_short,
-                        "short_name": program.name_abbreviated,
-                        "description": program.description,
-                        "value_type": program.value_type,
-                        "learn_more_link": program.learn_more_link,
-                        "apply_button_link": program.apply_button_link,
-                        "legal_status_required": program.legal_status_required,
-                        "category": program.category,
-                        "eligible": snapshot.eligible,
-                        "failed_tests": json.loads(snapshot.failed_tests),
-                        "passed_tests": json.loads(snapshot.passed_tests),
-                        "navigators": program.navigator.all(),
-                        "already_has": screen.has_benefit(program.name_abbreviated)
-                    })
-            return data
-    except Exception:
-        data = []
 
     snapshot = EligibilitySnapshot.objects.create(screen=screen)
 
