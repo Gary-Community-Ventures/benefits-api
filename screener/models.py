@@ -488,6 +488,7 @@ class EligibilitySnapshot(models.Model):
 # aggregated per screen using the EligibilitySnapshot id
 class ProgramEligibilitySnapshot(models.Model):
     eligibility_snapshot = models.ForeignKey(EligibilitySnapshot, related_name='program_snapshots', on_delete=models.CASCADE)
+    new = models.BooleanField(default=False)
     name = models.CharField(max_length=320)
     name_abbreviated = models.CharField(max_length=32)
     value_type = models.CharField(max_length=120)

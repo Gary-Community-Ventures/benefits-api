@@ -13,6 +13,7 @@ from programs.programs.policyengine.policyengine import eligibility_policy_engin
 import programs.programs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program
 from programs.serializers import UrgentNeedSerializer
+from django.core.exceptions import ObjectDoesNotExist
 import math
 import copy
 import json
@@ -120,6 +121,10 @@ def eligibility_results(screen, batch=False):
     all_programs = Program.objects.all()
     data = []
 
+    try:
+        previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen).latest('submission_date')
+    except ObjectDoesNotExist:
+        previous_snapshot = None
     snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
 
     pe_eligibility = eligibility_policy_engine(screen)
@@ -147,6 +152,8 @@ def eligibility_results(screen, batch=False):
 
         navigators = program.navigator.all()
 
+        new = False
+
         if not skip and program.active:
             ProgramEligibilitySnapshot.objects.create(
                 eligibility_snapshot=snapshot,
@@ -160,6 +167,7 @@ def eligibility_results(screen, batch=False):
                 eligible=eligibility["eligible"],
                 failed_tests=json.dumps(eligibility["failed"]),
                 passed_tests=json.dumps(eligibility["passed"]),
+                new=new
             )
             data.append(
                 {
@@ -181,7 +189,8 @@ def eligibility_results(screen, batch=False):
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],
                     "navigators": navigators,
-                    "already_has": screen.has_benefit(program.name_abbreviated)
+                    "already_has": screen.has_benefit(program.name_abbreviated),
+                    "new": new
                 }
             )
 

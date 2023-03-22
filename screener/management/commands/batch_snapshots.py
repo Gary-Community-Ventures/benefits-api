@@ -24,6 +24,7 @@ class Command(BaseCommand):
         if not options['all']:
             screens = screens.exclude(user__isnull=True)
 
+        # [:None] is everything
         limit = None if options['limit'] == -1 else options['limit']
         screens = screens.order_by('-submission_date')[:limit]
 
