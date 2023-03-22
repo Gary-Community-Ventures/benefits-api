@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from screener.models import Screen
-from programs.programs import calculators
+from screener.views import eligibility_results
 
 
 class Command(BaseCommand):
@@ -27,8 +27,6 @@ class Command(BaseCommand):
         limit = None if options['limit'] == -1 else options['limit']
         screens = screens.order_by('-submission_date')[:limit]
 
-        print(screens)
-        
         # Calculate eligibility for each screen
-
-        # Add snapshots
+        for screen in screens:
+            eligibility_results(screen, batch=True)

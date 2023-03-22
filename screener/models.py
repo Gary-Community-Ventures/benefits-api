@@ -463,6 +463,7 @@ class Expense(models.Model):
 class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name='eligibility_snapshots', on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
+    is_batch = models.BooleanField(default=False)
 
     def generate_program_snapshots(self):
         eligibility = self.screen.eligibility_results()

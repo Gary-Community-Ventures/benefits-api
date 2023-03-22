@@ -116,11 +116,11 @@ class MessageViewSet(viewsets.ModelViewSet):
         return Response({}, status=status.HTTP_201_CREATED)
 
 
-def eligibility_results(screen):
+def eligibility_results(screen, batch=False):
     all_programs = Program.objects.all()
     data = []
 
-    snapshot = EligibilitySnapshot.objects.create(screen=screen)
+    snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
 
     pe_eligibility = eligibility_policy_engine(screen)
     pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'coctc', 'medicaid', 'ssi', 'tanf']
@@ -159,7 +159,7 @@ def eligibility_results(screen):
                 legal_status_required=program.legal_status_required,
                 eligible=eligibility["eligible"],
                 failed_tests=json.dumps(eligibility["failed"]),
-                passed_tests=json.dumps(eligibility["passed"])
+                passed_tests=json.dumps(eligibility["passed"]),
             )
             data.append(
                 {
