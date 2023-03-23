@@ -133,6 +133,7 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_value = serializers.IntegerField()
     navigators = NavigatorSerializer(many=True)
     already_has = serializers.BooleanField()
+    new = serializers.BooleanField()
 
     class Meta:
         fields = '__all__'

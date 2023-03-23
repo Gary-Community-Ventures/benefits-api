@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from screener.models import Screen
 from screener.views import eligibility_results
+from tqdm import trange
 
 
 class Command(BaseCommand):
@@ -24,10 +25,16 @@ class Command(BaseCommand):
         if not options['all']:
             screens = screens.exclude(user__isnull=True)
 
-        # [:None] is everything
+        # List[:None] is everything in the list
         limit = None if options['limit'] == -1 else options['limit']
         screens = screens.order_by('-submission_date')[:limit]
 
         # Calculate eligibility for each screen
-        for screen in screens:
-            eligibility_results(screen, batch=True)
+        errors = []
+        for i in trange(len(screens), desc='Screens'):
+            try:
+                eligibility_results(screens[i], batch=True)
+            except Exception as e:
+                errors.append(str(screens[i].id) + ': ' + str(e))
+        if len(errors):
+            print('The following screens had errors:\n', '\n'.join(errors), sep='')

@@ -2,7 +2,6 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import override
-from django.utils import timezone
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, EligibilitySnapshot, ProgramEligibilitySnapshot
 from rest_framework import viewsets, views, status
 from rest_framework import permissions
@@ -123,6 +122,7 @@ def eligibility_results(screen, batch=False):
 
     try:
         previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen).latest('submission_date')
+        previous_results = None if previous_snapshot is None else previous_snapshot.program_snapshots.all()
     except ObjectDoesNotExist:
         previous_snapshot = None
     snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
@@ -152,7 +152,11 @@ def eligibility_results(screen, batch=False):
 
         navigators = program.navigator.all()
 
-        new = False
+        new = True
+        if previous_snapshot is not None:
+            for previous_snapshot in previous_results:
+                if previous_snapshot.name_abbreviated == program.name_abbreviated:
+                    new = False
 
         if not skip and program.active:
             ProgramEligibilitySnapshot.objects.create(
