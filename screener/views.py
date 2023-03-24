@@ -2,7 +2,6 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import override
-from django.utils import timezone
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, EligibilitySnapshot, ProgramEligibilitySnapshot
 from rest_framework import viewsets, views, status
 from rest_framework import permissions
@@ -13,6 +12,7 @@ from programs.programs.policyengine.policyengine import eligibility_policy_engin
 import programs.programs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program
 from programs.serializers import UrgentNeedSerializer
+from django.core.exceptions import ObjectDoesNotExist
 import math
 import copy
 import json
@@ -116,42 +116,16 @@ class MessageViewSet(viewsets.ModelViewSet):
         return Response({}, status=status.HTTP_201_CREATED)
 
 
-def eligibility_results(screen):
+def eligibility_results(screen, batch=False):
     all_programs = Program.objects.all()
     data = []
-    try:
-        screen_snapshot = EligibilitySnapshot.objects.filter(screen=screen).last()
-        if (timezone.now() - screen_snapshot.submission_date).microseconds < 1000000*60*60*24:
-            # if a new snapshot has been created in the past 24 hours then use the previous snapshot to load results
-            for snapshot in screen_snapshot.program_snapshots.all():
-                program = all_programs.get(translations__name=snapshot.name)
-                data.append(
-                    {
-                        "program_id": program.id,
-                        "name": program.name,
-                        "name_abbreviated": program.name_abbreviated,
-                        "estimated_value": math.trunc(snapshot.estimated_value),
-                        "estimated_delivery_time": program.estimated_delivery_time,
-                        "estimated_application_time": program.estimated_application_time,
-                        "description_short": program.description_short,
-                        "short_name": program.name_abbreviated,
-                        "description": program.description,
-                        "value_type": program.value_type,
-                        "learn_more_link": program.learn_more_link,
-                        "apply_button_link": program.apply_button_link,
-                        "legal_status_required": program.legal_status_required,
-                        "category": program.category,
-                        "eligible": snapshot.eligible,
-                        "failed_tests": json.loads(snapshot.failed_tests),
-                        "passed_tests": json.loads(snapshot.passed_tests),
-                        "navigators": program.navigator.all(),
-                        "already_has": screen.has_benefit(program.name_abbreviated)
-                    })
-            return data
-    except Exception:
-        data = []
 
-    snapshot = EligibilitySnapshot.objects.create(screen=screen)
+    try:
+        previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen).latest('submission_date')
+        previous_results = None if previous_snapshot is None else previous_snapshot.program_snapshots.all()
+    except ObjectDoesNotExist:
+        previous_snapshot = None
+    snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
 
     pe_eligibility = eligibility_policy_engine(screen)
     pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'coctc', 'medicaid', 'ssi', 'tanf']
@@ -178,6 +152,12 @@ def eligibility_results(screen):
 
         navigators = program.navigator.all()
 
+        new = True
+        if previous_snapshot is not None:
+            for previous_snapshot in previous_results:
+                if previous_snapshot.name_abbreviated == program.name_abbreviated:
+                    new = False
+
         if not skip and program.active:
             ProgramEligibilitySnapshot.objects.create(
                 eligibility_snapshot=snapshot,
@@ -190,7 +170,8 @@ def eligibility_results(screen):
                 legal_status_required=program.legal_status_required,
                 eligible=eligibility["eligible"],
                 failed_tests=json.dumps(eligibility["failed"]),
-                passed_tests=json.dumps(eligibility["passed"])
+                passed_tests=json.dumps(eligibility["passed"]),
+                new=new
             )
             data.append(
                 {
@@ -212,7 +193,8 @@ def eligibility_results(screen):
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],
                     "navigators": navigators,
-                    "already_has": screen.has_benefit(program.name_abbreviated)
+                    "already_has": screen.has_benefit(program.name_abbreviated),
+                    "new": new
                 }
             )
 
@@ -267,6 +249,7 @@ def urgent_needs(screen, language):
         'mental health': screen.needs_mental_health_help,
         'child dev': screen.needs_child_dev_help,
         'funeral': screen.needs_funeral_help,
+        'family planning': screen.needs_family_planning_help,
     }
 
     need_functions = {

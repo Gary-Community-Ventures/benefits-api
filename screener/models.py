@@ -61,6 +61,7 @@ class Screen(models.Model):
     needs_mental_health_help = models.BooleanField(default=False, blank=True, null=True)
     needs_child_dev_help = models.BooleanField(default=False, blank=True, null=True)
     needs_funeral_help = models.BooleanField(default=False, blank=True, null=True)
+    needs_family_planning_help = models.BooleanField(default=False, blank=True, null=True)
 
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
@@ -462,6 +463,7 @@ class Expense(models.Model):
 class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name='eligibility_snapshots', on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
+    is_batch = models.BooleanField(default=False)
 
     def generate_program_snapshots(self):
         eligibility = self.screen.eligibility_results()
@@ -486,6 +488,7 @@ class EligibilitySnapshot(models.Model):
 # aggregated per screen using the EligibilitySnapshot id
 class ProgramEligibilitySnapshot(models.Model):
     eligibility_snapshot = models.ForeignKey(EligibilitySnapshot, related_name='program_snapshots', on_delete=models.CASCADE)
+    new = models.BooleanField(default=False)
     name = models.CharField(max_length=320)
     name_abbreviated = models.CharField(max_length=32)
     value_type = models.CharField(max_length=120)

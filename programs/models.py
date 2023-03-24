@@ -68,7 +68,7 @@ class UrgentNeed(TranslatableModel):
     phone_number = PhoneNumberField(blank=True, null=True)
     type_short = models.CharField(max_length=120)
     active = models.BooleanField(blank=True, null=False, default=True)
-    functions = models.ManyToManyField(UrgentNeedFunction, related_name='function')
+    functions = models.ManyToManyField(UrgentNeedFunction, related_name='function', blank=True)
 
     def __str__(self):
         return self.name
