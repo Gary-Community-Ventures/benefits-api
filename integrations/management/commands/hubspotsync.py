@@ -3,6 +3,7 @@ from authentication.models import User
 from screener.models import Screen
 from django.db.models import Q
 from integrations.services.hubspot.integration import upsert_user_hubspot
+import time
 
 
 class Command(BaseCommand):
@@ -33,8 +34,6 @@ class Command(BaseCommand):
     # hubspot, and then clears the PII on the user record in favor of storing the
     # external id. This separates PII from household demographic.
     def sync_mfb_hubspot_users(self, limit):
-        if limit > 10:
-            limit = 10  # prevent hitting the rate limit on the hubspot API
         status = {
             'processed': 0,
             'completed': [],
@@ -54,15 +53,18 @@ class Command(BaseCommand):
                 user_screens = Screen.objects.filter(user_id=user.id).order_by('-submission_date')
                 if user_screens:
                     screen = user_screens.first()
+                else:
+                    continue
                 hubspot_id = upsert_user_hubspot(user, screen)
                 if hubspot_id:
                     self.replace_pii_with_hubspot_id(hubspot_id, user)
                     status['completed'].append((user.id, hubspot_id))
                 else:
                     status['failed'].append((user.id, hubspot_id))
+            # Delay to prevent hitting rate limit of 100 req per 10 seconds
+            time.sleep(.2)
             processed += 1
         return status
-
 
     # stores an external id from hubspot and then clears all of the PII
     def replace_pii_with_hubspot_id(self, hubspot_id, user):
