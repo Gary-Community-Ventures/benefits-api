@@ -37,4 +37,5 @@ class Command(BaseCommand):
             except Exception as e:
                 errors.append(str(screens[i].id) + ': ' + str(e))
         if len(errors):
-            print('The following screens had errors:\n', '\n'.join(errors), sep='')
+            self.stdout.write(
+                self.style.ERROR('The following screens had errors:\n' + '\n'.join(errors), sep=''))

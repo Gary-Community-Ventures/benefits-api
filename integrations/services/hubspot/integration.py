@@ -1,5 +1,5 @@
 from hubspot import HubSpot
-from hubspot.crm.contacts import SimplePublicObjectInput
+from hubspot.crm.contacts import SimplePublicObjectInput, BatchInputSimplePublicObjectBatchInput
 from hubspot.crm.contacts.exceptions import ApiException
 from decouple import config
 import json
@@ -56,6 +56,15 @@ class Hubspot():
         )
         return api_response
 
+    def bulk_update(self, formatted_users):
+        batch_input_simple_public_object_batch_input = BatchInputSimplePublicObjectBatchInput(formatted_users)
+        try:
+            self.api_client.crm.contacts.batch_api.update(
+                batch_input_simple_public_object_batch_input=batch_input_simple_public_object_batch_input
+            )
+        except ApiException as e:
+            print("Exception when calling batch_api->update: %s\n" % e)
+
     def get_conflict_contact_id(self, e):
         http_body = json.loads(e.body)
         # strip everything out of the error message except the contact id
@@ -78,5 +87,17 @@ class Hubspot():
         }
         if screen:
             contact['ab01___screener_id'] = screen.id
+            contact['ab01___screener_uuid'] = screen.uuid
+
+        return contact
+
+    def format_email_new_benefit(self, user, num_benefits, value_benefits):
+        contact = {
+            'id': user.external_id,
+            'properties': {
+                'ab01___number_of_new_benefits': int(num_benefits),
+                'ab01___new_benefit_total_value': int(value_benefits),
+            }
+        }
 
         return contact
