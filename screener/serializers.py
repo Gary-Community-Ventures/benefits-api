@@ -18,6 +18,7 @@ class IncomeStreamSerializer(serializers.ModelSerializer):
     class Meta:
         model = IncomeStream
         fields = '__all__'
+        read_only_fields = ('screen', 'household_member', 'id')
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
@@ -26,11 +27,10 @@ class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = '__all__'
+        read_only_fields = ('screen', 'household_member', 'id')
 
 
 class HouseholdMemberSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-    expenses = ExpenseSerializer(many=True)
     income_streams = IncomeStreamSerializer(many=True)
 
     class Meta:
@@ -51,10 +51,9 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
             'medicaid',
             'disability_medicaid',
             'has_income',
-            'has_expenses',
-            'expenses',
             'income_streams'
         )
+        read_only_fields = ('screen', 'id')
 
 
 class ScreenSerializer(serializers.ModelSerializer):
@@ -62,7 +61,8 @@ class ScreenSerializer(serializers.ModelSerializer):
     uuid = serializers.ReadOnlyField()
     submission_date = serializers.ReadOnlyField()
     household_members = HouseholdMemberSerializer(many=True)
-    user = UserSerializer()
+    expenses = ExpenseSerializer(many=True)
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Screen
@@ -83,6 +83,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'household_members',
             'last_email_request_date',
             'last_tax_filing_year',
+            'expenses',
             'user',
             'external_id',
             'request_language_code',
@@ -119,18 +120,15 @@ class ScreenSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         household_members = validated_data.pop('household_members')
+        expenses = validated_data.pop('expenses')
         screen = Screen.objects.create(**validated_data)
-        print(screen)
         for member in household_members:
             incomes = member.pop('income_streams')
-            expenses = member.pop('expenses')
             household_member = HouseholdMember.objects.create(**{**member, 'screen': screen})
-            print(household_member)
             for income in incomes:
-                print(IncomeStream.objects.create(**{**income, 'screen': screen, 'household_member': household_member}))
-            for expense in expenses:
-                print(Expense.objects.create(**{**expenses, 'screen': screen, 'household_member': household_members}))
-        print(screen.id)
+                IncomeStream.objects.create(**{**income, 'screen': screen, 'household_member': household_member})
+        for expense in expenses:
+            Expense.objects.create(**{**expense, 'screen': screen})
         return screen
 
 
