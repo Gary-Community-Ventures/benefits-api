@@ -1,4 +1,5 @@
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
+from authentication.serializers import UserSerializer
 from rest_framework import serializers
 from programs.serializers import NavigatorSerializer
 
@@ -29,8 +30,8 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 class HouseholdMemberSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    expenses = ExpenseSerializer(read_only=True, many=True)
-    income_streams = IncomeStreamSerializer(read_only=True, many=True)
+    expenses = ExpenseSerializer(many=True)
+    income_streams = IncomeStreamSerializer(many=True)
 
     class Meta:
         model = HouseholdMember
@@ -58,7 +59,10 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
 
 class ScreenSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    household_members = HouseholdMemberSerializer(read_only=True, many=True)
+    uuid = serializers.ReadOnlyField()
+    submission_date = serializers.ReadOnlyField()
+    household_members = HouseholdMemberSerializer(many=True)
+    user = UserSerializer()
 
     class Meta:
         model = Screen
@@ -112,6 +116,22 @@ class ScreenSerializer(serializers.ModelSerializer):
             'needs_funeral_help',
             'needs_family_planning_help'
         )
+
+    def create(self, validated_data):
+        household_members = validated_data.pop('household_members')
+        screen = Screen.objects.create(**validated_data)
+        print(screen)
+        for member in household_members:
+            incomes = member.pop('income_streams')
+            expenses = member.pop('expenses')
+            household_member = HouseholdMember.objects.create(**{**member, 'screen': screen})
+            print(household_member)
+            for income in incomes:
+                print(IncomeStream.objects.create(**{**income, 'screen': screen, 'household_member': household_member}))
+            for expense in expenses:
+                print(Expense.objects.create(**{**expenses, 'screen': screen, 'household_member': household_members}))
+        print(screen.id)
+        return screen
 
 
 class EligibilitySerializer(serializers.Serializer):
