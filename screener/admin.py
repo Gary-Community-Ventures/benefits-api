@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db.models.signals import post_save
 from django.utils.translation import override
 from screener.communications import email_pdf, text_link
+from integrations.services.hubspot.integration import upsert_user_hubspot
 from .models import Message, Screen, EligibilitySnapshot, HouseholdMember, IncomeStream, Expense
 from django.dispatch import receiver
 from django.utils import timezone
@@ -16,6 +17,19 @@ admin.site.register(Screen, screenAdmin)
 admin.site.register(Message)
 admin.site.register(IncomeStream)
 
+
+@receiver(post_save, sender=Screen)
+def upset_use_to_hubspot(sender, instance, created, **kwargs):
+    screen = instance
+    user = instance.user
+    if user is None:
+        return
+    should_upsert = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
+    print(should_upsert)
+    if not should_upsert:
+        return
+    print('Delete '*10)
+    upsert_user_hubspot(user, screen=screen)
 
 @receiver(post_save, sender=Message)
 def send_screener_email(sender, instance, created, **kwargs):
