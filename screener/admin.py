@@ -6,6 +6,7 @@ from integrations.services.hubspot.integration import upsert_user_hubspot
 from .models import Message, Screen, EligibilitySnapshot, HouseholdMember, IncomeStream, Expense
 from django.dispatch import receiver
 from django.utils import timezone
+from django.conf import settings
 import json
 
 
@@ -20,16 +21,29 @@ admin.site.register(IncomeStream)
 
 @receiver(post_save, sender=Screen)
 def upset_use_to_hubspot(sender, instance, created, **kwargs):
+    if settings.DEBUG:
+        return
     screen = instance
     user = instance.user
     if user is None:
         return
-    should_upsert = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
-    print(should_upsert)
-    if not should_upsert:
+    should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
+    if not should_upsert_user or screen.is_test:
         return
-    print('Delete '*10)
-    upsert_user_hubspot(user, screen=screen)
+
+    hubspot_id = upsert_user_hubspot(user, screen=screen)
+    if hubspot_id:
+        if hubspot_id:
+            user.external_id = hubspot_id
+            user.email_or_cell = hubspot_id + "@myfriendben.org"
+            user.first_name = None
+            user.last_name = None
+            user.cell = None
+            user.email = None
+            user.save()
+        else:
+            raise Exception('Failed to upsert user')
+
 
 @receiver(post_save, sender=Message)
 def send_screener_email(sender, instance, created, **kwargs):

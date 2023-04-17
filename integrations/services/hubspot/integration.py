@@ -90,7 +90,7 @@ class Hubspot():
         }
         if screen:
             contact['ab01___screener_id'] = screen.id
-            contact['ab01___screener_uuid'] = 1
+            contact['ab01___uuid'] = str(screen.uuid)
 
         return contact
 
