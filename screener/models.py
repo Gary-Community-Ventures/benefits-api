@@ -72,17 +72,15 @@ class Screen(models.Model):
         return gross_income
 
     def calc_expenses(self, frequency, types):
-        household_members = self.household_members.all()
+        expenses = self.expenses.all()
         total_expense = 0
 
-        for household_member in household_members:
-            expenses = household_member.expenses.all()
-            for expense in expenses:
-                if "all" in types or expense.type in types:
-                    if frequency == "monthly":
-                        total_expense += expense.monthly()
-                    elif frequency == "yearly":
-                        total_expense += expense.yearly()
+        for expense in expenses:
+            if "all" in types or expense.type in types:
+                if frequency == "monthly":
+                    total_expense += expense.monthly()
+                elif frequency == "yearly":
+                    total_expense += expense.yearly()
 
         return total_expense
 
