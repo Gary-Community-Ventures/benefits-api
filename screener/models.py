@@ -72,17 +72,15 @@ class Screen(models.Model):
         return gross_income
 
     def calc_expenses(self, frequency, types):
-        household_members = self.household_members.all()
+        expenses = self.expenses.all()
         total_expense = 0
 
-        for household_member in household_members:
-            expenses = household_member.expenses.all()
-            for expense in expenses:
-                if "all" in types or expense.type in types:
-                    if frequency == "monthly":
-                        total_expense += expense.monthly()
-                    elif frequency == "yearly":
-                        total_expense += expense.yearly()
+        for expense in expenses:
+            if "all" in types or expense.type in types:
+                if frequency == "monthly":
+                    total_expense += expense.monthly()
+                elif frequency == "yearly":
+                    total_expense += expense.yearly()
 
         return total_expense
 
@@ -323,8 +321,8 @@ class HouseholdMember(models.Model):
     veteran = models.BooleanField()
     medicaid = models.BooleanField(blank=True, null=True)
     disability_medicaid = models.BooleanField(blank=True, null=True)
-    has_income = models.BooleanField()
-    has_expenses = models.BooleanField()
+    has_income = models.BooleanField(null=True)
+    has_expenses = models.BooleanField(null=True)
 
     def calc_gross_income(self, frequency, types):
         gross_income = 0
@@ -424,7 +422,7 @@ class IncomeStream(models.Model):
 # HouseholdMember expenses
 class Expense(models.Model):
     screen = models.ForeignKey(Screen, related_name='expenses', on_delete=models.CASCADE)
-    household_member = models.ForeignKey(HouseholdMember, related_name='expenses', on_delete=models.CASCADE)
+    household_member = models.ForeignKey(HouseholdMember, related_name='expenses', on_delete=models.CASCADE, null=True)
     type = models.CharField(max_length=30)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     frequency = models.CharField(max_length=30)

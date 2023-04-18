@@ -17,6 +17,7 @@ class IncomeStreamSerializer(serializers.ModelSerializer):
     class Meta:
         model = IncomeStream
         fields = '__all__'
+        read_only_fields = ('screen', 'household_member', 'id')
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
@@ -25,12 +26,11 @@ class ExpenseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Expense
         fields = '__all__'
+        read_only_fields = ('screen', 'household_member', 'id')
 
 
 class HouseholdMemberSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-    expenses = ExpenseSerializer(read_only=True, many=True)
-    income_streams = IncomeStreamSerializer(read_only=True, many=True)
+    income_streams = IncomeStreamSerializer(many=True)
 
     class Meta:
         model = HouseholdMember
@@ -50,15 +50,14 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
             'medicaid',
             'disability_medicaid',
             'has_income',
-            'has_expenses',
-            'expenses',
             'income_streams'
         )
+        read_only_fields = ('screen', 'id')
 
 
 class ScreenSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-    household_members = HouseholdMemberSerializer(read_only=True, many=True)
+    household_members = HouseholdMemberSerializer(many=True)
+    expenses = ExpenseSerializer(many=True)
 
     class Meta:
         model = Screen
@@ -79,6 +78,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'household_members',
             'last_email_request_date',
             'last_tax_filing_year',
+            'expenses',
             'user',
             'external_id',
             'request_language_code',
@@ -112,6 +112,20 @@ class ScreenSerializer(serializers.ModelSerializer):
             'needs_funeral_help',
             'needs_family_planning_help'
         )
+        read_only_fields = ('id', 'uuid', 'submision_date')
+
+    def create(self, validated_data):
+        household_members = validated_data.pop('household_members')
+        expenses = validated_data.pop('expenses')
+        screen = Screen.objects.create(**validated_data)
+        for member in household_members:
+            incomes = member.pop('income_streams')
+            household_member = HouseholdMember.objects.create(**member, screen=screen)
+            for income in incomes:
+                IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
+        for expense in expenses:
+            Expense.objects.create(**expense, screen=screen)
+        return screen
 
 
 class EligibilitySerializer(serializers.Serializer):
