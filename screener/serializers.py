@@ -127,6 +127,22 @@ class ScreenSerializer(serializers.ModelSerializer):
             Expense.objects.create(**expense, screen=screen)
         return screen
 
+    def update(self, instance, validated_data):
+        print(instance)
+        household_members = validated_data.pop('household_members')
+        expenses = validated_data.pop('expenses')
+        Screen.objects.filter(pk=instance.id).update(**validated_data)
+        HouseholdMember.objects.filter(screen=instance).delete()
+        Expense.objects.filter(screen=instance).delete()
+        for member in household_members:
+            incomes = member.pop('income_streams')
+            household_member = HouseholdMember.objects.create(**member, screen=instance)
+            for income in incomes:
+                IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
+        for expense in expenses:
+            Expense.objects.create(**expense, screen=instance)
+        return instance
+
 
 class EligibilitySerializer(serializers.Serializer):
     description_short = serializers.CharField()
