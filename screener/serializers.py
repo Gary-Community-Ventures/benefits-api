@@ -112,7 +112,8 @@ class ScreenSerializer(serializers.ModelSerializer):
             'needs_funeral_help',
             'needs_family_planning_help'
         )
-        read_only_fields = ('id', 'uuid', 'submision_date')
+        read_only_fields = ('id', 'uuid', 'submision_date', 'last_email_request_date')
+        create_only_fields = ('user', 'start_date')
 
     def create(self, validated_data):
         household_members = validated_data.pop('household_members')
@@ -128,7 +129,6 @@ class ScreenSerializer(serializers.ModelSerializer):
         return screen
 
     def update(self, instance, validated_data):
-        print(instance)
         household_members = validated_data.pop('household_members')
         expenses = validated_data.pop('expenses')
         Screen.objects.filter(pk=instance.id).update(**validated_data)
