@@ -51,6 +51,7 @@ class User(AbstractUser):
     tcpa_consent = models.BooleanField()
     send_offers = models.BooleanField(default=False)
     send_updates = models.BooleanField(default=False)
+    external_id = models.CharField(max_length=320, blank=True, null=True)
 
     objects = UserManager()
 

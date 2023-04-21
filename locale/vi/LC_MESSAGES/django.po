@@ -1,0 +1,109 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-23 11:11-0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: .\authentication\models.py:47 .\programs\models.py:74
+#: .\screener\models.py:314
+msgid "email address"
+msgstr "địa chỉ email"
+
+#: .\benefits\settings.py:173
+msgid "US English"
+msgstr "Tiếng Anh Mỹ"
+
+#: .\benefits\settings.py:174
+msgid "Spanish"
+msgstr "Tiếng Tây Ban Nha"
+
+#: .\programs\programs\messages.py:9
+msgid "Household makes"
+msgstr "Hộ gia đình làm"
+
+#: .\programs\programs\messages.py:11
+msgid "per month which must be less than"
+msgstr "mỗi tháng phải ít hơn"
+
+#: .\programs\programs\messages.py:21
+msgid "Household resources must not exceed"
+msgstr "Nguồn lực hộ gia đình không được vượt quá"
+
+#: .\programs\programs\messages.py:31
+msgid "Must have a child between the ages of"
+msgstr "Phải có một người con trong độ tuổi"
+
+#: .\programs\programs\messages.py:33 .\programs\programs\messages.py:45
+msgid "and"
+msgstr "đến"
+
+#: .\programs\programs\messages.py:43
+msgid "Someone in the household must be between the ages of"
+msgstr "Trong gia đình phải có người ở độ tuổi"
+
+#: .\programs\programs\messages.py:55
+msgid "Someone in the household must be at least"
+msgstr "Trong gia đình phải có người ít nhất"
+
+#: .\programs\programs\messages.py:57
+msgid "years old"
+msgstr "tuổi"
+
+#: .\programs\programs\messages.py:66
+msgid "Household must have"
+msgstr "Hộ gia đình phải có"
+
+#: .\programs\programs\messages.py:76
+msgid "Household must not have"
+msgstr "Hộ gia đình không được có"
+
+#: .\programs\programs\messages.py:86
+msgid "Must live in an eligible location"
+msgstr "Phải sống ở địa điểm đủ điều kiện"
+
+#: .\programs\programs\messages.py:95
+msgid "Someone in the household must have a disability"
+msgstr "Trong gia đình phải có người bị khuyết tật"
+
+#: .\programs\programs\messages.py:104
+msgid "Someone in the household must not have health insurance"
+msgstr "Trong gia đình phải có người không có bảo hiểm y tế"
+
+#: .\programs\programs\nfp\calculator.py:38
+#: .\programs\programs\nfp\calculator.py:45
+msgid "Calculated income of "
+msgstr "Thu nhập tính toán của"
+
+#: .\programs\programs\nfp\calculator.py:39
+#: .\programs\programs\nfp\calculator.py:47
+msgid " for a household with "
+msgstr " cho một hộ gia đình có"
+
+#: .\programs\programs\nfp\calculator.py:41
+msgid " members is above the income limit of "
+msgstr " thành viên cao hơn giới hạn thu nhập của"
+
+#: .\programs\programs\nfp\calculator.py:49
+msgid " members is below the income limit of "
+msgstr " thành viên thấp hơn giới hạn thu nhập của"
+
+#: .\screener\communications\cell.py:14 .\screener\communications\email.py:18
+msgid "Thank you for using MyFriendBen. Click here to review your results."
+msgstr "Cảm ơn quý vị đã sử dụng MyFriendBen. Nhấp vào đây để xem lại kết quả của quý vị."
+
+#: .\screener\communications\email.py:16
+msgid "Screener Results from My Friend Ben"
+msgstr "Kết Quả Sàng Lọc từ My Friend Ben"

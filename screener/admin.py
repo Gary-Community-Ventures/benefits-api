@@ -1,18 +1,53 @@
 from django.contrib import admin
 from django.db.models.signals import post_save
 from django.utils.translation import override
-from screener.email import email_pdf
-from .models import Message, Screen, EligibilitySnapshot
+from screener.communications import email_pdf, text_link
+from integrations.services.hubspot.integration import upsert_user_hubspot
+from .models import Message, Screen, EligibilitySnapshot, HouseholdMember, IncomeStream, Expense
 from django.dispatch import receiver
-from .models import IncomeStream
+from django.utils import timezone
+from django.conf import settings
+import json
 
-admin.site.register(Screen)
+
+class screenAdmin(admin.ModelAdmin):
+    search_fields = ('id',)
+
+
+admin.site.register(Screen, screenAdmin)
 admin.site.register(Message)
 admin.site.register(IncomeStream)
 
 
+@receiver(post_save, sender=Screen)
+def upsert_user_to_hubspot(sender, instance, created, **kwargs):
+    if settings.DEBUG:
+        return
+    screen = instance
+    user = instance.user
+    if user is None:
+        return
+    should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
+    if not should_upsert_user or screen.is_test:
+        return
+
+    hubspot_id = upsert_user_hubspot(user, screen=screen)
+    if hubspot_id:
+        user.external_id = hubspot_id
+        user.email_or_cell = hubspot_id + "@myfriendben.org"
+        user.first_name = None
+        user.last_name = None
+        user.cell = None
+        user.email = None
+        user.save()
+    else:
+        raise Exception('Failed to upsert user')
+
+
 @receiver(post_save, sender=Message)
 def send_screener_email(sender, instance, created, **kwargs):
+    instance.screen.last_email_request_date = timezone.now()
+    instance.screen.save()
     if created and instance.type == 'emailScreen':
         if instance.email and instance.screen:
             language = 'en-us'
@@ -21,6 +56,14 @@ def send_screener_email(sender, instance, created, **kwargs):
 
             with override(language):
                 email_pdf(instance.email, instance.screen.id, language)
+    if created and instance.type == 'textScreen':
+        if instance.cell and instance.screen:
+            language = 'en-us'
+            if instance.screen.request_language_code:
+                language = instance.screen.request_language_code
+
+            with override(language):
+                text_link(instance.cell, instance.screen, language)
 
 
 def generate_bwf_snapshots():
@@ -72,3 +115,54 @@ def generate_nav_snapshots():
         eligibility_snapshot.generate_program_snapshots()
         count += 1
         print("Snapshot " + str(count) + "/" + str(total_screens) + " generated for " + str(screen.id))
+
+
+def generate_bia_sample_snapshot():
+    nav_ids = ['4097', '4147', '4148', '4149']
+    screens = Screen.objects.filter(id__in=nav_ids)
+    total_screens = screens.count()
+
+    count = 0
+    for screen in screens:
+        eligibility_snapshot = EligibilitySnapshot(screen=screen)
+        eligibility_snapshot.save()
+        eligibility_snapshot.generate_program_snapshots()
+        count += 1
+        print("Snapshot " + str(count) + "/" + str(total_screens) + " generated for " + str(screen.id))
+
+
+def add_from_json(new_json_str):
+    '''
+    Add json string from screen endpoint as parameter. Use triple quotes if in shell
+    '''
+    new_json = json.loads(new_json_str)
+
+    screen = Screen.objects.create(
+            **{k: v for k, v in new_json.items() if k not in ('household_members', 'id', 'uuid', 'user')},
+            )
+
+    members = []
+    incomes = []
+    expenses = []
+    for member in new_json['household_members']:
+        household_member = {k: v for k, v in member.items() if k not in ('income_streams', 'expenses', 'screen', 'id')}
+        member_model = HouseholdMember(**household_member, screen=screen)
+        members.append(member_model)
+
+        for income in member['income_streams']:
+            income = {k: v for k, v in income.items() if k not in ('household_member', 'screen', 'id')}
+            incomes.append(IncomeStream(**income,
+                                        screen=screen,
+                                        household_member=member_model))
+        for expense in member['expenses']:
+            expense = {k: v for k, v in expense.items() if k not in ('household_member', 'screen', 'id')}
+            expenses.append(Expense(**expense,
+                                    screen=screen,
+                                    household_member=member_model))
+
+    HouseholdMember.objects.bulk_create(members)
+    IncomeStream.objects.bulk_create(incomes)
+    Expense.objects.bulk_create(expenses)
+
+    print('id:', screen.id)
+    print('uuid:', screen.uuid)

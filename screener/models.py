@@ -2,6 +2,7 @@ from django.db import models
 from decimal import Decimal
 import json
 import math
+import uuid
 from authentication.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
@@ -14,9 +15,11 @@ from programs.programs.policyengine.policyengine import eligibility_policy_engin
 # application fields like submission_date, it also contains non-individual
 # household fields. Screen -> HouseholdMember -> IncomeStream & Expense
 class Screen(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid4)
     submission_date = models.DateTimeField(auto_now=True)
     start_date = models.DateTimeField(blank=True, null=True)
     referral_source = models.CharField(max_length=320, default=None, blank=True, null=True)
+    referrer_code = models.CharField(max_length=320, default=None, blank=True, null=True)
     agree_to_tos = models.BooleanField()
     zipcode = models.CharField(max_length=5)
     county = models.CharField(max_length=120, default=None, blank=True, null=True)
@@ -26,6 +29,7 @@ class Screen(models.Model):
     housing_situation = models.CharField(max_length=30, blank=True, null=True, default=None)
     last_email_request_date = models.DateTimeField(blank=True, null=True)
     is_test = models.BooleanField(default=False, blank=True)
+    is_verified = models.BooleanField(default=False, blank=True)
     user = models.ForeignKey(User, related_name='screens', on_delete=models.CASCADE, blank=True, null=True)
     external_id = models.CharField(max_length=120, blank=True, null=True)
     request_language_code = models.CharField(max_length=12, blank=True, null=True)
@@ -44,34 +48,39 @@ class Screen(models.Model):
     has_mydenver = models.BooleanField(default=False, blank=True, null=True)
     has_chp = models.BooleanField(default=False, blank=True, null=True)
     has_ccb = models.BooleanField(default=False, blank=True, null=True)
+    has_ssi = models.BooleanField(default=False, blank=True, null=True)
+    has_employer_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_private_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_medicaid_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_medicare_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_chp_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_no_hi = models.BooleanField(default=False, blank=True, null=True)
+    needs_food = models.BooleanField(default=False, blank=True, null=True)
+    needs_baby_supplies = models.BooleanField(default=False, blank=True, null=True)
+    needs_housing_help = models.BooleanField(default=False, blank=True, null=True)
+    needs_mental_health_help = models.BooleanField(default=False, blank=True, null=True)
+    needs_child_dev_help = models.BooleanField(default=False, blank=True, null=True)
+    needs_funeral_help = models.BooleanField(default=False, blank=True, null=True)
+    needs_family_planning_help = models.BooleanField(default=False, blank=True, null=True)
 
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
         gross_income = 0
 
         for household_member in household_members:
-            income_streams = household_member.income_streams.all()
-            for income_stream in income_streams:
-                if "all" in types or income_stream.type in types:
-                    if frequency == "monthly":
-                        gross_income += income_stream.monthly()
-                    elif frequency == "yearly":
-                        gross_income += income_stream.yearly()
-
+            gross_income += household_member.calc_gross_income(frequency, types)
         return gross_income
 
     def calc_expenses(self, frequency, types):
-        household_members = self.household_members.all()
+        expenses = self.expenses.all()
         total_expense = 0
 
-        for household_member in household_members:
-            expenses = household_member.expenses.all()
-            for expense in expenses:
-                if "all" in types or expense.type in types:
-                    if frequency == "monthly":
-                        total_expense += expense.monthly()
-                    elif frequency == "yearly":
-                        total_expense += expense.yearly()
+        for expense in expenses:
+            if "all" in types or expense.type in types:
+                if frequency == "monthly":
+                    total_expense += expense.monthly()
+                elif frequency == "yearly":
+                    total_expense += expense.yearly()
 
         return total_expense
 
@@ -91,9 +100,10 @@ class Screen(models.Model):
 
         household_members = self.household_members.all()
         for household_member in household_members:
+            has_child_relationship = household_member.relationship in child_relationship or 'all' in child_relationship
             if household_member.age >= age_min and \
                     household_member.age <= age_max and \
-                    household_member.relationship in child_relationship:
+                    has_child_relationship:
                 children += 1
             if household_member.pregnant and include_pregnant:
                 children += 1
@@ -151,23 +161,118 @@ class Screen(models.Model):
 
         return net_income
 
-    def program_eligibility(self):
+    def relationship_map(self):
+        relationship_map = {}
+
+        all_members = self.household_members.values()
+        for member in all_members:
+            if member['id'] in relationship_map:
+                if relationship_map[member['id']] != None:
+                    continue
+
+            relationship = member['relationship']
+            probabable_spouse = None
+
+            if relationship == 'headOfHousehold':
+                for other_member in all_members:
+                    if other_member['relationship'] in ('spouse', 'domesticPartner') and\
+                            other_member['id'] not in relationship_map:
+                        probabable_spouse = other_member['id']
+                        break
+            elif relationship in ('spouse', 'domesticPartner'):
+                for other_member in all_members:
+                    if other_member['relationship'] == 'headOfHousehold' and\
+                            other_member['id'] not in relationship_map:
+                        probabable_spouse = other_member['id']
+                        break
+            elif relationship in ('parent', 'fosterParent', 'stepParent', 'grandParent'):
+                for other_member in all_members:
+                    if other_member['relationship'] == relationship and\
+                            other_member['id'] != member['id'] and\
+                            other_member['id'] not in relationship_map:
+                        probabable_spouse = other_member['id']
+                        break
+            relationship_map[member['id']] = probabable_spouse
+            if probabable_spouse != None:
+                relationship_map[probabable_spouse] = member['id']
+        return relationship_map
+
+    def has_types_of_insurance(self, types, only=False):
+        """
+        Returns True if family has an insurance in types.
+        If only=True then will return False if the family has an insurance that is not in types.
+        """
+        types_of_hi = {
+            'employer': self.has_employer_hi,
+            'private': self.has_private_hi,
+            'medicaid': self.has_medicaid_hi,
+            'medicare': self.has_medicare_hi,
+            'chp': self.has_chp_hi,
+            'none': self.has_no_hi
+        }
+
+        has_type = False
+        for insurance in types_of_hi:
+            if not types_of_hi[insurance]: continue
+            if insurance in types:
+                has_type = True
+            elif only:
+                return False
+        return has_type
+
+    def has_benefit(self, name_abbreviated):
+        name_map = {
+            'tanf': self.has_tanf,
+            'wic': self.has_wic,
+            'snap': self.has_snap,
+            'lifeline': self.has_lifeline,
+            'acp': self.has_acp,
+            'eitc': self.has_eitc,
+            'coeitc': self.has_coeitc,
+            'nslp': self.has_nslp,
+            'ctc': self.has_ctc,
+            'medicaid': self.has_medicaid or self.has_medicaid_hi,
+            'rtdlive': self.has_rtdlive,
+            'cccap': self.has_cccap,
+            'mydenver': self.has_mydenver,
+            'chp': self.has_chp or self.has_chp_hi,
+            'ccb': self.has_ccb,
+            'ssi': self.has_ssi,
+            'medicare': self.has_medicare_hi,
+        }
+        return name_map[name_abbreviated] if name_abbreviated in name_map else False
+
+    def eligibility_results(self):
         all_programs = Program.objects.all()
+        screen = self
         data = []
 
-        pe_eligibility = eligibility_policy_engine(self)
-        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid']
+        pe_eligibility = eligibility_policy_engine(screen)
+        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid', 'ssi']
+
+        def sort_first(program):
+            calc_first = ('tanf', 'ssi', 'medicaid')
+
+            if program.name_abbreviated in calc_first:
+                return 0
+            else:
+                return 1
+
+        # make certain benifits calculate first so that they can be used in other benefits
+        all_programs = sorted(all_programs, key=sort_first)
 
         for program in all_programs:
             skip = False
             # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
-            if program.name_abbreviated not in pe_programs:
-                eligibility = program.eligibility(self, data)
-            else:
+            if program.name_abbreviated not in pe_programs and program.active:
+                eligibility = program.eligibility(screen, data)
+            elif program.active:
                 # skip = True
                 eligibility = pe_eligibility[program.name_abbreviated]
 
-            if not skip:
+            navigators = program.navigator.all()
+
+            if not skip and program.active:
                 data.append(
                     {
                         "program_id": program.id,
@@ -185,14 +290,16 @@ class Screen(models.Model):
                         "legal_status_required": program.legal_status_required,
                         "eligible": eligibility["eligible"],
                         "failed_tests": eligibility["failed"],
-                        "passed_tests": eligibility["passed"]
+                        "passed_tests": eligibility["passed"],
+                        "navigators": navigators
                     }
                 )
 
         eligible_programs = []
         for program in data:
             clean_program = program
-            clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
+            clean_program['estimated_value'] = math.trunc(
+                clean_program['estimated_value'])
             eligible_programs.append(clean_program)
 
         return eligible_programs
@@ -225,15 +332,20 @@ class HouseholdMember(models.Model):
     veteran = models.BooleanField()
     medicaid = models.BooleanField(blank=True, null=True)
     disability_medicaid = models.BooleanField(blank=True, null=True)
-    has_income = models.BooleanField()
-    has_expenses = models.BooleanField()
+    has_income = models.BooleanField(null=True)
+    has_expenses = models.BooleanField(null=True)
 
     def calc_gross_income(self, frequency, types):
         gross_income = 0
+        earned_income_types = ["wages", "selfEmployment", "investment"]
 
         income_streams = self.income_streams.all()
         for income_stream in income_streams:
-            if "all" in types or income_stream.type in types:
+            include_all = "all" in types
+            specific_match = income_stream.type in types
+            earned_income_match = "earned" in types and income_stream.type in earned_income_types
+            unearned_income_match = "unearned" in types and income_stream.type not in earned_income_types
+            if include_all or earned_income_match or unearned_income_match or specific_match:
                 if frequency == "monthly":
                     gross_income += income_stream.monthly()
                 elif frequency == "yearly":
@@ -261,6 +373,17 @@ class HouseholdMember(models.Model):
 
         return net_income
 
+    def is_married(self):
+        if self.relationship in ('spouse', 'domesticPartner'):
+            head_of_house = HouseholdMember.objects.all().filter(screen=self.screen, relationship='headOfHousehold')[0]
+            return {"is_married": True, "married_to": head_of_house}
+        if self.relationship == 'headOfHousehold':
+            all_household_members = HouseholdMember.objects.all().filter(screen=self.screen)
+            for member in all_household_members:
+                if member.relationship in ('spouse', 'domesticPartner'):
+                    return {"is_married": True, "married_to": member}
+        return {"is_married": False}
+
 
 # HouseholdMember income streams
 class IncomeStream(models.Model):
@@ -269,6 +392,7 @@ class IncomeStream(models.Model):
     type = models.CharField(max_length=30)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     frequency = models.CharField(max_length=30)
+    hours_worked = models.IntegerField(null=True)
 
     def monthly(self):
         if self.frequency == "monthly":
@@ -281,6 +405,8 @@ class IncomeStream(models.Model):
             monthly = self.amount * 2
         elif self.frequency == "yearly":
             monthly = self.amount / 12
+        elif self.frequency == "hourly":
+            monthly = self._hour_to_month()
 
         return monthly
 
@@ -295,14 +421,19 @@ class IncomeStream(models.Model):
             yearly = self.amount * 24
         elif self.frequency == "yearly":
             yearly = self.amount
+        elif self.frequency == "hourly":
+            yearly = self._hour_to_month() * 12
 
         return yearly
+
+    def _hour_to_month(self):
+        return self.amount * self.hours_worked * Decimal(4.35)
 
 
 # HouseholdMember expenses
 class Expense(models.Model):
     screen = models.ForeignKey(Screen, related_name='expenses', on_delete=models.CASCADE)
-    household_member = models.ForeignKey(HouseholdMember, related_name='expenses', on_delete=models.CASCADE)
+    household_member = models.ForeignKey(HouseholdMember, related_name='expenses', on_delete=models.CASCADE, null=True)
     type = models.CharField(max_length=30)
     amount = models.DecimalField(decimal_places=2, max_digits=10)
     frequency = models.CharField(max_length=30)
@@ -341,9 +472,10 @@ class Expense(models.Model):
 class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name='eligibility_snapshots', on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
+    is_batch = models.BooleanField(default=False)
 
     def generate_program_snapshots(self):
-        eligibility = self.screen.program_eligibility()
+        eligibility = self.screen.eligibility_results()
         for item in eligibility:
             program_snapshot = ProgramEligibilitySnapshot(
                 eligibility_snapshot=self,
@@ -365,6 +497,7 @@ class EligibilitySnapshot(models.Model):
 # aggregated per screen using the EligibilitySnapshot id
 class ProgramEligibilitySnapshot(models.Model):
     eligibility_snapshot = models.ForeignKey(EligibilitySnapshot, related_name='program_snapshots', on_delete=models.CASCADE)
+    new = models.BooleanField(default=False)
     name = models.CharField(max_length=320)
     name_abbreviated = models.CharField(max_length=32)
     value_type = models.CharField(max_length=120)

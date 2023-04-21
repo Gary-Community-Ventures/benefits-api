@@ -35,6 +35,12 @@ def eligibility_policy_engine(screen):
             "failed": [],
             "estimated_value": 0
         },
+        "coctc": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
         "coeitc": {
             "eligible": False,
             "passed": [],
@@ -47,11 +53,23 @@ def eligibility_policy_engine(screen):
             "failed": [],
             "estimated_value": 0
         },
+        "ssi": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
+        "tanf": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        }
     }
 
     benefit_data = policy_engine_calculate(screen)['result']
 
-    # WIC & MEDICAID
+    # WIC & MEDICAID & SSI
     for pkey, pvalue in benefit_data['people'].items():
         # WIC
         if pvalue['wic']['2023'] > 0:
@@ -78,8 +96,17 @@ def eligibility_policy_engine(screen):
 
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
 
+        # SSI
+        if pvalue['ssi']['2023'] > 0:
+            eligibility['ssi']['eligible'] = True
+            eligibility['ssi']['estimated_value'] += pvalue['ssi']['2023']
+
     # WIC PRESUMPTIVE ELIGIBILITY
-    if eligibility['wic']['eligible'] is False:
+    in_wic_demographic = False
+    for member in screen.household_members.all():
+        if member.pregnant is True or member.age <= 5:
+            in_wic_demographic = True
+    if eligibility['wic']['eligible'] is False and in_wic_demographic:
         if screen.has_medicaid is True \
                 or screen.has_tanf is True \
                 or screen.has_snap is True:
@@ -99,24 +126,46 @@ def eligibility_policy_engine(screen):
             eligibility['nslp']['eligible'] = True
             eligibility['nslp']['estimated_value'] = 680 * num_children
 
+    # TANF
+    if benefit_data['spm_units']['spm_unit']['co_tanf']['2023'] > 0:
+        eligibility['tanf']['eligible'] = True
+        eligibility['tanf']['estimated_value'] = benefit_data['spm_units']['spm_unit']['co_tanf']['2023']
+
+    tax_unit_data = benefit_data['tax_units']['tax_unit']
+
     # EITC
-    if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
+    if tax_unit_data['earned_income_tax_credit']['2022'] > 0:
         eligibility['eitc']['eligible'] = True
-        eligibility['eitc']['estimated_value'] = benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
+        eligibility['eitc']['estimated_value'] = tax_unit_data['earned_income_tax_credit']['2022']
 
     # COEITC
-    if benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022'] > 0:
+    if tax_unit_data['earned_income_tax_credit']['2022'] > 0:
         eligibility['coeitc']['eligible'] = True
-        eligibility['coeitc']['estimated_value'] = .10 * benefit_data['tax_units']['tax_unit']['earned_income_tax_credit']['2022']
+        eligibility['coeitc']['estimated_value'] = .20 * tax_unit_data['earned_income_tax_credit']['2022']
 
     # CTC
-    if benefit_data['tax_units']['tax_unit']['ctc']['2022'] > 0:
+    if tax_unit_data['ctc']['2022'] > 0:
         eligibility['ctc']['eligible'] = True
-        for pkey, pvalue in benefit_data['people'].items():
-            if pvalue['age']['2022'] <= 5:
-                eligibility['ctc']['estimated_value'] += 3600
-            elif pvalue['age']['2022'] > 5 and pvalue['age']['2022'] <= 17:
-                eligibility['ctc']['estimated_value'] += 3000
+        eligibility['ctc']['estimated_value'] = tax_unit_data['ctc']['2022']
+
+    # CO Child Tax Credit
+    if tax_unit_data['ctc']['2022'] > 0 and screen.num_children(age_max=6):
+        income_bands = {
+            "single": [{"max": 25000, "percent": .6}, {"max": 50000, "percent": .3}, {"max": 75000, "percent": .1}],
+            "maried": [{"max": 35000, "percent": .6}, {"max": 60000, "percent": .3}, {"max": 85000, "percent": .1}]
+        }
+        income = screen.calc_gross_income('yearly', ['all'])
+        relationship_status = 'maried' if screen.is_joint() else 'single'
+        multiplier = 0
+        for band in income_bands[relationship_status]:
+            # if the income is less than the band then set the multiplier and break out of the loop
+            if income <= band['max']:
+                multiplier = band['percent']
+                break
+
+        eligibility['coctc']['eligible'] = multiplier != 0
+        eligibility['coctc']['estimated_value'] = tax_unit_data['ctc']['2022'] * multiplier
+
     return eligibility
 
 
@@ -193,12 +242,18 @@ def policy_engine_prepare_params(screen):
                     "has_phone_expense": {"2023": screen.has_expense(["telephone"])},
                     "broadband_cost": {"2023": int(screen.calc_expenses("yearly", ["internet"]))},
                     "utility_expense": {"2023": int(screen.calc_expenses("yearly", ["otherUtilities", "heating", "cooling"]))},
+                    "snap_emergency_allotment": {"2023": 0},
                     "snap": {"2023": None},
                     "acp": {"2023": None},
                     "school_meal_daily_subsidy": {"2023": None},
                     "school_meal_tier": {"2023": None},
                     "meets_school_meal_categorical_eligibility": {"2023": None},
                     "lifeline": {"2023": None},
+                    "co_tanf_countable_gross_earned_income": {"2023": int(screen.calc_gross_income('yearly', ['earned']))},
+                    "co_tanf_countable_gross_unearned_income": {"2023": int(screen.calc_gross_income('yearly', ['unearned']))},
+                    "co_tanf": {"2023": None},
+                    "co_tanf_grant_standard": {"2023": None},
+                    "co_tanf_countable_earned_income_grant_standard": {"2023": None},
                 }
             }
         }
@@ -212,15 +267,26 @@ def policy_engine_prepare_params(screen):
         else:
             is_tax_unit_head = False
 
+        ssi_assets = 0
+        if household_member.age >= 19:
+            ssi_assets = screen.household_assets / screen.num_adults()
+
         policy_engine_params['household']['people'][member_id] = {
             "employment_income": {
                 "2023": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment'])),
                 "2022": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
             },
             "age": {"2023": household_member.age, "2022": household_member.age},
+            "is_pregnant": {"2023": household_member.pregnant},
             "is_tax_unit_head": {"2023": is_tax_unit_head, "2022": is_tax_unit_head},
             "wic": {"2023": None},
-            "medicaid": {"2023": None}
+            "medicaid": {"2023": None},
+            "ssi": {"2023": None},
+            "ssi_earned_income": {"2023": int(household_member.calc_gross_income('yearly', ['earned']))},
+            "ssi_unearned_income": {"2023": int(household_member.calc_gross_income('yearly', ['unearned']))},
+            "is_ssi_disabled": {"2023": household_member.disabled or household_member.visually_impaired},
+            "ssi_countable_resources": {"2023": int(ssi_assets)},
+            "ssi_amount_if_eligible": {"2023": None}
         }
 
         if household_member.pregnant:

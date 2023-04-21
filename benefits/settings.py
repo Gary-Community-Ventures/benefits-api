@@ -84,6 +84,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'screener.apps.ScreenerConfig',
     'programs.apps.ProgramsConfig',
+    'integrations.apps.IntegrationsConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'phonenumber_field',
@@ -172,6 +173,7 @@ LANGUAGE_CODE = 'en-us'
 LANGUAGES = (
     ('en-us', _("US English")),
     ('es', _('Spanish')),
+    ('vi', _('Vietnamese'))
 )
 
 TIME_ZONE = 'UTC'
@@ -186,6 +188,7 @@ PARLER_LANGUAGES = {
     None: (
         {'code': 'en-us'},
         {'code': 'es'},
+        {'code': 'vi'}
     ),
     'default': {
         'fallbacks': ['en-us'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE

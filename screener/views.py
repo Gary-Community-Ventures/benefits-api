@@ -2,16 +2,20 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import override
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
-from rest_framework import viewsets, views
+from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, EligibilitySnapshot, ProgramEligibilitySnapshot
+from rest_framework import viewsets, views, status
 from rest_framework import permissions
 from rest_framework.response import Response
 from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, \
     ExpenseSerializer, EligibilitySerializer, MessageSerializer
-from programs.models import Program
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
+import programs.programs.urgent_need_functions as urgent_need_functions
+from programs.models import UrgentNeed, Program
+from programs.serializers import UrgentNeedSerializer
+from django.core.exceptions import ObjectDoesNotExist
 import math
 import copy
+import json
 
 
 def index(request):
@@ -24,7 +28,7 @@ class ScreenViewSet(viewsets.ModelViewSet):
     """
     queryset = Screen.objects.all().order_by('-submission_date')
     serializer_class = ScreenSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['agree_to_tos', 'is_test']
     paginate_by = 10
     paginate_by_param = 'page_size'
@@ -37,7 +41,7 @@ class HouseholdMemberViewSet(viewsets.ModelViewSet):
     """
     queryset = HouseholdMember.objects.all()
     serializer_class = HouseholdMemberSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['has_income']
 
 
@@ -47,7 +51,7 @@ class IncomeStreamViewSet(viewsets.ModelViewSet):
     """
     queryset = IncomeStream.objects.all()
     serializer_class = IncomeStreamSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['screen']
 
 
@@ -57,7 +61,7 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     """
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['screen']
 
 
@@ -72,13 +76,23 @@ class EligibilityView(views.APIView):
 class EligibilityTranslationView(views.APIView):
 
     def get(self, request, id):
+        screen = Screen.objects.get(uuid=id)
         data = {}
-        eligibility = eligibility_results(id)
+        eligibility = eligibility_results(screen)
+        urgent_need_programs = {}
 
         for language in settings.LANGUAGES:
             translated_eligibility = eligibility_results_translation(eligibility, language[0])
             data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
-        return Response({"translations": data})
+            urgent_need_programs[language[0]] = UrgentNeedSerializer(
+                urgent_needs(screen, language), many=True
+                ).data
+        return Response({
+                "programs": data,
+                "urgent_needs": urgent_need_programs,
+                "screen_id": screen.id,
+                "default_language": screen.request_language_code
+             })
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -87,16 +101,45 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     queryset = Message.objects.all().order_by('-sent')
     serializer_class = MessageSerializer
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.DjangoModelPermissions]
+
+    def create(self, request):
+        body = json.loads(request.body.decode())
+        screen = Screen.objects.get(uuid=body['screen'])
+        Message.objects.create(
+            type=body['type'],
+            screen=screen,
+            email=body['email'] if 'email' in body else None,
+            cell=body['phone'] if 'phone' in body else None,
+            uid=body['uuid'] if 'uuid' in body else None,
+        )
+        return Response({}, status=status.HTTP_201_CREATED)
 
 
-def eligibility_results(screen_id):
+def eligibility_results(screen, batch=False):
     all_programs = Program.objects.all()
-    screen = Screen.objects.get(pk=screen_id)
     data = []
 
+    try:
+        previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen).latest('submission_date')
+        previous_results = None if previous_snapshot is None else previous_snapshot.program_snapshots.all()
+    except ObjectDoesNotExist:
+        previous_snapshot = None
+    snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
+
     pe_eligibility = eligibility_policy_engine(screen)
-    pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid']
+    pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'coctc', 'medicaid', 'ssi', 'tanf']
+
+    def sort_first(program):
+        calc_first = ('tanf', 'ssi', 'medicaid')
+
+        if program.name_abbreviated in calc_first:
+            return 0
+        else:
+            return 1
+
+    # make certain benifits calculate first so that they can be used in other benefits
+    all_programs = sorted(all_programs, key=sort_first)
 
     for program in all_programs:
         skip = False
@@ -109,7 +152,27 @@ def eligibility_results(screen_id):
 
         navigators = program.navigator.all()
 
+        new = True
+        if previous_snapshot is not None:
+            for previous_snapshot in previous_results:
+                if previous_snapshot.name_abbreviated == program.name_abbreviated:
+                    new = False
+
         if not skip and program.active:
+            ProgramEligibilitySnapshot.objects.create(
+                eligibility_snapshot=snapshot,
+                name=program.name,
+                name_abbreviated=program.name_abbreviated,
+                value_type=program.value_type,
+                estimated_value=eligibility["estimated_value"],
+                estimated_delivery_time=program.estimated_delivery_time,
+                estimated_application_time=program.estimated_application_time,
+                legal_status_required=program.legal_status_required,
+                eligible=eligibility["eligible"],
+                failed_tests=json.dumps(eligibility["failed"]),
+                passed_tests=json.dumps(eligibility["passed"]),
+                new=new
+            )
             data.append(
                 {
                     "program_id": program.id,
@@ -125,10 +188,13 @@ def eligibility_results(screen_id):
                     "learn_more_link": program.learn_more_link,
                     "apply_button_link": program.apply_button_link,
                     "legal_status_required": program.legal_status_required,
+                    "category": program.category,
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],
-                    "navigators": navigators
+                    "navigators": navigators,
+                    "already_has": screen.has_benefit(program.name_abbreviated),
+                    "new": new
                 }
             )
 
@@ -152,6 +218,8 @@ def eligibility_results_translation(results, language):
             translated_results[k]['estimated_application_time'] = translated_program.estimated_application_time
             translated_results[k]['description_short'] = translated_program.description_short
             translated_results[k]['description'] = translated_program.description
+            translated_results[k]['value_type'] = translated_program.value_type
+            translated_results[k]['category'] = translated_program.category
             translated_results[k]['learn_more_link'] = translated_program.learn_more_link
             translated_results[k]['apply_button_link'] = translated_program.apply_button_link
             translated_results[k]['passed_tests'] = []
@@ -171,3 +239,41 @@ def eligibility_results_translation(results, language):
                 translated_results[k]['failed_tests'].append(translated_message)
 
     return translated_results
+
+
+def urgent_needs(screen, language):
+    possible_needs = {
+        'food': screen.needs_food,
+        'baby supplies': screen.needs_baby_supplies,
+        'housing': screen.needs_housing_help,
+        'mental health': screen.needs_mental_health_help,
+        'child dev': screen.needs_child_dev_help,
+        'funeral': screen.needs_funeral_help,
+        'family planning': screen.needs_family_planning_help,
+    }
+
+    need_functions = {
+        'denver': urgent_need_functions.lives_in_denver(screen),
+        'helpkitchen_zipcode': urgent_need_functions.helpkitchen_zipcode(screen),
+        'child': urgent_need_functions.child(screen),
+    }
+
+    list_of_needs = []
+    for need, has_need in possible_needs.items():
+        if has_need:
+            list_of_needs.append(need)
+
+    urgent_need_resources = UrgentNeed.objects.filter(
+            type_short__in=list_of_needs, active=True
+        ).language(language[0]).all()
+
+    eligible_urgent_needs = []
+    for need in urgent_need_resources:
+        eligible = True
+        for function in need.functions.all():
+            if not need_functions[function.name]:
+                eligible = False
+        if eligible:
+            eligible_urgent_needs.append(need)
+
+    return eligible_urgent_needs

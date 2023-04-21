@@ -1,0 +1,443 @@
+- date: 03/01/2023 14:56:04
+  eligibility:
+    acp:
+      eligibility: true
+      value: 360
+    andcs:
+      eligibility: false
+      value: 0
+    cccap:
+      eligibility: true
+      value: 1700
+    cdhcs:
+      eligibility: false
+      value: 0
+    cfhc:
+      eligibility: false
+      value: 3756
+    chp:
+      eligibility: false
+      value: 4800
+    chs:
+      eligibility: false
+      value: 10655
+    cocb:
+      eligibility: true
+      value: 750
+    cpcr:
+      eligibility: false
+      value: 976
+    dpp:
+      eligibility: false
+      value: 9456
+    ede:
+      eligibility: false
+      value: 600
+    erc:
+      eligibility: true
+      value: 4000
+    fps:
+      eligibility: false
+      value: 404
+    leap:
+      eligibility: true
+      value: 362
+    lifeline:
+      eligibility: true
+      value: 111
+    mydenver:
+      eligibility: true
+      value: 300
+    oap:
+      eligibility: false
+      value: 0
+    omnisalud:
+      eligibility: false
+      value: 8520
+    rhc:
+      eligibility: true
+      value: 268
+    rtdlive:
+      eligibility: true
+      value: 750
+    tanf:
+      eligibility: false
+      value: 0
+- date: 03/08/2023 12:06:33
+  eligibility:
+    acp:
+      eligibility: true
+      value: 360
+    andcs:
+      eligibility: false
+      value: 0
+    cccap:
+      eligibility: true
+      value: 1700
+    cdhcs:
+      eligibility: false
+      value: 0
+    cfhc:
+      eligibility: false
+      value: 3756
+    chp:
+      eligibility: false
+      value: 4800
+    chs:
+      eligibility: false
+      value: 10655
+    cocb:
+      eligibility: true
+      value: 750
+    cpcr:
+      eligibility: false
+      value: 976
+    dpp:
+      eligibility: false
+      value: 9456
+    ede:
+      eligibility: false
+      value: 600
+    erc:
+      eligibility: true
+      value: 4000
+    fps:
+      eligibility: false
+      value: 404
+    leap:
+      eligibility: true
+      value: 362
+    lifeline:
+      eligibility: true
+      value: 111
+    mydenver:
+      eligibility: true
+      value: 300
+    oap:
+      eligibility: false
+      value: 0
+    omnisalud:
+      eligibility: false
+      value: 8520
+    rhc:
+      eligibility: true
+      value: 268
+    rtdlive:
+      eligibility: true
+      value: 750
+- date: 03/09/2023 11:45:15
+  eligibility:
+    acp:
+      eligibility: true
+      value: 360
+    andcs:
+      eligibility: false
+      value: 0
+    cccap:
+      eligibility: true
+      value: 1700
+    cdhcs:
+      eligibility: false
+      value: 0
+    cfhc:
+      eligibility: false
+      value: 3756
+    chp:
+      eligibility: false
+      value: 4800
+    chs:
+      eligibility: false
+      value: 10655
+    cocb:
+      eligibility: true
+      value: 750
+    cpcr:
+      eligibility: false
+      value: 1044
+    dpp:
+      eligibility: false
+      value: 9456
+    ede:
+      eligibility: false
+      value: 600
+    erc:
+      eligibility: true
+      value: 4000
+    fps:
+      eligibility: false
+      value: 404
+    leap:
+      eligibility: true
+      value: 362
+    lifeline:
+      eligibility: true
+      value: 111
+    mydenver:
+      eligibility: true
+      value: 300
+    oap:
+      eligibility: false
+      value: 0
+    omnisalud:
+      eligibility: false
+      value: 8520
+    rhc:
+      eligibility: true
+      value: 268
+    rtdlive:
+      eligibility: true
+      value: 750
+- date: 03/09/2023 12:02:23
+  eligibility:
+    acp:
+      eligibility: true
+      value: 360
+    andcs:
+      eligibility: false
+      value: 0
+    cccap:
+      eligibility: true
+      value: 1700
+    cdhcs:
+      eligibility: false
+      value: 0
+    cfhc:
+      eligibility: false
+      value: 3756
+    chp:
+      eligibility: false
+      value: 4800
+    chs:
+      eligibility: false
+      value: 10655
+    cocb:
+      eligibility: true
+      value: 750
+    cpcr:
+      eligibility: false
+      value: 1044
+    dpp:
+      eligibility: false
+      value: 9456
+    ede:
+      eligibility: false
+      value: 600
+    erc:
+      eligibility: true
+      value: 4000
+    fps:
+      eligibility: false
+      value: 404
+    leap:
+      eligibility: true
+      value: 362
+    lifeline:
+      eligibility: true
+      value: 111
+    mydenver:
+      eligibility: true
+      value: 300
+    oap:
+      eligibility: false
+      value: 0
+    omnisalud:
+      eligibility: false
+      value: 8520
+    rhc:
+      eligibility: true
+      value: 268
+    rtdlive:
+      eligibility: true
+      value: 750
+- date: 03/15/2023 10:01:23
+  eligibility:
+    acp:
+      eligibility: true
+      value: 360
+    andcs:
+      eligibility: false
+      value: 0
+    cccap:
+      eligibility: true
+      value: 1700
+    cdhcs:
+      eligibility: false
+      value: 0
+    cfhc:
+      eligibility: true
+      value: 3756
+    chp:
+      eligibility: false
+      value: 4800
+    chs:
+      eligibility: false
+      value: 10655
+    cocb:
+      eligibility: true
+      value: 750
+    cpcr:
+      eligibility: false
+      value: 1044
+    dpp:
+      eligibility: false
+      value: 9456
+    ede:
+      eligibility: false
+      value: 600
+    erc:
+      eligibility: true
+      value: 4000
+    fps:
+      eligibility: false
+      value: 404
+    leap:
+      eligibility: true
+      value: 362
+    lifeline:
+      eligibility: true
+      value: 111
+    mydenver:
+      eligibility: true
+      value: 300
+    oap:
+      eligibility: false
+      value: 0
+    omnisalud:
+      eligibility: false
+      value: 8520
+    rhc:
+      eligibility: true
+      value: 268
+    rtdlive:
+      eligibility: true
+      value: 750
+- date: 03/17/2023 11:59:04
+  eligibility:
+    acp:
+      eligibility: true
+      value: 360
+    andcs:
+      eligibility: false
+      value: 0
+    cccap:
+      eligibility: true
+      value: 1700
+    cdhcs:
+      eligibility: false
+      value: 0
+    cfhc:
+      eligibility: true
+      value: 3756
+    chp:
+      eligibility: false
+      value: 4800
+    chs:
+      eligibility: false
+      value: 10655
+    cocb:
+      eligibility: true
+      value: 750
+    cpcr:
+      eligibility: false
+      value: 1044
+    dpp:
+      eligibility: false
+      value: 9456
+    ede:
+      eligibility: false
+      value: 600
+    erc:
+      eligibility: true
+      value: 4000
+    fps:
+      eligibility: false
+      value: 404
+    leap:
+      eligibility: true
+      value: 362
+    lifeline:
+      eligibility: true
+      value: 111
+    mydenver:
+      eligibility: true
+      value: 300
+    oap:
+      eligibility: false
+      value: 0
+    omnisalud:
+      eligibility: false
+      value: 8520
+    rhc:
+      eligibility: true
+      value: 268
+    rtdlive:
+      eligibility: true
+      value: 750
+    upk:
+      eligibility: false
+      value: 0
+- date: 04/17/2023 10:55:40
+  eligibility:
+    acp:
+      eligibility: true
+      value: 360
+    andcs:
+      eligibility: false
+      value: 0
+    cccap:
+      eligibility: true
+      value: 1700
+    cdhcs:
+      eligibility: false
+      value: 0
+    cfhc:
+      eligibility: true
+      value: 3756
+    chp:
+      eligibility: false
+      value: 4800
+    chs:
+      eligibility: false
+      value: 10655
+    cocb:
+      eligibility: true
+      value: 750
+    cpcr:
+      eligibility: false
+      value: 1044
+    dpp:
+      eligibility: false
+      value: 9456
+    ede:
+      eligibility: false
+      value: 600
+    erc:
+      eligibility: true
+      value: 4000
+    fps:
+      eligibility: false
+      value: 404
+    leap:
+      eligibility: true
+      value: 393
+    lifeline:
+      eligibility: true
+      value: 111
+    mydenver:
+      eligibility: true
+      value: 300
+    oap:
+      eligibility: false
+      value: 0
+    omnisalud:
+      eligibility: false
+      value: 8520
+    rhc:
+      eligibility: true
+      value: 268
+    rtdlive:
+      eligibility: true
+      value: 750
+    upk:
+      eligibility: false
+      value: 0
