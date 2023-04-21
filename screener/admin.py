@@ -33,16 +33,15 @@ def upsert_user_to_hubspot(sender, instance, created, **kwargs):
 
     hubspot_id = upsert_user_hubspot(user, screen=screen)
     if hubspot_id:
-        if hubspot_id:
-            user.external_id = hubspot_id
-            user.email_or_cell = hubspot_id + "@myfriendben.org"
-            user.first_name = None
-            user.last_name = None
-            user.cell = None
-            user.email = None
-            user.save()
-        else:
-            raise Exception('Failed to upsert user')
+        user.external_id = hubspot_id
+        user.email_or_cell = hubspot_id + "@myfriendben.org"
+        user.first_name = None
+        user.last_name = None
+        user.cell = None
+        user.email = None
+        user.save()
+    else:
+        raise Exception('Failed to upsert user')
 
 
 @receiver(post_save, sender=Message)
