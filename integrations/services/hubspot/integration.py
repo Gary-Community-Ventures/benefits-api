@@ -4,6 +4,7 @@ from hubspot.crm.contacts.exceptions import ApiException
 from decouple import config
 import json
 import re
+import datetime
 
 
 def upsert_user_hubspot(user, screen=None):
@@ -86,7 +87,9 @@ class Hubspot():
             'ab01___tcpa_consent_to_contact': user.tcpa_consent,
             'language_code': user.language_code,
             'ab01___screener_id': None,
-            'ab01___screener_uuid': None
+            'ab01___screener_uuid': None,
+            'ab01___1st_mfb_completion_date': user.date_joined.date().isoformat(),
+            'full_name': f'{user.first_name} {user.last_name}'
         }
         if screen:
             contact['ab01___screener_id'] = screen.id
