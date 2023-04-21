@@ -2,9 +2,11 @@ from django.contrib import admin
 from django.db.models.signals import post_save
 from django.utils.translation import override
 from screener.communications import email_pdf, text_link
+from integrations.services.hubspot.integration import upsert_user_hubspot
 from .models import Message, Screen, EligibilitySnapshot, HouseholdMember, IncomeStream, Expense
 from django.dispatch import receiver
 from django.utils import timezone
+from django.conf import settings
 import json
 
 
@@ -15,6 +17,31 @@ class screenAdmin(admin.ModelAdmin):
 admin.site.register(Screen, screenAdmin)
 admin.site.register(Message)
 admin.site.register(IncomeStream)
+
+
+@receiver(post_save, sender=Screen)
+def upsert_user_to_hubspot(sender, instance, created, **kwargs):
+    if settings.DEBUG:
+        return
+    screen = instance
+    user = instance.user
+    if user is None:
+        return
+    should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
+    if not should_upsert_user or screen.is_test:
+        return
+
+    hubspot_id = upsert_user_hubspot(user, screen=screen)
+    if hubspot_id:
+        user.external_id = hubspot_id
+        user.email_or_cell = hubspot_id + "@myfriendben.org"
+        user.first_name = None
+        user.last_name = None
+        user.cell = None
+        user.email = None
+        user.save()
+    else:
+        raise Exception('Failed to upsert user')
 
 
 @receiver(post_save, sender=Message)
