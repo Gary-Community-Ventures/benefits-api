@@ -20,7 +20,7 @@ admin.site.register(IncomeStream)
 
 
 @receiver(post_save, sender=Screen)
-def upset_use_to_hubspot(sender, instance, created, **kwargs):
+def upsert_use_to_hubspot(sender, instance, created, **kwargs):
     if settings.DEBUG:
         return
     screen = instance
