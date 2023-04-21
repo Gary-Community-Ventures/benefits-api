@@ -4,6 +4,7 @@ from hubspot.crm.contacts.exceptions import ApiException
 from decouple import config
 import json
 import re
+import datetime
 
 
 def upsert_user_hubspot(user, screen=None):
@@ -31,10 +32,12 @@ class Hubspot():
             if http_body['category'] == 'CONFLICT':
                 try:
                     contact_id = self.get_conflict_contact_id(e)
-                    self.update_contact(contact_id, contact)
                 except ApiException as f:
                     print(f)
                     return False
+            else:
+                print(http_body)
+                return False
         return contact_id
 
     def create_contact(self, user):
@@ -82,12 +85,15 @@ class Hubspot():
             'ab01___send_offers': user.send_offers,
             'ab01___send_updates': user.send_updates,
             'ab01___tcpa_consent_to_contact': user.tcpa_consent,
-            'language_code': user.language_code,
-            'ab01___screener_id': None
+            'hs_language': user.language_code,
+            'ab01___screener_id': None,
+            'ab01___screener_uuid': None,
+            'ab01___1st_mfb_completion_date': user.date_joined.date().isoformat(),
+            'full_name': f'{user.first_name} {user.last_name}'
         }
         if screen:
             contact['ab01___screener_id'] = screen.id
-            contact['ab01___screener_uuid'] = screen.uuid
+            contact['ab01___uuid'] = str(screen.uuid)
 
         return contact
 
