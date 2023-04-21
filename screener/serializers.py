@@ -141,6 +141,7 @@ class ScreenSerializer(serializers.ModelSerializer):
                 IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=instance)
+        instance.refresh_from_db()
         return instance
 
 
