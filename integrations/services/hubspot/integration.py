@@ -85,7 +85,7 @@ class Hubspot():
             'ab01___send_offers': user.send_offers,
             'ab01___send_updates': user.send_updates,
             'ab01___tcpa_consent_to_contact': user.tcpa_consent,
-            'language_code': user.language_code,
+            'hs_language': user.language_code,
             'ab01___screener_id': None,
             'ab01___screener_uuid': None,
             'ab01___1st_mfb_completion_date': user.date_joined.date().isoformat(),
