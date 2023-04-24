@@ -33,6 +33,7 @@ class Screen(models.Model):
     user = models.ForeignKey(User, related_name='screens', on_delete=models.CASCADE, blank=True, null=True)
     external_id = models.CharField(max_length=120, blank=True, null=True)
     request_language_code = models.CharField(max_length=12, blank=True, null=True)
+    has_benefits = models.CharField(max_length=32, default='preferNotToAnswer', blank=True, null=True)
     has_tanf = models.BooleanField(default=False, blank=True, null=True)
     has_wic = models.BooleanField(default=False, blank=True, null=True)
     has_snap = models.BooleanField(default=False, blank=True, null=True)
@@ -49,6 +50,15 @@ class Screen(models.Model):
     has_chp = models.BooleanField(default=False, blank=True, null=True)
     has_ccb = models.BooleanField(default=False, blank=True, null=True)
     has_ssi = models.BooleanField(default=False, blank=True, null=True)
+    has_andcs = models.BooleanField(default=False, blank=True, null=True)
+    has_chs = models.BooleanField(default=False, blank=True, null=True)
+    has_cpcr = models.BooleanField(default=False, blank=True, null=True)
+    has_cdhcs = models.BooleanField(default=False, blank=True, null=True)
+    has_dpp = models.BooleanField(default=False, blank=True, null=True)
+    has_ede = models.BooleanField(default=False, blank=True, null=True)
+    has_erc = models.BooleanField(default=False, blank=True, null=True)
+    has_leap = models.BooleanField(default=False, blank=True, null=True)
+    has_oap = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=False, blank=True, null=True)
     has_private_hi = models.BooleanField(default=False, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=False, blank=True, null=True)
@@ -227,6 +237,15 @@ class Screen(models.Model):
             'chp': self.has_chp or self.has_chp_hi,
             'ccb': self.has_ccb,
             'ssi': self.has_ssi,
+            'andcs': self.has_andcs,
+            'chs': self.has_chs,
+            'cpcr': self.has_cpcr,
+            'cdhcs': self.has_cdhcs,
+            'dpp': self.has_dpp,
+            'ede': self.has_ede,
+            'erc': self.has_erc,
+            'leap': self.has_leap,
+            'oap': self.has_oap,
             'medicare': self.has_medicare_hi,
         }
         return name_map[name_abbreviated] if name_abbreviated in name_map else False

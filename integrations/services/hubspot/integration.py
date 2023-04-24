@@ -4,7 +4,6 @@ from hubspot.crm.contacts.exceptions import ApiException
 from decouple import config
 import json
 import re
-import datetime
 
 
 def upsert_user_hubspot(user, screen=None):
