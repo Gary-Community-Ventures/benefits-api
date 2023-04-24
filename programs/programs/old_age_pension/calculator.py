@@ -43,7 +43,7 @@ class OldAgePension():
             if benefit["name_abbreviated"] == 'tanf':
                 tanf_eligible = benefit["eligible"]
                 break
-        self._condition(not (self.screen.has_tanf or tanf_eligible),
+        self._condition(not (self.screen.has_benefit('tanf') or tanf_eligible),
                         messages.must_not_have_benefit('TANF'))
 
         # Asset test

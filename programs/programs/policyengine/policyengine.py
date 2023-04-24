@@ -107,9 +107,9 @@ def eligibility_policy_engine(screen):
         if member.pregnant is True or member.age <= 5:
             in_wic_demographic = True
     if eligibility['wic']['eligible'] is False and in_wic_demographic:
-        if screen.has_medicaid is True \
-                or screen.has_tanf is True \
-                or screen.has_snap is True:
+        if screen.has_benefit('medicaid') is True \
+                or screen.has_benefit('tanf') is True \
+                or screen.has_benefit('snap') is True:
             eligibility['wic']['eligible'] = True
             eligibility['wic']['estimated_value'] = 74 * 12
 

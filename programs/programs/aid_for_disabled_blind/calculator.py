@@ -39,7 +39,7 @@ class AidForDisabledBlind():
     def calc_eligibility(self):
 
         # Has SSI
-        self._condition(self.screen.has_ssi,
+        self._condition(self.screen.has_benefit('ssi'),
                         messages.must_have_benefit('SSI'))
 
         # No TANF
@@ -48,7 +48,7 @@ class AidForDisabledBlind():
             if benefit["name_abbreviated"] == 'tanf':
                 tanf_eligible = benefit["eligible"]
                 break
-        self._condition(not (self.screen.has_tanf or tanf_eligible),
+        self._condition(not (self.screen.has_benefit('tanf') or tanf_eligible),
                         messages.must_not_have_benefit('TANF'))
 
         # Asset test

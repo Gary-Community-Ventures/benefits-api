@@ -35,7 +35,7 @@ class DentalHealthCareSeniors():
     def calc_eligibility(self):
         # Health insurance
         has_valid_hi = not self.screen.has_types_of_insurance(['medicaid', 'private'], only=True)
-        has_medicaid = self.screen.has_medicaid
+        has_medicaid = self.screen.has_benefit('medicaid')
         self._condition(has_valid_hi and not has_medicaid,
                         messages.must_not_have_benefit('Medicaid'))
 

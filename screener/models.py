@@ -248,7 +248,7 @@ class Screen(models.Model):
             'oap': self.has_oap,
             'medicare': self.has_medicare_hi,
         }
-        return name_map[name_abbreviated] if name_abbreviated in name_map else False
+        return name_map[name_abbreviated] and self.has_benefits == 'true' if name_abbreviated in name_map else False
 
     def eligibility_results(self):
         all_programs = Program.objects.all()
