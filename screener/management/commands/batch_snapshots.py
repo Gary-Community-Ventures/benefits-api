@@ -42,4 +42,4 @@ class Command(BaseCommand):
                 errors.append(str(screens[i].id) + ': ' + str(e))
         if len(errors):
             self.stdout.write(
-                self.style.ERROR('The following screens had errors:\n' + '\n'.join(errors), sep=''))
+                self.style.ERROR('The following screens had errors:\n' + '\n'.join(errors)))
