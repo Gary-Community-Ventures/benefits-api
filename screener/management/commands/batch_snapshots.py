@@ -21,6 +21,7 @@ class Command(BaseCommand):
         screens = Screen.objects.filter(
             agree_to_tos=True,
             is_test=False,
+            completed=True
         )
 
         if not options['all']:
@@ -42,4 +43,4 @@ class Command(BaseCommand):
                 errors.append(str(screens[i].id) + ': ' + str(e))
         if len(errors):
             self.stdout.write(
-                self.style.ERROR('The following screens had errors:\n' + '\n'.join(errors), sep=''))
+                self.style.ERROR('The following screens had errors:\n' + '\n'.join(errors)))

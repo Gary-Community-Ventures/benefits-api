@@ -126,7 +126,6 @@ class ScreenSerializer(serializers.ModelSerializer):
             'needs_family_planning_help'
         )
         read_only_fields = ('id', 'uuid', 'submision_date', 'last_email_request_date', 'completed', 'user')
-        create_only_fields = ('start_date',)
 
     def create(self, validated_data):
         household_members = validated_data.pop('household_members')

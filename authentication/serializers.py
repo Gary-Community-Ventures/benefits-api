@@ -1,5 +1,4 @@
 from authentication.models import User
-from screener.models import Screen
 from rest_framework import serializers
 
 
@@ -34,14 +33,6 @@ class UserSerializer(serializers.ModelSerializer):
             'language_code',
             'tcpa_consent',
         )
-
-    def create(self, validated_data):
-        uuid = validated_data.pop('uuid')
-        screen = Screen.objects.get(uuid=uuid)
-        user = User.objects.create(**validated_data)
-        screen.user = user
-        screen.save()
-        return user
 
 
 class UserOffersSerializer(serializers.ModelSerializer):
