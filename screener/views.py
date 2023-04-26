@@ -17,6 +17,7 @@ from django.core.exceptions import ObjectDoesNotExist
 import math
 import copy
 import json
+from datetime import datetime
 
 
 def index(request):
@@ -104,6 +105,7 @@ class EligibilityTranslationView(views.APIView):
                 urgent_needs(screen, language), many=True
                 ).data
         screen.completed = True
+        screen.submission_date = datetime.now()
         screen.save()
         return Response({
                 "programs": data,
