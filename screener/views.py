@@ -2,6 +2,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import override
+from django.shortcuts import get_object_or_404
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, EligibilitySnapshot, ProgramEligibilitySnapshot
 from rest_framework import viewsets, views, status
 from rest_framework import permissions
@@ -33,6 +34,21 @@ class ScreenViewSet(viewsets.ModelViewSet):
     paginate_by = 10
     paginate_by_param = 'page_size'
     max_paginate_by = 100
+
+    def retrieve(self, request, pk=None):
+        queryset = self.queryset
+        screen = get_object_or_404(queryset, uuid=pk)
+        serializer = ScreenSerializer(screen)
+        return Response(serializer.data)
+
+    def update(self, request, pk=None):
+        queryset = self.queryset
+        user = get_object_or_404(queryset, uuid=pk)
+        body = json.loads(request.body.decode())
+        serializer = ScreenSerializer(user, data=body)
+        serializer.is_valid()
+        serializer.save()
+        return Response(serializer.data)
 
 
 class HouseholdMemberViewSet(viewsets.ModelViewSet):
@@ -87,6 +103,8 @@ class EligibilityTranslationView(views.APIView):
             urgent_need_programs[language[0]] = UrgentNeedSerializer(
                 urgent_needs(screen, language), many=True
                 ).data
+        screen.completed = True
+        screen.save()
         return Response({
                 "programs": data,
                 "urgent_needs": urgent_need_programs,

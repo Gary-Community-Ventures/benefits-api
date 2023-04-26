@@ -1,4 +1,5 @@
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
+from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from programs.serializers import NavigatorSerializer
 
@@ -58,12 +59,14 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
 class ScreenSerializer(serializers.ModelSerializer):
     household_members = HouseholdMemberSerializer(many=True)
     expenses = ExpenseSerializer(many=True)
+    user = UserOffersSerializer(read_only=True)
 
     class Meta:
         model = Screen
         fields = (
             'id',
             'uuid',
+            'completed',
             'is_test',
             'start_date',
             'submission_date',
@@ -122,13 +125,13 @@ class ScreenSerializer(serializers.ModelSerializer):
             'needs_funeral_help',
             'needs_family_planning_help'
         )
-        read_only_fields = ('id', 'uuid', 'submision_date', 'last_email_request_date')
-        create_only_fields = ('user', 'start_date')
+        read_only_fields = ('id', 'uuid', 'submision_date', 'last_email_request_date', 'completed', 'user')
+        create_only_fields = ('start_date',)
 
     def create(self, validated_data):
         household_members = validated_data.pop('household_members')
         expenses = validated_data.pop('expenses')
-        screen = Screen.objects.create(**validated_data)
+        screen = Screen.objects.create(**validated_data, completed=False)
         for member in household_members:
             incomes = member.pop('income_streams')
             household_member = HouseholdMember.objects.create(**member, screen=screen)

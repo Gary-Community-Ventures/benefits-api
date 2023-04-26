@@ -16,6 +16,7 @@ from programs.programs.policyengine.policyengine import eligibility_policy_engin
 # household fields. Screen -> HouseholdMember -> IncomeStream & Expense
 class Screen(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
+    completed = models.BooleanField(null=False, blank=False)
     submission_date = models.DateTimeField(blank=True, null=True)
     start_date = models.DateTimeField(blank=True, null=True)
     referral_source = models.CharField(max_length=320, default=None, blank=True, null=True)
