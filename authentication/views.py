@@ -1,9 +1,10 @@
+from django.conf import settings
 from authentication.models import User
 from screener.models import Screen
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 from authentication.serializers import UserSerializer, UserOffersSerializer
-import json
+from integrations.services.hubspot.integration import update_send_offers_hubspot
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -19,16 +20,16 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response('Must have an associated screen', status=400)
         screen = Screen.objects.get(uuid=pk)
         user = screen.user
-        body = json.loads(request.body.decode())
-        # if user:
-        #     serializer = UserOffersSerializer(user, data=body)
-        # else:
-        #     serializer = UserSerializer(data=body)
-        serializer = UserSerializer(user, data=body)
-        print(serializer)
+        if user:
+            serializer = UserOffersSerializer(user, data=request.data)
+        else:
+            serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid():
             screen.user = serializer.save()
             screen.save()
+            if user and user.external_id and not settings.DEBUG:
+                update_send_offers_hubspot(user.external_id, user.send_offers, user.send_updates)
+
             return Response(status=204)
         return Response(serializer.errors, status=400)

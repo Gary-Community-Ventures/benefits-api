@@ -13,6 +13,18 @@ def upsert_user_hubspot(user, screen=None):
     return contact_id
 
 
+def update_send_offers_hubspot(external_id, send_offers, send_updates):
+    hubspot = Hubspot()
+    contact = {
+        'ab01___send_offers': send_offers,
+        'ab01___send_updates': send_updates,
+    }
+    try:
+        hubspot.update_contact(external_id, contact)
+    except ApiException as e:
+        print(e)
+
+
 class Hubspot():
     def __init__(self):
         self.api_client = HubSpot(access_token=config('HUBSPOT'))
@@ -31,6 +43,7 @@ class Hubspot():
             if http_body['category'] == 'CONFLICT':
                 try:
                     contact_id = self.get_conflict_contact_id(e)
+                    self.update_contact(contact_id, contact)
                 except ApiException as f:
                     print(f)
                     return False
