@@ -12,7 +12,7 @@ def text_link(cell, screen, language):
     client = Client(account_sid, auth_token)
     domain = config("FRONTEND_DOMAIN")
     words = _("Thank you for using MyFriendBen. Click here to review your results.")
-    url = f"{domain}/results/{screen.uuid}"
+    url = f"{domain}/{screen.uuid}/results"
     client.messages.create(
         from_=from_phone_number,
         body=f"{words} {url}",
