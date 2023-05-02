@@ -72,6 +72,8 @@ has_ede: False
 has_erc: False
 has_leap: False
 has_oap: False
+has_coctc: False
+has_upk: False
 has_employer_hi: False
 has_private_hi: False
 has_medicaid_hi: False

@@ -16,6 +16,7 @@ class Command(BaseCommand):
         screen = Screen.objects.create(
             **{key: value for key, value in screen_dict.items() if key != 'household_members'},
             agree_to_tos=True,
+            completed=False,
             is_test=True
             )
 
