@@ -14,6 +14,7 @@ import programs.programs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program
 from programs.serializers import UrgentNeedSerializer
 from django.core.exceptions import ObjectDoesNotExist
+from .webhooks import eligibility_hooks
 import math
 import copy
 import json
@@ -104,16 +105,18 @@ class EligibilityTranslationView(views.APIView):
             urgent_need_programs[language[0]] = UrgentNeedSerializer(
                 urgent_needs(screen, language), many=True
                 ).data
-        screen.completed = True
-        if screen.submission_date is None:
-            screen.submission_date = datetime.now(timezone.utc)
-        screen.save()
-        return Response({
+        results = {
                 "programs": data,
                 "urgent_needs": urgent_need_programs,
                 "screen_id": screen.id,
                 "default_language": screen.request_language_code
-             })
+            }
+        eligibility_hooks[screen.referrer_code](screen, results)
+        if screen.submission_date is None:
+            screen.submission_date = datetime.now(timezone.utc)
+        screen.completed = True
+        screen.save()
+        return Response(results)
 
 
 class MessageViewSet(viewsets.ModelViewSet):
