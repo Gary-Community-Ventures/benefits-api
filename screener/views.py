@@ -111,7 +111,7 @@ class EligibilityTranslationView(views.APIView):
                 "screen_id": screen.id,
                 "default_language": screen.request_language_code
             }
-        eligibility_hooks[screen.referrer_code](screen, results)
+        eligibility_hooks[screen.referrer_code].send(screen, results)
         if screen.submission_date is None:
             screen.submission_date = datetime.now(timezone.utc)
         screen.completed = True

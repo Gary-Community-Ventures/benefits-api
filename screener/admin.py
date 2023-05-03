@@ -3,10 +3,20 @@ from django.db.models.signals import post_save
 from django.utils.translation import override
 from screener.communications import email_pdf, text_link
 from integrations.services.hubspot.integration import upsert_user_hubspot
-from .models import Message, Screen, EligibilitySnapshot, HouseholdMember, IncomeStream, Expense
+from .models import (
+    Message,
+    Screen,
+    EligibilitySnapshot,
+    HouseholdMember,
+    IncomeStream,
+    Expense,
+    WebHookFunction,
+    WebHook
+)
 from django.dispatch import receiver
 from django.utils import timezone
 from django.conf import settings
+from parler.admin import TranslatableAdmin
 import json
 import uuid
 
@@ -18,6 +28,17 @@ class screenAdmin(admin.ModelAdmin):
 admin.site.register(Screen, screenAdmin)
 admin.site.register(Message)
 admin.site.register(IncomeStream)
+
+
+class WebHookFunctionsAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
+
+
+class WebHookAdmin(TranslatableAdmin):
+    search_fields = ('referrer_code',)
+
+admin.site.register(WebHookFunction, WebHookFunctionsAdmin)
+admin.site.register(WebHook, WebHookAdmin)
 
 
 @receiver(post_save, sender=Screen)
