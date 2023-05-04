@@ -9,6 +9,8 @@ class Hook():
         self.functions = [func.name for func in hook.functions.all()]
 
     def send(self, screen: Screen, results: dict):
+        if screen.completed:
+            return
         request_data = {'external_id': screen.external_id}
         if 'send_screen' in self.functions:
             key, value = self.screen_data(screen)
