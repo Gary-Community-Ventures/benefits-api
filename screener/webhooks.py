@@ -33,7 +33,10 @@ class Hook():
         return 'eligibility', results
 
 
-eligibility_hooks: dict[str, Hook] = {}
+def eligibility_hooks():
+    hooks: dict[str, Hook] = {}
 
-for hook in WebHook.objects.all():
-    eligibility_hooks[hook.referrer_code] = Hook(hook)
+    for hook in WebHook.objects.all():
+        hooks[hook.referrer_code] = Hook(hook)
+
+    return hooks
