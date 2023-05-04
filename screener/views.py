@@ -3,12 +3,28 @@ from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import override
 from django.shortcuts import get_object_or_404
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, EligibilitySnapshot, ProgramEligibilitySnapshot
+from screener.models import (
+    Screen,
+    HouseholdMember,
+    IncomeStream,
+    Expense,
+    Message,
+    EligibilitySnapshot,
+    ProgramEligibilitySnapshot,
+    WebHook
+)
 from rest_framework import viewsets, views, status
 from rest_framework import permissions
 from rest_framework.response import Response
-from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, \
-    ExpenseSerializer, EligibilitySerializer, MessageSerializer
+from screener.serializers import (
+    ScreenSerializer,
+    HouseholdMemberSerializer,
+    IncomeStreamSerializer,
+    ExpenseSerializer,
+    EligibilitySerializer,
+    MessageSerializer,
+    WebHookSerializer
+)
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import programs.programs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program
@@ -81,6 +97,12 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     serializer_class = ExpenseSerializer
     permission_classes = [permissions.DjangoModelPermissions]
     filterset_fields = ['screen']
+
+
+class WebHookViewSet(viewsets.ModelViewSet):
+    queryset = WebHook.objects.all()
+    serializer_class = WebHookSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
 
 
 class EligibilityView(views.APIView):
