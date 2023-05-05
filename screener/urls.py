@@ -8,6 +8,7 @@ router.register(r'householdmembers', views.HouseholdMemberViewSet)
 router.register(r'incomestreams', views.IncomeStreamViewSet)
 router.register(r'expenses', views.ExpenseViewSet)
 router.register(r'messages', views.MessageViewSet)
+router.register(r'webhooks', views.WebHookViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),

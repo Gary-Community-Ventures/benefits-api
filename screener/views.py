@@ -3,17 +3,34 @@ from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.utils.translation import override
 from django.shortcuts import get_object_or_404
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, EligibilitySnapshot, ProgramEligibilitySnapshot
+from screener.models import (
+    Screen,
+    HouseholdMember,
+    IncomeStream,
+    Expense,
+    Message,
+    EligibilitySnapshot,
+    ProgramEligibilitySnapshot,
+    WebHook
+)
 from rest_framework import viewsets, views, status
 from rest_framework import permissions
 from rest_framework.response import Response
-from screener.serializers import ScreenSerializer, HouseholdMemberSerializer, IncomeStreamSerializer, \
-    ExpenseSerializer, EligibilitySerializer, MessageSerializer
+from screener.serializers import (
+    ScreenSerializer,
+    HouseholdMemberSerializer,
+    IncomeStreamSerializer,
+    ExpenseSerializer,
+    EligibilitySerializer,
+    MessageSerializer,
+    WebHookSerializer
+)
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import programs.programs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program
 from programs.serializers import UrgentNeedSerializer
 from django.core.exceptions import ObjectDoesNotExist
+from .webhooks import eligibility_hooks
 import math
 import copy
 import json
@@ -82,6 +99,12 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     filterset_fields = ['screen']
 
 
+class WebHookViewSet(viewsets.ModelViewSet):
+    queryset = WebHook.objects.all()
+    serializer_class = WebHookSerializer
+    permission_classes = [permissions.DjangoModelPermissions]
+
+
 class EligibilityView(views.APIView):
 
     def get(self, request, id):
@@ -104,16 +127,20 @@ class EligibilityTranslationView(views.APIView):
             urgent_need_programs[language[0]] = UrgentNeedSerializer(
                 urgent_needs(screen, language), many=True
                 ).data
-        screen.completed = True
-        if screen.submission_date is None:
-            screen.submission_date = datetime.now(timezone.utc)
-        screen.save()
-        return Response({
+        results = {
                 "programs": data,
                 "urgent_needs": urgent_need_programs,
                 "screen_id": screen.id,
                 "default_language": screen.request_language_code
-             })
+            }
+        hooks = eligibility_hooks()
+        if screen.referrer_code in hooks:
+            hooks[screen.referrer_code].send(screen, results)
+        if screen.submission_date is None:
+            screen.submission_date = datetime.now(timezone.utc)
+        screen.completed = True
+        screen.save()
+        return Response(results)
 
 
 class MessageViewSet(viewsets.ModelViewSet):

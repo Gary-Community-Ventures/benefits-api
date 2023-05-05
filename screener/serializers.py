@@ -1,6 +1,7 @@
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
+from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, WebHook
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
+from parler_rest.serializers import TranslatableModelSerializer, TranslatedFieldsField
 from programs.serializers import NavigatorSerializer
 
 
@@ -187,3 +188,11 @@ class EligibilityTranslationSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('translations',)
+
+
+class WebHookSerializer(TranslatableModelSerializer):
+    translations = TranslatedFieldsField(shared_model=WebHook)
+
+    class Meta:
+        model = WebHook
+        fields = ('referrer_code', 'translations')
