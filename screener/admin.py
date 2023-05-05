@@ -8,6 +8,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from django.conf import settings
 import json
+import uuid
 
 
 class screenAdmin(admin.ModelAdmin):
@@ -166,3 +167,17 @@ def add_from_json(new_json_str):
 
     print('id:', screen.id)
     print('uuid:', screen.uuid)
+
+
+def uniqueUUIDs():
+    screens = Screen.objects.all()
+
+    currentUUIDs = []
+    for screen in screens:
+        if screen.uuid in currentUUIDs:
+            print(screen.uuid, 'was replaced')
+            screen.uuid = uuid.uuid4()
+            screen.save()
+        currentUUIDs.append(screen.uuid)
+
+    print('done')

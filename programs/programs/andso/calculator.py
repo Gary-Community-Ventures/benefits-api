@@ -37,12 +37,12 @@ class Andso():
     def calc_eligibility(self):
 
         # No SSI
-        self._condition(not self.screen.has_ssi,
+        self._condition(not self.screen.has_benefit('ssi'),
                         "Must not be receiving SSI")
 
         # No TANIF
         tanf_eligible = calculate_tanf(self.screen, None)["eligibility"]["eligible"]
-        self._condition(not (self.screen.has_tanf or tanf_eligible),
+        self._condition(not (self.screen.has_benefit('tanf') or tanf_eligible),
                         "Must not be eligible for TANF")
         # Assets less than limit
         self._condition(self.screen.household_assets < Andso.asset_limit,

@@ -21,6 +21,7 @@ class Command(BaseCommand):
         screens = Screen.objects.filter(
             agree_to_tos=True,
             is_test=False,
+            completed=True
         )
 
         if not options['all']:

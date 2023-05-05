@@ -41,7 +41,7 @@ class FamilyPlanningServices():
                 is_medicaid_eligible = benefit["eligible"]
                 break
 
-        self._condition(not (self.screen.has_medicaid or is_medicaid_eligible),
+        self._condition(not (self.screen.has_benefit('medicaid') or is_medicaid_eligible),
                         messages.must_not_have_benefit('Medicaid'))
 
         # Child or Pregnant

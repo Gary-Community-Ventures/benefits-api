@@ -12,7 +12,7 @@ def email_pdf(target_email, screen_id, language):
     from_email = Email("screener@garycommunity.org")  # Change to your verified sender
     to_email = To(target_email)  # Change to your recipient
     domain = config("FRONTEND_DOMAIN")
-    url = f"{domain}/results/{screen.uuid}"
+    url = f"{domain}/{screen.uuid}/results"
     subject = _("Screener Results from My Friend Ben")
     content = Content("text/html",
                       _("Thank you for using MyFriendBen. Click here to review your results.") +

@@ -16,14 +16,15 @@ from programs.programs.policyengine.policyengine import eligibility_policy_engin
 # household fields. Screen -> HouseholdMember -> IncomeStream & Expense
 class Screen(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
-    submission_date = models.DateTimeField(auto_now=True)
+    completed = models.BooleanField(null=False, blank=False)
+    submission_date = models.DateTimeField(blank=True, null=True)
     start_date = models.DateTimeField(blank=True, null=True)
     referral_source = models.CharField(max_length=320, default=None, blank=True, null=True)
     referrer_code = models.CharField(max_length=320, default=None, blank=True, null=True)
-    agree_to_tos = models.BooleanField()
-    zipcode = models.CharField(max_length=5)
+    agree_to_tos = models.BooleanField(blank=True, null=True)
+    zipcode = models.CharField(max_length=5, blank=True, null=True)
     county = models.CharField(max_length=120, default=None, blank=True, null=True)
-    household_size = models.IntegerField()
+    household_size = models.IntegerField(blank=True, null=True)
     last_tax_filing_year = models.CharField(max_length=120, default=None, blank=True, null=True)
     household_assets = models.DecimalField(decimal_places=2, max_digits=10, default=None, blank=True, null=True)
     housing_situation = models.CharField(max_length=30, blank=True, null=True, default=None)
@@ -33,6 +34,7 @@ class Screen(models.Model):
     user = models.ForeignKey(User, related_name='screens', on_delete=models.CASCADE, blank=True, null=True)
     external_id = models.CharField(max_length=120, blank=True, null=True)
     request_language_code = models.CharField(max_length=12, blank=True, null=True)
+    has_benefits = models.CharField(max_length=32, default='preferNotToAnswer', blank=True, null=True)
     has_tanf = models.BooleanField(default=False, blank=True, null=True)
     has_wic = models.BooleanField(default=False, blank=True, null=True)
     has_snap = models.BooleanField(default=False, blank=True, null=True)
@@ -49,6 +51,15 @@ class Screen(models.Model):
     has_chp = models.BooleanField(default=False, blank=True, null=True)
     has_ccb = models.BooleanField(default=False, blank=True, null=True)
     has_ssi = models.BooleanField(default=False, blank=True, null=True)
+    has_andcs = models.BooleanField(default=False, blank=True, null=True)
+    has_chs = models.BooleanField(default=False, blank=True, null=True)
+    has_cpcr = models.BooleanField(default=False, blank=True, null=True)
+    has_cdhcs = models.BooleanField(default=False, blank=True, null=True)
+    has_dpp = models.BooleanField(default=False, blank=True, null=True)
+    has_ede = models.BooleanField(default=False, blank=True, null=True)
+    has_erc = models.BooleanField(default=False, blank=True, null=True)
+    has_leap = models.BooleanField(default=False, blank=True, null=True)
+    has_oap = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=False, blank=True, null=True)
     has_private_hi = models.BooleanField(default=False, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=False, blank=True, null=True)
@@ -238,9 +249,18 @@ class Screen(models.Model):
             'chp': self.has_chp or self.has_chp_hi,
             'ccb': self.has_ccb,
             'ssi': self.has_ssi,
+            'andcs': self.has_andcs,
+            'chs': self.has_chs,
+            'cpcr': self.has_cpcr,
+            'cdhcs': self.has_cdhcs,
+            'dpp': self.has_dpp,
+            'ede': self.has_ede,
+            'erc': self.has_erc,
+            'leap': self.has_leap,
+            'oap': self.has_oap,
             'medicare': self.has_medicare_hi,
         }
-        return name_map[name_abbreviated] if name_abbreviated in name_map else False
+        return name_map[name_abbreviated] and self.has_benefits == 'true' if name_abbreviated in name_map else False
 
     def eligibility_results(self):
         all_programs = Program.objects.all()
@@ -320,20 +340,20 @@ class Message(models.Model):
 # Screen
 class HouseholdMember(models.Model):
     screen = models.ForeignKey(Screen, related_name='household_members', on_delete=models.CASCADE)
-    relationship = models.CharField(max_length=30)
-    age = models.IntegerField()
-    student = models.BooleanField()
-    student_full_time = models.BooleanField()
-    pregnant = models.BooleanField()
-    unemployed = models.BooleanField()
-    worked_in_last_18_mos = models.BooleanField()
-    visually_impaired = models.BooleanField()
-    disabled = models.BooleanField()
-    veteran = models.BooleanField()
+    relationship = models.CharField(max_length=30, blank=True, null=True)
+    age = models.IntegerField(blank=True, null=True)
+    student = models.BooleanField(blank=True, null=True)
+    student_full_time = models.BooleanField(blank=True, null=True)
+    pregnant = models.BooleanField(blank=True, null=True)
+    unemployed = models.BooleanField(blank=True, null=True)
+    worked_in_last_18_mos = models.BooleanField(blank=True, null=True)
+    visually_impaired = models.BooleanField(blank=True, null=True)
+    disabled = models.BooleanField(blank=True, null=True)
+    veteran = models.BooleanField(blank=True, null=True)
     medicaid = models.BooleanField(blank=True, null=True)
     disability_medicaid = models.BooleanField(blank=True, null=True)
-    has_income = models.BooleanField(null=True)
-    has_expenses = models.BooleanField(null=True)
+    has_income = models.BooleanField(blank=True, null=True)
+    has_expenses = models.BooleanField(blank=True, null=True)
 
     def calc_gross_income(self, frequency, types):
         gross_income = 0
@@ -389,10 +409,10 @@ class HouseholdMember(models.Model):
 class IncomeStream(models.Model):
     screen = models.ForeignKey(Screen, related_name='income_streams', on_delete=models.CASCADE)
     household_member = models.ForeignKey(HouseholdMember, related_name='income_streams', on_delete=models.CASCADE)
-    type = models.CharField(max_length=30)
-    amount = models.DecimalField(decimal_places=2, max_digits=10)
-    frequency = models.CharField(max_length=30)
-    hours_worked = models.IntegerField(null=True)
+    type = models.CharField(max_length=30, blank=True, null=True)
+    amount = models.DecimalField(decimal_places=2, max_digits=10, blank=True, null=True)
+    frequency = models.CharField(max_length=30, blank=True, null=True)
+    hours_worked = models.IntegerField(null=True, blank=True)
 
     def monthly(self):
         if self.frequency == "monthly":
@@ -434,9 +454,9 @@ class IncomeStream(models.Model):
 class Expense(models.Model):
     screen = models.ForeignKey(Screen, related_name='expenses', on_delete=models.CASCADE)
     household_member = models.ForeignKey(HouseholdMember, related_name='expenses', on_delete=models.CASCADE, null=True)
-    type = models.CharField(max_length=30)
-    amount = models.DecimalField(decimal_places=2, max_digits=10)
-    frequency = models.CharField(max_length=30)
+    type = models.CharField(max_length=30, blank=True, null=True)
+    amount = models.DecimalField(decimal_places=2, max_digits=10, blank=True, null=True)
+    frequency = models.CharField(max_length=30, blank=True, null=True)
 
     def monthly(self):
         if self.frequency == "monthly":
@@ -473,7 +493,6 @@ class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name='eligibility_snapshots', on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
     is_batch = models.BooleanField(default=False)
-
     def generate_program_snapshots(self):
         eligibility = self.screen.eligibility_results()
         for item in eligibility:

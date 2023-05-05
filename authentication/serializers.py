@@ -21,3 +21,27 @@ class UserSerializer(serializers.ModelSerializer):
             'send_offers',
             'send_updates'
         )
+        create_only_fields = (
+            'id',
+            'date_joined',
+            'last_login',
+            'cell',
+            'email',
+            'first_name',
+            'last_name',
+            'email_or_cell',
+            'language_code',
+            'tcpa_consent',
+        )
+
+
+class UserOffersSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'send_offers',
+            'send_updates'
+        )

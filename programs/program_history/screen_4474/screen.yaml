@@ -67,6 +67,7 @@ household_members:
     expenses: []
     incomes: []
 last_tax_filing_year: '2021'
+has_benefits: 'false'
 has_tanf: False
 has_wic: False
 has_snap: False
@@ -83,6 +84,15 @@ has_mydenver: False
 has_chp: False
 has_ccb: False
 has_ssi: False
+has_andcs: False
+has_chs: False
+has_cpcr: False
+has_cdhcs: False
+has_dpp: False
+has_ede: False
+has_erc: False
+has_leap: False
+has_oap: False
 has_employer_hi: True
 has_private_hi: False
 has_medicaid_hi: False

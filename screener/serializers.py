@@ -1,4 +1,5 @@
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
+from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from programs.serializers import NavigatorSerializer
 
@@ -58,12 +59,14 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
 class ScreenSerializer(serializers.ModelSerializer):
     household_members = HouseholdMemberSerializer(many=True)
     expenses = ExpenseSerializer(many=True)
+    user = UserOffersSerializer(read_only=True)
 
     class Meta:
         model = Screen
         fields = (
             'id',
             'uuid',
+            'completed',
             'is_test',
             'start_date',
             'submission_date',
@@ -82,6 +85,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'user',
             'external_id',
             'request_language_code',
+            'has_benefits',
             'has_tanf',
             'has_wic',
             'has_snap',
@@ -98,6 +102,15 @@ class ScreenSerializer(serializers.ModelSerializer):
             'has_chp',
             'has_ccb',
             'has_ssi',
+            'has_andcs',
+            'has_chs',
+            'has_cpcr',
+            'has_cdhcs',
+            'has_dpp',
+            'has_ede',
+            'has_erc',
+            'has_leap',
+            'has_oap',
             'has_employer_hi',
             'has_private_hi',
             'has_medicaid_hi',
@@ -112,12 +125,12 @@ class ScreenSerializer(serializers.ModelSerializer):
             'needs_funeral_help',
             'needs_family_planning_help'
         )
-        read_only_fields = ('id', 'uuid', 'submision_date')
+        read_only_fields = ('id', 'uuid', 'submision_date', 'last_email_request_date', 'completed', 'user')
 
     def create(self, validated_data):
         household_members = validated_data.pop('household_members')
         expenses = validated_data.pop('expenses')
-        screen = Screen.objects.create(**validated_data)
+        screen = Screen.objects.create(**validated_data, completed=False)
         for member in household_members:
             incomes = member.pop('income_streams')
             household_member = HouseholdMember.objects.create(**member, screen=screen)
@@ -126,6 +139,22 @@ class ScreenSerializer(serializers.ModelSerializer):
         for expense in expenses:
             Expense.objects.create(**expense, screen=screen)
         return screen
+
+    def update(self, instance, validated_data):
+        household_members = validated_data.pop('household_members')
+        expenses = validated_data.pop('expenses')
+        Screen.objects.filter(pk=instance.id).update(**validated_data)
+        HouseholdMember.objects.filter(screen=instance).delete()
+        Expense.objects.filter(screen=instance).delete()
+        for member in household_members:
+            incomes = member.pop('income_streams')
+            household_member = HouseholdMember.objects.create(**member, screen=instance)
+            for income in incomes:
+                IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
+        for expense in expenses:
+            Expense.objects.create(**expense, screen=instance)
+        instance.refresh_from_db()
+        return instance
 
 
 class EligibilitySerializer(serializers.Serializer):
