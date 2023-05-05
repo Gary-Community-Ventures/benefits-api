@@ -60,6 +60,8 @@ class Screen(models.Model):
     has_erc = models.BooleanField(default=False, blank=True, null=True)
     has_leap = models.BooleanField(default=False, blank=True, null=True)
     has_oap = models.BooleanField(default=False, blank=True, null=True)
+    has_coctc = models.BooleanField(default=False, blank=True, null=True)
+    has_upk = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=False, blank=True, null=True)
     has_private_hi = models.BooleanField(default=False, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=False, blank=True, null=True)
@@ -258,6 +260,8 @@ class Screen(models.Model):
             'erc': self.has_erc,
             'leap': self.has_leap,
             'oap': self.has_oap,
+            'coctc': self.has_coctc,
+            'upk': self.has_upk,
             'medicare': self.has_medicare_hi,
         }
         return name_map[name_abbreviated] and self.has_benefits == 'true' if name_abbreviated in name_map else False
