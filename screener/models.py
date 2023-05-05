@@ -98,6 +98,17 @@ class Screen(models.Model):
 
         return total_expense
 
+    def has_expense(self, expense_types):
+        """
+        Returns True if one household member has one of the expenses in expense_types
+        """
+        household_members = self.household_members.all()
+        for expense_type in expense_types:
+            for household_member in household_members:
+                household_expense_types = household_member.expenses.values_list("type", flat=True)
+                if expense_type in household_expense_types: return True
+        return False
+
     def num_children(self, age_min=0, age_max=18, include_pregnant=False, child_relationship=['child', 'fosterChild']):
         children = 0
 
