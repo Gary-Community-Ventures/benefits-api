@@ -1,13 +1,14 @@
 from django.conf import settings
 from authentication.models import User
 from screener.models import Screen
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
 from authentication.serializers import UserSerializer, UserOffersSerializer
 from integrations.services.hubspot.integration import update_send_offers_hubspot
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(mixins.UpdateModelMixin,
+                  viewsets.GenericViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
