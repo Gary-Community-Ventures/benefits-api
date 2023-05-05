@@ -62,7 +62,7 @@ class UrgentNeed(TranslatableModel):
     translations = TranslatedFields(
         name=models.CharField(max_length=120),
         description=models.TextField(),
-        link=models.CharField(max_length=320),
+        link=models.CharField(max_length=320, blank=True, null=True),
         type=models.CharField(max_length=120),
     )
     phone_number = PhoneNumberField(blank=True, null=True)
