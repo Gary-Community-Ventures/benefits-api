@@ -28,7 +28,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             screen.user = serializer.save()
             screen.save()
-            if user and user.external_id and not settings.DEBUG:
+            if user and user.external_id and not screen.is_test_data and not settings.DEBUG:
                 update_send_offers_hubspot(user.external_id, user.send_offers, user.send_updates)
 
             return Response(status=204)

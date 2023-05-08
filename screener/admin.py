@@ -37,6 +37,7 @@ class WebHookFunctionsAdmin(admin.ModelAdmin):
 class WebHookAdmin(TranslatableAdmin):
     search_fields = ('referrer_code',)
 
+
 admin.site.register(WebHookFunction, WebHookFunctionsAdmin)
 admin.site.register(WebHook, WebHookAdmin)
 
@@ -47,10 +48,10 @@ def upsert_user_to_hubspot(sender, instance, created, **kwargs):
         return
     screen = instance
     user = instance.user
-    if user is None:
+    if user is None or screen.is_test_data is None:
         return
     should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
-    if not should_upsert_user or screen.is_test or screen.referral_source == 'testOrProspect':
+    if not should_upsert_user or screen.is_test_data:
         return
 
     hubspot_id = upsert_user_hubspot(user, screen=screen)
