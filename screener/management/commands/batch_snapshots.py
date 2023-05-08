@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from screener.models import Screen
 from screener.views import eligibility_results
 from tqdm import trange
+import time
 
 
 class Command(BaseCommand):
@@ -21,6 +22,7 @@ class Command(BaseCommand):
         screens = Screen.objects.filter(
             agree_to_tos=True,
             is_test=False,
+            is_test_data=False,
             completed=True
         )
 
@@ -39,6 +41,7 @@ class Command(BaseCommand):
         for i in trange(len(screens), desc='Screens'):
             try:
                 eligibility_results(screens[i], batch=True)
+                time.sleep(1)
             except Exception as e:
                 errors.append(str(screens[i].id) + ': ' + str(e))
         if len(errors):
