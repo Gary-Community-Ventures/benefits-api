@@ -202,3 +202,12 @@ def uniqueUUIDs():
         currentUUIDs.append(screen.uuid)
 
     print('done')
+
+
+def update_is_test_data():
+    screens = Screen.objects.all()
+
+    for screen in screens:
+        screen.set_screen_is_test()
+
+    print('done')
