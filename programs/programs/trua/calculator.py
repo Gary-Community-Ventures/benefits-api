@@ -1,7 +1,7 @@
 import programs.programs.messages as messages
 
 
-def calculate_trua(screen, data):
+def calculate_trua(screen, data, program):
     trua = Trua(screen)
     eligibility = trua.eligibility
     value = trua.value

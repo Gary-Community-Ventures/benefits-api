@@ -1,7 +1,7 @@
 import programs.programs.messages as messages
 
 
-def calculate_omnisalud(screen, data):
+def calculate_omnisalud(screen, data, program):
     omnisalud = OmniSalud(screen)
     eligibility = omnisalud.eligibility
     value = omnisalud.value

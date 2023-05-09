@@ -1,7 +1,7 @@
 import programs.programs.messages as messages
 
 
-def calculate_reproductive_health_care(screen, data):
+def calculate_reproductive_health_care(screen, data, program):
     rhc = ReproductiveHealthCare(screen, data)
     eligibility = rhc.eligibility
     value = rhc.value

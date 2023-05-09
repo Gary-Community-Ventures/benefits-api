@@ -2,7 +2,7 @@ from programs.co_county_zips import counties_from_zip
 import programs.programs.messages as messages
 
 
-def calculate_mydenver(screen, data):
+def calculate_mydenver(screen, data, program):
     eligibility = eligibility_mydenver(screen)
     value = value_mydenver(screen)
 

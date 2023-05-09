@@ -2,7 +2,7 @@ from django.db.models import Q
 import programs.programs.messages as messages
 
 
-def calculate_property_credit_rebate(screen, data):
+def calculate_property_credit_rebate(screen, data, program):
     cpcr = PropertyCreditRebate(screen)
     eligibility = cpcr.eligibility
     value = cpcr.value

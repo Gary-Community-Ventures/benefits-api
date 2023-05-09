@@ -1,7 +1,7 @@
 import programs.programs.messages as messages
 
 
-def calculate_aid_for_disabled_blind(screen, data):
+def calculate_aid_for_disabled_blind(screen, data, program):
     andcs = AidForDisabledBlind(screen, data)
     eligibility = andcs.eligibility
     value = andcs.value

@@ -3,8 +3,8 @@ from django.conf import settings
 import programs.programs.messages as messages
 
 
-def calculate_rtdlive(screen, data):
-    eligibility = eligibility_rtdlive(screen)
+def calculate_rtdlive(screen, data, program):
+    eligibility = eligibility_rtdlive(screen, program)
     value = value_rtdlive(screen)
 
     calculation = {
@@ -15,7 +15,7 @@ def calculate_rtdlive(screen, data):
     return calculation
 
 
-def eligibility_rtdlive(screen):
+def eligibility_rtdlive(screen, program):
 
     eligibility = {
         "eligible": True,
@@ -29,7 +29,8 @@ def eligibility_rtdlive(screen):
     frequency = "yearly"
 
     # INCOME TEST
-    income_limit = 1.85 * settings.FPL2022[screen.household_size]
+    fpl = program.fpl.as_dict()
+    income_limit = 1.85 * fpl[screen.household_size]
     income_types = ['all']
     gross_income = screen.calc_gross_income(frequency, income_types)
 

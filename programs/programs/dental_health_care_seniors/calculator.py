@@ -2,8 +2,8 @@ from django.conf import settings
 import programs.programs.messages as messages
 
 
-def calculate_dental_health_care_seniors(screen, data):
-    cdhcs = DentalHealthCareSeniors(screen)
+def calculate_dental_health_care_seniors(screen, data, program):
+    cdhcs = DentalHealthCareSeniors(screen, program)
     eligibility = cdhcs.eligibility
     value = cdhcs.value
 
@@ -19,8 +19,9 @@ class DentalHealthCareSeniors():
     amount = 80
     min_age = 60
 
-    def __init__(self, screen):
+    def __init__(self, screen, program):
         self.screen = screen
+        self.fpl = program.fpl.as_dict()
 
         self.eligibility = {
             "eligible": True,
@@ -45,7 +46,7 @@ class DentalHealthCareSeniors():
 
         # Income test
         gross_income = int(self.screen.calc_gross_income("monthly", ["all"]))
-        income_band = int(2.5 * settings.FPL2022[self.screen.household_size]/12)
+        income_band = int(2.5 * self.fpl[self.screen.household_size]/12)
         self._condition(gross_income <= income_band,
                         messages.income(gross_income, income_band))
 

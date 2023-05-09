@@ -17,28 +17,6 @@ from decouple import config
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 
-# 2022 FPL Levels for use across the site
-FPL2022 = {
-    1: 13590,
-    2: 18130,
-    3: 23030,
-    4: 27750,
-    5: 32470,
-    6: 37190,
-    7: 41910,
-    8: 46630
-}
-FPL2021 = {
-    1: 12880,
-    2: 17420,
-    3: 21960,
-    4: 26500,
-    5: 31040,
-    6: 35580,
-    7: 40120,
-    8: 44660
-}
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

@@ -1,7 +1,7 @@
 import programs.programs.messages as messages
 
 
-def calculate_denver_preschool_program(screen, data):
+def calculate_denver_preschool_program(screen, data, program):
     dpp = DenverPreschoolProgram(screen)
     eligibility = dpp.eligibility
     value = dpp.value

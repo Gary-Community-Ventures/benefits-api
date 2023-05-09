@@ -2,8 +2,8 @@ from django.conf import settings
 import programs.programs.messages as messages
 
 
-def calculate_every_day_eats(screen, data):
-    ede = EveryDayEats(screen)
+def calculate_every_day_eats(screen, data, program):
+    ede = EveryDayEats(screen, program)
     eligibility = ede.eligibility
     value = ede.value
 
@@ -19,8 +19,9 @@ class EveryDayEats():
     amount = 600
     min_age = 60
 
-    def __init__(self, screen):
+    def __init__(self, screen, program):
         self.screen = screen
+        self.fpl = program.fpl.as_dict()
 
         self.eligibility = {
             "eligible": True,
@@ -39,7 +40,7 @@ class EveryDayEats():
                         messages.older_than(EveryDayEats.min_age))
 
         # Income
-        income_limit = 1.3 * settings.FPL2022[self.screen.household_size]
+        income_limit = 1.3 * self.fpl[self.screen.household_size]
         gross_income = self.screen.calc_gross_income('yearly', ['all'])
 
         self._condition(gross_income < income_limit,

@@ -1,7 +1,7 @@
 import programs.programs.messages as messages
 
 
-def calculate_affordable_connectivity(screen, data):
+def calculate_affordable_connectivity(screen, data, program):
     eligibility = eligibility_affordable_connectivity(screen)
     value = value_affordable_connectivity(screen)
 
