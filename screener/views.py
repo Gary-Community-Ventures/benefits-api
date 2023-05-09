@@ -304,6 +304,7 @@ def urgent_needs(screen, language):
         'denver': urgent_need_functions.lives_in_denver(screen),
         'helpkitchen_zipcode': urgent_need_functions.helpkitchen_zipcode(screen),
         'child': urgent_need_functions.child(screen),
+        'bia_food_delivery': urgent_need_functions.bia_food_delivery(screen)
     }
 
     list_of_needs = []
