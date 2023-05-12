@@ -69,6 +69,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'uuid',
             'completed',
             'is_test',
+            'is_test_data',
             'start_date',
             'submission_date',
             'agree_to_tos',
@@ -126,12 +127,21 @@ class ScreenSerializer(serializers.ModelSerializer):
             'needs_funeral_help',
             'needs_family_planning_help'
         )
-        read_only_fields = ('id', 'uuid', 'submision_date', 'last_email_request_date', 'completed', 'user')
+        read_only_fields = (
+            'id',
+            'uuid',
+            'submision_date',
+            'last_email_request_date',
+            'completed',
+            'user',
+            'is_test_data'
+        )
 
     def create(self, validated_data):
         household_members = validated_data.pop('household_members')
         expenses = validated_data.pop('expenses')
         screen = Screen.objects.create(**validated_data, completed=False)
+        screen.set_screen_is_test()
         for member in household_members:
             incomes = member.pop('income_streams')
             household_member = HouseholdMember.objects.create(**member, screen=screen)
@@ -155,6 +165,7 @@ class ScreenSerializer(serializers.ModelSerializer):
         for expense in expenses:
             Expense.objects.create(**expense, screen=instance)
         instance.refresh_from_db()
+        instance.set_screen_is_test()
         return instance
 
 

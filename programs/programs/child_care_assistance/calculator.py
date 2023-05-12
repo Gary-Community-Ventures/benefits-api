@@ -44,7 +44,7 @@ def eligibility_child_care_assistance(screen):
 
     # INCOME TEST
     counties = counties_from_zip(screen.zipcode)
-    county_name = counties[0]
+    county_name = counties[0] if len(counties) > 0 else screen.county
     frequency = "yearly"
     cccap_county_data = cccap_county_values(county_name)
     if not cccap_county_data:

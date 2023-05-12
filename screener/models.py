@@ -31,6 +31,7 @@ class Screen(models.Model):
     housing_situation = models.CharField(max_length=30, blank=True, null=True, default=None)
     last_email_request_date = models.DateTimeField(blank=True, null=True)
     is_test = models.BooleanField(default=False, blank=True)
+    is_test_data = models.BooleanField(blank=True, null=True)
     is_verified = models.BooleanField(default=False, blank=True)
     user = models.ForeignKey(User, related_name='screens', on_delete=models.CASCADE, blank=True, null=True)
     external_id = models.CharField(max_length=120, blank=True, null=True)
@@ -266,6 +267,16 @@ class Screen(models.Model):
             'medicare': self.has_medicare_hi,
         }
         return name_map[name_abbreviated] and self.has_benefits == 'true' if name_abbreviated in name_map else False
+
+    def set_screen_is_test(self):
+        referral_source_tests = ['testorprospect', 'test']
+        if self.referral_source or self.referrer_code is None:
+            return
+
+        self.is_test_data = self.is_test or \
+            self.referral_source.lower() in referral_source_tests or \
+            self.referrer_code.lower() in referral_source_tests
+        self.save()
 
     def eligibility_results(self):
         all_programs = Program.objects.all()
