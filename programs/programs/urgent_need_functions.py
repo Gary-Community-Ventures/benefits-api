@@ -39,3 +39,16 @@ def child(screen):
     Return True if someone is younger than 18
     '''
     return screen.num_children(child_relationship=['all']) >= 1
+
+
+def bia_food_delivery(screen):
+    '''
+    Return True if in Adams, Arapahoe, Denver or Jefferson county
+    '''
+    eligible_counties = [
+        'Adams County',
+        'Arapahoe County',
+        'Denver County',
+        'Jefferson County',
+    ]
+    return screen.county in eligible_counties
