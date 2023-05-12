@@ -270,12 +270,10 @@ class Screen(models.Model):
 
     def set_screen_is_test(self):
         referral_source_tests = ['testorprospect', 'test']
-        if self.referral_source or self.referrer_code is None:
-            return
 
         self.is_test_data = self.is_test or \
-            self.referral_source.lower() in referral_source_tests or \
-            self.referrer_code.lower() in referral_source_tests
+            self.referral_source and self.referral_source.lower() in referral_source_tests or \
+            self.referrer_code and self.referrer_code.lower() in referral_source_tests
         self.save()
 
     def eligibility_results(self):
