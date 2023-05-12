@@ -21,7 +21,8 @@
         requestInterceptor: (request) => {
           request.headers['X-CSRFToken'] = "{{ csrf_token }}"
           return request;
-        }
+        },
+        supportedSubmitMethods: ["get"]
       })
     </script>
   </body>

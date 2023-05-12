@@ -13,7 +13,7 @@ from screener.models import (
     ProgramEligibilitySnapshot,
     WebHook
 )
-from rest_framework import viewsets, views, status
+from rest_framework import viewsets, views, status, mixins
 from rest_framework import permissions
 from rest_framework.response import Response
 from screener.serializers import (
@@ -41,7 +41,10 @@ def index(request):
     return HttpResponse("Colorado Benefits Screener API")
 
 
-class ScreenViewSet(viewsets.ModelViewSet):
+class ScreenViewSet(mixins.CreateModelMixin,
+                    mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    viewsets.GenericViewSet):
     """
     API endpoint that allows screens to be viewed or edited.
     """
@@ -99,7 +102,8 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     filterset_fields = ['screen']
 
 
-class WebHookViewSet(viewsets.ModelViewSet):
+class WebHookViewSet(mixins.RetrieveModelMixin,
+                     viewsets.GenericViewSet):
     queryset = WebHook.objects.all()
     serializer_class = WebHookSerializer
     permission_classes = [permissions.DjangoModelPermissions]
@@ -143,7 +147,8 @@ class EligibilityTranslationView(views.APIView):
         return Response(results)
 
 
-class MessageViewSet(viewsets.ModelViewSet):
+class MessageViewSet(mixins.CreateModelMixin,
+                     viewsets.GenericViewSet):
     """
     API endpoint that logs messages sent.
     """

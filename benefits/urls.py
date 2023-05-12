@@ -28,7 +28,10 @@ urlpatterns = [
     path('openapi', get_schema_view(
         title="Colorado Open Benefits APU",
         description="API calculates eligibility across over 40 benefit programs in Colorado",
-        version="0.0.1"
+        version="0.0.1",
+        public=True,
+        permission_classes=[],
+        authentication_classes=[]
     ), name='openapi-schema'),
     path('api/documentation/', TemplateView.as_view(
         template_name='swagger-ui.html',
