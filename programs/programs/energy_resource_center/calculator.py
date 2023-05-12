@@ -1,7 +1,7 @@
 import programs.programs.messages as messages
 
 
-def calculate_energy_resource_center(screen, data):
+def calculate_energy_resource_center(screen, data, program):
     erc = EnergyResourceCenter(screen)
     eligibility = erc.eligibility
     value = erc.value

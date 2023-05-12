@@ -1,7 +1,7 @@
 import programs.programs.messages as messages
 
 
-def calculate_old_age_pension(screen, data):
+def calculate_old_age_pension(screen, data, program):
     old_age_pension = OldAgePension(screen, data)
     eligibility = old_age_pension.eligibility
     value = old_age_pension.value

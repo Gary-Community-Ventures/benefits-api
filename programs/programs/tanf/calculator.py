@@ -2,7 +2,7 @@ from decimal import Decimal
 import programs.programs.messages as messages
 
 
-def calculate_tanf(screen, data):
+def calculate_tanf(screen, data, program):
     value = 0
     child_age_limit = 19
     children = screen.num_children(age_max=child_age_limit,

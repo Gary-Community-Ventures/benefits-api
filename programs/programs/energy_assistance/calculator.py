@@ -2,7 +2,7 @@ import programs.programs.messages as messages
 from programs.sheets import sheets_get_data
 
 
-def calculate_energy_assistance(screen, data):
+def calculate_energy_assistance(screen, data, program):
     eligibility = eligibility_energy_assistance(screen)
     value = value_energy_assistance(screen)
 

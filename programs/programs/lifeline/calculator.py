@@ -1,7 +1,7 @@
 import programs.programs.messages as messages
 
 
-def calculate_lifeline(screen, data):
+def calculate_lifeline(screen, data, program):
     eligibility = eligibility_lifeline(screen)
     value = value_lifeline(screen)
 

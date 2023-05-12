@@ -4,7 +4,7 @@ import re
 import programs.programs.messages as messages
 
 
-def calculate_child_care_assistance(screen, data):
+def calculate_child_care_assistance(screen, data, program):
     eligibility = eligibility_child_care_assistance(screen)
     value = value_child_care_assistance(screen)
 

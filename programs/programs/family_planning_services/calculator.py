@@ -2,8 +2,8 @@ from django.conf import settings
 import programs.programs.messages as messages
 
 
-def calculate_family_planning_services(screen, data):
-    fps = FamilyPlanningServices(screen, data)
+def calculate_family_planning_services(screen, data, program):
+    fps = FamilyPlanningServices(screen, data, program)
     eligibility = fps.eligibility
     value = fps.value
 
@@ -19,9 +19,10 @@ class FamilyPlanningServices():
     amount = 404
     child_max_age = 18
 
-    def __init__(self, screen, data):
+    def __init__(self, screen, data, program):
         self.screen = screen
         self.data = data
+        self.fpl = program.fpl.as_dict()
 
         self.eligibility = {
             "eligible": True,
@@ -51,7 +52,7 @@ class FamilyPlanningServices():
                         messages.child(0, FamilyPlanningServices.child_max_age))
 
         # Income
-        income_limit = int(2.6 * settings.FPL2022[self.screen.household_size]/12)
+        income_limit = int(2.6 * self.fpl[self.screen.household_size]/12)
         income_types = ["wages", "selfEmployment"]
         gross_income = int(self.screen.calc_gross_income('monthly', income_types))
 

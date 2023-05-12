@@ -6,6 +6,32 @@ from django.utils.translation import gettext_lazy as _
 from programs.programs import calculators
 
 
+class FederalPoveryLimit(models.Model):
+    year = models.CharField(max_length=32, unique=True)
+    has_1_person = models.IntegerField()
+    has_2_people = models.IntegerField()
+    has_3_people = models.IntegerField()
+    has_4_people = models.IntegerField()
+    has_5_people = models.IntegerField()
+    has_6_people = models.IntegerField()
+    has_7_people = models.IntegerField()
+    has_8_people = models.IntegerField()
+
+    def as_dict(self):
+        return {
+            1: self.has_1_person,
+            2: self.has_2_people,
+            3: self.has_3_people,
+            4: self.has_4_people,
+            5: self.has_5_people,
+            6: self.has_6_people,
+            7: self.has_7_people,
+            8: self.has_8_people,
+        }
+
+    def __str__(self):
+        return self.year
+
 
 # This model describes all of the benefit programs available in the screener
 # results. Each program has a specific folder in /programs where the specific
@@ -27,6 +53,7 @@ class Program(TranslatableModel):
         category=models.CharField(max_length=120),
         active=models.BooleanField(blank=True, null=False, default=True)
     )
+    fpl = models.ForeignKey(FederalPoveryLimit, related_name='fpl', blank=True, null=True, on_delete=models.SET_NULL)
 
     # This function provides eligibility calculation for any benefit program
     # in the system when passed the screen. As some benefits depend on
@@ -34,7 +61,7 @@ class Program(TranslatableModel):
     # contains the eligibility information and values for all currently
     # calculated benefits in the chain.
     def eligibility(self, screen, data):
-        calculation = calculators[self.name_abbreviated.lower()](screen, data)
+        calculation = calculators[self.name_abbreviated.lower()](screen, data, self)
 
         eligibility = calculation['eligibility']
         if eligibility['eligible']:

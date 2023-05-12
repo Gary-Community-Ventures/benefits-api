@@ -1,7 +1,7 @@
 from programs.programs.tanf.calculator import calculate_tanf
 
 
-def calculate_andso(screen, data):
+def calculate_andso(screen, data, program):
     andso = Andso(screen)
     eligibility = andso.eligibility
     value = andso.value

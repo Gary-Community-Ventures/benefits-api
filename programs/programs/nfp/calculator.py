@@ -3,8 +3,8 @@ from django.conf import settings
 import math
 
 
-def calculate_nfp(screen, data):
-    eligibility = eligibility_nfp(screen)
+def calculate_nfp(screen, data, program):
+    eligibility = eligibility_nfp(screen, program)
     value = value_nfp(screen)
 
     calculation = {
@@ -15,7 +15,7 @@ def calculate_nfp(screen, data):
     return calculation
 
 
-def eligibility_nfp(screen):
+def eligibility_nfp(screen, program):
 
     eligibility = {
         "eligible": True,
@@ -27,7 +27,8 @@ def eligibility_nfp(screen):
 
     # INCOME TEST -- you can apply for RTD Live with only pay stubs,
     # so we limit to wages here
-    income_limit = 2 * settings.FPL2022[screen.household_size]
+    fpl = program.fpl.as_dict()
+    income_limit = 2 * fpl[screen.household_size]
     income_types = ["wages", "selfEmployment"]
     gross_income = screen.calc_gross_income(frequency, income_types)
 

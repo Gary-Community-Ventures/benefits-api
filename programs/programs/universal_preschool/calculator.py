@@ -2,8 +2,8 @@ import programs.programs.messages as messages
 from django.conf import settings
 
 
-def calculate_universal_preschool(screen, data):
-    universal_preschool = UniversalPreschool(screen)
+def calculate_universal_preschool(screen, data, program):
+    universal_preschool = UniversalPreschool(screen, program)
     eligibility = universal_preschool.eligibility
     value = universal_preschool.value
 
@@ -25,8 +25,9 @@ class UniversalPreschool():
         '30_hours': 10_655
     }
 
-    def __init__(self, screen):
+    def __init__(self, screen, program):
         self.screen = screen
+        self.fpl = program.fpl.as_dict()
 
         self.eligibility = {
             "eligible": True,
@@ -46,7 +47,7 @@ class UniversalPreschool():
         foster_children = self.screen.num_children(age_min=UniversalPreschool.qualifying_min_age,
                                                    age_max=UniversalPreschool.max_age,
                                                    child_relationship=['fosterChild'])
-        income_limit = int(2.7 * settings.FPL2022[self.screen.household_size])
+        income_limit = int(2.7 * self.fpl[self.screen.household_size])
         self.income_requirement = self.screen.calc_gross_income('yearly', ['all']) < income_limit
         other_factors = self.income_requirement or foster_children >= 1
 

@@ -2,8 +2,8 @@ from django.conf import settings
 import programs.programs.messages as messages
 
 
-def calculate_chp(screen, data):
-    eligibility = eligibility_chp(screen, data)
+def calculate_chp(screen, data, program):
+    eligibility = eligibility_chp(screen, data, program)
     value = value_chp(screen)
 
     calculation = {
@@ -14,7 +14,7 @@ def calculate_chp(screen, data):
     return calculation
 
 
-def eligibility_chp(screen, data):
+def eligibility_chp(screen, data, program):
 
     eligibility = {
         "eligible": True,
@@ -48,7 +48,8 @@ def eligibility_chp(screen, data):
         eligibility["failed"].append(messages.child())
 
     # INCOME TEST
-    income_limit = 2.6 * settings.FPL2022[screen.household_size]
+    fpl = program.fpl.as_dict()
+    income_limit = 2.6 * fpl[screen.household_size]
     income_types = ["wages", "selfEmployment"]
     gross_income = screen.calc_gross_income(frequency, income_types)
 

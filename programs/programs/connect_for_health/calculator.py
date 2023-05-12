@@ -3,8 +3,8 @@ from programs.programs.connect_for_health.tax_credit_value import tax_credit_by_
 import programs.programs.messages as messages
 
 
-def calculate_connect_for_health(screen, data):
-    cfhc = ConnectForHealth(screen, data)
+def calculate_connect_for_health(screen, data, program):
+    cfhc = ConnectForHealth(screen, data, program)
     eligibility = cfhc.eligibility
     value = cfhc.value
 
@@ -19,9 +19,10 @@ def calculate_connect_for_health(screen, data):
 class ConnectForHealth():
     health_credit_value = 313
 
-    def __init__(self, screen, data):
+    def __init__(self, screen, data, program):
         self.screen = screen
         self.data = data
+        self.fpl = program.fpl.as_dict()
 
         self.eligibility = {
             "eligible": True,
@@ -50,7 +51,7 @@ class ConnectForHealth():
                         messages.has_no_insurance())
 
         # Income
-        income_band = int(settings.FPL2022[self.screen.household_size]/12 * 4)
+        income_band = int(self.fpl[self.screen.household_size]/12 * 4)
         gross_income = int(self.screen.calc_gross_income('yearly', ("all",))/12)
         self._condition(gross_income < income_band,
                         messages.income(gross_income, income_band))

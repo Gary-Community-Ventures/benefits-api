@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Program, UrgentNeed, Navigator, UrgentNeedFunction
+from .models import Program, UrgentNeed, Navigator, UrgentNeedFunction, FederalPoveryLimit
 from parler.admin import TranslatableAdmin
 
 
@@ -22,7 +22,12 @@ class UrgentNeedsFunctionAdmin(admin.ModelAdmin):
     fields = ('name',)
 
 
+class FederalPovertyLimitAdmin(admin.ModelAdmin):
+    search_fields = ('year',)
+
+
 admin.site.register(Program, ProgramAdmin)
 admin.site.register(Navigator, NavigatorAdmin)
 admin.site.register(UrgentNeed, UrgentNeedAdmin)
 admin.site.register(UrgentNeedFunction, UrgentNeedsFunctionAdmin)
+admin.site.register(FederalPoveryLimit, FederalPovertyLimitAdmin)

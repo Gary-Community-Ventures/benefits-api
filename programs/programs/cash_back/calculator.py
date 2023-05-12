@@ -1,7 +1,7 @@
 import programs.programs.messages as messages
 
 
-def calculate_cash_back(screen, data):
+def calculate_cash_back(screen, data, program):
     eligibility = eligibility_cash_back(screen)
     value = value_cash_back(screen)
 
