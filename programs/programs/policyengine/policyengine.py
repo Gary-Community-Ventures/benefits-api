@@ -135,22 +135,22 @@ def eligibility_policy_engine(screen):
     tax_unit_data = benefit_data['tax_units']['tax_unit']
 
     # EITC
-    if tax_unit_data['earned_income_tax_credit']['2022'] > 0:
+    if tax_unit_data['eitc_eligible']['2023']:
         eligibility['eitc']['eligible'] = True
-        eligibility['eitc']['estimated_value'] = tax_unit_data['earned_income_tax_credit']['2022']
+        eligibility['eitc']['estimated_value'] = tax_unit_data['earned_income_tax_credit']['2023']
 
     # COEITC
-    if tax_unit_data['earned_income_tax_credit']['2022'] > 0:
+    if tax_unit_data['co_eitc']['2023'] > 0:
         eligibility['coeitc']['eligible'] = True
-        eligibility['coeitc']['estimated_value'] = .20 * tax_unit_data['earned_income_tax_credit']['2022']
+        eligibility['coeitc']['estimated_value'] = tax_unit_data['co_eitc']['2023']
 
     # CTC
-    if tax_unit_data['ctc']['2022'] > 0:
+    if tax_unit_data['ctc']['2023'] > 0:
         eligibility['ctc']['eligible'] = True
-        eligibility['ctc']['estimated_value'] = tax_unit_data['ctc']['2022']
+        eligibility['ctc']['estimated_value'] = tax_unit_data['ctc']['2023']
 
     # CO Child Tax Credit
-    if tax_unit_data['ctc']['2022'] > 0 and screen.num_children(age_max=6):
+    if tax_unit_data['ctc']['2023'] > 0 and screen.num_children(age_max=6):
         income_bands = {
             "single": [{"max": 25000, "percent": .6}, {"max": 50000, "percent": .3}, {"max": 75000, "percent": .1}],
             "maried": [{"max": 35000, "percent": .6}, {"max": 60000, "percent": .3}, {"max": 85000, "percent": .1}]
@@ -165,7 +165,7 @@ def eligibility_policy_engine(screen):
                 break
 
         eligibility['coctc']['eligible'] = multiplier != 0
-        eligibility['coctc']['estimated_value'] = tax_unit_data['ctc']['2022'] * multiplier
+        eligibility['coctc']['estimated_value'] = tax_unit_data['ctc']['2023'] * multiplier
 
     return eligibility
 
@@ -203,9 +203,11 @@ def policy_engine_prepare_params(screen):
             "tax_units": {
                 "tax_unit": {
                     "members": [],
-                    "earned_income_tax_credit": {"2022": None},
-                    "ctc": {"2022": None},
-                    "tax_unit_is_joint": {"2022": screen.is_joint()}
+                    "earned_income_tax_credit": {"2023": None},
+                    "eitc_eligible": {"2023": None},
+                    "co_eitc": {"2023": None},
+                    "ctc": {"2023": None},
+                    "tax_unit_is_joint": {"2023": screen.is_joint()}
                 }
             },
             "families": {
