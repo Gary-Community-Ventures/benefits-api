@@ -26,7 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("sesame/login/", LoginView.as_view(), name="sesame-login"),
     path('openapi', get_schema_view(
-        title="Colorado Open Benefits APU",
+        title="Colorado Open Benefits API",
         description="API calculates eligibility across over 40 benefit programs in Colorado",
         version="0.0.1",
         public=True,
