@@ -135,7 +135,7 @@ def eligibility_policy_engine(screen):
     tax_unit_data = benefit_data['tax_units']['tax_unit']
 
     # EITC
-    if tax_unit_data['eitc_eligible']['2023']:
+    if tax_unit_data['earned_income_tax_credit']['2023'] > 0:
         eligibility['eitc']['eligible'] = True
         eligibility['eitc']['estimated_value'] = tax_unit_data['earned_income_tax_credit']['2023']
 
@@ -204,7 +204,6 @@ def policy_engine_prepare_params(screen):
                 "tax_unit": {
                     "members": [],
                     "earned_income_tax_credit": {"2023": None},
-                    "eitc_eligible": {"2023": None},
                     "co_eitc": {"2023": None},
                     "ctc": {"2023": None},
                     "tax_unit_is_joint": {"2023": screen.is_joint()}
