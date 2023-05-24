@@ -113,6 +113,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'has_erc',
             'has_leap',
             'has_oap',
+            'has_coctc',
             'has_upk',
             'has_employer_hi',
             'has_private_hi',
