@@ -5,7 +5,6 @@ from . import views
 router = routers.DefaultRouter()
 router.register(r'screens', views.ScreenViewSet)
 router.register(r'messages', views.MessageViewSet)
-router.register(r'webhooks', views.WebHookViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
