@@ -25,7 +25,7 @@ from screener.serializers import (
 )
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import programs.programs.urgent_need_functions as urgent_need_functions
-from programs.models import UrgentNeed, Program
+from programs.models import UrgentNeed, Program, Referrer
 from programs.serializers import UrgentNeedSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from .webhooks import eligibility_hooks
@@ -161,9 +161,13 @@ class MessageViewSet(mixins.CreateModelMixin,
         return Response({}, status=status.HTTP_201_CREATED)
 
 
-def eligibility_results(screen, batch=False):
+def eligibility_results(screen: Screen, batch=False):
     all_programs = Program.objects.all()
     data = []
+    try:
+        referrer = Referrer.objects.get(referrer_code=screen.referrer_code)
+    except ObjectDoesNotExist:
+        referrer = None
 
     try:
         previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen).latest('submission_date')
@@ -195,7 +199,15 @@ def eligibility_results(screen, batch=False):
             # skip = True
             eligibility = pe_eligibility[program.name_abbreviated]
 
-        navigators = program.navigator.all()
+        all_navigators = program.navigator.all()
+        if referrer is None:
+            navigators = all_navigators
+        else:
+            referrer_navigators = referrer.primary_navigators.all() & all_navigators
+            if len(referrer_navigators) == 0:
+                navigators = all_navigators
+            else:
+                navigators = referrer_navigators
 
         new = True
         if previous_snapshot is not None:
