@@ -541,22 +541,3 @@ class ProgramEligibilitySnapshot(models.Model):
     eligible = models.BooleanField()
     failed_tests = models.JSONField(blank=True, null=True)
     passed_tests = models.JSONField(blank=True, null=True)
-
-
-class WebHookFunction(models.Model):
-    name = models.CharField(max_length=64)
-
-    def __str__(self):
-        return self.name
-
-
-class WebHook(TranslatableModel):
-    referrer_code = models.CharField(max_length=120)
-    url = models.CharField(max_length=320)
-    translations = TranslatedFields(
-        consent_text=models.TextField()
-    )
-    functions = models.ManyToManyField(WebHookFunction, related_name='function')
-
-    def __str__(self):
-        return self.referrer_code

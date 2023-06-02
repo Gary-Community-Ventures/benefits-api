@@ -11,7 +11,6 @@ from screener.models import (
     Message,
     EligibilitySnapshot,
     ProgramEligibilitySnapshot,
-    WebHook
 )
 from rest_framework import viewsets, views, status, mixins
 from rest_framework import permissions
@@ -23,7 +22,6 @@ from screener.serializers import (
     ExpenseSerializer,
     EligibilitySerializer,
     MessageSerializer,
-    WebHookSerializer
 )
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import programs.programs.urgent_need_functions as urgent_need_functions
@@ -102,13 +100,6 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     filterset_fields = ['screen']
 
 
-class WebHookViewSet(mixins.RetrieveModelMixin,
-                     viewsets.GenericViewSet):
-    queryset = WebHook.objects.all()
-    serializer_class = WebHookSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
 class EligibilityView(views.APIView):
 
     def get(self, request, id):
@@ -144,6 +135,7 @@ class EligibilityTranslationView(views.APIView):
             screen.submission_date = datetime.now(timezone.utc)
         screen.completed = True
         screen.save()
+
         return Response(results)
 
 

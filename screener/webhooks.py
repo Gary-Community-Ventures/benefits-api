@@ -1,12 +1,13 @@
-from .models import Screen, WebHook
+from .models import Screen
+from programs.models import Referrer
 from .serializers import ScreenSerializer
 import requests
 
 
 class Hook():
-    def __init__(self, hook: WebHook):
+    def __init__(self, hook: Referrer):
         self.hook = hook
-        self.functions = [func.name for func in hook.functions.all()]
+        self.functions = [func.name for func in hook.webhook_functions.all()]
 
     def send(self, screen: Screen, results: dict):
         if screen.completed:
@@ -20,7 +21,7 @@ class Hook():
             request_data[key] = value
 
         try:
-            requests.post(self.hook.url, json=request_data)
+            requests.post(self.hook.webhook_url, json=request_data)
         except requests.exceptions.RequestException:
             # TODO: add logging
             pass
@@ -36,7 +37,7 @@ class Hook():
 def eligibility_hooks():
     hooks: dict[str, Hook] = {}
 
-    for hook in WebHook.objects.all():
+    for hook in Referrer.objects.all():
         hooks[hook.referrer_code] = Hook(hook)
 
     return hooks
