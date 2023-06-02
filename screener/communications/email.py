@@ -9,7 +9,7 @@ def email_pdf(target_email, screen_id, language):
     screen = Screen.objects.get(pk=screen_id)
 
     sg = sendgrid.SendGridAPIClient(api_key=config('SENDGRID'))
-    from_email = Email("screener@garycommunity.org")  # Change to your verified sender
+    from_email = Email("screener@myfriendben.org")  # Change to your verified sender
     to_email = To(target_email)  # Change to your recipient
     domain = config("FRONTEND_DOMAIN")
     url = f"{domain}/{screen.uuid}/results"
