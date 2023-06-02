@@ -161,7 +161,7 @@ class MessageViewSet(mixins.CreateModelMixin,
         return Response({}, status=status.HTTP_201_CREATED)
 
 
-def eligibility_results(screen: Screen, batch=False):
+def eligibility_results(screen, batch=False):
     all_programs = Program.objects.all()
     data = []
     try:
