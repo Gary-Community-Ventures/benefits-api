@@ -65,7 +65,19 @@ def eligibility_policy_engine(screen):
             "passed": [],
             "failed": [],
             "estimated_value": 0
-        }
+        },
+        "andcs": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
+        "oap": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
     }
 
     benefit_data = policy_engine_calculate(screen)['result']
@@ -101,6 +113,16 @@ def eligibility_policy_engine(screen):
         if pvalue['ssi']['2023'] > 0:
             eligibility['ssi']['eligible'] = True
             eligibility['ssi']['estimated_value'] += pvalue['ssi']['2023']
+
+        # AND-CS
+        if pvalue['co_state_supplement']['2023'] > 0:
+            eligibility['andcs']['eligible'] = True
+            eligibility['andcs']['estimated_value'] += pvalue['co_state_supplement']['2023']
+
+        # OAP
+        if pvalue['co_oap']['2023'] > 0:
+            eligibility['oap']['eligible'] = True
+            eligibility['oap']['estimated_value'] += pvalue['co_oap']['2023']
 
     # WIC PRESUMPTIVE ELIGIBILITY
     in_wic_demographic = False
