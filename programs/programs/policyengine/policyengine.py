@@ -287,7 +287,6 @@ def policy_engine_prepare_params(screen):
                     "snap_utility_allowance": {"2023": None},
                     "has_heating_cooling_expense": {"2023": screen.has_expense(["heating", "cooling"])},
                     "has_phone_expense": {"2023": screen.has_expense(["telephone"])},
-                    "broadband_cost": {"2023": int(screen.calc_expenses("yearly", ["internet"]))},
                     "utility_expense": {"2023": int(screen.calc_expenses("yearly", ["otherUtilities", "heating", "cooling"]))},
                     "snap_emergency_allotment": {"2023": 0},
                     "snap": {"2023": None},
