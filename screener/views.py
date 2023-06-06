@@ -177,7 +177,22 @@ def eligibility_results(screen, batch=False):
     snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
 
     pe_eligibility = eligibility_policy_engine(screen)
-    pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'coctc', 'medicaid', 'ssi', 'tanf', 'andcs', 'oap']
+    pe_programs = (
+        'snap',
+        'wic',
+        'nslp',
+        'eitc',
+        'coeitc',
+        'ctc',
+        'coctc',
+        'medicaid',
+        'ssi',
+        'tanf',
+        'andcs',
+        'oap',
+        'acp',
+        'lifeline',
+    )
 
     def sort_first(program):
         calc_first = ('tanf', 'ssi', 'medicaid')
