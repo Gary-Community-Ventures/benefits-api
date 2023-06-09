@@ -114,3 +114,27 @@ class Navigator(TranslatableModel):
 
     def __str__(self):
         return self.name
+
+
+class WebHookFunction(models.Model):
+    name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return self.name
+
+
+class Referrer(TranslatableModel):
+    referrer_code = models.CharField(max_length=64, unique=True)
+    webhook_url = models.CharField(max_length=320, blank=True, null=True)
+    webhook_functions = models.ManyToManyField(WebHookFunction, related_name='web_hook', blank=True)
+    primary_navigators = models.ManyToManyField(Navigator, related_name='primary_navigators', blank=True)
+    logo = models.ImageField(blank=True, null=True)
+    white_label_css = models.FileField(blank=True, null=True)
+    translations = TranslatedFields(
+        header_html=models.FileField(blank=True, null=True),
+        footer_html=models.FileField(blank=True, null=True),
+        consent_text=models.TextField(blank=True, null=True)
+    )
+
+    def __str__(self):
+        return self.referrer_code

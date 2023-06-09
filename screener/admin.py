@@ -10,8 +10,6 @@ from .models import (
     HouseholdMember,
     IncomeStream,
     Expense,
-    WebHookFunction,
-    WebHook
 )
 from django.dispatch import receiver
 from django.utils import timezone
@@ -28,18 +26,6 @@ class screenAdmin(admin.ModelAdmin):
 admin.site.register(Screen, screenAdmin)
 admin.site.register(Message)
 admin.site.register(IncomeStream)
-
-
-class WebHookFunctionsAdmin(admin.ModelAdmin):
-    search_fields = ('name',)
-
-
-class WebHookAdmin(TranslatableAdmin):
-    search_fields = ('referrer_code',)
-
-
-admin.site.register(WebHookFunction, WebHookFunctionsAdmin)
-admin.site.register(WebHook, WebHookAdmin)
 
 
 @receiver(post_save, sender=Screen)

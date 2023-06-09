@@ -11,7 +11,6 @@ from screener.models import (
     Message,
     EligibilitySnapshot,
     ProgramEligibilitySnapshot,
-    WebHook
 )
 from rest_framework import viewsets, views, status, mixins
 from rest_framework import permissions
@@ -23,11 +22,10 @@ from screener.serializers import (
     ExpenseSerializer,
     EligibilitySerializer,
     MessageSerializer,
-    WebHookSerializer
 )
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import programs.programs.urgent_need_functions as urgent_need_functions
-from programs.models import UrgentNeed, Program
+from programs.models import UrgentNeed, Program, Referrer
 from programs.serializers import UrgentNeedSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from .webhooks import eligibility_hooks
@@ -102,13 +100,6 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     filterset_fields = ['screen']
 
 
-class WebHookViewSet(mixins.RetrieveModelMixin,
-                     viewsets.GenericViewSet):
-    queryset = WebHook.objects.all()
-    serializer_class = WebHookSerializer
-    permission_classes = [permissions.DjangoModelPermissions]
-
-
 class EligibilityView(views.APIView):
 
     def get(self, request, id):
@@ -144,6 +135,7 @@ class EligibilityTranslationView(views.APIView):
             screen.submission_date = datetime.now(timezone.utc)
         screen.completed = True
         screen.save()
+
         return Response(results)
 
 
@@ -172,6 +164,10 @@ class MessageViewSet(mixins.CreateModelMixin,
 def eligibility_results(screen, batch=False):
     all_programs = Program.objects.all()
     data = []
+    try:
+        referrer = Referrer.objects.get(referrer_code=screen.referrer_code)
+    except ObjectDoesNotExist:
+        referrer = None
 
     try:
         previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen).latest('submission_date')
@@ -203,7 +199,15 @@ def eligibility_results(screen, batch=False):
             # skip = True
             eligibility = pe_eligibility[program.name_abbreviated]
 
-        navigators = program.navigator.all()
+        all_navigators = program.navigator.all()
+        if referrer is None:
+            navigators = all_navigators
+        else:
+            referrer_navigators = referrer.primary_navigators.all() & all_navigators
+            if len(referrer_navigators) == 0:
+                navigators = all_navigators
+            else:
+                navigators = referrer_navigators
 
         new = True
         if previous_snapshot is not None:
