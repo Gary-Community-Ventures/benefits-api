@@ -78,6 +78,18 @@ def eligibility_policy_engine(screen):
             "failed": [],
             "estimated_value": 0
         },
+        "acp": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
+        "lifeline": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
     }
 
     benefit_data = policy_engine_calculate(screen)['result']
@@ -153,6 +165,16 @@ def eligibility_policy_engine(screen):
     if benefit_data['spm_units']['spm_unit']['co_tanf']['2023'] > 0:
         eligibility['tanf']['eligible'] = True
         eligibility['tanf']['estimated_value'] = benefit_data['spm_units']['spm_unit']['co_tanf']['2023']
+
+    # ACP
+    if benefit_data['spm_units']['spm_unit']['acp']['2023'] > 0:
+        eligibility['acp']['eligible'] = True
+        eligibility['acp']['estimated_value'] = benefit_data['spm_units']['spm_unit']['acp']['2023']
+
+    # Lifeline
+    if benefit_data['spm_units']['spm_unit']['lifeline']['2023'] > 0:
+        eligibility['lifeline']['eligible'] = True
+        eligibility['lifeline']['estimated_value'] = benefit_data['spm_units']['spm_unit']['lifeline']['2023']
 
     tax_unit_data = benefit_data['tax_units']['tax_unit']
 
@@ -265,7 +287,6 @@ def policy_engine_prepare_params(screen):
                     "snap_utility_allowance": {"2023": None},
                     "has_heating_cooling_expense": {"2023": screen.has_expense(["heating", "cooling"])},
                     "has_phone_expense": {"2023": screen.has_expense(["telephone"])},
-                    "broadband_cost": {"2023": int(screen.calc_expenses("yearly", ["internet"]))},
                     "utility_expense": {"2023": int(screen.calc_expenses("yearly", ["otherUtilities", "heating", "cooling"]))},
                     "snap_emergency_allotment": {"2023": 0},
                     "snap": {"2023": None},
@@ -279,6 +300,7 @@ def policy_engine_prepare_params(screen):
                     "co_tanf": {"2023": None},
                     "co_tanf_grant_standard": {"2023": None},
                     "co_tanf_countable_earned_income_grant_standard": {"2023": None},
+                    "broadband_cost": {"2023": 500},
                 }
             }
         }
