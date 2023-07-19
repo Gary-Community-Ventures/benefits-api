@@ -96,10 +96,18 @@ def eligibility_policy_engine(screen):
 
     # WIC & MEDICAID & SSI
     for pkey, pvalue in benefit_data['people'].items():
+        wic_categories = {
+            'NONE': 0,
+            'INFANT': 130,
+            'CHILD': 74,
+            "PREGNANT": 100,
+            "POSTPARTUM": 100,
+            "BREASTFEEDING": 100,
+        }
         # WIC
         if pvalue['wic']['2023'] > 0:
             eligibility['wic']['eligible'] = True
-            eligibility['wic']['estimated_value'] += pvalue['wic']['2023']
+            eligibility['wic']['estimated_value'] += wic_categories[pvalue['wic_category']['2023']] * 12
 
         # MEDICAID
         if pvalue['medicaid']['2023'] > 0:
@@ -326,6 +334,7 @@ def policy_engine_prepare_params(screen):
             "age": {"2023": household_member.age, "2022": household_member.age},
             "is_pregnant": {"2023": household_member.pregnant},
             "is_tax_unit_head": {"2023": is_tax_unit_head, "2022": is_tax_unit_head},
+            "wic_category": {"2023": None},
             "wic": {"2023": None},
             "medicaid": {"2023": None},
             "ssi": {"2023": None},
