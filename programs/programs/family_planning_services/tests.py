@@ -1,7 +1,6 @@
 from django.test import TestCase
 from programs.programs.family_planning_services.calculator import FamilyPlanningServices
 from screener.models import Screen, HouseholdMember, IncomeStream
-from django.conf import settings
 
 
 class TestFamilyPlanningServicesPension(TestCase):

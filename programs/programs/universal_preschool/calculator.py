@@ -1,5 +1,4 @@
 import programs.programs.messages as messages
-from django.conf import settings
 
 
 def calculate_universal_preschool(screen, data, program):

@@ -1,7 +1,6 @@
 from django.test import TestCase
 from programs.programs.connect_for_health.calculator import ConnectForHealth
 from screener.models import Screen, HouseholdMember, IncomeStream
-from django.conf import settings
 
 
 class TestConnectForHealth(TestCase):

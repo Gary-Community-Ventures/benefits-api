@@ -1,4 +1,3 @@
-from django.conf import settings
 import programs.programs.messages as messages
 
 

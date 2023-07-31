@@ -1,7 +1,6 @@
 from django.test import TestCase
 from programs.programs.dental_health_care_seniors.calculator import DentalHealthCareSeniors
 from screener.models import Screen, HouseholdMember, IncomeStream
-from django.conf import settings
 
 
 class TestDentalHealthCareSeniorsPension(TestCase):
