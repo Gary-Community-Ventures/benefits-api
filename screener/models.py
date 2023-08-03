@@ -77,6 +77,9 @@ class Screen(models.Model):
     needs_child_dev_help = models.BooleanField(default=False, blank=True, null=True)
     needs_funeral_help = models.BooleanField(default=False, blank=True, null=True)
     needs_family_planning_help = models.BooleanField(default=False, blank=True, null=True)
+    needs_job_resources = models.BooleanField(default=False, blank=True, null=True)
+    needs_dental_care = models.BooleanField(default=False, blank=True, null=True)
+    needs_legal_services = models.BooleanField(default=False, blank=True, null=True)
 
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()

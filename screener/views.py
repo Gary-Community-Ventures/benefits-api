@@ -322,6 +322,9 @@ def urgent_needs(screen, language):
         'child dev': screen.needs_child_dev_help,
         'funeral': screen.needs_funeral_help,
         'family planning': screen.needs_family_planning_help,
+        'job resources': screen.needs_job_resources,
+        'dental care': screen.needs_dental_care,
+        'legal services': screen.needs_legal_services,
     }
 
     need_functions = {
