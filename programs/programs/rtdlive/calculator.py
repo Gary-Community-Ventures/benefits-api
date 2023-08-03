@@ -1,5 +1,4 @@
 from programs.co_county_zips import counties_from_zip
-from django.conf import settings
 import programs.programs.messages as messages
 
 

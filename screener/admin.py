@@ -14,7 +14,6 @@ from .models import (
 from django.dispatch import receiver
 from django.utils import timezone
 from django.conf import settings
-from parler.admin import TranslatableAdmin
 import json
 import uuid
 

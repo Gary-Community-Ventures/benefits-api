@@ -1,4 +1,3 @@
-from django.conf import settings
 import programs.programs.messages as messages
 from programs.programs.head_start.eligible_zipcodes import eligible_zipcode
 

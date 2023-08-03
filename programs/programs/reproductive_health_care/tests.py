@@ -1,22 +1,21 @@
 from django.test import TestCase
 from programs.programs.reproductive_health_care.calculator import ReproductiveHealthCare
-from screener.models import Screen, HouseholdMember, IncomeStream
-from django.conf import settings
+from screener.models import Screen, HouseholdMember
 
 
 class TestReproductiveHealthCarePension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
-            zipcode='80205',
-            county='Denver County',
+            zipcode="80205",
+            county="Denver County",
             household_size=1,
             household_assets=0,
-            has_no_hi=True
+            has_no_hi=True,
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
-            relationship='headOfHousehold',
+            relationship="headOfHousehold",
             age=60,
             student=False,
             student_full_time=False,
@@ -31,8 +30,9 @@ class TestReproductiveHealthCarePension(TestCase):
         )
 
     def test_reproductive_health_care_pass_all_conditions(self):
-        rhc = ReproductiveHealthCare(self.screen1, [
-                  {"name_abbreviated": 'medicaid', "eligible": True}])
+        rhc = ReproductiveHealthCare(
+            self.screen1, [{"name_abbreviated": "medicaid", "eligible": True}]
+        )
         eligibility = rhc.eligibility
 
         self.assertTrue(eligibility["eligible"])
@@ -41,8 +41,9 @@ class TestReproductiveHealthCarePension(TestCase):
         self.person1.has_no_hi = False
         self.person1.save()
 
-        rhc = ReproductiveHealthCare(self.screen1,
-                  [{"name_abbreviated": 'medicaid', "eligible": False}])
+        rhc = ReproductiveHealthCare(
+            self.screen1, [{"name_abbreviated": "medicaid", "eligible": False}]
+        )
         eligibility = rhc.eligibility
 
         self.assertFalse(eligibility["eligible"])

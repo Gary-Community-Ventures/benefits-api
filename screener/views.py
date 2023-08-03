@@ -195,7 +195,7 @@ def eligibility_results(screen, batch=False):
     )
 
     def sort_first(program):
-        calc_first = ('tanf', 'ssi', 'medicaid')
+        calc_first = ('tanf', 'ssi', 'medicaid', 'nslp')
 
         if program.name_abbreviated in calc_first:
             return 0
