@@ -127,7 +127,10 @@ class ScreenSerializer(serializers.ModelSerializer):
             'needs_mental_health_help',
             'needs_child_dev_help',
             'needs_funeral_help',
-            'needs_family_planning_help'
+            'needs_family_planning_help',
+            'needs_job_resources',
+            'needs_dental_care',
+            'needs_legal_services'
         )
         read_only_fields = (
             'id',
