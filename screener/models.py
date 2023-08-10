@@ -7,6 +7,7 @@ from authentication.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 from programs.models import Program
+from parler.models import TranslatableModel, TranslatedFields
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 
 
@@ -109,8 +110,7 @@ class Screen(models.Model):
         for expense_type in expense_types:
             for household_member in household_members:
                 household_expense_types = household_member.expenses.values_list("type", flat=True)
-                if expense_type in household_expense_types:
-                    return True
+                if expense_type in household_expense_types: return True
         return False
 
     def num_children(self, age_min=0, age_max=18, include_pregnant=False, child_relationship=['child', 'fosterChild']):
@@ -185,7 +185,7 @@ class Screen(models.Model):
         all_members = self.household_members.values()
         for member in all_members:
             if member['id'] in relationship_map:
-                if relationship_map[member['id']] is not None:
+                if relationship_map[member['id']] != None:
                     continue
 
             relationship = member['relationship']
@@ -211,7 +211,7 @@ class Screen(models.Model):
                         probabable_spouse = other_member['id']
                         break
             relationship_map[member['id']] = probabable_spouse
-            if probabable_spouse is None:
+            if probabable_spouse != None:
                 relationship_map[probabable_spouse] = member['id']
         return relationship_map
 
@@ -231,8 +231,7 @@ class Screen(models.Model):
 
         has_type = False
         for insurance in types_of_hi:
-            if not types_of_hi[insurance]:
-                continue
+            if not types_of_hi[insurance]: continue
             if insurance in types:
                 has_type = True
             elif only:
@@ -511,7 +510,6 @@ class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name='eligibility_snapshots', on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
     is_batch = models.BooleanField(default=False)
-
     def generate_program_snapshots(self):
         eligibility = self.screen.eligibility_results()
         for item in eligibility:
