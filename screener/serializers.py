@@ -1,7 +1,6 @@
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
-from parler_rest.serializers import TranslatableModelSerializer, TranslatedFieldsField
 from programs.serializers import NavigatorSerializer
 
 

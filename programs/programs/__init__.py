@@ -20,6 +20,7 @@ from programs.programs.property_credit_rebate.calculator import calculate_proper
 from programs.programs.old_age_pension.calculator import calculate_old_age_pension
 from programs.programs.universal_preschool.calculator import calculate_universal_preschool
 from programs.programs.my_spark.calculator import calculate_my_spark
+from programs.programs.ssdi.calculator import calculate_ssdi
 
 calculators = {
     "acp": calculate_affordable_connectivity,
@@ -43,5 +44,6 @@ calculators = {
     "cpcr": calculate_property_credit_rebate,
     "oap": calculate_old_age_pension,
     "upk": calculate_universal_preschool,
-    "myspark": calculate_my_spark
+    "myspark": calculate_my_spark,
+    "ssdi": calculate_ssdi,
 }
