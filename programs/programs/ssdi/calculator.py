@@ -54,7 +54,7 @@ class Ssdi():
         self._condition(someone_is_disabled, messages.has_disability())
 
         # Income test
-        self._condition(someone_meets_income_test, messages.income(member_income, income_limit))
+        self._condition(someone_meets_income_test, messages.income(lowest_income, income_limit))
 
     def calc_value(self):
         self.value = Ssdi.amount * 12 * self.members_eligible
