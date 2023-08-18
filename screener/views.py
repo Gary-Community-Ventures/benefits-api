@@ -24,7 +24,7 @@ from screener.serializers import (
     MessageSerializer,
 )
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
-import programs.programs.urgent_need_functions as urgent_need_functions
+import programs.programs.urgent_needs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program, Referrer
 from programs.serializers import UrgentNeedSerializer
 from django.core.exceptions import ObjectDoesNotExist
@@ -331,7 +331,9 @@ def urgent_needs(screen, language):
         'denver': urgent_need_functions.lives_in_denver(screen),
         'helpkitchen_zipcode': urgent_need_functions.helpkitchen_zipcode(screen),
         'child': urgent_need_functions.child(screen),
-        'bia_food_delivery': urgent_need_functions.bia_food_delivery(screen)
+        'bia_food_delivery': urgent_need_functions.bia_food_delivery(screen),
+        'trua': urgent_need_functions.trua(screen),
+        'eoc': urgent_need_functions.eoc(screen),
     }
 
     list_of_needs = []
