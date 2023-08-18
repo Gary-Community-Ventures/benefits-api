@@ -33,22 +33,31 @@ class Ssdi():
         self.calc_value()
 
     def calc_eligibility(self):
-        # Has a disability
-        someone_is_blind = False
         someone_is_disabled = False
+        someone_meets_income_test = False
+        lowest_income = float('inf')
+        self.members_eligible = 0
         for member in self.screen.household_members.all():
-            someone_is_blind = someone_is_blind or member.visually_impaired
-            someone_is_disabled = someone_is_disabled or member.disabled
+            member_is_disabled = member.disabled or member.visually_impaired
+            someone_is_disabled = someone_is_disabled or member_is_disabled
 
-        self._condition(someone_is_blind or someone_is_disabled, messages.has_disability())
+            income_limit = Ssdi.income_limit_blind if member.visually_impaired else Ssdi.income_limit
+            member_income = member.calc_gross_income('monthly', ('all',))
+            member_meets_income_test = (member_income < income_limit) and member_is_disabled
+            someone_meets_income_test = someone_meets_income_test or member_meets_income_test
+            if member_meets_income_test and member_is_disabled:
+                self.members_eligible += 1
+            if member_income < lowest_income and member_is_disabled:
+                lowest_income = member_income
+
+        # Has a disability
+        self._condition(someone_is_disabled, messages.has_disability())
 
         # Income test
-        income_limit = Ssdi.income_limit_blind if someone_is_blind else Ssdi.income_limit
-        household_income = self.screen.calc_gross_income('yearly', ('all',))
-        self._condition(household_income < income_limit, messages.income(household_income, income_limit))
+        self._condition(someone_meets_income_test, messages.income(member_income, income_limit))
 
     def calc_value(self):
-        self.value = Ssdi.amount * 12
+        self.value = Ssdi.amount * 12 * self.members_eligible
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
