@@ -192,6 +192,7 @@ def eligibility_results(screen, batch=False):
         'oap',
         'acp',
         'lifeline',
+        'pell_grant'
     )
 
     def sort_first(program):
