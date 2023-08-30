@@ -3,12 +3,12 @@ from django.utils.translation import gettext_noop as _
 
 def income(income, max_income):
     '''
-    Household makes ${income} per month which must be less than ${max_income}
+    Household makes ${income} per year which must be less than ${max_income}
     '''
     return (
         _('Household makes'),
         f' ${round(income)} ',
-        _('per month which must be less than'),
+        _('per year which must be less than'),
         f' ${round(max_income)}'
     )
 

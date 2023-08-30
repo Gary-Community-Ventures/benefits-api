@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-23 11:11-0700\n"
+"POT-Creation-Date: 2023-08-30 14:22-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,26 +15,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\authentication\models.py:47 .\programs\models.py:74
-#: .\screener\models.py:314
+#: .\authentication\models.py:47 .\programs\models.py:109
+#: .\screener\models.py:352
 msgid "email address"
 msgstr "Correo electrónico"
 
-#: .\benefits\settings.py:173
+#: .\benefits\settings.py:154
 msgid "US English"
 msgstr "Inglés de Estados Unidos"
 
-#: .\benefits\settings.py:174
+#: .\benefits\settings.py:155
 msgid "Spanish"
 msgstr "Español"
+
+#: .\benefits\settings.py:156
+msgid "Vietnamese"
+msgstr ""
 
 #: .\programs\programs\messages.py:9
 msgid "Household makes"
 msgstr "Vivienda genera"
 
 #: .\programs\programs\messages.py:11
-msgid "per month which must be less than"
-msgstr "por mes, que debe ser menor de"
+msgid "per year which must be less than"
+msgstr "por año, que debe ser menor de"
 
 #: .\programs\programs\messages.py:21
 msgid "Household resources must not exceed"
