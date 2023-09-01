@@ -1,0 +1,3620 @@
+{
+	"en-us": {
+		"header.appName": ["myfriendben", true],
+		"header.selectLang": ["Language", true],
+		"disclaimer.step-header": ["Step 1 of ", true],
+		"disclaimer.header": ["What you should know before we begin:", true],
+		"disclaimer.sub-header": ["Gary Philanthropy Disclaimer", true],
+		"disclaimer.body": [
+			"This benefit calculator is a tool that recommends public benefits programs for you to consider based upon information you provide about your household and Gary Philanthropy’s (“Gary”) best understanding of publicly available information regarding benefits programs. Gary cannot guarantee eligibility or acceptance into any program. To enroll in a benefit, you will need to apply through the appropriate government agency. The administering government agency will determine final eligibility upon your submission of an application for each program. The information you share through the public benefits screening will be kept confidential but may be shared with a government agency and/or the third-party organization assisting you with the benefits calculator process for the sole purpose of assisting with benefits applications or offering you additional free services through Gary. Under no circumstances will your information be sold. By filling out this benefits calculator, you agree to future contact from Gary or our affiliates regarding your use of the benefits calculator or to offer additional programs that may be of interest to you and your family. Standard message and data costs may apply to these communications. You may opt out of receiving these communications at any time through the opt-out link in the communication.",
+			true
+		],
+		"disclaimer.helper-text": [
+			"Check the box below and then click the Continue button to get started.",
+			true
+		],
+		"disclaimer.error": ["Please check the box to continue.", true],
+		"disclaimer-label": [
+			"By proceeding, you confirm that you have read and agree to the ",
+			true
+		],
+		"landingPage-and-text": [" and ", true],
+		"startOver-button": ["Start Over", true],
+		"continue-button": ["Continue", true],
+		"qcc.step-text": ["Step ", true],
+		"qcc.of-text": [" of ", true],
+		"qcc.optional-sign-up-text": [
+			"Optional: Sign up for benefits updates and/or paid feedback opportunities",
+			true
+		],
+		"qcc.tell-us-text": ["Tell us about your household.", true],
+		"qcc.tell-us-final-text": [
+			"Tell us some final information about your household.",
+			true
+		],
+		"qcc.so-far-text": ["So far you’ve told us about:", true],
+		"qcc.you-text": [" You, ", true],
+		"qcc.hoh-text": ["Head of Household (You)", true],
+		"qcc.createTaxDropdownMenu-label": ["Tax Year", true],
+		"qcc.createTaxDropdownMenu-disabledSelectMenuItemText": [
+			"Select a Tax Year",
+			true
+		],
+		"qcc.createReferralDropdownMenu-label": ["Referral Source", true],
+		"qcc.createReferralDropdownMenu-disabledSelectMenuItemText": [
+			"Select a source",
+			true
+		],
+		"questions.age": ["How old are you?", true],
+		"questions.age-inputLabel": ["Age", true],
+		"questions.zipcode": ["What is your zip code?", true],
+		"questions.zipcode-inputLabel": ["Zip Code", true],
+		"questions.zipcode-a": ["Please select a county: ", true],
+		"questions.zipcode-a-inputLabel": ["County", true],
+		"questions.zipcode-a-disabledSelectMenuItemText": ["Select a county", true],
+		"questions.hasBenefits": [
+			"Does your household currently have any benefits?",
+			true
+		],
+		"questions.hasBenefits-description": [
+			"This information will help make sure we don't give you results for benefits you already have.",
+			true
+		],
+		"questions.hasBenefits-ariaLabel": ["has benefits", true],
+		"questions.hasBenefits-a": [
+			"Please tell us what benefits your household currently has.",
+			true
+		],
+		"questions.hasBenefits-a-ariaLabel": ["current benefits", true],
+		"questions.healthInsurance": [
+			"Which type(s) of health insurance do members of your household have? Check all that apply.",
+			true
+		],
+		"questions.student": ["Are you a student?", true],
+		"questions.student-ariaLabel": ["is a student", true],
+		"questions.student-a": ["Are you a full-time student?", true],
+		"questions.student-a-ariaLabel": ["is a full-time student", true],
+		"questions.pregnant": ["Are you pregnant?", true],
+		"questions.pregnant-ariaLabel": ["is pregnant", true],
+		"questions.unemployed": ["Are you currently unemployed?", true],
+		"questions.unemployed-ariaLabel": ["is currently unemployed", true],
+		"questions.unemployed-a": ["Did you work in the past 18 months?", true],
+		"questions.unemployed-a-ariaLabel": [
+			"has worked in the past 18 months",
+			true
+		],
+		"questions.blindOrVisuallyImpaired": [
+			"Are you blind or visually impaired?",
+			true
+		],
+		"questions.blindOrVisuallyImpaired-description": [
+			"\"Visually impaired\" means you cannot correct your vision to a \"normal\" level.",
+			true
+		],
+		"questions.blindOrVisuallyImpaired-ariaLabel": [
+			"is blind or visually impaired",
+			true
+		],
+		"questions.disabled": [
+			"Do you have any disabilities that make you unable to work now or in the future?",
+			true
+		],
+		"questions.disabled-ariaLabel": ["has any disabilities", true],
+		"questions.veteran": [
+			"Do you serve or have you served in the U.S. Armed Forces, National Guard or Reserves?",
+			true
+		],
+		"questions.veteran-ariaLabel": ["is a veteran", true],
+		"questions.hasIncome": ["Do you have an income?", true],
+		"questions.hasIncome-description": [
+			"Income is the money you earn or receive before deducting taxes. This includes money from jobs, alimony, investments, or gifts. Enter income for yourself only. You will have a chance to enter income for other household members later.",
+			true
+		],
+		"questions.hasIncome-ariaLabel": ["has an income", true],
+		"questions.hasIncome-a": [
+			"What type of income have you had most recently?",
+			true
+		],
+		"questions.hasIncome-a-ariaLabel": ["most recent type of income", true],
+		"questions.hasExpenses": ["Does your household have any expenses?", true],
+		"questions.hasExpenses-description": [
+			"Add up expenses for everyone who lives in your home. This includes costs like child care, child support, rent, medical expenses, heating bills, and more. We will ask only about expenses that may affect benefits. We will not ask about expenses such as food since grocery bills do not affect benefits.",
+			true
+		],
+		"questions.hasExpenses-ariaLabel": ["has expenses", true],
+		"questions.hasExpenses-a": [
+			"What type of expense has your household had most recently?",
+			true
+		],
+		"questions.hasExpenses-a-ariaLabel": ["most recent type of expense", true],
+		"questions.householdSize": [
+			"Including you, how many people are in your household?",
+			true
+		],
+		"questions.householdSize-description": [
+			"This is usually family members who you both live and share important resources with like food and bills.",
+			true
+		],
+		"questions.householdSize-inputLabel": ["Household Size", true],
+		"questions.householdData": [
+			"Tell us about the next person in your household.",
+			true
+		],
+		"questions.householdData-ariaLabel": ["screener household data", true],
+		"questions.householdAssets": [
+			"How much does your whole household have right now in:",
+			true
+		],
+		"questions.householdAssets-description": [
+			"Cash on hand? Checking or saving accounts? Stocks, bonds or mutual funds? In some cases, eligibility for benefits may be affected if your household owns other valuable assets such as a car or life insurance policy.",
+			true
+		],
+		"questions.householdAssets-inputLabel": ["Dollar Amount", true],
+		"questions.lastTaxFilingYear": [
+			"What was the last year you filed taxes for?",
+			true
+		],
+		"questions.lastTaxFilingYear-description": [
+			"The most recent year you can file taxes for is 2022.",
+			true
+		],
+		"questions.referralSource": ["How did you hear about this screener?", true],
+		"questions.referralSource-a": ["If other, please specify:", true],
+		"questions.referralSource-a-inputLabel": ["Other referral source", true],
+		"questions.signUpInfo": [
+			"What would you like us to contact you about?",
+			true
+		],
+		"questions.signUpInfo-a": [
+			"Please provide your contact info below: ",
+			true
+		],
+		"questions.signUpInfo-a-ariaLabel": ["screener optional signup page", true],
+		"questions.acuteHHConditions": [
+			"Is anyone in your household in immediate need of help with any of the following?",
+			true
+		],
+		"validation-helperText.age": ["Please enter a valid age (13-130)", true],
+		"validation-helperText.zipcode": ["Please enter a valid CO zip code", true],
+		"validation-helperText.healthInsurance": [
+			"If none of these apply, please select \"One or more household member(s) do not have health insurance\"",
+			true
+		],
+		"validation-helperText.incomeValue": [
+			"Please enter a number greater than 0",
+			true
+		],
+		"validation-helperText.expenseValue": [
+			"Please enter a number greater than 0",
+			true
+		],
+		"validation-helperText.householdSize": ["Number of People (max. 8)", true],
+		"validation-helperText.assets": [
+			"Please enter 0 or a positive number.",
+			true
+		],
+		"validation-helperText.hHMemberAge": [
+			"Please enter 0 or a positive number",
+			true
+		],
+		"validation-helperText.hhMemberAgeB": [
+			"Please enter 0 or a positive number for the household member's age",
+			true
+		],
+		"validation-helperText.hhMemberRelation": [
+			"Please select a relation option",
+			true
+		],
+		"validation-helperText.hhMemberNoneApply": [
+			"Please deselect all other options if none of these conditions apply",
+			true
+		],
+		"validation-helperText.noneApply": [
+			"If none of these conditions apply please select \"None of these apply\" ",
+			true
+		],
+		"validation-helperText.hhMemberIncome": [
+			"Please select and enter a response for all income fields",
+			true
+		],
+		"validation-helperText.hhMemberExpense": [
+			"Please select and enter a response for all three expense fields",
+			true
+		],
+		"validation-helperText.email": ["Please enter a valid email address", true],
+		"validation-helperText.lastTaxFilingYear": ["*Please select a year", true],
+		"validation-helperText.referralSource": [
+			"Please select a referral source.",
+			true
+		],
+		"validation-helperText.phoneNumber": [
+			"Please enter a 10 digit phone number",
+			true
+		],
+		"validation-helperText.firstName": ["Please enter your first name", true],
+		"validation-helperText.lastName": ["Please enter your last name", true],
+		"validation-helperText.notificationSelection": [
+			"Please select a notification option",
+			true
+		],
+		"validation-helperText.consentCheckbox": [
+			"Please check the box above to sign up for the selected notifications",
+			true
+		],
+		"validation-helperText.noEmailOrPhoneNumber": [
+			"Please enter an email or phone number",
+			true
+		],
+		"validation-helperText.benefits": [
+			"If your household does not receive any of these benefits, please select the \"No\" option above.",
+			true
+		],
+		"previousButton": ["Prev", true],
+		"continueButton": ["Continue", true],
+		"radiofield.label-yes": ["Yes", true],
+		"radiofield.label-no": ["No", true],
+		"radiofield.label-preferNotToAnswer": ["Prefer not to answer", true],
+		"householdDataBlock.createFMInputLabel-headOfHH": ["Your Age", true],
+		"householdDataBlock.createFMInputLabel-person": ["Person ", true],
+		"householdDataBlock.createFMInputLabel-age": [" Age", true],
+		"householdDataBlock.createAgeQuestion-how": ["How old are they?", true],
+		"householdDataBlock.createAgeQuestion-how-headOfHH": [
+			"How old are you?",
+			true
+		],
+		"householdDataBlock.createAgeQuestion-zero": [
+			"If your child is less than a year old, enter 0.",
+			true
+		],
+		"householdDataBlock.createHOfHRelationQuestion-relation": [
+			"What is this person’s relationship to you?",
+			true
+		],
+		"householdDataBlock.createDropdownCompProps-inputLabelText": [
+			"Relation",
+			true
+		],
+		"householdDataBlock.createDropdownCompProps-label": ["Relation Type", true],
+		"householdDataBlock.createDropdownCompProps-disabledSelectMenuItemText": [
+			"Click to select relationship",
+			true
+		],
+		"householdDataBlock.questionHeader": ["Tell us about yourself.", true],
+		"householdDataBlock.member-income": ["Income", true],
+		"relationshipOptions.yourself": ["Yourself", true],
+		"relationshipOptions.child": ["Child", true],
+		"relationshipOptions.fosterChild": ["Foster Child", true],
+		"relationshipOptions.stepChild": ["Step-child", true],
+		"relationshipOptions.grandChild": ["Grandchild", true],
+		"relationshipOptions.spouse": ["Spouse", true],
+		"relationshipOptions.parent": ["Parent", true],
+		"relationshipOptions.fosterParent": ["Foster Parent", true],
+		"relationshipOptions.stepParent": ["Step-parent", true],
+		"relationshipOptions.grandParent": ["Grandparent", true],
+		"relationshipOptions.sisterOrBrother": ["Sister/Brother", true],
+		"relationshipOptions.stepSisterOrBrother": [
+			"Step-sister/Step-brother",
+			true
+		],
+		"relationshipOptions.boyfriendOrGirlfriend": ["Boyfriend/Girlfriend", true],
+		"relationshipOptions.domesticPartner": ["Domestic Partner", true],
+		"relationshipOptions.unrelated": ["Unrelated", true],
+		"relationshipOptions.relatedOther": ["Related in some other way", true],
+		"householdDataBlock.createConditionsQuestion-do-these-apply-to-you": [
+			"Do any of these apply to you?",
+			true
+		],
+		"householdDataBlock.createConditionsQuestion-do-these-apply": [
+			"Do any of these apply to them?",
+			true
+		],
+		"householdDataBlock.createConditionsQuestion-pick": [
+			"It's OK to pick more than one.",
+			true
+		],
+		"conditionOptions.student": [
+			"Student or prospective student at a college, university, or other post-secondary institution",
+			true
+		],
+		"conditionOptions.pregnant": ["Pregnant", true],
+		"conditionOptions.unemployed": ["Unemployed", true],
+		"conditionOptions.blindOrVisuallyImpaired": [
+			"Blind or visually impaired",
+			true
+		],
+		"conditionOptions.disabled": [
+			"Have any disabilities that make you unable to work now or in the future",
+			true
+		],
+		"checkboxGroup.disabledLabel": [
+			"Have any disabilities that make them unable to work now or in the future",
+			true
+		],
+		"conditionOptions.veteran": [
+			"Are serving or have served in the U.S. Armed Forces, National Guard or Reserves",
+			true
+		],
+		"conditionOptions.noneOfTheseApply": ["None of these apply", true],
+		"householdDataBlock.createFTStudentRadioQuestion-ariaLabel": [
+			"is a full-time student",
+			true
+		],
+		"householdDataBlock.createFTStudentRadioQuestion-youQLabel": [
+			"Are you a full-time student?",
+			true
+		],
+		"householdDataBlock.createFTStudentRadioQuestion-questionLabel": [
+			"Are they a full-time student?",
+			true
+		],
+		"householdDataBlock.createUnemployed18MosRadioQuestion-ariaLabel": [
+			"has worked in the past 18 months",
+			true
+		],
+		"householdDataBlock.createUnemployed18MosRadioQuestion-youQLabel": [
+			"Did you work in the last 18 months?",
+			true
+		],
+		"householdDataBlock.createUnemployed18MosRadioQuestion-questionLabel": [
+			"Did they work in the last 18 months?",
+			true
+		],
+		"householdDataBlock.createIncomeRadioQuestion-ariaLabel": [
+			"has an income",
+			true
+		],
+		"householdDataBlock.createIncomeRadioQuestion-questionLabel": [
+			"Does this individual in your household have significant income you have not already included?",
+			true
+		],
+		"householdDataBlock.createIncomeRadioQuestion-questionDescription": [
+			"This includes money from jobs, alimony, investments, or gifts. Income is the money earned or received before deducting taxes.",
+			true
+		],
+		"personIncomeBlock.return-questionLabel": [
+			"What type of income have they had most recently?",
+			true
+		],
+		"personIncomeBlock.return-questionDescription": [
+			"Answer the best you can. You will be able to include additional types of income. The more you include, the more accurate your results will be.",
+			true
+		],
+		"personIncomeBlock.return-addIncomeButton": ["Add another income", true],
+		"personIncomeBlock.createMenuItems-disabledSelectMenuItem": [
+			"Select",
+			true
+		],
+		"incomeOptions.wages": ["Wages, salaries, tips", true],
+		"incomeOptions.selfEmployment": [
+			"Income from freelance, independent contractor, or self-employment work",
+			true
+		],
+		"incomeOptions.unemployment": ["Unemployment Benefits", true],
+		"incomeOptions.cashAssistance": ["Cash Assistance Grant", true],
+		"incomeOptions.childSupport": ["Child Support (Received)", true],
+		"incomeOptions.sSI": ["Supplemental Security Income (SSI)", true],
+		"incomeOptions.sSDisability": ["Social Security Disability Benefits", true],
+		"incomeOptions.sSSurvivor": [
+			"Social Security Survivor's Benefits (Widow/Widower)",
+			true
+		],
+		"incomeOptions.sSRetirement": ["Social Security Retirement Benefits", true],
+		"incomeOptions.sSDependent": [
+			"Social Security Dependent Benefits (retirement, disability, or survivors)",
+			true
+		],
+		"incomeOptions.cOSDisability": ["Colorado State Disability Benefits", true],
+		"incomeOptions.veteran": ["Veteran's Pension or Benefits", true],
+		"incomeOptions.pension": ["Military, Government, or Private Pension", true],
+		"incomeOptions.deferredComp": [
+			"Withdrawals from Deferred Compensation (IRA, Keogh, etc.)",
+			true
+		],
+		"incomeOptions.workersComp": ["Worker's Compensation", true],
+		"incomeOptions.alimony": ["Alimony (Received)", true],
+		"incomeOptions.boarder": ["Boarder or Lodger", true],
+		"incomeOptions.gifts": ["Gifts/Contributions (Received)", true],
+		"incomeOptions.rental": ["Rental Income", true],
+		"incomeOptions.investment": [
+			"Investment Income (interest, dividends, and profit from selling stocks)",
+			true
+		],
+		"personIncomeBlock.createIncomeBlockQuestions-questionLabel": [
+			"If they receive another type of income, select it below.",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamsDropdownMenu-inputLabel": [
+			"Income Type",
+			true
+		],
+		"personIncomeBlock.createIncomeAmountTextfield-questionLabel": [
+			"How much do they receive each pay period for this type of income: ",
+			true
+		],
+		"personIncomeBlock.createIncomeAmountTextfield-amountLabel": [
+			"Amount",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-youQLabel": [
+			"How often are you paid this income: ",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-questionLabel": [
+			"How often are they paid this income: ",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-freqLabel": [
+			"Frequency",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-incomeFreqLabel": [
+			"Income Frequency",
+			true
+		],
+		"personIncomeBlock.createFrequencyMenuItems-disabledSelectMenuItem": [
+			"Select",
+			true
+		],
+		"personIncomeBlock.createIncomeAmountTextfield-hourly-questionLabel": [
+			"What is their hourly rate: ",
+			true
+		],
+		"personIncomeBlock.createHoursWorkedTextfield-youQLabel": [
+			"How many hours do you work on average per week: ",
+			true
+		],
+		"personIncomeBlock.createHoursWorkedTextfield-questionLabel": [
+			"How many hours do they work on average per week: ",
+			true
+		],
+		"householdDataBlock.createExpenseRadioQuestion-ariaLabel": [
+			"has expenses",
+			true
+		],
+		"householdDataBlock.createExpenseRadioQuestion-questionLabel": [
+			"Do they have any expenses",
+			true
+		],
+		"householdDataBlock.createExpenseRadioQuestion-questionDescription": [
+			"This includes costs like rent, mortgage, medical bills, child care, child support and heating bills.",
+			true
+		],
+		"personExpenseBlock.return-questionLabel": [
+			"What type of expense have they had most recently?",
+			true
+		],
+		"personExpenseBlock.return-questionDescription": [
+			"Answer the best you can. You will be able to include additional types of expenses. The more you include, the more accurate your results will be.",
+			true
+		],
+		"personExpenseBlock.return-addExpenseButton": ["Add another expense", true],
+		"personExpenseBlock.createExpenseBlockQuestions-questionLabel": [
+			"If they have another expense, select it below.",
+			true
+		],
+		"personExpenseBlock.createExpenseDropdownMenu-expenseTypeInputLabel": [
+			"Expense Type",
+			true
+		],
+		"personExpenseBlock.createExpenseMenuItems-disabledSelect": [
+			"Select",
+			true
+		],
+		"expenseOptions.childCare": ["Child Care", true],
+		"expenseOptions.childSupport": ["Child Support (Paid)", true],
+		"expenseOptions.dependentCare": ["Dependent Care", true],
+		"expenseOptions.rent": ["Rent", true],
+		"expenseOptions.mortgage": ["Mortgage", true],
+		"expenseOptions.heating": ["Heating", true],
+		"expenseOptions.cooling": ["Cooling", true],
+		"expenseOptions.otherUtilities": ["Other Utilities", true],
+		"expenseOptions.telephone": ["Telephone", true],
+		"expenseOptions.internet": ["Internet", true],
+		"expenseOptions.auto": ["Auto Insurance Premium &/or Payment", true],
+		"expenseOptions.medical": ["Medical Insurance Premium &/or Bills", true],
+		"expenseOptions.studentLoans": ["Student Loans", true],
+		"expenseOptions.creditCard": ["Credit Card Debt", true],
+		"expenseOptions.personalLoan": ["Personal Loan", true],
+		"personExpenseBlock.createExpenseFrequencyDropdownMenu-questionLabel": [
+			"How often do they have this type of expense: ",
+			true
+		],
+		"personExpenseBlock.createExpenseFrequencyDropdownMenu-expenseFrequencyInputLabel": [
+			"Frequency",
+			true
+		],
+		"personExpenseBlock.createExpenseFrequencyDropdownMenu-expenseFrequencySelectLabel": [
+			"Expense Frequency",
+			true
+		],
+		"personExpenseBlock.createExpenseFrequencyMenuItems-disabledSelectMenuItemText": [
+			"Select",
+			true
+		],
+		"personExpenseBlock.createExpenseAmountTextfield-questionLabel": [
+			"How much is this type of expense: ",
+			true
+		],
+		"personExpenseBlock.createExpenseAmountTextfield-expenseAmountTextfieldLabel": [
+			"Amount",
+			true
+		],
+		"incomeBlock.createIncomeBlockQuestions-questionLabel": [
+			"If you receive another type of income, select it below.",
+			true
+		],
+		"incomeBlock.createIncomeStreamsDropdownMenu-incomeTypeInputLabel": [
+			"Income Type",
+			true
+		],
+		"incomeBlock.createIncomeStreamsDropdownMenu-incomeTypeSelectLabel": [
+			"Income Type",
+			true
+		],
+		"incomeBlock.createMenuItems-disabledSelectMenuItemText": ["Select", true],
+		"incomeBlock.createIncomeStreamFrequencyDropdownMenu-questionLabel": [
+			"How often do you receive this income: ",
+			true
+		],
+		"incomeBlock.createIncomeStreamFrequencyDropdownMenu-incomeFrequencyLabel": [
+			"Frequency",
+			true
+		],
+		"incomeBlock.createIncomeStreamFrequencyDropdownMenu-incomeFrequencySelectLabel": [
+			"Income Frequency",
+			true
+		],
+		"incomeBlock.createFrequencyMenuItems-disabledSelectMenuItemText": [
+			"Select",
+			true
+		],
+		"incomeBlock.createIncomeAmountTextfield-questionLabel": [
+			"How much do you receive each pay period for: ",
+			true
+		],
+		"incomeBlock.createIncomeAmountTextfield-hourly-questionLabel": [
+			"What is your hourly rate: ",
+			true
+		],
+		"incomeBlock.createIncomeAmountTextfield-amountLabel": ["Amount", true],
+		"incomeBlock.createHoursWorkedTextfield-questionLabel": [
+			"How many hours do you work on average per week: ",
+			true
+		],
+		"incomeBlock.createHoursWorkedTextfield-amountLabel": ["Hours", true],
+		"incomeBlock.return-error-message": [
+			"Please select and enter a response for all income fields",
+			true
+		],
+		"incomeBlock.return-addIncomeButton": ["Add another income", true],
+		"expenseBlock.createExpenseBlockQuestions-questionLabel": [
+			"If you have another expense, select it below.",
+			true
+		],
+		"expenseBlock.createExpenseDropdownMenu-expenseTypeInputLabel": [
+			"Expense Type",
+			true
+		],
+		"expenseBlock.createExpenseDropdownMenu-expenseTypeSelectLabel": [
+			"Expense Type",
+			true
+		],
+		"expenseBlock.createExpenseMenuItems-disabledSelectMenuItemText": [
+			"Select",
+			true
+		],
+		"expenseBlock.createExpenseAmountTextfield-questionLabel": [
+			"How much is this expense every month: ",
+			true
+		],
+		"expenseBlock.createExpenseAmountTextfield-amountLabel": ["Amount", true],
+		"expenseBlock.return-error-message": [
+			"Please select and enter a response for all expense fields",
+			true
+		],
+		"expenseBlock.return-addExpenseButton": ["Add another expense", true],
+		"confirmation.return-stepLabel": ["Step ", true],
+		"confirmation.return-ofLabel": [" of ", true],
+		"confirmation.return-subheader": ["Ok. Here's what we've got:", true],
+		"confirmation.return-questionLabel": [
+			"Is all of your information correct?",
+			true
+		],
+		"confirmation.displayAllFormData-personLabel": ["person", true],
+		"confirmation.displayAllFormData-peopleLabel": ["people", true],
+		"confirmation.displayAllFormData-yourHouseholdLabel": [
+			"Household Members",
+			true
+		],
+		"confirmation.editLinkText": ["Edit", true],
+		"confirmation.displayAllFormData-householdResourcesText": [
+			"Household resources",
+			true
+		],
+		"confirmation.displayAllFormData-householdResourcesDescription": [
+			" (This is cash on hand, checking or saving accounts, stocks, bonds or mutual funds.)",
+			true
+		],
+		"confirmation.displayAllFormData-zipcodeText": ["Zip code: ", true],
+		"confirmation.displayAllFormData-countyText": ["County: ", true],
+		"confirmation.displayAllFormData-lastTaxFilingYear": [
+			"Last Tax Filing Year: ",
+			true
+		],
+		"confirmation.displayAllFormData-referralSourceText": [
+			"Referral Source",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-youText": [" You, ", true],
+		"confirmation.headOfHouseholdDataBlock-headOfHouseholdText": [
+			" head of household",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-conditionsText": [
+			"Conditions:",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-studentFulltimeText": [
+			"Full-time student",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-studentText": ["Student", true],
+		"confirmation.headOfHouseholdDataBlock-pregnantText": ["Pregnant", true],
+		"confirmation.headOfHouseholdDataBlock-unemployed18MosText": [
+			"Unemployed, worked in the last 18 months",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-unemployedText": [
+			"Unemployed",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-blindOrVisuallyImpairedText": [
+			"Blind or visually impaired",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-disabledText": ["Disabled", true],
+		"confirmation.headOfHouseholdDataBlock-veteranText": ["Veteran", true],
+		"confirmation.headOfHouseholdDataBlock-medicaidText": [
+			"Receiving Medicaid",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-disabilityRelatedMedicaidText": [
+			"Receiving disability-related Medicaid",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-incomeLabel": ["Income:", true],
+		"confirmation.headOfHouseholdDataBlock-expensesLabel": [
+			"Monthly Household Expenses",
+			true
+		],
+		"confirmation.displayAllFormData-currentHHBenefitsText": [
+			"Current Household Benefits",
+			true
+		],
+		"confirmation.displayAllFormData-healthInsurance": [
+			"Household Insurance",
+			true
+		],
+		"confirmation.displayAllFormData-acuteHHConditions": [
+			"Immediate Needs",
+			true
+		],
+		"confirmation.none": [" None", true],
+		"confirmation.noIncome": [" None", true],
+		"confirmation.residenceInfo": ["Residence Information", true],
+		"frequencyOptions.weekly": ["every week", true],
+		"frequencyOptions.biweekly": ["every 2 weeks", true],
+		"frequencyOptions.monthly": ["every month", true],
+		"frequencyOptions.hourly": ["hourly", true],
+		"results-error.header": ["Oops! Looks like something went wrong.", true],
+		"results-error.message": [
+			"We're sorry. We are having some trouble completing your request. Please make sure you have completed all of the questions on the screen and try again. If you are still unable to load your benefits results, please contact myfriendben@garycommunity.org.",
+			true
+		],
+		"results-error.button": ["Back to Screener", true],
+		"results.return-screenerIdLabel": ["Screener ID: ", true],
+		"results.return-programsUpToLabel": [" programs, up to ", true],
+		"results.return-perYearOrLabel": [" per year or ", true],
+		"results.return-perMonthLabel": [
+			" per month in cash or reduced expenses for you to consider",
+			true
+		],
+		"results.share": ["Share", true],
+		"results.share-email": ["Email", true],
+		"results.share-copyLink": ["Copy Link", true],
+		"results.share-copied": ["Copied", true],
+		"results.share-header": ["Share MyFriendBen with a friend:", true],
+		"results.return-sendResultsButton": ["Send Results", true],
+		"results.return-ineligibilityLinkText": [
+			"* For additional information on programs that you were not eligible for click here",
+			true
+		],
+		"results.return-goBackToEligibleText": [
+			"Go back to eligible programs",
+			true
+		],
+		"results.return-estimatedDeliveryTimeA": [
+			"*On average people who are approved for this benefit start receiving it ",
+			true
+		],
+		"results.return-estimatedDeliveryTimeB": [
+			" after completing the application.",
+			true
+		],
+		"results.displaySubheader-rememberDisclaimerText": [
+			"Remember that we can't guarantee eligibility, but based on the information you provided, we believe you are likely eligible for the programs below:",
+			true
+		],
+		"results.displaySubheader-basedOnInformationText": [
+			"Based on the information you provided, we believe you are likely not eligible for the programs below:",
+			true
+		],
+		"results.displaySubheader-sendResultsDescText": [
+			"To receive a copy of these results by email or text please click the email results button.",
+			true
+		],
+		"results.resultsTable-benefitLabel": ["Benefit", true],
+		"results.resultsTable-annualValueLabel": ["Estimated Annual Value", true],
+		"results.resultsTable-timeToApply": ["Time to Apply", true],
+		"results.resultsTable-sorryNoProgramsWereFoundLabel": [
+			"Sorry, we were not able to find any programs for you based on the information that was provided.",
+			true
+		],
+		"results.resultsRow-applyButton": ["Apply", true],
+		"results.resultsRow-expandForEligibilityLink": [
+			"Expand for eligibility details",
+			true
+		],
+		"results.resultsRow-applyWithAssistance": ["Apply with assistance", true],
+		"results.resultsRow-reducedExpensesText": ["reduced expenses", true],
+		"results.resultsRow-cashText": ["cash", true],
+		"results.resultsRow-reducedCostText": ["reduced cost services", true],
+		"results.returnSignupCitizenFilter": [
+			"Only show benefits that do not require a citizen or qualified non-citizen in the household",
+			true
+		],
+		"results.perYear": ["Per Year", true],
+		"results.returnToScreenButton": ["Edit Screener Responses", true],
+		"filter.filterByCategoryButton": ["Filters", true],
+		"filter.filterByEligibility": ["Filter By Eligibility", true],
+		"filter.filterEligible": ["Eligible", true],
+		"filter.filterInEligible": ["Ineligible", true],
+		"filter.filterAlreadyHave": ["Include benefits that I already have", true],
+		"filter.filterByCategory": ["Filter By Category", true],
+		"filter.filterAllCategories": ["All Categories", true],
+		"results.displayResultsFilterButtons-benefitPrograms": [
+			"Benefit Programs",
+			true
+		],
+		"results.displayResultsFilterButtons-urgentNeedsResources": [
+			"Immediate Needs",
+			true
+		],
+		"loading.return-loadingText": [
+			"Please wait while we gather your results...",
+			true
+		],
+		"results.displaySubheader-loadingDisclaimerText": [
+			"Remember that we can't guarantee eligibility, but based on the information you provided, we believe you are likely eligible for the following programs.",
+			true
+		],
+		"results.displaySubheader-noResults": ["No Benefits Results Found", true],
+		"taxYearOptions.noRecentFiling": [
+			"I have not filed taxes in the last 5 years",
+			true
+		],
+		"benefitOptions.tanf": [
+			"Cash assistance and work support (Temporary Assistance for Needy Families (TANF/Colorado Works))",
+			true
+		],
+		"benefitOptions.wic": [
+			"Food and breastfeeding assistance (Special Supplemental Nutrition Program for Women, Infants, and Children (WIC))",
+			true
+		],
+		"benefitOptions.snap": [
+			"Food assistance (Supplemental Nutrition Assistance Program/SNAP)",
+			true
+		],
+		"benefitOptions.lifeline": [
+			"Phone or internet discount (Lifeline Phone/Internet Service)",
+			true
+		],
+		"benefitOptions.acp": [
+			"Home internet discount (Affordable Connectivity Program)",
+			true
+		],
+		"benefitOptions.eitc": [
+			"Federal tax credit: earned income (Earned Income Tax Credit)",
+			true
+		],
+		"benefitOptions.coeitc": [
+			"State tax credit: earned income (Colorado Earned Income Tax Credit)",
+			true
+		],
+		"benefitOptions.nslp": [
+			"Free school meals (National School Lunch Program)",
+			true
+		],
+		"benefitOptions.ctc": [
+			"Federal tax credit: child tax credit (Child Tax Credit)",
+			true
+		],
+		"benefitOptions.rtdlive": ["Discounted RTD fares (RTD LiVE)", true],
+		"benefitOptions.cccap": [
+			"Help with child care costs (Colorado Child Care Assistance Program)",
+			true
+		],
+		"benefitOptions.mydenver": [
+			"Reduced-cost youth programs (MY Denver Card)",
+			true
+		],
+		"benefitOptions.leap": ["Help with winter heating bills (LEAP)", true],
+		"referralOptions.testOrProspect": ["Test / Prospective Partner", true],
+		"referralOptions.searchEngine": ["Google or other search engine", true],
+		"referralOptions.other": ["Other", true],
+		"signUpOptions.sendUpdates": [
+			"Please notify me when new benefits become available that I am likely eligible for based on the information I have provided.",
+			true
+		],
+		"signUpOptions.sendOffers": [
+			"Please notify me when there are paid opportunities to provide feedback on this screener.",
+			true
+		],
+		"signUp.createFirstNameTextfield-label": ["First Name", true],
+		"signUp.createLastNameTextfield-label": ["Last Name", true],
+		"signUp.createEmailTextfield-label": ["Email", true],
+		"signUp.createPhoneTextfield-label": ["Cell Phone", true],
+		"signUp.displayDisclosureSection-consentText": [
+			"By filling out this form, you agree to future contact from Gary Philanthropy or our affiliates regarding your use of the benefits calculator or to offer additional programs that may be of interest to you and your family. Standard message and data costs may apply to these communications. You may opt out of receiving these communications at any time through the opt-out link in the communication.",
+			true
+		],
+		"signUp.displayDisclosureSection-consentCheck1": [
+			"I have read, understand, and agree to the terms of My Friend Ben's ",
+			true
+		],
+		"signUp.displayDisclosureSection-consentCheckLink": [
+			"data privacy policy",
+			true
+		],
+		"signUp.displayDisclosureSection-consentCheck4": [
+			" and consent to contact.",
+			true
+		],
+		"emailResults.displaySubheader-text": ["Save my results", true],
+		"emailResults.enter-emailLabel": ["Email my results link", true],
+		"emailResults.enter-phoneNumberLabel": ["Text my results link", true],
+		"emailResults.sendButton": ["Send", true],
+		"emailResults.return-signupCompleted": [
+			"A copy of your results has been sent.",
+			true
+		],
+		"emailResults.return-signupCompleted-email": [
+			"A copy of your results has been sent. If you do not see the email in your inbox, please check your spam folder.",
+			true
+		],
+		"emailResults.copy-results-text": ["Copy my results link", true],
+		"landingPage.step-header": ["Step 0 of ", true],
+		"landingPage.body": [
+			"MyFriendBen is a tool that can help determine benefits you are likely eligible for. Here's what you should know before you get started:",
+			true
+		],
+		"landingPage.firstBulletItem": [
+			"MyFriendBen only provides estimates of what you may qualify for. You should not rely on these estimates. You must confirm your final eligibility and benefit amount with the proper agency or other decision maker.",
+			true
+		],
+		"landingPage.publicCharge": [
+			"Some benefits are available to Non-U.S. citizens. Non-U.S. citizens planning to apply for legal permanent residency or a visa should consider how applying for any benefits may affect their immigration status. For more information, please review the ",
+			true
+		],
+		"landingPage.publicChargeLink": [
+			"Colorado Department of Human Services Public Charge Rule",
+			true
+		],
+		"landingPage-policyText": ["Privacy Policy", true],
+		"landingPage-additionalTerms": [
+			"Additional Terms & Consent to Contact",
+			true
+		],
+		"healthInsuranceOptions.employer": [
+			"Employer-provided health insurance",
+			true
+		],
+		"healthInsuranceOptions.private": ["Private health insurance", true],
+		"healthInsuranceOptions.medicaid": [
+			"Health First Colorado (Medicaid)",
+			true
+		],
+		"healthInsuranceOptions.medicare": ["Medicare", true],
+		"healthInsuranceOptions.chp": ["Child Health Plan Plus (CHP+)", true],
+		"healthInsuranceOptions.none": [
+			"One or more household member(s) do not have health insurance",
+			true
+		],
+		"acuteConditionOptions.food": ["Food or groceries", true],
+		"acuteConditionOptions.babySupplies": [
+			"Diapers and other baby supplies",
+			true
+		],
+		"acuteConditionOptions.housing": [
+			"Emergency help paying mortgage, rent, or utilities",
+			true
+		],
+		"acuteConditionOptions.support": [
+			"A challenge you or your child would like to talk about",
+			true
+		],
+		"acuteConditionOptions.childDevelopment": [
+			"Concern about your baby or toddler's development",
+			true
+		],
+		"acuteConditionOptions.loss": ["Funeral, burial, or cremation costs", true],
+		"acuteConditionOptions.familyPlanning": [
+			"Family planning or birth control",
+			true
+		],
+		"acuteConditionOptions.jobResources": ["Finding a job", true],
+		"acuteConditionOptions.dentalCare": ["Low-cost dental care", true],
+		"acuteConditionOptions.legalServices": [
+			"Free or low-cost help with civil legal needs",
+			true
+		],
+		"urgentNeedsTable.visit-website-button": ["Visit website", true],
+		"urgentNeedsTable.resources-columnHeader": ["Resources", true],
+		"urgentNeedsTable.typeOfResource-columnHeader": ["Type of Resource", true],
+		"urgentNeedsRow.formatPhoneNumber": ["Phone Number: ", true],
+		"benefitCategories.cash": ["Cash Assistance", true],
+		"benefitCategories.foodAndNutrition": ["Food and Nutrition", true],
+		"benefitCategories.childCare": ["Child Care, Preschool, and Youth", true],
+		"benefitCategories.housingAndUtilities": ["Housing and Utilities", true],
+		"benefitCategories.transportation": ["Transportation", true],
+		"benefitCategories.healthCare": ["Health Care", true],
+		"benefitCategories.taxCredits": ["Tax Credits", true],
+		"benefitCategories.childCareHelperText": [
+			"Do you wonder why the annual value of these programs may differ from the total values in your results? It's because this annual value is an estimate of the combined likely average value of child care and preschool programs you qualify for. Savings from programs may overlap. You may be able to combine benefits to help pay for child care and preschool.",
+			true
+		],
+		"cashAssistanceBenefits.tanf": [
+			"Cash assistance and work support (Temporary Assistance for Needy Families (TANF/Colorado Works))",
+			true
+		],
+		"cashAssistanceBenefits.ssi": [
+			"Federal cash assistance for individuals who are disabled, blind, or 65 years of age or older (Supplemental Security Income/SSI)",
+			true
+		],
+		"cashAssistanceBenefits.andcs": [
+			"State cash assistance for individuals who are disabled and receiving SSI (Aid to the Needy Disabled - Colorado Supplement/AND-CS)",
+			true
+		],
+		"cashAssistanceBenefits.oap": [
+			"State cash assistance for individuals 60 years of age or older (Old Age Pension/OAP)",
+			true
+		],
+		"cashAssistanceBenefits.coPropTaxRentHeatCreditRebate": [
+			"Cash to pay property tax, rent, and heat bills (Colorado Property Tax/Rent/Heat Credit Rebate)",
+			true
+		],
+		"foodAndNutritionBenefits.snap": [
+			"Food assistance (Supplemental Nutrition Assistance Program/SNAP)",
+			true
+		],
+		"foodAndNutritionBenefits.wic": [
+			"Food and breastfeeding assistance (Special Supplemental Nutrition Program for Women, Infants, and Children/WIC)",
+			true
+		],
+		"foodAndNutritionBenefits.nslp": [
+			"Free school meals (National School Lunch Program)",
+			true
+		],
+		"foodAndNutritionBenefits.ede": [
+			"Food support for people 60 years of age or older (Everyday Eats)",
+			true
+		],
+		"childCareBenefits.cccap": [
+			"Help with child care costs (Colorado Child Care Assistance Program/CCCAP)",
+			true
+		],
+		"childCareBenefits.denverpresc": [
+			"Tuition credits for Denver preschoolers (Denver Preschool Program)",
+			true
+		],
+		"childCareBenefits.coheadstart": [
+			"Free early child care and preschool (Colorado Head Start)",
+			true
+		],
+		"childCareBenefits.mydenver": [
+			"Reduced-cost youth programs (MY Denver Card)",
+			true
+		],
+		"childCareBenefits.univpresc": [
+			"Free preschool (Universal Preschool Colorado)",
+			true
+		],
+		"housingAndUtilities.acp": [
+			"Home internet discount (Affordable Connectivity Program)",
+			true
+		],
+		"housingAndUtilities.lifeline": [
+			"Phone or internet discount (Lifeline Phone/Internet Service)",
+			true
+		],
+		"housingAndUtilities.leap": [
+			"Help with winter heating bills (Low-Income Energy Assistance Program/LEAP)",
+			true
+		],
+		"housingAndUtilities.erc": [
+			"Free home energy upgrades (Energy Resource Center)",
+			true
+		],
+		"transportationBenefits.rtdlive": ["Discounted RTD fares (RTD LiVE)", true],
+		"healthCareBenefits.reproductivehealth": [
+			"Free birth control (Reproductive Health Care Program)",
+			true
+		],
+		"healthCareBenefits.familyplanning": [
+			"Free family planning benefits (Family Planning Services)",
+			true
+		],
+		"healthCareBenefits.dentallowincseniors": [
+			"Low-cost dental care for people 60 years of age or older (Colorado Dental Health Program for Low-Income Seniors)",
+			true
+		],
+		"taxCreditBenefits.eitc": [
+			"Federal tax credit: earned income (Earned Income Tax Credit)",
+			true
+		],
+		"taxCreditBenefits.ctc": [
+			"Federal tax credit: child tax credit (Child Tax Credit)",
+			true
+		],
+		"taxCreditBenefits.coeitc": [
+			"State tax credit: earned income (Colorado Earned Income Tax Credit/Expanded Earned Income Tax Credit)",
+			true
+		],
+		"taxCreditBenefits.coctc": [
+			"State tax credit: Colorado child tax credit",
+			true
+		],
+		"displayAnnualIncome.annual": [" annually", true],
+		"listAllIncomeStreams.hoursPerWeek": [" hours/week ", true],
+		"filterSection.citizenship": ["Citizenship", true],
+		"filterSection.other": ["Other", true],
+		"filterSection.reset": ["Reset", true],
+		"noResults.p-One": [
+			"It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Immediate Needs” tab.",
+			true
+		],
+		"noResults.p-Two": ["For additional resources, visit ", true],
+		"noResults.p-Three": [
+			" to chat with someone online or on the phone to get the resources you’re looking for.",
+			true
+		],
+		"noResultsOrUrgentNeeds.p-One": [
+			"It looks like you didn’t indicate any immediate needs.",
+			true
+		],
+		"errorMessage-county": ["Please Select a county", true],
+		"errorMessage-numberOfHHMembers": [
+			"Please enter the number of people in your household (max. 8)",
+			true
+		],
+		"errorMessage-age": ["Please enter your age", true],
+		"errorMessage-incomeType": ["Please select an income type", true],
+		"errorMessage-incomeFrequency": ["Please select a frequency", true],
+		"errorMessage-greaterThanZero": [
+			"Please enter a number greater than 0",
+			true
+		],
+		"errorMessage-HHMemberAge": ["Please enter a number 0 or greater", true],
+		"errorMessage-HHMemberRelationship": ["Please select a relationship", true],
+		"errorMessage-expenseType": ["Please select an expense type", true],
+		"errorMessage-otherReferralSource": [
+			"Please type in your referral source",
+			true
+		],
+		"TwoOneOneHeader.aboutUs": ["ABOUT US", true],
+		"TwoOneOneHeader.support": ["SUPPORT", true],
+		"TwoOneOneHeader.agencies": ["COMMUNITY AGENCIES", true],
+		"TwoOneOneHeader.resources": ["SEARCH RESOURCES", true],
+		"TwoOneOneHeader.chat": ["CHAT", true],
+		"TwoOneOneHeader.login": ["LOGIN", true],
+		"footer-header": [
+			"Not finding what you are looking for? Try these other ways to get help:",
+			true
+		],
+		"footer-dial-text": ["Dial ", true],
+		"footer-or-text": [" or", true],
+		"footer-tollFree-text": ["toll free", true],
+		"footer-text-text": ["Text", true],
+		"footer-to-text": ["to", true],
+		"footer-standardMsg-text": [
+			"*Standard message and data rates may apply.",
+			true
+		],
+		"footer-chat-text": ["Chat", true],
+		"footer-liveChat-text": ["Click to live chat with a 2-1-1 Navigator", true],
+		"footer-first-paragraph": [
+			"Services found within search results may involve eligibility criteria. Please contact the resource directly to find out more information about how to obtain these services. This site contains links to other sites. All of the information provided is believed to be accurate and reliable. However, 2-1-1 Colorado assumes no responsibility for any errors appearing, nor for the use of the information provided.",
+			true
+		],
+		"footer-second-paragraph": [
+			"2-1-1 Colorado is committed to helping Colorado citizens connect with the services they need. Whether by phone or internet, our goal is to present accurate, well-organized and easy-to-find information from state and local health and human services programs. We accomplish this through the work of our four Area Information Centers across the state. No matter where you live in Colorado, you can dial 2-1-1 and find information about resources in your local community. Whether you need help finding food or housing, child care, crisis counseling or substance abuse treatment, one number is all you need to know.",
+			true
+		],
+		"footer-copyright": ["© Copyright 2-1-1 Colorado", true],
+		"footer-terms-of-service-link": ["2-1-1 Terms of Service |", true],
+		"footer-twoOneOne-privacy": ["2-1-1 Privacy Policy |", true],
+		"footer-twoOneOne-mfb": ["MyFriendBen Privacy Policy", true],
+		"jeffcoLandingPage-text": [
+			"Through early childhood education, adult and child protection, job training, food assistance, Medicaid, and other programs, Jefferson County Human Services helps people build better, safer lives. Take a quick screener to be sure you're receiving all of the benefits and programs you may be eligible for to achieve your own prosperity. MyFriendBen will give you an estimate of how much you may be able to receive in public benefits.",
+			true
+		],
+		"jeffco-getStarted-button": ["Get Started", true]
+	},
+	"es": {
+		"header.appName": ["myfriendben", true],
+		"header.selectLang": ["Idioma", true],
+		"disclaimer.step-header": ["Paso 1 de ", true],
+		"disclaimer.header": ["Lo que debería saber antes de comenzar:", true],
+		"disclaimer.sub-header": [
+			"Descargo de responsabilidad de Gary Philanthropy",
+			true
+		],
+		"disclaimer.body": [
+			"Esta calculadora de beneficios es una herramienta que recomienda programas de beneficios públicos según la información que usted proporciona sobre su hogar y la mejor compresión de Gary Philanthropy (“Gary”) de la información disponible públicamente sobre los programas de beneficios. Gary no puede garantizar su elegibilidad o aceptación en ningún programa. Para inscribirse en un beneficio, deberá presentar una solicitud a través de la agencia gubernamental. Esa agencia luego determinará su elegibilidad para cada programa. La información que comparta en la evaluación de beneficios se mantendrá confidencial, pero se puede compartir con una agencia gubernamental y/o con organizaciones de terceros con el único propósito de ayudarlo con las solicitudes de beneficios y ofrecerle servicios adicionales a través de Gary. Bajo ninguna circunstancias se venderá su información. Al completar esta calculadora de beneficios acepta que Gary o nuestros afiliados se comuniquen en el futuro con respecto a su uso de la calculadora de beneficios o para ofrecer programas adicionales que puedan ser de su interés y su familia. Es posible que se apliquen costos estándar de mensajes y datos a estas comunicaciones. Puede optar a no recibir estas comunicaciones en cualquier momento a través del enlace de exclusión el la comunicación.",
+			true
+		],
+		"disclaimer.helper-text": [
+			"Marque la siguiente casilla y luego haga clic en el botón de Continuar para comenzar.",
+			true
+		],
+		"disclaimer.error": ["Marque la casilla para continuar.", true],
+		"disclaimer-label": ["Al continuar, confirma que ha leído y acepta ", true],
+		"landingPage-and-text": [" y ", true],
+		"startOver-button": ["Empezar de nuevo", true],
+		"continue-button": ["Continuar", true],
+		"qcc.step-text": ["Paso ", true],
+		"qcc.of-text": [" de ", true],
+		"qcc.optional-sign-up-text": [
+			"Opcional: Registrese para recibir actualizaciones de beneficios y/o otras oportunidades de comentarios pagados.",
+			true
+		],
+		"qcc.tell-us-text": ["Cuéntenos sobre su hogar.", true],
+		"qcc.tell-us-final-text": [
+			"Díganos alguna información final sobre su hogar.",
+			true
+		],
+		"qcc.so-far-text": ["Hasta ahora, nos compartió lo siguiente:", true],
+		"qcc.you-text": [" Usted, ", true],
+		"qcc.hoh-text": ["Jefe/Jefa de hogar (usted)", true],
+		"qcc.createTaxDropdownMenu-label": ["Año fiscal", true],
+		"qcc.createTaxDropdownMenu-disabledSelectMenuItemText": [
+			"Seleccione un año fiscal",
+			true
+		],
+		"qcc.createReferralDropdownMenu-label": ["Fuente de referencia", true],
+		"qcc.createReferralDropdownMenu-disabledSelectMenuItemText": [
+			"Seleccione una opción",
+			true
+		],
+		"questions.age": ["¿Qué edad tiene?", true],
+		"questions.age-inputLabel": ["Edad", true],
+		"questions.zipcode": ["¿Cuál es su código postal?", true],
+		"questions.zipcode-inputLabel": ["Código postal", true],
+		"questions.zipcode-a": ["Seleccione un condado: ", true],
+		"questions.zipcode-a-inputLabel": ["Condado", true],
+		"questions.zipcode-a-disabledSelectMenuItemText": [
+			"Seleccione un condado",
+			true
+		],
+		"questions.hasBenefits": [
+			"¿Alguien en su hogar actualmente recibe algun beneficio?",
+			true
+		],
+		"questions.hasBenefits-description": [
+			"Esta información ayudará a asegurarnos que no le enseñamos información sobre beneficios que su hogar ya tiene.",
+			true
+		],
+		"questions.hasBenefits-ariaLabel": ["tiene beneficios", true],
+		"questions.hasBenefits-a": [
+			"Díganos qué beneficios tiene actualmente su hogar.",
+			true
+		],
+		"questions.hasBenefits-a-ariaLabel": ["beneficios actuales", true],
+		"questions.healthInsurance": [
+			"¿Qué tipo(s) de seguro médico tienen los miembros de su hogar? Marque todo lo que corresponda.",
+			true
+		],
+		"questions.student": ["¿Es estudiante?", true],
+		"questions.student-ariaLabel": ["es estudiante", true],
+		"questions.student-a": ["¿Es estudiante de tiempo completo?", true],
+		"questions.student-a-ariaLabel": ["es estudiante de tiempo completo", true],
+		"questions.pregnant": ["¿Está embarazada?", true],
+		"questions.pregnant-ariaLabel": ["está embarazada", true],
+		"questions.unemployed": ["¿Está desempleado?", true],
+		"questions.unemployed-ariaLabel": ["está desempleado", true],
+		"questions.unemployed-a": ["¿Trabajó en los últimos 18 meses?", true],
+		"questions.unemployed-a-ariaLabel": [
+			"trabajó en los últimos 18 meses",
+			true
+		],
+		"questions.blindOrVisuallyImpaired": [
+			"¿Es ciego o tiene discapacidad visual?",
+			true
+		],
+		"questions.blindOrVisuallyImpaired-description": [
+			"\"Discapacidad visual\" significa que no puede corregir su visión a un nivel \"normal\".",
+			true
+		],
+		"questions.blindOrVisuallyImpaired-ariaLabel": [
+			"es ciego o tiene problemas de visión",
+			true
+		],
+		"questions.disabled": [
+			"¿Tiene alguna discapacidad que le imposibilite trabajar ahora o en el futuro?",
+			true
+		],
+		"questions.disabled-ariaLabel": ["tiene alguna discapacidad", true],
+		"questions.veteran": [
+			"¿Sirve o ha servido en las Fuerzas Armadas de los EE.UU, Guardia Nacional o Reservas?",
+			true
+		],
+		"questions.veteran-ariaLabel": ["es veterano", true],
+		"questions.hasIncome": ["¿Tiene ingresos?", true],
+		"questions.hasIncome-description": [
+			"El ingreso es el dinero que gana o recibe antes de deducir impuestos. Esto incluye dinero de trabajos, pensión alimenticia, inversiones o regalos. Ingrese ingresos solo para usted. Tendrá la oportunidad de ingresar ingresos para otros miembros del hogar más adelante.",
+			true
+		],
+		"questions.hasIncome-ariaLabel": ["tiene ingresos", true],
+		"questions.hasIncome-a": [
+			"¿Qué tipo de ingresos ha recibido últimamente?",
+			true
+		],
+		"questions.hasIncome-a-ariaLabel": ["tipo de ingresos más recientes", true],
+		"questions.hasExpenses": ["¿Tiene gastos en su hogar?", true],
+		"questions.hasExpenses-description": [
+			"Sume los gastos de todas las personas que viven en su hogar. Esto incluye costos como cuidado de niños, manutención de niños, alquiler, gastos médicos, facturas de calefacción y más. Solo preguntaremos sobre los gastos que puedan afectar los beneficios. No preguntaremos sobre gastos como los de la alimentacion, ya que las facturas del supermercado no afectan los beneficios.",
+			true
+		],
+		"questions.hasExpenses-ariaLabel": ["tiene gastos", true],
+		"questions.hasExpenses-a": [
+			"¿Qué tipo de gasto ha tenido su hogar más recientemente?",
+			true
+		],
+		"questions.hasExpenses-a-ariaLabel": ["tipo de gastos más recientes", true],
+		"questions.householdSize": [
+			"Contándolo a usted, cuántas personas hay en su hogar?",
+			true
+		],
+		"questions.householdSize-description": [
+			"Esto se refiere habitualmente a miembros de su familia que viven y comparten con usted recursos importantes como alimentos y facturas.",
+			true
+		],
+		"questions.householdSize-inputLabel": [
+			"Número de integrantes del hogar",
+			true
+		],
+		"questions.householdData": [
+			"Cuéntenos sobre la siguiente persona en su hogar.",
+			true
+		],
+		"questions.householdData-ariaLabel": [
+			"datos del cuestionario del hogar",
+			true
+		],
+		"questions.householdAssets": [
+			"¿A cuánto ascienden los recursos de todo su hogar en este momento?",
+			true
+		],
+		"questions.householdAssets-description": [
+			"¿Efectivo en mano? ¿Cuentas corrientes o de ahorro? ¿Acciones, bonos o fondos mutuales de inversión? En algunos casos, elegibilidad para beneficios puede verse afectado si su hogar posee otros activos valiosos, como un automóvil o una póliza de seguro de vida.",
+			true
+		],
+		"questions.householdAssets-inputLabel": ["Cantidad en dólares", true],
+		"questions.lastTaxFilingYear": [
+			"¿Cuál fue el último año en el que declaro impuestos?",
+			true
+		],
+		"questions.lastTaxFilingYear-description": [
+			"El año más reciente para el que puede declarar impuestos es 2022.",
+			true
+		],
+		"questions.referralSource": ["¿Cómo se enteró de esta calculadora?", true],
+		"questions.referralSource-a": ["Si es otro, especifique:", true],
+		"questions.referralSource-a-inputLabel": [
+			"Otra fuente de referencia",
+			true
+		],
+		"questions.signUpInfo": [
+			"¿Sobre qué le gustaría que nos comuniquemos con usted?",
+			true
+		],
+		"questions.signUpInfo-a": [
+			"Proporcione su información de contacto a continuación: ",
+			true
+		],
+		"questions.signUpInfo-a-ariaLabel": ["página de registro opcional", true],
+		"questions.acuteHHConditions": [
+			"¿Alguien en su hogar necesita ayuda inmediata con alguno de los siguientes?",
+			true
+		],
+		"validation-helperText.age": ["Ingrese una edad válida (13 a 130)", true],
+		"validation-helperText.zipcode": [
+			"Ingrese un código postal válido de Colorado",
+			true
+		],
+		"validation-helperText.healthInsurance": [
+			"Si ninguno de estos aplica, seleccione \"Uno o más miembros del hogar no tienen seguro médico\"",
+			true
+		],
+		"validation-helperText.incomeValue": [
+			"Ingrese un número mayor que 0",
+			true
+		],
+		"validation-helperText.expenseValue": [
+			"Ingrese un número mayor que 0",
+			true
+		],
+		"validation-helperText.householdSize": [
+			"Cantidad de personas (máximo de 8)",
+			true
+		],
+		"validation-helperText.assets": ["Ingrese 0 o un número positivo", true],
+		"validation-helperText.hHMemberAge": [
+			"Ingrese 0 o un número positivo",
+			true
+		],
+		"validation-helperText.hhMemberAgeB": [
+			"Ingrese 0 o un número positivo para la edad del miembro del hogar",
+			true
+		],
+		"validation-helperText.hhMemberRelation": [
+			"Seleccione una opción de parentesco",
+			true
+		],
+		"validation-helperText.hhMemberNoneApply": [
+			"Deseleccione las demás opciones si ninguna de estas condiciones le corresponden",
+			true
+		],
+		"validation-helperText.noneApply": [
+			"Si no corresponde ninguna opcion seleccione \"Ninguna de las opciones anteriores\" ",
+			true
+		],
+		"validation-helperText.hhMemberIncome": [
+			"Seleccione e ingrese una respuesta para todos los campos de ingresos",
+			true
+		],
+		"validation-helperText.hhMemberExpense": [
+			"Seleccione e ingrese una respuesta en los tres campos de gastos",
+			true
+		],
+		"validation-helperText.email": [
+			"Ingrese una dirección de correo electrónico válida",
+			true
+		],
+		"validation-helperText.lastTaxFilingYear": ["*Seleccione un año", true],
+		"validation-helperText.referralSource": [
+			"Seleccione una fuente de referencia.",
+			true
+		],
+		"validation-helperText.phoneNumber": [
+			"Ingrese un número de teléfono de 10 dígitos",
+			true
+		],
+		"validation-helperText.firstName": ["Ingrese su nombre", true],
+		"validation-helperText.lastName": ["Ingrese su apellido", true],
+		"validation-helperText.notificationSelection": [
+			"Seleccione una opción de notificación",
+			true
+		],
+		"validation-helperText.consentCheckbox": [
+			"Marque la casilla de arriba para suscribirse a las notificaciones seleccionadas",
+			true
+		],
+		"validation-helperText.noEmailOrPhoneNumber": [
+			"Ingrese un correo electrónico o número de teléfono",
+			true
+		],
+		"validation-helperText.benefits": [
+			"Si su hogar no recibe ninguno de estos beneficios, seleccione la opción \"No\" arriba.",
+			true
+		],
+		"previousButton": ["Previo", true],
+		"continueButton": ["Continuar", true],
+		"radiofield.label-yes": ["Sí", true],
+		"radiofield.label-no": ["No", true],
+		"radiofield.label-preferNotToAnswer": ["Prefiero no contestar", true],
+		"householdDataBlock.createFMInputLabel-headOfHH": ["Su Edad", true],
+		"householdDataBlock.createFMInputLabel-person": ["Persona ", true],
+		"householdDataBlock.createFMInputLabel-age": [" Edad", true],
+		"householdDataBlock.createAgeQuestion-how": ["¿Qué edad tiene?", true],
+		"householdDataBlock.createAgeQuestion-how-headOfHH": [
+			"¿Cuántos años tiene usted?",
+			true
+		],
+		"householdDataBlock.createAgeQuestion-zero": [
+			"Si su hijo/a tiene menos de un año, ingrese 0.",
+			true
+		],
+		"householdDataBlock.createHOfHRelationQuestion-relation": [
+			"¿Qué parentesco tiene esta persona con usted?",
+			true
+		],
+		"householdDataBlock.createDropdownCompProps-inputLabelText": [
+			"Parentesco",
+			true
+		],
+		"householdDataBlock.createDropdownCompProps-label": [
+			"Tipo de parentesco",
+			true
+		],
+		"householdDataBlock.createDropdownCompProps-disabledSelectMenuItemText": [
+			"Haga clic para seleccionar un tipo de parentesco",
+			true
+		],
+		"householdDataBlock.questionHeader": ["Cuéntenos sobre usted.", true],
+		"householdDataBlock.member-income": ["Ingresos", true],
+		"relationshipOptions.yourself": ["Usted", true],
+		"relationshipOptions.child": ["Hijo/a", true],
+		"relationshipOptions.fosterChild": ["Hijo/a adoptivo/a", true],
+		"relationshipOptions.stepChild": ["Hijastro/a", true],
+		"relationshipOptions.grandChild": ["Nieto/a", true],
+		"relationshipOptions.spouse": ["Esposo/a", true],
+		"relationshipOptions.parent": ["Padre/madre", true],
+		"relationshipOptions.fosterParent": ["Padre/madre adoptivo/a", true],
+		"relationshipOptions.stepParent": ["Padrastro/madrastra", true],
+		"relationshipOptions.grandParent": ["Abuelo/a", true],
+		"relationshipOptions.sisterOrBrother": ["Hermano/a", true],
+		"relationshipOptions.stepSisterOrBrother": ["Hermanastro/a", true],
+		"relationshipOptions.boyfriendOrGirlfriend": ["Novio/a", true],
+		"relationshipOptions.domesticPartner": ["Pareja doméstica", true],
+		"relationshipOptions.unrelated": ["Sin relación de parentesco", true],
+		"relationshipOptions.relatedOther": [
+			"Otro tipo de relación de parentesco",
+			true
+		],
+		"householdDataBlock.createConditionsQuestion-do-these-apply-to-you": [
+			"¿Alguno de estos se aplica a usted?",
+			true
+		],
+		"householdDataBlock.createConditionsQuestion-do-these-apply": [
+			"¿Cuál de las siguientes opciones corresponde?",
+			true
+		],
+		"householdDataBlock.createConditionsQuestion-pick": [
+			"Puede elegir más de una opcion.",
+			true
+		],
+		"conditionOptions.student": [
+			"Estudiante o futuro estudiante en un colegio, universidad o otra institución postsecundaria",
+			true
+		],
+		"conditionOptions.pregnant": ["Embarazada", true],
+		"conditionOptions.unemployed": ["Sin empleo", true],
+		"conditionOptions.blindOrVisuallyImpaired": [
+			"Ciego o con problemas de visión",
+			true
+		],
+		"conditionOptions.disabled": [
+			"Tiene alguna discapacidad que le imposibilite trabajar ahora o en el futuro",
+			true
+		],
+		"checkboxGroup.disabledLabel": [
+			"Tiene alguna discapacidad que los haga incapaces de trabajar ahora o en el futuro",
+			true
+		],
+		"conditionOptions.veteran": [
+			"Está sirviendo o ha servido en las Fuerzas Armadas de los EE. UU, Guardia Nacional o las Reservas",
+			true
+		],
+		"conditionOptions.noneOfTheseApply": [
+			"Ninguna de las opciones anteriores",
+			true
+		],
+		"householdDataBlock.createFTStudentRadioQuestion-ariaLabel": [
+			"es estudiante de tiempo completo",
+			true
+		],
+		"householdDataBlock.createFTStudentRadioQuestion-youQLabel": [
+			"¿Usted es estudiante de tiempo completo?",
+			true
+		],
+		"householdDataBlock.createFTStudentRadioQuestion-questionLabel": [
+			"¿Es estudiante de tiempo completo?",
+			true
+		],
+		"householdDataBlock.createUnemployed18MosRadioQuestion-ariaLabel": [
+			"trabajó en los últimos 18 meses",
+			true
+		],
+		"householdDataBlock.createUnemployed18MosRadioQuestion-youQLabel": [
+			"¿Ha trabajado en los últimos 18 meses?",
+			true
+		],
+		"householdDataBlock.createUnemployed18MosRadioQuestion-questionLabel": [
+			"¿Trabajó en los últimos 18 meses?",
+			true
+		],
+		"householdDataBlock.createIncomeRadioQuestion-ariaLabel": [
+			"tiene ingresos",
+			true
+		],
+		"householdDataBlock.createIncomeRadioQuestion-questionLabel": [
+			"¿Esta persona en su hogar tiene un ingreso significativo que aún no ha incluido?",
+			true
+		],
+		"householdDataBlock.createIncomeRadioQuestion-questionDescription": [
+			"Esto incluye ingresos por concepto de trabajo, pensión alimenticia, inversiones o regalos. Ingreso es el dinero ganado o recibido antes de deducir impuestos.",
+			true
+		],
+		"personIncomeBlock.return-questionLabel": [
+			"¿Qué tipo de ingresos ha percibido últimamente?",
+			true
+		],
+		"personIncomeBlock.return-questionDescription": [
+			"Responda lo mejor que pueda. Podrá incluir tipos adicionales de ingresos. Cuantos más incluya, más precisos serán sus resultados.",
+			true
+		],
+		"personIncomeBlock.return-addIncomeButton": ["Agregar otro ingreso", true],
+		"personIncomeBlock.createMenuItems-disabledSelectMenuItem": [
+			"Seleccionar",
+			true
+		],
+		"incomeOptions.wages": ["Sueldos, salarios, propinas", true],
+		"incomeOptions.selfEmployment": [
+			"Ingresos de lanza libre, contratista independiente o trabajo por cuenta propia",
+			true
+		],
+		"incomeOptions.unemployment": ["Beneficios de desempleo", true],
+		"incomeOptions.cashAssistance": ["Subsidio en efectivo", true],
+		"incomeOptions.childSupport": ["Manutención infantil (recibida)", true],
+		"incomeOptions.sSI": [
+			"Beneficios de Seguridad de Ingreso Suplementario (SSI, en inglés)",
+			true
+		],
+		"incomeOptions.sSDisability": [
+			"Beneficios para personas con discapacidad del Seguro Social",
+			true
+		],
+		"incomeOptions.sSSurvivor": [
+			"Beneficios de sobreviviente del Seguro Social (Viudo/Viudo)",
+			true
+		],
+		"incomeOptions.sSRetirement": [
+			"Beneficios de jubilación del Seguro Social",
+			true
+		],
+		"incomeOptions.sSDependent": [
+			"Beneficios para dependientes del Seguro Social (jubilación, discapacidad o sobrevivientes)",
+			true
+		],
+		"incomeOptions.cOSDisability": [
+			"Beneficios por discapacidad del estado de Colorado",
+			true
+		],
+		"incomeOptions.veteran": ["Pensión o beneficios para veteranos", true],
+		"incomeOptions.pension": ["Pensión militar, gubernamental o privada", true],
+		"incomeOptions.deferredComp": [
+			"Retiros de remuneraciones diferidas (IRA, Keogh, etc.)",
+			true
+		],
+		"incomeOptions.workersComp": [
+			"Compensación por accidentes en el trabajo",
+			true
+		],
+		"incomeOptions.alimony": [
+			"Pensión para el cónyuge divorciado (recibida)",
+			true
+		],
+		"incomeOptions.boarder": ["Huésped o inquilino", true],
+		"incomeOptions.gifts": ["Regalos/contribuciones (recibidas)", true],
+		"incomeOptions.rental": ["Ingresos por alquileres", true],
+		"incomeOptions.investment": [
+			"Ingresos por inversiones (intereses, dividendos y ganancias por la venta de acciones)",
+			true
+		],
+		"personIncomeBlock.createIncomeBlockQuestions-questionLabel": [
+			"Si recibe otro tipo de ingresos, seleccione de las opciones a continuación.",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamsDropdownMenu-inputLabel": [
+			"Tipo de ingresos",
+			true
+		],
+		"personIncomeBlock.createIncomeAmountTextfield-questionLabel": [
+			"¿Cuánto reciben en cada período de pago por este tipo de ingreso: ",
+			true
+		],
+		"personIncomeBlock.createIncomeAmountTextfield-amountLabel": [
+			"Monto",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-youQLabel": [
+			"Cada cuánto le pagan estos ingresos: ",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-questionLabel": [
+			"Cada cuánto se les paga este ingreso: ",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-freqLabel": [
+			"Frecuencia",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-incomeFreqLabel": [
+			"Frecuencia de ingresos",
+			true
+		],
+		"personIncomeBlock.createFrequencyMenuItems-disabledSelectMenuItem": [
+			"Seleccionar",
+			true
+		],
+		"personIncomeBlock.createIncomeAmountTextfield-hourly-questionLabel": [
+			"¿Cual es el sueldo horario de ellos: ",
+			true
+		],
+		"personIncomeBlock.createHoursWorkedTextfield-youQLabel": [
+			"¿Cuántas horas trabaja usted en promedio por semana: ",
+			true
+		],
+		"personIncomeBlock.createHoursWorkedTextfield-questionLabel": [
+			"¿Cuántas horas trabajan en promedio por semana: ",
+			true
+		],
+		"householdDataBlock.createExpenseRadioQuestion-ariaLabel": [
+			"tiene gastos",
+			true
+		],
+		"householdDataBlock.createExpenseRadioQuestion-questionLabel": [
+			"¿Tiene gastos?",
+			true
+		],
+		"householdDataBlock.createExpenseRadioQuestion-questionDescription": [
+			"Esto incluye costos como alquiler, hipoteca, facturas médicas, guardería, manutención infantil y facturas de calefacción.",
+			true
+		],
+		"personExpenseBlock.return-questionLabel": [
+			"¿Qué tipo de gastos tuvo más últimamente?",
+			true
+		],
+		"personExpenseBlock.return-questionDescription": [
+			"Responda lo mejor que pueda. Podrá incluir tipos adicionales de gastos. Cuantos más incluya, más precisos serán sus resultados.",
+			true
+		],
+		"personExpenseBlock.return-addExpenseButton": ["Agregue otro gasto", true],
+		"personExpenseBlock.createExpenseBlockQuestions-questionLabel": [
+			"Si tiene otro tipo de gastos, seleccione de las opciones a continuación.",
+			true
+		],
+		"personExpenseBlock.createExpenseDropdownMenu-expenseTypeInputLabel": [
+			"Tipo de gasto",
+			true
+		],
+		"personExpenseBlock.createExpenseMenuItems-disabledSelect": [
+			"Seleccionar",
+			true
+		],
+		"expenseOptions.childCare": ["Guardería", true],
+		"expenseOptions.childSupport": ["Manutención infantil (pagada)", true],
+		"expenseOptions.dependentCare": ["Cuidado de dependientes", true],
+		"expenseOptions.rent": ["Alquiler", true],
+		"expenseOptions.mortgage": ["Hipoteca", true],
+		"expenseOptions.heating": ["Calefacción", true],
+		"expenseOptions.cooling": ["Refrigeración", true],
+		"expenseOptions.otherUtilities": ["Otras Utilidades", true],
+		"expenseOptions.telephone": ["Teléfono", true],
+		"expenseOptions.internet": ["Internet", true],
+		"expenseOptions.auto": ["Pago y/o prima de seguro de automóvil", true],
+		"expenseOptions.medical": ["Prima de seguro médico y/o facturas", true],
+		"expenseOptions.studentLoans": ["Préstamos estudiantiles", true],
+		"expenseOptions.creditCard": ["Deuda de tarjeta de crédito", true],
+		"expenseOptions.personalLoan": ["Préstamo personal", true],
+		"personExpenseBlock.createExpenseFrequencyDropdownMenu-questionLabel": [
+			"¿Con qué frecuencia tiene este tipo de gasto: ",
+			true
+		],
+		"personExpenseBlock.createExpenseFrequencyDropdownMenu-expenseFrequencyInputLabel": [
+			"Frecuencia",
+			true
+		],
+		"personExpenseBlock.createExpenseFrequencyDropdownMenu-expenseFrequencySelectLabel": [
+			"Frecuencia del gasto",
+			true
+		],
+		"personExpenseBlock.createExpenseFrequencyMenuItems-disabledSelectMenuItemText": [
+			"Seleccionar",
+			true
+		],
+		"personExpenseBlock.createExpenseAmountTextfield-questionLabel": [
+			"¿A cuánto asciende este tipo de gasto? ",
+			true
+		],
+		"personExpenseBlock.createExpenseAmountTextfield-expenseAmountTextfieldLabel": [
+			"Monto",
+			true
+		],
+		"incomeBlock.createIncomeBlockQuestions-questionLabel": [
+			"Si recibe otro tipo de ingresos, seleccione de las opciones a continuación.",
+			true
+		],
+		"incomeBlock.createIncomeStreamsDropdownMenu-incomeTypeInputLabel": [
+			"Tipo de ingresos",
+			true
+		],
+		"incomeBlock.createIncomeStreamsDropdownMenu-incomeTypeSelectLabel": [
+			"Tipo de ingresos",
+			true
+		],
+		"incomeBlock.createMenuItems-disabledSelectMenuItemText": [
+			"Seleccionar",
+			true
+		],
+		"incomeBlock.createIncomeStreamFrequencyDropdownMenu-questionLabel": [
+			"¿Con qué frecuencia recibe estos ingresos: ",
+			true
+		],
+		"incomeBlock.createIncomeStreamFrequencyDropdownMenu-incomeFrequencyLabel": [
+			"Frecuencia",
+			true
+		],
+		"incomeBlock.createIncomeStreamFrequencyDropdownMenu-incomeFrequencySelectLabel": [
+			"Frecuencia de ingresos",
+			true
+		],
+		"incomeBlock.createFrequencyMenuItems-disabledSelectMenuItemText": [
+			"Seleccionar",
+			true
+		],
+		"incomeBlock.createIncomeAmountTextfield-questionLabel": [
+			"¿Cuánto recibe en cada período de pago por: ",
+			true
+		],
+		"incomeBlock.createIncomeAmountTextfield-hourly-questionLabel": [
+			"¿Cuál es su tarifa por hora: ",
+			true
+		],
+		"incomeBlock.createIncomeAmountTextfield-amountLabel": ["Monto", true],
+		"incomeBlock.createHoursWorkedTextfield-questionLabel": [
+			"¿Cuántas horas trabaja en promedio por semana: ",
+			true
+		],
+		"incomeBlock.createHoursWorkedTextfield-amountLabel": ["Horas", true],
+		"incomeBlock.return-error-message": [
+			"Seleccione e ingrese una respuesta para todos los campos de ingresos",
+			true
+		],
+		"incomeBlock.return-addIncomeButton": ["Agregar otro ingreso", true],
+		"expenseBlock.createExpenseBlockQuestions-questionLabel": [
+			"Si tiene otro gasto, seleccione de las opciones a continuación.",
+			true
+		],
+		"expenseBlock.createExpenseDropdownMenu-expenseTypeInputLabel": [
+			"Tipo de gasto",
+			true
+		],
+		"expenseBlock.createExpenseDropdownMenu-expenseTypeSelectLabel": [
+			"Tipo de gasto",
+			true
+		],
+		"expenseBlock.createExpenseMenuItems-disabledSelectMenuItemText": [
+			"Seleccionar",
+			true
+		],
+		"expenseBlock.createExpenseAmountTextfield-questionLabel": [
+			"¿A cuánto asciende este tipo de gasto cada mes: ",
+			true
+		],
+		"expenseBlock.createExpenseAmountTextfield-amountLabel": ["Monto", true],
+		"expenseBlock.return-error-message": [
+			"Seleccione e ingrese una respuesta para todos los campos de gastos",
+			true
+		],
+		"expenseBlock.return-addExpenseButton": ["Agregue otro gasto", true],
+		"confirmation.return-stepLabel": ["Paso ", true],
+		"confirmation.return-ofLabel": [" de ", true],
+		"confirmation.return-subheader": ["OK. Esto es lo que tenemos:", true],
+		"confirmation.return-questionLabel": [
+			"¿Toda su información es correcta?",
+			true
+		],
+		"confirmation.displayAllFormData-personLabel": ["persona", true],
+		"confirmation.displayAllFormData-peopleLabel": ["personas", true],
+		"confirmation.displayAllFormData-yourHouseholdLabel": [
+			"Miembros del hogar",
+			true
+		],
+		"confirmation.editLinkText": ["Editar", true],
+		"confirmation.displayAllFormData-householdResourcesText": [
+			"Recursos del hogar",
+			true
+		],
+		"confirmation.displayAllFormData-householdResourcesDescription": [
+			" (Se trata de efectivo en mano, cuentas de cheques o ahorros, acciones, bonos o fondos mutuales de inversión.)",
+			true
+		],
+		"confirmation.displayAllFormData-zipcodeText": ["Código postal: ", true],
+		"confirmation.displayAllFormData-countyText": ["Condado: ", true],
+		"confirmation.displayAllFormData-lastTaxFilingYear": [
+			"Último año de declaración de impuestos: ",
+			true
+		],
+		"confirmation.displayAllFormData-referralSourceText": [
+			"Fuente de referencia",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-youText": [" Usted, ", true],
+		"confirmation.headOfHouseholdDataBlock-headOfHouseholdText": [
+			" jefe de hogar",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-conditionsText": [
+			"Condiciones:",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-studentFulltimeText": [
+			"Estudiante de tiempo completo",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-studentText": ["Estudiante", true],
+		"confirmation.headOfHouseholdDataBlock-pregnantText": ["Embarazada", true],
+		"confirmation.headOfHouseholdDataBlock-unemployed18MosText": [
+			"Sin empleo, trabajó en los últimos 18 meses",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-unemployedText": [
+			"Sin empleo",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-blindOrVisuallyImpairedText": [
+			"Ciego o con problemas de visión",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-disabledText": [
+			"Discapacitado",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-veteranText": ["Veterano", true],
+		"confirmation.headOfHouseholdDataBlock-medicaidText": [
+			"Tiene cobertura de Medicaid",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-disabilityRelatedMedicaidText": [
+			"Tiene cobertura de Medicaid relacionada con su discapacidad",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-incomeLabel": ["Ingreso:", true],
+		"confirmation.headOfHouseholdDataBlock-expensesLabel": [
+			"Gastos mensuales del hogar",
+			true
+		],
+		"confirmation.displayAllFormData-currentHHBenefitsText": [
+			"Beneficios actuales del hogar",
+			true
+		],
+		"confirmation.displayAllFormData-healthInsurance": [
+			"Seguro doméstico",
+			true
+		],
+		"confirmation.displayAllFormData-acuteHHConditions": [
+			"Necesidades inmediatas",
+			true
+		],
+		"confirmation.none": [" Ninguna", true],
+		"confirmation.noIncome": [" Ninguno", true],
+		"confirmation.residenceInfo": ["Información de Residencia", true],
+		"frequencyOptions.weekly": ["cada semana", true],
+		"frequencyOptions.biweekly": ["cada 2 semanas", true],
+		"frequencyOptions.monthly": ["cada mes", true],
+		"frequencyOptions.hourly": ["cada hora", true],
+		"results-error.header": ["¡Ups! Parece que salió algo mal.", true],
+		"results-error.message": [
+			"Lo lamentamos. Estamos teniendo algunos problemas para completar su solicitud. Asegúrese de haber completado todas las preguntas en la pantalla y vuelva a intentarlo. Si aún no puede cargar los resultados de sus beneficios, comuníquese con myfriendben@garycommuity.org",
+			true
+		],
+		"results-error.button": ["Volver a la calculadora", true],
+		"results.return-screenerIdLabel": ["ID de cuestionario: ", true],
+		"results.return-programsUpToLabel": [" programas, hasta ", true],
+		"results.return-perYearOrLabel": [" por año o ", true],
+		"results.return-perMonthLabel": [
+			" por mes en efectivo o gastos reducidos para que usted considere",
+			true
+		],
+		"results.share": ["Compartir", true],
+		"results.share-email": ["Correo Electronico", true],
+		"results.share-copyLink": ["Copiar Link", true],
+		"results.share-copied": ["Copiado", true],
+		"results.share-header": ["Compartir MyFriendBen con un amigo:", true],
+		"results.return-sendResultsButton": ["Enviar resultados", true],
+		"results.return-ineligibilityLinkText": [
+			"* Para más información sobre programas para los cuales no es elegible, haga clic aquí.",
+			true
+		],
+		"results.return-goBackToEligibleText": [
+			"Volver a programas elegibles",
+			true
+		],
+		"results.return-estimatedDeliveryTimeA": [
+			"*En promedio, las personas aprobadas para este beneficio comienzan a recibirlo ",
+			true
+		],
+		"results.return-estimatedDeliveryTimeB": [
+			" después de completar la solicitud.",
+			true
+		],
+		"results.displaySubheader-rememberDisclaimerText": [
+			"Recuerde que no podemos garantizar elegibilidad, pero según la información que nos proporcionó, creemos que posiblemente sea elegible para los siguientes programas:",
+			true
+		],
+		"results.displaySubheader-basedOnInformationText": [
+			"Según la información que nos proporcionó, creemos que posiblemente no sea elegible para los siguientes programas: ",
+			true
+		],
+		"results.displaySubheader-sendResultsDescText": [
+			"Para recibir una copia de sus resultados por correo electrónico o mensaje de texto, haga clic en el botón de enviar resultados.",
+			true
+		],
+		"results.resultsTable-benefitLabel": ["Beneficio", true],
+		"results.resultsTable-annualValueLabel": [
+			"Estimacíon del Valor Anual",
+			true
+		],
+		"results.resultsTable-timeToApply": ["Tiempo para aplicar", true],
+		"results.resultsTable-sorryNoProgramsWereFoundLabel": [
+			"Lamentablemente no pudimos encontrar ningún programa para usted según la información que nos proporcionó.",
+			true
+		],
+		"results.resultsRow-applyButton": ["Solicitar", true],
+		"results.resultsRow-expandForEligibilityLink": [
+			"Expandir para ver la información sobre elegibilidad",
+			true
+		],
+		"results.resultsRow-applyWithAssistance": ["Aplicar con asistencia", true],
+		"results.resultsRow-reducedExpensesText": ["gastos reducidos", true],
+		"results.resultsRow-cashText": ["efectivo", true],
+		"results.resultsRow-reducedCostText": ["servicios a costo reducido", true],
+		"results.returnSignupCitizenFilter": [
+			"Solo muestre beneficios que no requieran un ciudadano o un no ciudadano en el hogar",
+			true
+		],
+		"results.perYear": ["Por Año", true],
+		"results.returnToScreenButton": ["Modificar respuestas", true],
+		"filter.filterByCategoryButton": ["Filtrar", true],
+		"filter.filterByEligibility": ["Filtrar Por Elegibilidad", true],
+		"filter.filterEligible": ["Elegible", true],
+		"filter.filterInEligible": ["Inelegible", true],
+		"filter.filterAlreadyHave": ["Incluir beneficios que ya tengo", true],
+		"filter.filterByCategory": ["Filtrar Por Categoría", true],
+		"filter.filterAllCategories": ["Todas Las Categorias", true],
+		"results.displayResultsFilterButtons-benefitPrograms": [
+			"Programas de beneficios",
+			true
+		],
+		"results.displayResultsFilterButtons-urgentNeedsResources": [
+			"Necesidades Inmediatas",
+			true
+		],
+		"loading.return-loadingText": [
+			"Espere mientras reunimos sus resultados...",
+			true
+		],
+		"results.displaySubheader-loadingDisclaimerText": [
+			"Recuerde que no podemos garantizar elegibilidad, pero según la información que nos proporcionó, creemos que posiblemente sea elegible para los siguientes programas.",
+			true
+		],
+		"results.displaySubheader-noResults": [
+			"No se encontraron resultados de beneficios",
+			true
+		],
+		"taxYearOptions.noRecentFiling": [
+			"No he presentado impuestos en los últimos 5 años",
+			true
+		],
+		"benefitOptions.tanf": [
+			"Asistencia en efectivo y apoyo laboral (Asistencia temporal para familias necesitadas (TANF/Colorado Works))",
+			true
+		],
+		"benefitOptions.wic": [
+			"Asistencia alimentaria y de lactancia (Programa Especial de Nutrición Suplementaria para Mujeres, Bebés y Niños (WIC))",
+			true
+		],
+		"benefitOptions.snap": [
+			"Asistencia alimentaria (Programa de Asistencia Nutricional Suplementaria/SNAP)",
+			true
+		],
+		"benefitOptions.lifeline": [
+			"Descuento de teléfono o internet (servicio de internet/teléfono de Lifeline)",
+			true
+		],
+		"benefitOptions.acp": [
+			"Descuento de internet residencial (Programa de conectividad asequible)",
+			true
+		],
+		"benefitOptions.eitc": [
+			"Crédito fiscal federal: ingreso del trabajo (Crédito fiscal por ingreso del trabajo)",
+			true
+		],
+		"benefitOptions.coeitc": [
+			"Crédito fiscal estatal: ingreso del trabajo (Crédito fiscal por ingreso del trabajo de Colorado)",
+			true
+		],
+		"benefitOptions.nslp": [
+			"Comidas escolares gratuitas (Programa Nacional de Almuerzos Escolares)",
+			true
+		],
+		"benefitOptions.ctc": [
+			"Crédito fiscal federal: crédito fiscal por hijos (Crédito Fiscal por Hijos)",
+			true
+		],
+		"benefitOptions.rtdlive": ["Tarifas RTD con descuento (RTD LiVE)", true],
+		"benefitOptions.cccap": [
+			"Ayuda con los costos de cuidado infantil (Programa de asistencia para el cuidado infantil de Colorado)",
+			true
+		],
+		"benefitOptions.mydenver": [
+			"Programas para jóvenes de costo reducido (MY Denver Card)",
+			true
+		],
+		"benefitOptions.leap": [
+			"Ayuda con las facturas de calefacción de invierno (LEAP)",
+			true
+		],
+		"referralOptions.testOrProspect": ["Ensayador / Socio potencial", true],
+		"referralOptions.searchEngine": ["Google o otro motor de búsqueda", true],
+		"referralOptions.other": ["Otro", true],
+		"signUpOptions.sendUpdates": [
+			"Por favor notifiqueme cuando nuevos beneficios estén disponibles que probablemente sea elegible, basado en la información que he proporcionado",
+			true
+		],
+		"signUpOptions.sendOffers": [
+			"Notifiqueme cuando haya oportunidades monetarias para hablar sobre esta calculadora",
+			true
+		],
+		"signUp.createFirstNameTextfield-label": ["Primer nombre", true],
+		"signUp.createLastNameTextfield-label": ["Apellido", true],
+		"signUp.createEmailTextfield-label": ["Correo electrónico", true],
+		"signUp.createPhoneTextfield-label": ["Teléfono móvil", true],
+		"signUp.displayDisclosureSection-consentText": [
+			"Al completar este formulario, acepta que Gary Philanthropy o nuestros afiliados se comuniquen en el futuro sobre el uso de la calculadora de beneficios y ofrezcan programas adicionales que puedan ser de su interés y la de su familia. Es posible que se apliquen costos estándar de mensajes y datos a estas comunicaciones. Puede optar a no recibir estas comunicaciones en cualquier momento a través del enlace de exclusión en la comunicación.",
+			true
+		],
+		"signUp.displayDisclosureSection-consentCheck1": [
+			"He leído, comprendo y acepto los términos del descargo de ",
+			true
+		],
+		"signUp.displayDisclosureSection-consentCheckLink": [
+			"privacidad de datos",
+			true
+		],
+		"signUp.displayDisclosureSection-consentCheck4": [
+			" de My Friend Ben y doy mi consentimiento de contacto.",
+			true
+		],
+		"emailResults.displaySubheader-text": ["Guardar mis resultados", true],
+		"emailResults.enter-emailLabel": [
+			"Enviar por correo electrónico mi enlace de resultados",
+			true
+		],
+		"emailResults.enter-phoneNumberLabel": [
+			"Enviar un mensaje de texto con el enlace de mis resultados",
+			true
+		],
+		"emailResults.sendButton": ["Enviar", true],
+		"emailResults.return-signupCompleted": [
+			"Se ha enviado una copia de sus resultados.",
+			true
+		],
+		"emailResults.return-signupCompleted-email": [
+			"Se ha enviado una copia de sus resultados. Si no ve el correo electrónico en su bandeja de entrada, verifique su carpeta de correo no deseado.",
+			true
+		],
+		"emailResults.copy-results-text": ["Copiar mi enlace de resultados", true],
+		"landingPage.step-header": ["Paso 0 de ", true],
+		"landingPage.body": [
+			"MyFriendBen es una herramienta que puede ayudarle a determinar los beneficios para los que probablemente sea elegible. Esto es lo que debe saber antes de comenzar:",
+			true
+		],
+		"landingPage.firstBulletItem": [
+			"MyFriendBen solo proporciona estimaciones de lo que puede calificar. No debe confiar en estas estimaciones. Debe confirmar su elegibilidad final y la cantidad con la agencia apropiada o la persona que hace estas decisiones.",
+			true
+		],
+		"landingPage.publicCharge": [
+			"Algunos beneficios están disponibles para personas sin ciudadanía. Las personas sin ciudadanía que planean solicitar la residencia permanente legal o una visa deben considerar cómo la solicitud de beneficios puede afectar su estatus migratorio. Para obtener más información, consulte el ",
+			true
+		],
+		"landingPage.publicChargeLink": [
+			"Regla de Carga Pública del Departamento de Servicios Humanos de Colorado",
+			true
+		],
+		"landingPage-policyText": ["la política de privacidad,", true],
+		"landingPage-additionalTerms": [
+			"los términos adicionales y el consentimiento contacto.",
+			true
+		],
+		"healthInsuranceOptions.employer": [
+			"Seguro de salud proporcionado por el empleador",
+			true
+		],
+		"healthInsuranceOptions.private": ["Seguro médico privado", true],
+		"healthInsuranceOptions.medicaid": [
+			"Health First Colorado (Medicaid)",
+			true
+		],
+		"healthInsuranceOptions.medicare": [
+			"Seguro médico del estado (Medicare)",
+			true
+		],
+		"healthInsuranceOptions.chp": ["Child Health Plan Plus (CHP+)", true],
+		"healthInsuranceOptions.none": [
+			"Uno o más miembros del hogar no tienen seguro médico",
+			true
+		],
+		"acuteConditionOptions.food": ["Alimentos o comestibles", true],
+		"acuteConditionOptions.babySupplies": [
+			"Pañales y otros suministros para bebés",
+			true
+		],
+		"acuteConditionOptions.housing": [
+			"Ayuda de emergencia para pagar la hipoteca, el alquiler o los servicios públicos",
+			true
+		],
+		"acuteConditionOptions.support": [
+			"Un desafío sobre el cual usted o su hijo/a les gustaría hablar",
+			true
+		],
+		"acuteConditionOptions.childDevelopment": [
+			"Preocupación por el desarrollo de su bebé o niño pequeño",
+			true
+		],
+		"acuteConditionOptions.loss": [
+			"Costos de funeral, entierro o cremación",
+			true
+		],
+		"acuteConditionOptions.familyPlanning": [
+			"Planificación familiar o control de natalidad",
+			true
+		],
+		"acuteConditionOptions.jobResources": ["Encontrar trabajo", true],
+		"acuteConditionOptions.dentalCare": ["Atención dental de bajo costo", true],
+		"acuteConditionOptions.legalServices": [
+			"Ayuda gratuita o de bajo costo para necesidades legales civiles",
+			true
+		],
+		"urgentNeedsTable.visit-website-button": ["Visite el sitio web", true],
+		"urgentNeedsTable.resources-columnHeader": ["Recursos", true],
+		"urgentNeedsTable.typeOfResource-columnHeader": ["Tipo de Recurso", true],
+		"urgentNeedsRow.formatPhoneNumber": ["Número de teléfono: ", true],
+		"benefitCategories.cash": ["Asistencia en Efectivo", true],
+		"benefitCategories.foodAndNutrition": ["Alimentos y Nutrición", true],
+		"benefitCategories.childCare": [
+			"Cuidado de Niños, Preescolar y Jóvenes",
+			true
+		],
+		"benefitCategories.housingAndUtilities": ["Vivienda y Servicios", true],
+		"benefitCategories.transportation": ["Transporte", true],
+		"benefitCategories.healthCare": ["Cuidado de la Salud", true],
+		"benefitCategories.taxCredits": ["Créditos Fiscales", true],
+		"benefitCategories.childCareHelperText": [
+			"¿Se pregunta por qué el valor anual de estos programas puede diferir de los valores en total de sus resultados? Esto se debe a que este valor anual es una estimación del valor promedio probable combinado de los programas de cuidado infantil y preescolar para los que califican. Los ahorros de los programas pueden superponerse. Es Posible que pueda combinar los beneficios para ayudar a pagar el cuidado infantil y el preescolar. ",
+			true
+		],
+		"cashAssistanceBenefits.tanf": [
+			"Asistencia en efectivo y apoyo laboral (Asistencia Temporal para Familias Necesitadas (TANF/Colorado Works))",
+			true
+		],
+		"cashAssistanceBenefits.ssi": [
+			"Asistencia federal en efectivo para personas discapacitadas, ciegas o mayores de 65 años (Seguridad de Ingreso Suplementario/SSI)",
+			true
+		],
+		"cashAssistanceBenefits.andcs": [
+			"Asistencia estatal en efectivo para personas discapacitadas que reciben SSI (Ayuda para discapacitados necesitados - Suplemento de Colorado/AND-CS)",
+			true
+		],
+		"cashAssistanceBenefits.oap": [
+			"Asistencia estatal en efectivo para personas mayores de 60 años (pensión de vejez/OAP)",
+			true
+		],
+		"cashAssistanceBenefits.coPropTaxRentHeatCreditRebate": [
+			"Efectivo para pagar el impuesto sobre la propiedad, el alquiler y las facturas de calefacción (Impuesto sobre la propiedad de Colorado/Renta/Reembolso de créditos de calefacción)",
+			true
+		],
+		"foodAndNutritionBenefits.snap": [
+			"Asistencia alimentaria (Programa de Asistencia Nutricional Suplementaria/SNAP)",
+			true
+		],
+		"foodAndNutritionBenefits.wic": [
+			"Asistencia alimentaria y de lactancia (Programa Especial de Nutrición Suplementaria para Mujeres, Bebés y Niños/WIC)",
+			true
+		],
+		"foodAndNutritionBenefits.nslp": [
+			"Comidas escolares gratuitas (Programa Nacional de Almuerzos Escolares)",
+			true
+		],
+		"foodAndNutritionBenefits.ede": [
+			"Apoyo alimentario para personas mayores de 60 años (Everyday Eats)",
+			true
+		],
+		"childCareBenefits.cccap": [
+			"Ayuda con los costos de cuidado infantil (Programa de asistencia para el cuidado infantil de Colorado/CCCAP)",
+			true
+		],
+		"childCareBenefits.denverpresc": [
+			"Créditos de matrícula para niños en edad preescolar de Denver (Programa preescolar de Denver)",
+			true
+		],
+		"childCareBenefits.coheadstart": [
+			"Cuidado infantil y preescolar gratuitos (Colorado Head Start)",
+			true
+		],
+		"childCareBenefits.mydenver": [
+			"Programas para jóvenes de costo reducido (MY Denver Card)",
+			true
+		],
+		"childCareBenefits.univpresc": [
+			"Preescolar gratuito (Universal Preschool Colorado)",
+			true
+		],
+		"housingAndUtilities.acp": [
+			"Descuento de Internet residencial (Programa de conectividad asequible)",
+			true
+		],
+		"housingAndUtilities.lifeline": [
+			"Descuento de teléfono o Internet (servicio de Internet/teléfono de Lifeline)",
+			true
+		],
+		"housingAndUtilities.leap": [
+			"Ayuda con las facturas de calefacción de invierno (Programa de asistencia de energía para personas de bajos ingresos/LEAP)",
+			true
+		],
+		"housingAndUtilities.erc": [
+			"Actualizaciones gratuitas de energía para el hogar (Centro de recursos de energía)",
+			true
+		],
+		"transportationBenefits.rtdlive": [
+			"Tarifas RTD con descuento (RTD LiVE)",
+			true
+		],
+		"healthCareBenefits.reproductivehealth": [
+			"Control de la natalidad gratuito (Programa de Atención de la Salud Reproductiva)",
+			true
+		],
+		"healthCareBenefits.familyplanning": [
+			"Beneficios gratuitos de planificación familiar (Servicios de planificación familiar)",
+			true
+		],
+		"healthCareBenefits.dentallowincseniors": [
+			"Atención dental de bajo costo para personas mayores de 60 años (Programa de salud dental de Colorado para personas mayores de bajos ingresos)",
+			true
+		],
+		"taxCreditBenefits.eitc": [
+			"Crédito fiscal federal: por ingresos del trabajo (EITC)",
+			true
+		],
+		"taxCreditBenefits.ctc": [
+			"Crédito fiscal federal: crédito tributario por hijos (CTC)",
+			true
+		],
+		"taxCreditBenefits.coeitc": [
+			"Crédito fiscal estatal: por ingresos del trabajo (COEITC)",
+			true
+		],
+		"taxCreditBenefits.coctc": [
+			"Crédito fiscal estatal: crédito tributario por hijos (COCTC)",
+			true
+		],
+		"displayAnnualIncome.annual": [" anualmente", true],
+		"listAllIncomeStreams.hoursPerWeek": [" horas/semana ", true],
+		"filterSection.citizenship": ["Ciudadanía", true],
+		"filterSection.other": ["Otro", true],
+		"filterSection.reset": ["Restablecer", true],
+		"noResults.p-One": [
+			"Parece que no es posible que califique para los beneficios incluidos en MyFriendBen en este momento. Si indico la necesidad de recursos inmediatamente, haga clic en lance de “Necesidades inmediatas”.",
+			true
+		],
+		"noResults.p-Two": ["Para recursos adicionales, visite ", true],
+		"noResults.p-Three": [
+			" para hablar con alguien en línea o por teléfono para obtener los recursos que está buscando.",
+			true
+		],
+		"noResultsOrUrgentNeeds.p-One": [
+			"Parece que usted no indicó ninguna necesidad inmediata.",
+			true
+		],
+		"errorMessage-county": ["Seleccione un condado", true],
+		"errorMessage-numberOfHHMembers": [
+			"Ingrese el número de personas en su hogar (max. 8)",
+			true
+		],
+		"errorMessage-age": ["Por favor ingrese su edad", true],
+		"errorMessage-incomeType": ["Seleccione un tipo de ingreso", true],
+		"errorMessage-incomeFrequency": [
+			"Por favor selecciona la frecuencia",
+			true
+		],
+		"errorMessage-greaterThanZero": [
+			"Por favor ingrese un número mayor que 0",
+			true
+		],
+		"errorMessage-HHMemberAge": ["Por favor ingrese un numero 0 o mayor", true],
+		"errorMessage-HHMemberRelationship": [
+			"Por favor seleccione un relación",
+			true
+		],
+		"errorMessage-expenseType": ["Por favor seleccione el tipo de gasto", true],
+		"errorMessage-otherReferralSource": [
+			"Por favor escriba su fuente de referencia",
+			true
+		],
+		"TwoOneOneHeader.aboutUs": ["ACERCA DE NOSOTROS", true],
+		"TwoOneOneHeader.support": ["SOPORTE", true],
+		"TwoOneOneHeader.agencies": ["AGENCIAS DE LA COMUNIDAD", true],
+		"TwoOneOneHeader.resources": ["BUSCAR RECURSOS", true],
+		"TwoOneOneHeader.chat": ["CHAT", true],
+		"TwoOneOneHeader.login": ["INICIAR SESIÓN", true],
+		"footer-header": [
+			"¿No encuentra lo que busca? Pruebe estas otras formas de obtener ayuda:",
+			true
+		],
+		"footer-dial-text": ["Marque ", true],
+		"footer-or-text": [" o", true],
+		"footer-tollFree-text": ["llamada gratuita", true],
+		"footer-text-text": ["Textee", true],
+		"footer-to-text": ["a", true],
+		"footer-standardMsg-text": [
+			"*Pueden aplicarse tarifas estándar de mensajes y datos.",
+			true
+		],
+		"footer-chat-text": ["Chat", true],
+		"footer-liveChat-text": [
+			"Haga clic para chatear en vivo con un Navegador de 2-1-1",
+			true
+		],
+		"footer-first-paragraph": [
+			"Los servicios que se encuentran en los resultados de búsqueda pueden incluir criterios de elegibilidad. Comuníquese directamente con el recurso para obtener más información sobre cómo obtener estos servicios. Este sitio contiene enlaces a otros sitios. Toda la información provista es se cree que es precisa y confiable. Sin embargo, 2-1-1 Colorado no asume ninguna responsabilidad por los errores que aparezcan, ni por el uso de la información provista.",
+			true
+		],
+		"footer-second-paragraph": [
+			"2-1-1 Colorado se compromete a ayudar a los ciudadanos de Colorado a conectarse con los servicios que necesitan. Ya sea por teléfono o Internet, nuestro objetivo es presentar información precisa, bien organizada y fácil de encontrar información de programas estatales y locales de salud y servicios humanos. Logramos esto a través del trabajo de nuestros cuatro centros de información del área en todo el estado. No importa dónde viva en Colorado, puede marcar 2-1-1 y encontrar información sobre los recursos en su comunidad local. Ya sea que necesite ayuda para encontrar comida o vivienda, cuidado de niños, asesoramiento en caso de crisis o tratamiento por abuso de sustancias, un número es todo lo que necesita saber.",
+			true
+		],
+		"footer-copyright": ["© Derechos de autor 2-1-1 Colorado", true],
+		"footer-terms-of-service-link": ["2-1-1 Condiciones de Servicio |", true],
+		"footer-twoOneOne-privacy": ["Póliza de Privacidad de 2-1-1 |", true],
+		"footer-twoOneOne-mfb": ["Póliza de Privacidad de MyFriendBen", true],
+		"jeffcoLandingPage-text": [
+			"A través de la educación infantil temprana, la protección de adultos y niños, la capacitación laboral, la asistencia alimentaria, Medicaid y otros programas, los Servicios Humanos del Condado de Jefferson ayudan a las personas a construir vidas mejores y más seguras. Realice una evaluación rápida para estar seguro de que está recibiendo todos los beneficios y programas para los que puede ser elegible para lograr su propia prosperidad. MyFriendBen le dará una estimación de cuánto podría recibir en beneficios públicos.",
+			true
+		],
+		"jeffco-getStarted-button": ["Empezar", true]
+	},
+	"vi": {
+		"header.appName": ["myfriendben", true],
+		"header.selectLang": ["Ngôn ngữ", true],
+		"disclaimer.step-header": ["Bước 1 / ", true],
+		"disclaimer.header": [
+			"Những điều quý vị nên biết trước khi chúng ta bắt đầu:",
+			true
+		],
+		"disclaimer.sub-header": [
+			"Tuyên Bố Miễn Trừ Trách Nhiệm của Gary Philanthropy",
+			true
+		],
+		"disclaimer.body": [
+			"Công cụ tính phúc lợi này đề xuất các chương trình phúc lợi công cộng để quý vị xem xét dựa trên thông tin quý vị cung cấp về hộ gia đình của mình và sự hiểu biết tốt nhất của Gary Philanthropy (“Gary”) về thông tin công khai liên quan đến các chương trình phúc lợi. Gary không đảm bảo tính đủ điều kiện hoặc được chấp nhận vào bất kỳ chương trình nào. Để ghi danh nhận một phúc lợi, quý vị sẽ cần phải đăng ký thông qua cơ quan chính phủ thích hợp. Cơ quan quản lý của chính phủ sẽ xác định tính đủ điều kiện cuối cùng khi quý vị nộp đơn đăng ký vào mỗi chương trình. Thông tin quý vị chia sẻ thông qua sàng lọc phúc lợi công cộng sẽ được giữ bí mật nhưng có thể được chia sẻ với cơ quan chính phủ và/hoặc tổ chức bên thứ ba hỗ trợ quý vị trong quy trình tính toán phúc lợi với mục đích duy nhất là hỗ trợ nộp đơn xin phúc lợi hoặc cung cấp thêm các dịch vụ miễn phí cho quý vị thông qua Gary. Trong mọi trường hợp, thông tin của quý vị sẽ không bị bán. Bằng cách điền vào công cụ tính phúc lợi này, quý vị đồng ý với liên hệ trong tương lai từ Gary hoặc các chi nhánh của chúng tôi về việc quý vị sử dụng công cụ tính phúc lợi hoặc cung cấp các chương trình bổ sung mà quý vị và gia đình quý vị có thể quan tâm. Các thông tin liên lạc này có thể bị tính phí dữ liệu và tin nhắn tiêu chuẩn. Quý vị có thể từ chối nhận các thông tin liên lạc này bất cứ lúc nào thông qua liên kết từ chối trong thông tin liên lạc.",
+			true
+		],
+		"disclaimer.helper-text": [
+			"Chọn ô bên dưới và sau đó nhấp vào nút Tiếp Tục để bắt đầu.",
+			true
+		],
+		"disclaimer.error": ["Vui lòng đánh dấu vào ô để tiếp tục.", true],
+		"disclaimer-label": [
+			"Bằng cách tiếp tục, bạn xác nhận rằng bạn đã đọc và đồng ý với ",
+			true
+		],
+		"landingPage-and-text": [" va ", true],
+		"startOver-button": ["Bắt Đầu Lại", true],
+		"continue-button": ["Tiếp Tục", true],
+		"qcc.step-text": ["Bước ", true],
+		"qcc.of-text": [" / ", true],
+		"qcc.optional-sign-up-text": [
+			"Tùy chọn: Đăng ký để nhận thông tin cập nhật về phúc lợi và/hoặc cơ hội đóng góp ý kiến phản hồi được nhận tiền",
+			true
+		],
+		"qcc.tell-us-text": [
+			"Hãy cho chúng tôi biết về hộ gia đình của quý vị.",
+			true
+		],
+		"qcc.tell-us-final-text": [
+			"Hãy cho chúng tôi biết một số thông tin cuối cùng về hộ gia đình của quý vị.",
+			true
+		],
+		"qcc.so-far-text": ["Cho đến nay quý vị đã cho chúng tôi biết về:", true],
+		"qcc.you-text": [" Quý vị, ", true],
+		"qcc.hoh-text": ["Chủ hộ (Bạn)", true],
+		"qcc.createTaxDropdownMenu-label": ["Năm Khai Thuế", true],
+		"qcc.createTaxDropdownMenu-disabledSelectMenuItemText": [
+			"Chọn một Năm Khai Thuế",
+			true
+		],
+		"qcc.createReferralDropdownMenu-label": ["Nguồn Giới Thiệu", true],
+		"qcc.createReferralDropdownMenu-disabledSelectMenuItemText": [
+			"Chọn Một Nguồn",
+			true
+		],
+		"questions.age": ["Quý vị bao nhiêu tuổi?", true],
+		"questions.age-inputLabel": ["Tuổi", true],
+		"questions.zipcode": ["Mã zip của quý vị là gì?", true],
+		"questions.zipcode-inputLabel": ["Mã Zip", true],
+		"questions.zipcode-a": ["Vui lòng chọn một quận: ", true],
+		"questions.zipcode-a-inputLabel": ["Quận", true],
+		"questions.zipcode-a-disabledSelectMenuItemText": ["Chọn một quận", true],
+		"questions.hasBenefits": [
+			"Hộ gia đình của quý vị hiện có nhận được bất kỳ phúc lợi nào không?",
+			true
+		],
+		"questions.hasBenefits-description": [
+			"Thông tin này sẽ giúp đảm bảo rằng chúng tôi không cung cấp cho quý vị kết quả về những phúc lợi mà quý vị đã có.",
+			true
+		],
+		"questions.hasBenefits-ariaLabel": ["có nhận được phúc lợi", true],
+		"questions.hasBenefits-a": [
+			"Xin vui lòng cho chúng tôi biết những phúc lợi mà hộ gia đình quý vị hiện đang nhận được.",
+			true
+		],
+		"questions.hasBenefits-a-ariaLabel": ["những phúc lợi hiện tại", true],
+		"questions.healthInsurance": [
+			"Các thành viên trong hộ gia đình của quý vị có (những) loại bảo hiểm y tế nào? Chọn tất cả những phát biểu đúng.",
+			true
+		],
+		"questions.student": ["Quý vị là học sinh/sinh viên?", true],
+		"questions.student-ariaLabel": ["là học sinh/sinh viên", true],
+		"questions.student-a": [
+			"Quý vị có phải là học sinh/sinh viên toàn thời gian không?",
+			true
+		],
+		"questions.student-a-ariaLabel": [
+			"là học sinh/sinh viên toàn thời gian",
+			true
+		],
+		"questions.pregnant": ["Quý vị có đang mang thai không?", true],
+		"questions.pregnant-ariaLabel": ["đang mang thai", true],
+		"questions.unemployed": ["Quý vị hiện có đang thất nghiệp không?", true],
+		"questions.unemployed-ariaLabel": ["hiện đang thất nghiệp", true],
+		"questions.unemployed-a": [
+			"Quý vị có việc làm trong 18 tháng qua không?",
+			true
+		],
+		"questions.unemployed-a-ariaLabel": [
+			"có việc làm trong 18 tháng qua",
+			true
+		],
+		"questions.blindOrVisuallyImpaired": [
+			"Quý vị có bị mù hoặc khiếm thị không?",
+			true
+		],
+		"questions.blindOrVisuallyImpaired-description": [
+			"\"Khiếm thị\" có nghĩa là quý vị không thể điều chỉnh thị lực của mình ở mức \"bình thường\".",
+			true
+		],
+		"questions.blindOrVisuallyImpaired-ariaLabel": [
+			"bị mù hoặc khiếm thị",
+			true
+		],
+		"questions.disabled": [
+			"Quý vị có bị bất kỳ tình trạng khuyết tật nào khiến quý vị không thể làm việc bây giờ hoặc trong tương lai không?",
+			true
+		],
+		"questions.disabled-ariaLabel": [
+			"bị bất kỳ tình trạng khuyết tật nào",
+			true
+		],
+		"questions.veteran": [
+			"Quý vị có phục vụ hoặc quý vị đã từng phục vụ trong Lực Lượng Vũ Trang, Lực Lượng Vệ Binh Quốc Gia hoặc Lực Lượng Dự Bị của Hoa Kỳ không?",
+			true
+		],
+		"questions.veteran-ariaLabel": ["là cựu chiến binh", true],
+		"questions.hasIncome": ["Quý vị có thu nhập không?", true],
+		"questions.hasIncome-description": [
+			"Thu nhập là số tiền quý vị kiếm được hoặc nhận được trước khi trừ thuế. Số tiền này bao gồm tiền từ việc làm, tiền cấp dưỡng, đầu tư hoặc quà tặng. Chỉ nhập thu nhập của chính quý vị. Quý vị sẽ có cơ hội nhập thu nhập cho các thành viên khác trong hộ gia đình sau này.",
+			true
+		],
+		"questions.hasIncome-ariaLabel": ["có thu nhập", true],
+		"questions.hasIncome-a": [
+			"Gần đây nhất quý vị có loại thu nhập nào?",
+			true
+		],
+		"questions.hasIncome-a-ariaLabel": ["loại thu nhập gần đây nhất", true],
+		"questions.hasExpenses": [
+			"Hộ gia đình quý vị có phải trả bất kỳ chi phí nào không?",
+			true
+		],
+		"questions.hasExpenses-description": [
+			"Cộng chi phí cho tất cả những người sống trong nhà của quý vị. Bao gồm các chi phí như trông trẻ, cấp dưỡng nuôi con, tiền thuê nhà, chi phí y tế, hóa đơn sưởi, v.v. Chúng tôi sẽ chỉ hỏi về các chi phí có thể ảnh hưởng đến phúc lợi. Chúng tôi sẽ không hỏi về các chi phí như thực phẩm vì hóa đơn hàng tạp hóa không ảnh hưởng đến phúc lợi.",
+			true
+		],
+		"questions.hasExpenses-ariaLabel": ["có phải trả chi phí", true],
+		"questions.hasExpenses-a": [
+			"Loại chi phí nào mà hộ gia đình quý vị phải chi gần đây nhất?",
+			true
+		],
+		"questions.hasExpenses-a-ariaLabel": ["loại chi phí gần đây nhất", true],
+		"questions.householdSize": [
+			"Có bao nhiêu người trong hộ gia đình của quý vị bao gồm cả quý vị?",
+			true
+		],
+		"questions.householdSize-description": [
+			"Đây thường là những thành viên trong gia đình mà cả quý vị và họ cùng chung sống và dùng chung những nguồn quan trọng như thức ăn và hóa đơn.",
+			true
+		],
+		"questions.householdSize-inputLabel": ["Quy Mô Hộ Gia Đình", true],
+		"questions.householdData": [
+			"Hãy cho chúng tôi biết về người tiếp theo trong hộ gia đình của quý vị.",
+			true
+		],
+		"questions.householdData-ariaLabel": [
+			"dữ liệu về hộ gia đình cho công cụ sàng lọc",
+			true
+		],
+		"questions.householdAssets": [
+			"Cả hộ gia đình quý vị hiện có bao nhiêu tiền trong:",
+			true
+		],
+		"questions.householdAssets-description": [
+			"Tiền mặt? Tài khoản vãng lai hoặc tài khoản tiết kiệm? Cổ phiếu, trái phiếu hay quỹ tương hỗ? Trong một số trường hợp, tính đủ điều kiện nhận phúc lợi có thể bị ảnh hưởng nếu hộ gia đình của quý vị sở hữu các tài sản có giá trị khác như xe hơi hoặc hợp đồng bảo hiểm nhân thọ.",
+			true
+		],
+		"questions.householdAssets-inputLabel": ["Số Tiền", true],
+		"questions.lastTaxFilingYear": [
+			"Năm ngoái quý vị đã khai thuế để làm gì?",
+			true
+		],
+		"questions.lastTaxFilingYear-description": [
+			"Năm gần đây nhất quý vị có thể khai thuế là năm 2022.",
+			true
+		],
+		"questions.referralSource": [
+			"Làm thế nào quý vị biết về công cụ sàng lọc này?",
+			true
+		],
+		"questions.referralSource-a": ["Nếu khác, xin vui lòng ghi rõ:", true],
+		"questions.referralSource-a-inputLabel": ["Nguồn giới thiệu khác", true],
+		"questions.signUpInfo": [
+			"Quý vị muốn chúng tôi liên hệ với quý vị về vấn đề gì?",
+			true
+		],
+		"questions.signUpInfo-a": [
+			"Vui lòng cung cấp thông tin liên lạc của quý vị dưới đây: ",
+			true
+		],
+		"questions.signUpInfo-a-ariaLabel": [
+			"trang đăng ký tùy chọn của công cụ sàng lọc",
+			true
+		],
+		"questions.acuteHHConditions": [
+			"Có ai trong hộ gia đình của quý vị đang cần trợ giúp ngay về bất kỳ vấn đề nào sau đây không?",
+			true
+		],
+		"validation-helperText.age": [
+			"Vui lòng nhập độ tuổi hợp lệ (13-130)",
+			true
+		],
+		"validation-helperText.zipcode": ["Vui lòng nhập mã zip CO hợp lệ", true],
+		"validation-helperText.healthInsurance": [
+			"Nếu không có lựa chọn nào phù hợp, vui lòng chọn \"Một hoặc nhiều thành viên trong hộ gia đình không có bảo hiểm y tế\"",
+			true
+		],
+		"validation-helperText.incomeValue": [
+			"Vui lòng nhập một số lớn hơn 0",
+			true
+		],
+		"validation-helperText.expenseValue": [
+			"Vui lòng nhập một số lớn hơn 0",
+			true
+		],
+		"validation-helperText.householdSize": ["Số Người (tối đa 8)", true],
+		"validation-helperText.assets": ["Vui lòng nhập 0 hoặc số dương.", true],
+		"validation-helperText.hHMemberAge": [
+			"Vui lòng nhập 0 hoặc số dương",
+			true
+		],
+		"validation-helperText.hhMemberAgeB": [
+			"Vui lòng nhập 0 hoặc số dương cho tuổi của thành viên trong hộ gia đình",
+			true
+		],
+		"validation-helperText.hhMemberRelation": [
+			"Vui lòng chọn một tùy chọn mối quan hệ",
+			true
+		],
+		"validation-helperText.hhMemberNoneApply": [
+			"Vui lòng bỏ chọn tất cả các tùy chọn khác nếu không có điều kiện nào trong số này đúng",
+			true
+		],
+		"validation-helperText.noneApply": [
+			"Nếu không có điều kiện nào trong số này đúng, vui lòng chọn \"Không có điều kiện nào trong số này đúng\" ",
+			true
+		],
+		"validation-helperText.hhMemberIncome": [
+			"Vui lòng chọn và nhập câu trả lời cho tất cả các trường thu nhập",
+			true
+		],
+		"validation-helperText.hhMemberExpense": [
+			"Vui lòng chọn và nhập câu trả lời cho cả ba trường chi phí",
+			true
+		],
+		"validation-helperText.email": ["Vui lòng nhập địa chỉ email hợp lệ", true],
+		"validation-helperText.lastTaxFilingYear": ["*Vui lòng chọn một năm", true],
+		"validation-helperText.referralSource": [
+			"Vui lòng chọn một nguồn giới thiệu.",
+			true
+		],
+		"validation-helperText.phoneNumber": [
+			"Vui lòng nhập số điện thoại gồm 10 chữ số",
+			true
+		],
+		"validation-helperText.firstName": ["Vui lòng nhập tên của quý vị", true],
+		"validation-helperText.lastName": ["Vui lòng nhập họ của quý vị", true],
+		"validation-helperText.notificationSelection": [
+			"Vui lòng chọn một tùy chọn thông báo",
+			true
+		],
+		"validation-helperText.consentCheckbox": [
+			"Vui lòng đánh dấu vào ô bên trên để đăng ký nhận thông báo đã chọn",
+			true
+		],
+		"validation-helperText.noEmailOrPhoneNumber": [
+			"Vui lòng nhập email hoặc số điện thoại",
+			true
+		],
+		"validation-helperText.benefits": [
+			"Nếu hộ gia đình của quý vị không nhận được bất kỳ phúc lợi nào trong số này, vui lòng chọn tùy chọn \"Không\" ở trên.",
+			true
+		],
+		"previousButton": ["Trước Đó", true],
+		"continueButton": ["Tiếp Tục", true],
+		"radiofield.label-yes": ["Có", true],
+		"radiofield.label-no": ["Không", true],
+		"radiofield.label-preferNotToAnswer": ["Tôi không muốn trả lời", true],
+		"householdDataBlock.createFMInputLabel-headOfHH": ["Tuổi của bạn", true],
+		"householdDataBlock.createFMInputLabel-person": ["Người ", true],
+		"householdDataBlock.createFMInputLabel-age": [" Tuổi", true],
+		"householdDataBlock.createAgeQuestion-how": ["Họ bao nhiêu tuổi?", true],
+		"householdDataBlock.createAgeQuestion-how-headOfHH": [
+			"Quý vị bao nhiêu tuổi?",
+			true
+		],
+		"householdDataBlock.createAgeQuestion-zero": [
+			"Nếu con quý vị dưới một tuổi, hãy nhập 0.",
+			true
+		],
+		"householdDataBlock.createHOfHRelationQuestion-relation": [
+			"Mối quan hệ của người này với quý vị là gì?",
+			true
+		],
+		"householdDataBlock.createDropdownCompProps-inputLabelText": [
+			"Mối quan hệ",
+			true
+		],
+		"householdDataBlock.createDropdownCompProps-label": [
+			"Loại Mối Quan Hệ",
+			true
+		],
+		"householdDataBlock.createDropdownCompProps-disabledSelectMenuItemText": [
+			"Nhấp vào để chọn mối quan hệ",
+			true
+		],
+		"householdDataBlock.questionHeader": [
+			"Cho chúng tôi biết về quý vị.",
+			true
+		],
+		"householdDataBlock.member-income": ["Thu nhập", true],
+		"relationshipOptions.yourself": ["Chính bạn", true],
+		"relationshipOptions.child": ["Con", true],
+		"relationshipOptions.fosterChild": ["Con Nuôi", true],
+		"relationshipOptions.stepChild": ["Con Riêng", true],
+		"relationshipOptions.grandChild": ["Cháu", true],
+		"relationshipOptions.spouse": ["Vợ/Chồng", true],
+		"relationshipOptions.parent": ["Bố Mẹ", true],
+		"relationshipOptions.fosterParent": ["Bố Mẹ Nuôi", true],
+		"relationshipOptions.stepParent": ["Bố Mẹ Kế", true],
+		"relationshipOptions.grandParent": ["Ông Bà", true],
+		"relationshipOptions.sisterOrBrother": ["Anh Chị Em", true],
+		"relationshipOptions.stepSisterOrBrother": ["Anh Chị Em Kế", true],
+		"relationshipOptions.boyfriendOrGirlfriend": ["Bạn Trai/Bạn Gái", true],
+		"relationshipOptions.domesticPartner": ["Bạn Tình Sống Chung", true],
+		"relationshipOptions.unrelated": ["Không Có Mối Quan Hệ", true],
+		"relationshipOptions.relatedOther": ["Có mối quan hệ theo cách khác", true],
+		"householdDataBlock.createConditionsQuestion-do-these-apply-to-you": [
+			"Có bất kỳ phát biểu nào trong số này đúng với quý vị không?",
+			true
+		],
+		"householdDataBlock.createConditionsQuestion-do-these-apply": [
+			"Có bất kỳ phát biểu nào trong số này đúng với họ không?",
+			true
+		],
+		"householdDataBlock.createConditionsQuestion-pick": [
+			"Quý vị có thể chọn nhiều hơn một lựa chọn.",
+			true
+		],
+		"conditionOptions.student": [
+			"Sinh viên hoặc sinh viên tương lai tại một trường cao đẳng, đại học hoặc tổ chức sau trung học khác",
+			true
+		],
+		"conditionOptions.pregnant": ["Có thai", true],
+		"conditionOptions.unemployed": ["Thất nghiệp", true],
+		"conditionOptions.blindOrVisuallyImpaired": ["Mù hoặc khiếm thị", true],
+		"conditionOptions.disabled": [
+			"Bị bất kỳ tình trạng khuyết tật nào khiến quý vị không thể làm việc bây giờ hoặc trong tương lai",
+			true
+		],
+		"checkboxGroup.disabledLabel": [
+			"Bị bất kỳ tình trạng khuyết tật nào khiến họ không thể làm việc bây giờ hoặc trong tương lai",
+			true
+		],
+		"conditionOptions.veteran": [
+			"Đang phục vụ hoặc đã từng phục vụ trong Lực Lượng Vũ Trang, Lực Lượng Vệ Binh Quốc Gia hoặc Lực Lượng Dự Bị của Hoa Kỳ",
+			true
+		],
+		"conditionOptions.noneOfTheseApply": [
+			"Không phát biểu nào trong số này đúng",
+			true
+		],
+		"householdDataBlock.createFTStudentRadioQuestion-ariaLabel": [
+			"là học sinh/sinh viên toàn thời gian",
+			true
+		],
+		"householdDataBlock.createFTStudentRadioQuestion-youQLabel": [
+			"Quý vị có phải là học sinh/sinh viên toàn thời gian không?",
+			true
+		],
+		"householdDataBlock.createFTStudentRadioQuestion-questionLabel": [
+			"Họ có phải là học sinh/sinh viên toàn thời gian không?",
+			true
+		],
+		"householdDataBlock.createUnemployed18MosRadioQuestion-ariaLabel": [
+			"có việc làm trong 18 tháng qua",
+			true
+		],
+		"householdDataBlock.createUnemployed18MosRadioQuestion-youQLabel": [
+			"Quý vị có việc làm trong 18 tháng qua không?",
+			true
+		],
+		"householdDataBlock.createUnemployed18MosRadioQuestion-questionLabel": [
+			"Họ có việc làm trong 18 tháng qua không?",
+			true
+		],
+		"householdDataBlock.createIncomeRadioQuestion-ariaLabel": [
+			"có thu nhập",
+			true
+		],
+		"householdDataBlock.createIncomeRadioQuestion-questionLabel": [
+			"Người này trong hộ gia đình của quý vị có thu nhập đáng kể mà quý vị chưa liệt kê vào không?",
+			true
+		],
+		"householdDataBlock.createIncomeRadioQuestion-questionDescription": [
+			"Số tiền này bao gồm tiền từ việc làm, tiền cấp dưỡng, đầu tư hoặc quà tặng. Thu nhập là số tiền kiếm được hoặc nhận được trước khi khấu trừ thuế.",
+			true
+		],
+		"personIncomeBlock.return-questionLabel": [
+			"Họ có loại thu nhập nào gần đây nhất?",
+			true
+		],
+		"personIncomeBlock.return-questionDescription": [
+			"Trả lời đúng nhất quý vị có thể. Quý vị sẽ có thể liệt kê các loại thu nhập khác. Quý vị càng liệt kê nhiều, kết quả của quý vị sẽ càng chính xác.",
+			true
+		],
+		"personIncomeBlock.return-addIncomeButton": ["Thêm thu nhập khác", true],
+		"personIncomeBlock.createMenuItems-disabledSelectMenuItem": ["Chọn", true],
+		"incomeOptions.wages": ["Tiền lương, tiền công, tiền boa", true],
+		"incomeOptions.selfEmployment": [
+			"Thu nhập từ công việc tự do, nhà thầu độc lập hoặc tự làm chủ",
+			true
+		],
+		"incomeOptions.unemployment": ["Trợ Cấp Thất Nghiệp", true],
+		"incomeOptions.cashAssistance": ["Trợ Cấp Hỗ Trợ Tiền Mặt", true],
+		"incomeOptions.childSupport": ["Cấp Dưỡng Nuôi Con (Đã Nhận)", true],
+		"incomeOptions.sSI": ["Thu Nhập An Sinh Bổ Sung (SSI)", true],
+		"incomeOptions.sSDisability": [
+			"Phúc Lợi An Sinh Xã Hội cho Người Khuyết Tật",
+			true
+		],
+		"incomeOptions.sSSurvivor": [
+			"Phúc Lợi An Sinh Xã Hội cho Người Còn Sống (Góa Chồng/Góa Vợ)",
+			true
+		],
+		"incomeOptions.sSRetirement": [
+			"Phúc Lợi An Sinh Xã Hội cho Người Nghỉ Hưu",
+			true
+		],
+		"incomeOptions.sSDependent": [
+			"Phúc Lợi An Sinh Xã Hội cho Người Phụ Thuộc (nghỉ hưu, khuyết tật hoặc người còn sống)",
+			true
+		],
+		"incomeOptions.cOSDisability": [
+			"Phúc Lợi Dành Cho Người Khuyết Tật của Tiểu Bang Colorado",
+			true
+		],
+		"incomeOptions.veteran": [
+			"Lương Hưu hoặc Phúc Lợi của Cựu Chiến Binh",
+			true
+		],
+		"incomeOptions.pension": [
+			"Lương Hưu Quân Sự, Chính Phủ hoặc Tư Nhân",
+			true
+		],
+		"incomeOptions.deferredComp": [
+			"Rút Tiền từ Chương Trình Phúc Lợi Trả Sau (IRA, Keogh, v.v.)",
+			true
+		],
+		"incomeOptions.workersComp": ["Bồi Thường cho Người Lao Động", true],
+		"incomeOptions.alimony": ["Tiền Cấp Dưỡng (Đã Nhận)", true],
+		"incomeOptions.boarder": ["Học Sinh Nội Trú hoặc Ở Trọ", true],
+		"incomeOptions.gifts": ["Quà Tặng/Đóng Góp (Đã Nhận)", true],
+		"incomeOptions.rental": ["Thu Nhập Cho Thuê", true],
+		"incomeOptions.investment": [
+			"Thu Nhập Đầu Tư (tiền lãi, cổ tức và lợi nhuận từ việc bán cổ phiếu)",
+			true
+		],
+		"personIncomeBlock.createIncomeBlockQuestions-questionLabel": [
+			"Nếu họ nhận được một loại thu nhập khác, hãy chọn loại thu nhập đó bên dưới.",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamsDropdownMenu-inputLabel": [
+			"Loại Thu Nhập",
+			true
+		],
+		"personIncomeBlock.createIncomeAmountTextfield-questionLabel": [
+			"Họ nhận được bao nhiêu tiền trong mỗi kỳ trả cho loại thu nhập này: ",
+			true
+		],
+		"personIncomeBlock.createIncomeAmountTextfield-amountLabel": [
+			"Số tiền",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-youQLabel": [
+			"Tần suất quý vị được trả khoản thu nhập này như thế nào: ",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-questionLabel": [
+			"Tần suất họ được trả khoản thu nhập này như thế nào: ",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-freqLabel": [
+			"Tần Suất",
+			true
+		],
+		"personIncomeBlock.createIncomeStreamFrequencyDropdownMenu-incomeFreqLabel": [
+			"Tần Suất Thu Nhập",
+			true
+		],
+		"personIncomeBlock.createFrequencyMenuItems-disabledSelectMenuItem": [
+			"Chọn",
+			true
+		],
+		"personIncomeBlock.createIncomeAmountTextfield-hourly-questionLabel": [
+			"Tiền công theo giờ của họ là bao nhiêu: ",
+			true
+		],
+		"personIncomeBlock.createHoursWorkedTextfield-youQLabel": [
+			"Quý vị làm việc trung bình bao nhiêu giờ mỗi tuần: ",
+			true
+		],
+		"personIncomeBlock.createHoursWorkedTextfield-questionLabel": [
+			"Họ làm việc trung bình bao nhiêu giờ mỗi tuần: ",
+			true
+		],
+		"householdDataBlock.createExpenseRadioQuestion-ariaLabel": [
+			"có phải trả chi phí",
+			true
+		],
+		"householdDataBlock.createExpenseRadioQuestion-questionLabel": [
+			"Họ có phải trả bất kỳ chi phí nào không",
+			true
+		],
+		"householdDataBlock.createExpenseRadioQuestion-questionDescription": [
+			"Bao gồm các chi phí như tiền thuê nhà,  tiền thế chấp, hóa đơn y tế, trông trẻ, cấp dưỡng nuôi con và hóa đơn sưởi.",
+			true
+		],
+		"personExpenseBlock.return-questionLabel": [
+			"Họ phải trả loại chi phí nào gần đây nhất?",
+			true
+		],
+		"personExpenseBlock.return-questionDescription": [
+			"Trả lời đúng nhất quý vị có thể. Quý vị sẽ có thể liệt kê các loại chi phí khác. Quý vị càng liệt kê nhiều, kết quả của quý vị sẽ càng chính xác.",
+			true
+		],
+		"personExpenseBlock.return-addExpenseButton": ["Thêm chi phí khác", true],
+		"personExpenseBlock.createExpenseBlockQuestions-questionLabel": [
+			"Nếu họ phải trả khoản chi phí khác, hãy chọn loại chi phí đó bên dưới.",
+			true
+		],
+		"personExpenseBlock.createExpenseDropdownMenu-expenseTypeInputLabel": [
+			"Loại Chi Phí",
+			true
+		],
+		"personExpenseBlock.createExpenseMenuItems-disabledSelect": ["Chọn", true],
+		"expenseOptions.childCare": ["Trông Trẻ", true],
+		"expenseOptions.childSupport": ["Cấp Dưỡng Nuôi Con (Đã Trả)", true],
+		"expenseOptions.dependentCare": ["Chăm Sóc Người Phụ Thuộc", true],
+		"expenseOptions.rent": ["Tiền Thuê Nhà", true],
+		"expenseOptions.mortgage": ["Tiền Thế Chấp", true],
+		"expenseOptions.heating": ["Sưởi ấm", true],
+		"expenseOptions.cooling": ["Làm mát", true],
+		"expenseOptions.otherUtilities": ["Tiện Ích Khác", true],
+		"expenseOptions.telephone": ["Điện Thoại", true],
+		"expenseOptions.internet": ["Internet", true],
+		"expenseOptions.auto": ["Phí Bảo Hiểm Ô Tô &/hoặc Thanh Toán", true],
+		"expenseOptions.medical": ["Phí Bảo Hiểm Y Tế &/hoặc Hóa Đơn", true],
+		"expenseOptions.studentLoans": ["Khoản Vay Sinh Viên", true],
+		"expenseOptions.creditCard": ["Nợ Thẻ Tín Dụng", true],
+		"expenseOptions.personalLoan": ["Vay Tiêu Dùng Cá Nhân", true],
+		"personExpenseBlock.createExpenseFrequencyDropdownMenu-questionLabel": [
+			"Tần suất họ phải trả loại chi phí này: ",
+			true
+		],
+		"personExpenseBlock.createExpenseFrequencyDropdownMenu-expenseFrequencyInputLabel": [
+			"Tần Suất",
+			true
+		],
+		"personExpenseBlock.createExpenseFrequencyDropdownMenu-expenseFrequencySelectLabel": [
+			"Tần Suất Chi Phí",
+			true
+		],
+		"personExpenseBlock.createExpenseFrequencyMenuItems-disabledSelectMenuItemText": [
+			"Chọn",
+			true
+		],
+		"personExpenseBlock.createExpenseAmountTextfield-questionLabel": [
+			"Loại chi phí này là bao nhiêu: ",
+			true
+		],
+		"personExpenseBlock.createExpenseAmountTextfield-expenseAmountTextfieldLabel": [
+			"Số tiền",
+			true
+		],
+		"incomeBlock.createIncomeBlockQuestions-questionLabel": [
+			"Nếu quý vị nhận được một loại thu nhập khác, hãy chọn loại thu nhập đó bên dưới.",
+			true
+		],
+		"incomeBlock.createIncomeStreamsDropdownMenu-incomeTypeInputLabel": [
+			"Loại Thu Nhập",
+			true
+		],
+		"incomeBlock.createIncomeStreamsDropdownMenu-incomeTypeSelectLabel": [
+			"Loại Thu Nhập",
+			true
+		],
+		"incomeBlock.createMenuItems-disabledSelectMenuItemText": ["Chọn", true],
+		"incomeBlock.createIncomeStreamFrequencyDropdownMenu-questionLabel": [
+			"Tần suất quý vị nhận được loại thu nhập này: ",
+			true
+		],
+		"incomeBlock.createIncomeStreamFrequencyDropdownMenu-incomeFrequencyLabel": [
+			"Tần Suất",
+			true
+		],
+		"incomeBlock.createIncomeStreamFrequencyDropdownMenu-incomeFrequencySelectLabel": [
+			"Tần Suất Thu Nhập",
+			true
+		],
+		"incomeBlock.createFrequencyMenuItems-disabledSelectMenuItemText": [
+			"Chọn",
+			true
+		],
+		"incomeBlock.createIncomeAmountTextfield-questionLabel": [
+			"Quý vị nhận được bao nhiêu tiền trong mỗi kỳ trả: ",
+			true
+		],
+		"incomeBlock.createIncomeAmountTextfield-hourly-questionLabel": [
+			"Tiền công theo giờ của quý vị là bao nhiêu: ",
+			true
+		],
+		"incomeBlock.createIncomeAmountTextfield-amountLabel": ["Số tiền", true],
+		"incomeBlock.createHoursWorkedTextfield-questionLabel": [
+			"Quý vị làm việc trung bình bao nhiêu giờ mỗi tuần: ",
+			true
+		],
+		"incomeBlock.createHoursWorkedTextfield-amountLabel": ["Giờ", true],
+		"incomeBlock.return-error-message": [
+			"Vui lòng chọn và nhập câu trả lời cho tất cả các trường thu nhập",
+			true
+		],
+		"incomeBlock.return-addIncomeButton": ["Thêm thu nhập khác", true],
+		"expenseBlock.createExpenseBlockQuestions-questionLabel": [
+			"Nếu quý vị phải trả khoản chi phí khác, hãy chọn loại chi phí đó bên dưới.",
+			true
+		],
+		"expenseBlock.createExpenseDropdownMenu-expenseTypeInputLabel": [
+			"Loại Chi Phí",
+			true
+		],
+		"expenseBlock.createExpenseDropdownMenu-expenseTypeSelectLabel": [
+			"Loại Chi Phí",
+			true
+		],
+		"expenseBlock.createExpenseMenuItems-disabledSelectMenuItemText": [
+			"Chọn",
+			true
+		],
+		"expenseBlock.createExpenseAmountTextfield-questionLabel": [
+			"Chi phí này hàng tháng là bao nhiêu: ",
+			true
+		],
+		"expenseBlock.createExpenseAmountTextfield-amountLabel": ["Số tiền", true],
+		"expenseBlock.return-error-message": [
+			"Vui lòng chọn và nhập câu trả lời cho tất cả các trường chi phí",
+			true
+		],
+		"expenseBlock.return-addExpenseButton": ["Thêm chi phí khác", true],
+		"confirmation.return-stepLabel": ["Bước ", true],
+		"confirmation.return-ofLabel": [" / ", true],
+		"confirmation.return-subheader": [
+			"Ok. Dưới đây là những thông tin chúng tôi đã nắm được:",
+			true
+		],
+		"confirmation.return-questionLabel": [
+			"Tất cả các thông tin của quý vị đã chính xác chưa?",
+			true
+		],
+		"confirmation.displayAllFormData-personLabel": ["người", true],
+		"confirmation.displayAllFormData-peopleLabel": ["người", true],
+		"confirmation.displayAllFormData-yourHouseholdLabel": [
+			"Thành viên trong gia đình",
+			true
+		],
+		"confirmation.editLinkText": ["Chỉnh sửa", true],
+		"confirmation.displayAllFormData-householdResourcesText": [
+			"Nguồn lực của gia đình",
+			true
+		],
+		"confirmation.displayAllFormData-householdResourcesDescription": [
+			" (Đây là tiền mặt, tài khoản vãng lai hoặc tài khoản tiết kiệm, cổ phiếu, trái phiếu hay quỹ tương hỗ.)",
+			true
+		],
+		"confirmation.displayAllFormData-zipcodeText": ["Mã zip: ", true],
+		"confirmation.displayAllFormData-countyText": ["Quận: ", true],
+		"confirmation.displayAllFormData-lastTaxFilingYear": [
+			"Năm Khai Thuế Gần Đây Nhất: ",
+			true
+		],
+		"confirmation.displayAllFormData-referralSourceText": [
+			"Nguồn Giới Thiệu",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-youText": [" Quý vị, ", true],
+		"confirmation.headOfHouseholdDataBlock-headOfHouseholdText": [
+			" chủ hộ",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-conditionsText": [
+			"Điều kiện:",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-studentFulltimeText": [
+			"Học sinh/sinh viên toàn thời gian",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-studentText": [
+			"Học sinh/sinh viên",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-pregnantText": ["Có thai", true],
+		"confirmation.headOfHouseholdDataBlock-unemployed18MosText": [
+			"Thất nghiệp, đã có việc làm trong 18 tháng qua",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-unemployedText": [
+			"Thất nghiệp",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-blindOrVisuallyImpairedText": [
+			"Mù hoặc khiếm thị",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-disabledText": [
+			"Bị khuyết tật",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-veteranText": [
+			"Cựu chiến binh",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-medicaidText": [
+			"Nhận Medicaid",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-disabilityRelatedMedicaidText": [
+			"Nhận Medicaid liên quan đến khuyết tật",
+			true
+		],
+		"confirmation.headOfHouseholdDataBlock-incomeLabel": ["Thu nhập:", true],
+		"confirmation.headOfHouseholdDataBlock-expensesLabel": [
+			"Chi phí sinh hoạt hàng tháng",
+			true
+		],
+		"confirmation.displayAllFormData-currentHHBenefitsText": [
+			"Lợi ích hộ gia đình hiện tại",
+			true
+		],
+		"confirmation.displayAllFormData-healthInsurance": [
+			"Bảo hiểm hộ gia đình",
+			true
+		],
+		"confirmation.displayAllFormData-acuteHHConditions": ["Nhu Cầu Ngay", true],
+		"confirmation.none": [" Không có", true],
+		"confirmation.noIncome": [" Không có", true],
+		"confirmation.residenceInfo": ["Thông tin cư trú", true],
+		"frequencyOptions.weekly": ["hàng tuần", true],
+		"frequencyOptions.biweekly": ["2 tuần một lần", true],
+		"frequencyOptions.monthly": ["hàng tháng", true],
+		"frequencyOptions.hourly": ["hàng giờ", true],
+		"results-error.header": ["Ôi! Hình như có gì đó đã sai.", true],
+		"results-error.message": [
+			"Chúng tôi xin lỗi. Chúng tôi đang gặp một số vấn đề khi hoàn thành yêu cầu của bạn. Vui lòng đảm bảo bạn đã hoàn thành tất cả các câu hỏi trên màn hình và thử lại. Nếu bạn vẫn không thể tải kết quả lợi ích của mình, vui lòng liên hệ myfriendben@garycommunity.org.",
+			true
+		],
+		"results-error.button": ["Trở lại Screener", true],
+		"results.return-screenerIdLabel": ["ID Công Cụ Sàng Lọc: ", true],
+		"results.return-programsUpToLabel": [" chương trình, lên đến ", true],
+		"results.return-perYearOrLabel": [" mỗi năm hoặc ", true],
+		"results.return-perMonthLabel": [
+			" mỗi tháng bằng tiền mặt hoặc giảm chi phí để quý vị cân nhắc",
+			true
+		],
+		"results.share": ["Chia Sẻ", true],
+		"results.share-email": ["Email", true],
+		"results.share-copyLink": ["Sao Chép Liên Kết", true],
+		"results.share-copied": ["Đã Sao Chép", true],
+		"results.share-header": ["Chia sẻ MyFriendBen với bạn bè:", true],
+		"results.return-sendResultsButton": ["Gửi Kết Quả", true],
+		"results.return-ineligibilityLinkText": [
+			"* Để biết thêm thông tin về các chương trình mà quý vị không đủ điều kiện tham gia, hãy nhấp vào đây",
+			true
+		],
+		"results.return-goBackToEligibleText": [
+			"Quay lại các chương trình đủ điều kiện",
+			true
+		],
+		"results.return-estimatedDeliveryTimeA": [
+			"*Trung bình những người được chấp thuận nhận phúc lợi này bắt đầu nhận được phúc lợi ",
+			true
+		],
+		"results.return-estimatedDeliveryTimeB": [
+			" sau khi hoàn thành đơn xin.",
+			true
+		],
+		"results.displaySubheader-rememberDisclaimerText": [
+			"Hãy nhớ rằng chúng tôi không thể đảm bảo tính đủ điều kiện, nhưng dựa trên thông tin quý vị cung cấp, chúng tôi tin rằng quý vị có khả năng đủ điều kiện tham gia các chương trình bên dưới:",
+			true
+		],
+		"results.displaySubheader-basedOnInformationText": [
+			"Dựa trên thông tin quý vị cung cấp, chúng tôi tin rằng quý vị có khả năng không đủ điều kiện tham gia các chương trình bên dưới:",
+			true
+		],
+		"results.displaySubheader-sendResultsDescText": [
+			"Để nhận bản sao của các kết quả này qua email hoặc tin nhắn, vui lòng nhấp vào nút kết quả qua email.",
+			true
+		],
+		"results.resultsTable-benefitLabel": ["Phúc lợi", true],
+		"results.resultsTable-annualValueLabel": [
+			"Giá Trị Hàng Năm Ước Tính",
+			true
+		],
+		"results.resultsTable-timeToApply": ["Thời Gian Nộp Đơn", true],
+		"results.resultsTable-sorryNoProgramsWereFoundLabel": [
+			"Rất tiếc, chúng tôi không thể tìm thấy bất kỳ chương trình nào cho quý vị dựa trên thông tin được cung cấp.",
+			true
+		],
+		"results.resultsRow-applyButton": ["Nộp đơn", true],
+		"results.resultsRow-expandForEligibilityLink": [
+			"Mở rộng để biết chi tiết về tính đủ điều kiện",
+			true
+		],
+		"results.resultsRow-applyWithAssistance": ["Nộp đơn với sự hỗ trợ", true],
+		"results.resultsRow-reducedExpensesText": ["giảm chi phí", true],
+		"results.resultsRow-cashText": ["tiền mặt", true],
+		"results.resultsRow-reducedCostText": ["giảm chi phí dịch vụ", true],
+		"results.returnSignupCitizenFilter": [
+			"Chỉ hiển thị các phúc lợi không yêu cầu công dân hoặc người không phải là công dân đủ tiêu chuẩn trong hộ gia đình",
+			true
+		],
+		"results.perYear": ["Mỗi Năm", true],
+		"results.returnToScreenButton": ["Chuyển đổi câu trả lời", true],
+		"filter.filterByCategoryButton": ["Lọc", true],
+		"filter.filterByEligibility": ["Lọc Theo Tính Đủ Điều Kiện", true],
+		"filter.filterEligible": ["Đủ Điều Kiện", true],
+		"filter.filterInEligible": ["Không Đủ Điều Kiện", true],
+		"filter.filterAlreadyHave": ["Bao gồm các phúc lợi mà tôi đã nhận", true],
+		"filter.filterByCategory": ["Lọc Theo Danh Mục", true],
+		"filter.filterAllCategories": ["Tất Cả Danh Mục", true],
+		"results.displayResultsFilterButtons-benefitPrograms": [
+			"Chương Trình Phúc Lợi",
+			true
+		],
+		"results.displayResultsFilterButtons-urgentNeedsResources": [
+			"Nhu Cầu Ngay",
+			true
+		],
+		"loading.return-loadingText": [
+			"Xin vui lòng chờ trong khi chúng tôi thu thập kết quả của quý vị...",
+			true
+		],
+		"results.displaySubheader-loadingDisclaimerText": [
+			"Hãy nhớ rằng chúng tôi không thể đảm bảo tính đủ điều kiện, nhưng dựa trên thông tin quý vị cung cấp, chúng tôi tin rằng quý vị có khả năng đủ điều kiện tham gia các chương trình sau đây.",
+			true
+		],
+		"results.displaySubheader-noResults": [
+			"Không tìm thấy kết quả lợi ích",
+			true
+		],
+		"taxYearOptions.noRecentFiling": [
+			"Tôi đã không nộp thuế trong 5 năm qua",
+			true
+		],
+		"benefitOptions.tanf": [
+			"Trợ cấp tiền mặt và hỗ trợ việc làm (Trợ Cấp Tạm Thời Cho Các Gia Đình Nghèo Khó (TANF/Colorado Works))",
+			true
+		],
+		"benefitOptions.wic": [
+			"Trợ cấp thực phẩm và nuôi con bằng sữa mẹ (Chương Trình Dinh Dưỡng Bổ Sung Đặc Biệt dành cho Phụ Nữ, Trẻ Sơ Sinh và Trẻ Em (WIC))",
+			true
+		],
+		"benefitOptions.snap": [
+			"Trợ cấp lương thực (Chương Trình Hỗ Trợ Dinh Dưỡng Bổ Sung/SNAP)",
+			true
+		],
+		"benefitOptions.lifeline": [
+			"Giảm giá điện thoại hoặc internet (Dịch Vụ Điện Thoại/Internet Lifeline)",
+			true
+		],
+		"benefitOptions.acp": [
+			"Giảm giá internet tại nhà (Chương Trình Kết Nối Giá Cả Phải Chăng)",
+			true
+		],
+		"benefitOptions.eitc": [
+			"Tín thuế liên bang: thu nhập kiếm được (Tín Thuế Thu Nhập Kiếm Được)",
+			true
+		],
+		"benefitOptions.coeitc": [
+			"Tín thuế tiểu bang: thu nhập kiếm được (Tín Thuế Thu Nhập Kiếm Được của Colorado)",
+			true
+		],
+		"benefitOptions.nslp": [
+			"Bữa ăn miễn phí tại trường (Chương Trình Bữa Trưa Tại Trường Quốc Gia)",
+			true
+		],
+		"benefitOptions.ctc": [
+			"Tín thuế liên bang: tín thuế trẻ em (Tín Thuế Trẻ Em)",
+			true
+		],
+		"benefitOptions.rtdlive": ["Giảm giá vé RTD (RTD LiVE)", true],
+		"benefitOptions.cccap": [
+			"Hỗ trợ chi phí trông trẻ (Chương Trình Hỗ Trợ Trông Trẻ Colorado)",
+			true
+		],
+		"benefitOptions.mydenver": [
+			"Các chương trình giảm chi phí dành cho thanh thiếu niên (Thẻ MY Denver)",
+			true
+		],
+		"benefitOptions.leap": ["Trợ giúp về hóa đơn sưởi mùa đông (LEAP)", true],
+		"referralOptions.testOrProspect": ["Thử nghiệm / Đối tác tiềm năng", true],
+		"referralOptions.searchEngine": ["Google hoặc công cụ tìm kiếm khác", true],
+		"referralOptions.other": ["Khác", true],
+		"signUpOptions.sendUpdates": [
+			"Vui lòng thông báo cho tôi khi có các phúc lợi mới mà tôi có khả năng đủ điều kiện nhận dựa trên thông tin tôi đã cung cấp.",
+			true
+		],
+		"signUpOptions.sendOffers": [
+			"Vui lòng thông báo cho tôi khi có cơ hội được trả tiền để đóng góp ý kiến phản hồi về công cụ sàng lọc này.",
+			true
+		],
+		"signUp.createFirstNameTextfield-label": ["Tên", true],
+		"signUp.createLastNameTextfield-label": ["Họ", true],
+		"signUp.createEmailTextfield-label": ["Email", true],
+		"signUp.createPhoneTextfield-label": ["Điện Thoại Di Động", true],
+		"signUp.displayDisclosureSection-consentText": [
+			"Bằng cách điền vào biểu mẫu này, quý vị đồng ý với liên hệ trong tương lai từ Gary Philanthropy hoặc các chi nhánh của chúng tôi về việc quý vị sử dụng công cụ tính phúc lợi hoặc cung cấp các chương trình bổ sung mà quý vị và gia đình quý vị có thể quan tâm. Các thông tin liên lạc này có thể bị tính phí dữ liệu và tin nhắn tiêu chuẩn. Quý vị có thể từ chối nhận các thông tin liên lạc này bất cứ lúc nào thông qua liên kết từ chối trong thông tin liên lạc.",
+			true
+		],
+		"signUp.displayDisclosureSection-consentCheck1": [
+			"Tôi đã đọc, hiểu và đồng ý với các điều khoản của My Friend Ben ",
+			true
+		],
+		"signUp.displayDisclosureSection-consentCheckLink": [
+			"chính sách quyền riêng tư dữ liệu",
+			true
+		],
+		"signUp.displayDisclosureSection-consentCheck4": [
+			" và đồng ý cho phép liên hệ.",
+			true
+		],
+		"emailResults.displaySubheader-text": ["Lưu kết quả của tôi", true],
+		"emailResults.enter-emailLabel": [
+			"Gửi liên kết kết quả của tôi qua email",
+			true
+		],
+		"emailResults.enter-phoneNumberLabel": [
+			"Nhắn tin liên kết kết quả của tôi",
+			true
+		],
+		"emailResults.sendButton": ["Gửi", true],
+		"emailResults.return-signupCompleted": [
+			"Đã gửi bản sao kết quả của quý vị.",
+			true
+		],
+		"emailResults.return-signupCompleted-email": [
+			"Đã gửi bản sao kết quả của quý vị. Nếu bạn không thấy email trong hộp thư đến của mình, vui lòng kiểm tra thư mục spam của bạn.",
+			true
+		],
+		"emailResults.copy-results-text": [
+			"Sao chép liên kết kết quả của tôi",
+			true
+		],
+		"landingPage.step-header": ["Bước 0 / ", true],
+		"landingPage.body": [
+			"MyFriendBen là công cụ có thể giúp xác định các phúc lợi mà quý vị có khả năng đủ điều kiện nhận. Dưới đây là những điều quý vị nên biết trước khi bắt đầu:",
+			true
+		],
+		"landingPage.firstBulletItem": [
+			"MyFriendBen chỉ cung cấp ước tính về những gì bạn có thể hội đủ điều kiện. Bạn không nên dựa vào những ước tính này. Bạn phải xác nhận tính đủ điều kiện và số tiền trợ cấp cuối cùng của mình với cơ quan thích hợp hoặc người ra quyết định khác.",
+			true
+		],
+		"landingPage.publicCharge": [
+			"Một số lợi ích được cung cấp cho những người không phải là công dân Hoa Kỳ. Những người không phải là công dân Hoa Kỳ dự định nộp đơn xin thường trú hợp pháp hoặc xin thị thực nên xem xét việc đăng ký bất kỳ lợi ích nào có thể ảnh hưởng đến tình trạng nhập cư của họ. Để biết thêm thông tin, vui lòng xem lại các ",
+			true
+		],
+		"landingPage.publicChargeLink": [
+			"Quy định về Gánh nặng Xã hội của Sở Dịch vụ Nhân sinh Colorado",
+			true
+		],
+		"landingPage-policyText": ["chính sách quyền riêng tư,", true],
+		"landingPage-additionalTerms": [
+			"diều khoản bổ sung và dồng ý liên hệ.",
+			true
+		],
+		"healthInsuranceOptions.employer": [
+			"Bảo hiểm y tế do chủ lao động cung cấp",
+			true
+		],
+		"healthInsuranceOptions.private": ["Bảo hiểm y tế tư nhân", true],
+		"healthInsuranceOptions.medicaid": [
+			"Chương trình Health First Colorado (Medicaid)",
+			true
+		],
+		"healthInsuranceOptions.medicare": ["Chương trình Medicare", true],
+		"healthInsuranceOptions.chp": [
+			"Chương trình Child Health Plan Plus (CHP+)",
+			true
+		],
+		"healthInsuranceOptions.none": [
+			"Một hoặc nhiều thành viên trong hộ gia đình không có bảo hiểm y tế",
+			true
+		],
+		"acuteConditionOptions.food": ["Thực phẩm hoặc hàng tạp hóa", true],
+		"acuteConditionOptions.babySupplies": ["Tã và đồ dùng trẻ em khác", true],
+		"acuteConditionOptions.housing": [
+			"Trợ giúp khẩn cấp thanh toán thế chấp, tiền thuê nhà hoặc các tiện ích",
+			true
+		],
+		"acuteConditionOptions.support": [
+			"Khó khăn mà quý vị hoặc con quý vị muốn trao đổi",
+			true
+		],
+		"acuteConditionOptions.childDevelopment": [
+			"Mối quan ngại về sự phát triển của con sơ sinh hoặc con nhỏ của quý vị",
+			true
+		],
+		"acuteConditionOptions.loss": [
+			"Chi phí tang lễ, chôn cất hoặc hỏa táng",
+			true
+		],
+		"acuteConditionOptions.familyPlanning": [
+			"Kế hoạch hóa gia đình hoặc ngừa thai",
+			true
+		],
+		"acuteConditionOptions.jobResources": ["Tìm việc", true],
+		"acuteConditionOptions.dentalCare": [
+			"Chăm sóc nha khoa chi phí thấp",
+			true
+		],
+		"acuteConditionOptions.legalServices": [
+			"Trợ giúp miễn phí hoặc chi phí thấp với các nhu cầu pháp lý dân sự",
+			true
+		],
+		"urgentNeedsTable.visit-website-button": ["Truy cập trang web", true],
+		"urgentNeedsTable.resources-columnHeader": ["Nguồn Lực", true],
+		"urgentNeedsTable.typeOfResource-columnHeader": ["Loại Nguồn Lực", true],
+		"urgentNeedsRow.formatPhoneNumber": ["Số Điện Thoại: ", true],
+		"benefitCategories.cash": ["Trợ Cấp Tiền Mặt", true],
+		"benefitCategories.foodAndNutrition": ["Thực Phẩm và Dinh Dưỡng", true],
+		"benefitCategories.childCare": [
+			"Trông Trẻ, Mầm Non và Thanh Thiếu Niên",
+			true
+		],
+		"benefitCategories.housingAndUtilities": ["Nhà Ở và Tiện Ích", true],
+		"benefitCategories.transportation": ["Đi Lại", true],
+		"benefitCategories.healthCare": ["Chăm Sóc Sức Khỏe", true],
+		"benefitCategories.taxCredits": ["Các Khoản Tín Thuế", true],
+		"benefitCategories.childCareHelperText": [
+			"Quý vị có thắc mắc tại sao giá trị hàng năm của các chương trình này có thể khác với tổng giá trị trong kết quả của quý vị không? Đó là bởi vì giá trị hàng năm này là ước tính của giá trị trung bình có khả năng kết hợp của các chương trình trông trẻ và mầm non mà quý vị đủ điều kiện tham gia. Tiết kiệm từ các chương trình có thể trùng nhau. Quý vị có thể kết hợp các khoản phúc lợi để giúp chi trả cho dịch vụ trông trẻ và mầm non.",
+			true
+		],
+		"cashAssistanceBenefits.tanf": [
+			"Trợ cấp tiền mặt và hỗ trợ việc làm (Trợ Cấp Tạm Thời Cho Các Gia Đình Nghèo Khó (TANF/Colorado Works))",
+			true
+		],
+		"cashAssistanceBenefits.ssi": [
+			"Trợ cấp tiền mặt của liên bang dành cho những người bị khuyết tật, mù lòa hoặc từ 65 tuổi trở lên (Thu Nhập An Sinh Bổ Sung/SSI)",
+			true
+		],
+		"cashAssistanceBenefits.andcs": [
+			"Trợ cấp tiền mặt của tiểu bang cho những cá nhân bị khuyết tật và nhận SSI (Trợ Cấp Cho Người Khuyết Tật Túng Thiếu - Chương Trình Bổ Sung của Colorado/AND-CS)",
+			true
+		],
+		"cashAssistanceBenefits.oap": [
+			"Trợ cấp tiền mặt của tiểu bang cho những người từ 60 tuổi trở lên (Lương Hưu Người Cao Tuổi/OAP)",
+			true
+		],
+		"cashAssistanceBenefits.coPropTaxRentHeatCreditRebate": [
+			"Tiền mặt để trả thuế bất động sản, tiền thuê nhà và các hóa đơn sưởi (Thuế Bất Động Sản/Tiền Thuê Nhà/Giảm Giá Tín Dụng Nhiệt của Colorado)",
+			true
+		],
+		"foodAndNutritionBenefits.snap": [
+			"Trợ cấp thực phẩm (Chương Trình Trợ Cấp Dinh Dưỡng Bổ Sung/SNAP)",
+			true
+		],
+		"foodAndNutritionBenefits.wic": [
+			"Trợ cấp thực phẩm và nuôi con bằng sữa mẹ (Chương Trình Dinh Dưỡng Bổ Sung Đặc Biệt dành cho Phụ Nữ, Trẻ Sơ Sinh và Trẻ Em/WIC)",
+			true
+		],
+		"foodAndNutritionBenefits.nslp": [
+			"Bữa ăn miễn phí tại trường (Chương Trình Bữa Trưa Tại Trường Quốc Gia)",
+			true
+		],
+		"foodAndNutritionBenefits.ede": [
+			"Trợ cấp thực phẩm cho người từ 60 tuổi trở lên (Thực Phẩm Hàng Ngày)",
+			true
+		],
+		"childCareBenefits.cccap": [
+			"Hỗ trợ chi phí trông trẻ (Chương Trình Trợ Cấp Trông Trẻ Colorado/CCCAP)",
+			true
+		],
+		"childCareBenefits.denverpresc": [
+			"Tín dụng học phí cho học sinh mầm non Denver (Chương Trình Mầm Non Denver)",
+			true
+		],
+		"childCareBenefits.coheadstart": [
+			"Trông trẻ sớm và mầm non miễn phí (Colorado Head Start)",
+			true
+		],
+		"childCareBenefits.mydenver": [
+			"Các chương trình giảm chi phí dành cho thanh thiếu niên (Thẻ MY Denver)",
+			true
+		],
+		"childCareBenefits.univpresc": [
+			"Trường mầm non miễn phí (Universal Preschool Colorado)",
+			true
+		],
+		"housingAndUtilities.acp": [
+			"Giảm giá internet tại nhà (Chương Trình Kết Nối Giá Cả Phải Chăng)",
+			true
+		],
+		"housingAndUtilities.lifeline": [
+			"Giảm giá điện thoại hoặc internet (Dịch Vụ Điện Thoại/Internet Lifeline)",
+			true
+		],
+		"housingAndUtilities.leap": [
+			"Trợ giúp về hóa đơn sưởi mùa đông (Chương Trình Trợ Cấp Năng Lượng cho Người có Thu Nhập Thấp/LEAP)",
+			true
+		],
+		"housingAndUtilities.erc": [
+			"Nâng cấp năng lượng tại nhà miễn phí (Trung Tâm Tài Nguyên Năng Lượng)",
+			true
+		],
+		"transportationBenefits.rtdlive": ["Giảm giá vé RTD (RTD LiVE)", true],
+		"healthCareBenefits.reproductivehealth": [
+			"Ngừa thai miễn phí (Chương Trình Chăm Sóc Sức Khỏe Sinh Sản)",
+			true
+		],
+		"healthCareBenefits.familyplanning": [
+			"Quyền lợi kế hoạch hóa gia đình miễn phí (Dịch Vụ Kế Hoạch Hóa Gia Đình)",
+			true
+		],
+		"healthCareBenefits.dentallowincseniors": [
+			"Chăm sóc nha khoa chi phí thấp cho người từ 60 tuổi trở lên (Chương Trình Sức Khỏe Nha Khoa Colorado dành cho Người Cao Tuổi có Thu Nhập Thấp)",
+			true
+		],
+		"taxCreditBenefits.eitc": [
+			"Tín dụng thuế liên bang: Thu nhập kiếm được (EITC)",
+			true
+		],
+		"taxCreditBenefits.ctc": [
+			"Tín dụng thuế liên bang: Tín dụng thuế dành cho trẻ em (CTC)",
+			true
+		],
+		"taxCreditBenefits.coeitc": [
+			"Tín dụng thuế của tiểu bang: Thu nhập kiếm được (COEITC)",
+			true
+		],
+		"taxCreditBenefits.coctc": [
+			"Tín dụng thuế của tiểu bang: Tín dụng thuế dành cho trẻ em (COCTC)",
+			true
+		],
+		"displayAnnualIncome.annual": [" hàng năm", true],
+		"listAllIncomeStreams.hoursPerWeek": [" giờ/tuần ", true],
+		"filterSection.citizenship": ["Quyền công dân", true],
+		"filterSection.other": ["Khác", true],
+		"filterSection.reset": ["Đặt lại", true],
+		"noResults.p-One": [
+			"Có vẻ như bạn có thể không đủ điều kiện cho các lợi ích được bao gồm trong MyFriendBen vào thời điểm này. Nếu bạn cho biết cần một tài nguyên ngay lập tức, vui lòng nhấp vào tab Immediate Needs.",
+			true
+		],
+		"noResults.p-Two": ["Để có thêm tài nguyên, hãy truy cập ", true],
+		"noResults.p-Three": [
+			" để trò chuyện với ai đó trực tuyến hoặc trên điện thoại để có được các tài nguyên mà bạn đang tìm kiếm.",
+			true
+		],
+		"noResultsOrUrgentNeeds.p-One": [
+			"Có vẻ như anh không chỉ ra bất kỳ nhu cầu khẩn cấp nào.",
+			true
+		],
+		"errorMessage-county": ["Vui lòng chọn một quận", true],
+		"errorMessage-numberOfHHMembers": [
+			"Vui lòng nhập số người trong hộ gia đình của bạn (tối đa 8)",
+			true
+		],
+		"errorMessage-age": ["Làm ơn viết tuổi của bạn", true],
+		"errorMessage-incomeType": ["Vui lòng chọn một loại thu nhập", true],
+		"errorMessage-incomeFrequency": ["Vui lòng chọn tần suất", true],
+		"errorMessage-greaterThanZero": ["Vui lòng nhập một số lớn hơn 0", true],
+		"errorMessage-HHMemberAge": ["Vui lòng nhập một số 0 hoặc lớn hơn", true],
+		"errorMessage-HHMemberRelationship": [
+			"Vui lòng chọn một mối quan hệ",
+			true
+		],
+		"errorMessage-expenseType": ["Vui lòng chọn một loại chi phí", true],
+		"errorMessage-otherReferralSource": [
+			"Vui lòng nhập nguồn giới thiệu của bạn",
+			true
+		],
+		"TwoOneOneHeader.aboutUs": ["GIỚI THIỆU VỀ CHÚNG TÔI", true],
+		"TwoOneOneHeader.support": ["HỖ TRỢ", true],
+		"TwoOneOneHeader.agencies": ["CƠ QUAN CỘNG ĐỒNG", true],
+		"TwoOneOneHeader.resources": ["TÌM KIẾM TÀI NGUYÊN", true],
+		"TwoOneOneHeader.chat": ["TRÒ CHUYỆN", true],
+		"TwoOneOneHeader.login": ["ĐĂNG NHẬP", true],
+		"footer-header": [
+			"Không tìm thấy thứ bạn đang tìm? Hãy thử những cách khác để được trợ giúp:",
+			true
+		],
+		"footer-dial-text": ["Quay số ", true],
+		"footer-or-text": [" hoặc", true],
+		"footer-tollFree-text": ["miễn phí", true],
+		"footer-text-text": ["Văn bản", true],
+		"footer-to-text": ["đến", true],
+		"footer-standardMsg-text": [
+			"*Tốc độ dữ liệu và tin nhắn tiêu chuẩn có thể áp dụng.",
+			true
+		],
+		"footer-chat-text": ["Trò chuyện", true],
+		"footer-liveChat-text": [
+			"Nhấp để trò chuyện trực tiếp với Bộ điều hướng 2-1-1",
+			true
+		],
+		"footer-first-paragraph": [
+			"Các dịch vụ được tìm thấy trong kết quả tìm kiếm có thể liên quan đến tiêu chí đủ điều kiện. Vui lòng liên hệ trực tiếp với nguồn để tìm hiểu thêm thông tin về cách nhận các dịch vụ này. Trang web này chứa các liên kết đến các trang web khác. Tất cả thông tin được cung cấp là được cho là chính xác và đáng tin cậy. Tuy nhiên, 2-1-1 Colorado không chịu trách nhiệm về bất kỳ lỗi nào xuất hiện, cũng như việc sử dụng thông tin được cung cấp.",
+			true
+		],
+		"footer-second-paragraph": [
+			"2-1-1 Colorado cam kết giúp công dân Colorado kết nối với các dịch vụ họ cần. Cho dù qua điện thoại hay internet, mục tiêu của chúng tôi là trình bày thông tin chính xác, có tổ chức tốt và dễ tìm thông tin từ các chương trình dịch vụ nhân sinh và y tế của tiểu bang và địa phương. Chúng tôi thực hiện điều này thông qua công việc của bốn Trung tâm Thông tin Khu vực của chúng tôi trên toàn tiểu bang. Bất kể bạn sống ở đâu tại Colorado, bạn có thể quay số 2-1-1 và tìm thông tin về các nguồn tài nguyên trong cộng đồng địa phương. Cho dù bạn cần trợ giúp tìm kiếm thức ăn hoặc nhà ở, chăm sóc trẻ em, tư vấn về khủng hoảng hoặc điều trị lạm dụng chất gây nghiện, bạn chỉ cần biết một con số.",
+			true
+		],
+		"footer-copyright": ["© Copyright 2-1-1 Colorado", true],
+		"footer-terms-of-service-link": ["Điều khoản dịch vụ 2-1-1 |", true],
+		"footer-twoOneOne-privacy": ["Chính sách bảo mật 2-1-1 |", true],
+		"footer-twoOneOne-mfb": ["Chính sách quyền riêng tư của MyFriendBen", true],
+		"jeffcoLandingPage-text": [
+			"Thông qua giáo dục mầm non, bảo vệ người lớn và trẻ em, đào tạo nghề, hỗ trợ thực phẩm, Medicaid và các chương trình khác, Dịch vụ Nhân sinh Quận Jefferson giúp mọi người xây dựng cuộc sống tốt hơn, an toàn hơn. Hãy sàng lọc nhanh để đảm bảo bạn' đang nhận được tất cả các lợi ích và chương trình mà bạn có thể đủ điều kiện để đạt được sự thịnh vượng của riêng mình. MyFriendBen sẽ cung cấp cho bạn ước tính số tiền bạn có thể nhận được từ phúc lợi công cộng.",
+			true
+		],
+		"jeffco-getStarted-button": ["Bắt Dầu", true]
+	}
+}

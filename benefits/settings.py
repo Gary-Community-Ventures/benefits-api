@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'screener.apps.ScreenerConfig',
     'programs.apps.ProgramsConfig',
     'integrations.apps.IntegrationsConfig',
+    'translations.apps.TranslationsConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'phonenumber_field',
