@@ -22,8 +22,9 @@ class TranslationManager(TranslatableManager):
         for lang in all_langs:
             lang_translations = {}
             for translation in translations:
-                translation.set_current_language(lang['code'])
-                lang_translations[translation.label] = translation.text
+                if translation.active:
+                    translation.set_current_language(lang['code'])
+                    lang_translations[translation.label] = translation.text
             translations_dict[lang['code']] = lang_translations
         return translations_dict
 
