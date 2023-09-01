@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-23 11:11-0700\n"
+"POT-Creation-Date: 2023-08-30 14:22-0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,26 +17,30 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: .\authentication\models.py:47 .\programs\models.py:74
-#: .\screener\models.py:314
+#: .\authentication\models.py:47 .\programs\models.py:109
+#: .\screener\models.py:352
 msgid "email address"
 msgstr "địa chỉ email"
 
-#: .\benefits\settings.py:173
+#: .\benefits\settings.py:154
 msgid "US English"
 msgstr "Tiếng Anh Mỹ"
 
-#: .\benefits\settings.py:174
+#: .\benefits\settings.py:155
 msgid "Spanish"
 msgstr "Tiếng Tây Ban Nha"
+
+#: .\benefits\settings.py:156
+msgid "Vietnamese"
+msgstr ""
 
 #: .\programs\programs\messages.py:9
 msgid "Household makes"
 msgstr "Hộ gia đình làm"
 
 #: .\programs\programs\messages.py:11
-msgid "per month which must be less than"
-msgstr "mỗi tháng phải ít hơn"
+msgid "per year which must be less than"
+msgstr "mỗi năm phải ít hơn"
 
 #: .\programs\programs\messages.py:21
 msgid "Household resources must not exceed"
@@ -102,7 +106,9 @@ msgstr " thành viên thấp hơn giới hạn thu nhập của"
 
 #: .\screener\communications\cell.py:14 .\screener\communications\email.py:18
 msgid "Thank you for using MyFriendBen. Click here to review your results."
-msgstr "Cảm ơn quý vị đã sử dụng MyFriendBen. Nhấp vào đây để xem lại kết quả của quý vị."
+msgstr ""
+"Cảm ơn quý vị đã sử dụng MyFriendBen. Nhấp vào đây để xem lại kết quả của "
+"quý vị."
 
 #: .\screener\communications\email.py:16
 msgid "Screener Results from My Friend Ben"
