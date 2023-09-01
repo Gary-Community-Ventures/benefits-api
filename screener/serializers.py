@@ -72,6 +72,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'start_date',
             'submission_date',
             'agree_to_tos',
+            'is_13_or_older',
             'zipcode',
             'county',
             'referral_source',
