@@ -23,6 +23,7 @@ urlpatterns = [
     path('api/', include('screener.urls')),
     path('api/', include('programs.urls')),
     path('api/', include('authentication.urls')),
+    path('translations/', include('translations.urls')),
     path('admin/', admin.site.urls),
     path("sesame/login/", LoginView.as_view(), name="sesame-login"),
     path('openapi', get_schema_view(

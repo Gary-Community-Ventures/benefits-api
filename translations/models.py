@@ -50,14 +50,3 @@ class Translation(TranslatableModel):
 
     def __str__(self):
         return self.label
-
-
-'''
-LANGUAGE_CODE = 'en-us'
-
-LANGUAGES = (
-    ('en-us', _("US English")),
-    ('es', _('Spanish')),
-    ('vi', _('Vietnamese'))
-)
-'''
