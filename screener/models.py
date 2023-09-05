@@ -22,6 +22,7 @@ class Screen(models.Model):
     referral_source = models.CharField(max_length=320, default=None, blank=True, null=True)
     referrer_code = models.CharField(max_length=320, default=None, blank=True, null=True)
     agree_to_tos = models.BooleanField(blank=True, null=True)
+    is_13_or_older = models.BooleanField(blank=True, null=True)
     zipcode = models.CharField(max_length=5, blank=True, null=True)
     county = models.CharField(max_length=120, default=None, blank=True, null=True)
     household_size = models.IntegerField(blank=True, null=True)
