@@ -33,7 +33,7 @@ class Screen(models.Model):
     is_test = models.BooleanField(default=False, blank=True)
     is_test_data = models.BooleanField(blank=True, null=True)
     is_verified = models.BooleanField(default=False, blank=True)
-    user = models.ForeignKey(User, related_name='screens', on_delete=models.CASCADE, blank=True, null=True)
+    user = models.ForeignKey(User, related_name='screens', on_delete=models.SET_NULL, blank=True, null=True)
     external_id = models.CharField(max_length=120, blank=True, null=True)
     request_language_code = models.CharField(max_length=12, blank=True, null=True)
     has_benefits = models.CharField(max_length=32, default='preferNotToAnswer', blank=True, null=True)
@@ -472,7 +472,7 @@ class IncomeStream(models.Model):
 # HouseholdMember expenses
 class Expense(models.Model):
     screen = models.ForeignKey(Screen, related_name='expenses', on_delete=models.CASCADE)
-    household_member = models.ForeignKey(HouseholdMember, related_name='expenses', on_delete=models.CASCADE, null=True)
+    household_member = models.ForeignKey(HouseholdMember, related_name='expenses', on_delete=models.SET_NULL, null=True)
     type = models.CharField(max_length=30, blank=True, null=True)
     amount = models.DecimalField(decimal_places=2, max_digits=10, blank=True, null=True)
     frequency = models.CharField(max_length=30, blank=True, null=True)

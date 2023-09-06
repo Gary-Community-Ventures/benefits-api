@@ -2,6 +2,7 @@ from django.db import models
 from parler.models import TranslatableModel, TranslatedFields
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
+from translations.models import Translation
 
 from programs.programs import calculators
 
@@ -33,27 +34,97 @@ class FederalPoveryLimit(models.Model):
         return self.year
 
 
+class ProgramManager(models.Manager):
+    translated_fields = (
+        'description_short',
+        'name',
+        'description',
+        'learn_more_link',
+        'apply_button_link',
+        'value_type',
+        'estimated_delivery_time',
+        'estimated_application_time',
+        'category',
+    )
+
+    def new_program(self, name_abbreviated, legal_status_required):
+        translations = {}
+        for field in ProgramManager.translated_fields:
+            translations[field] = Translation.objects.add_translation(f'program.{name_abbreviated}_temporary_key-{field}', '')
+
+        program = self.create(
+            name_abbreviated=name_abbreviated,
+            legal_status_required=legal_status_required,
+            active=False,
+            fpl=None,
+            **translations
+        )
+
+        for [field, translation] in translations.items():
+            translation.label = f'program.{program.name_abbreviated}_{program.id}-{field}'
+            translation.save()
+
+
 # This model describes all of the benefit programs available in the screener
 # results. Each program has a specific folder in /programs where the specific
 # logic for eligibility and value is stored.
-class Program(TranslatableModel):
-
-    translations = TranslatedFields(
-        description_short=models.TextField(),
-        name=models.CharField(max_length=120),
-        name_abbreviated=models.CharField(max_length=120),
-        description=models.TextField(),
-        learn_more_link=models.CharField(max_length=320),
-        apply_button_link=models.CharField(max_length=320),
-        dollar_value=models.IntegerField(),
-        value_type=models.CharField(max_length=120, ),
-        estimated_delivery_time=models.CharField(max_length=320),
-        estimated_application_time=models.CharField(max_length=320, blank=True, null=True, default=None),
-        legal_status_required=models.CharField(max_length=120),
-        category=models.CharField(max_length=120),
-        active=models.BooleanField(blank=True, null=False, default=True)
-    )
+class Program(models.Model):
+    name_abbreviated = models.CharField(max_length=120)
+    legal_status_required = models.CharField(max_length=120)
+    active = models.BooleanField(blank=True, default=True)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name='fpl', blank=True, null=True, on_delete=models.SET_NULL)
+
+    description_short = models.ForeignKey(
+        Translation,
+        related_name='description_short',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    name = models.ForeignKey(Translation, related_name='name', blank=False, null=False, on_delete=models.PROTECT)
+    description = models.ForeignKey(
+        Translation,
+        related_name='description',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    learn_more_link = models.ForeignKey(
+        Translation,
+        related_name='learn_more_link',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    apply_button_link = models.ForeignKey(
+        Translation,
+        related_name='apply_button_link',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    value_type = models.ForeignKey(
+        Translation,
+        related_name='value_type',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    estimated_delivery_time = models.ForeignKey(
+        Translation,
+        related_name='estimated_delivery_time',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    estimated_application_time = models.ForeignKey(
+        Translation,
+        related_name='estimated_application_time',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    category = models.ForeignKey(
+        Translation,
+        related_name='category',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+
+    objects = ProgramManager()
 
     # This function provides eligibility calculation for any benefit program
     # in the system when passed the screen. As some benefits depend on
@@ -72,10 +143,10 @@ class Program(TranslatableModel):
         return eligibility
 
     def __str__(self):
-        return self.name
+        return self.name.text
 
     def __unicode__(self):
-        return self.name
+        return self.name.text
 
 
 class UrgentNeedFunction(models.Model):
@@ -128,13 +199,6 @@ class Referrer(TranslatableModel):
     webhook_url = models.CharField(max_length=320, blank=True, null=True)
     webhook_functions = models.ManyToManyField(WebHookFunction, related_name='web_hook', blank=True)
     primary_navigators = models.ManyToManyField(Navigator, related_name='primary_navigators', blank=True)
-    logo = models.ImageField(blank=True, null=True)
-    white_label_css = models.FileField(blank=True, null=True)
-    translations = TranslatedFields(
-        header_html=models.FileField(blank=True, null=True),
-        footer_html=models.FileField(blank=True, null=True),
-        consent_text=models.TextField(blank=True, null=True)
-    )
 
     def __str__(self):
         return self.referrer_code

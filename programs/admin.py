@@ -3,8 +3,8 @@ from .models import Program, UrgentNeed, Navigator, UrgentNeedFunction, FederalP
 from parler.admin import TranslatableAdmin
 
 
-class ProgramAdmin(TranslatableAdmin):
-    search_fields = ('translations__name',)
+class ProgramAdmin(admin.ModelAdmin):
+    search_fields = ('name_abbreviated',)
 
 
 class NavigatorAdmin(TranslatableAdmin):

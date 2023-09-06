@@ -4,10 +4,13 @@ from django.conf import settings
 
 
 class TranslationManager(TranslatableManager):
+    use_in_migrations = True
+
     def add_translation(self, label, default_message):
         default_lang = settings.LANGUAGE_CODE
         parent = self.create(label=label, active=True)
         parent.create_translation(default_lang, text=default_message, edited=True)
+        return parent
 
     def edit_translation(self, label, lang, translation, manual=True):
         parent = self.language(lang).get(label=label)
