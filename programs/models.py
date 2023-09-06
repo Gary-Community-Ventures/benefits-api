@@ -76,50 +76,49 @@ class Program(models.Model):
 
     description_short = models.ForeignKey(
         Translation,
-        related_name='description_short',
+        related_name='program_description_short',
         blank=False,
         null=False,
         on_delete=models.PROTECT)
-    name = models.ForeignKey(Translation, related_name='name', blank=False, null=False, on_delete=models.PROTECT)
+    name = models.ForeignKey(Translation, related_name='program_name', blank=False, null=False, on_delete=models.PROTECT)
     description = models.ForeignKey(
         Translation,
-        related_name='description',
+        related_name='program_description',
         blank=False,
         null=False,
         on_delete=models.PROTECT)
     learn_more_link = models.ForeignKey(
         Translation,
-        related_name='learn_more_link',
+        related_name='program_learn_more_link',
         blank=False,
         null=False,
         on_delete=models.PROTECT)
     apply_button_link = models.ForeignKey(
         Translation,
-        related_name='apply_button_link',
-        blank=False,
+        related_name='program_apply_button_link',
         null=False,
         on_delete=models.PROTECT)
     value_type = models.ForeignKey(
         Translation,
-        related_name='value_type',
+        related_name='program_value_type',
         blank=False,
         null=False,
         on_delete=models.PROTECT)
     estimated_delivery_time = models.ForeignKey(
         Translation,
-        related_name='estimated_delivery_time',
+        related_name='program_estimated_delivery_time',
         blank=False,
         null=False,
         on_delete=models.PROTECT)
     estimated_application_time = models.ForeignKey(
         Translation,
-        related_name='estimated_application_time',
+        related_name='program_estimated_application_time',
         blank=False,
         null=False,
         on_delete=models.PROTECT)
     category = models.ForeignKey(
         Translation,
-        related_name='category',
+        related_name='program_category',
         blank=False,
         null=False,
         on_delete=models.PROTECT)
@@ -156,32 +155,69 @@ class UrgentNeedFunction(models.Model):
         return self.name
 
 
-class UrgentNeed(TranslatableModel):
-    translations = TranslatedFields(
-        name=models.CharField(max_length=120),
-        description=models.TextField(),
-        link=models.CharField(max_length=320, blank=True, null=True),
-        type=models.CharField(max_length=120),
-    )
+class UrgentNeed(models.Model):
     phone_number = PhoneNumberField(blank=True, null=True)
     type_short = models.CharField(max_length=120)
     active = models.BooleanField(blank=True, null=False, default=True)
     functions = models.ManyToManyField(UrgentNeedFunction, related_name='function', blank=True)
 
+    name = models.ForeignKey(
+        Translation,
+        related_name='urgent_need_name',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    description = models.ForeignKey(
+        Translation,
+        related_name='urgent_need_description',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    link = models.ForeignKey(
+        Translation,
+        related_name='urgent_need_link',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    type = models.ForeignKey(
+        Translation,
+        related_name='urgent_need_type',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+
     def __str__(self):
         return self.name
 
 
-class Navigator(TranslatableModel):
+class Navigator(models.Model):
     program = models.ManyToManyField(Program, related_name='navigator')
     phone_number = PhoneNumberField(blank=True, null=True)
-    translations = TranslatedFields(
-        name=models.CharField(max_length=120),
-        email=models.EmailField(_('email address'), blank=True, null=True),
-        assistance_link=models.CharField(
-            max_length=320, blank=True, null=False),
-        description=models.TextField()
-    )
+
+    name = models.ForeignKey(
+        Translation,
+        related_name='navigator_name',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    email = models.ForeignKey(
+        Translation,
+        related_name='navigator_email',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    assistance_link = models.ForeignKey(
+        Translation,
+        related_name='navigator_assistance_link',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
+    description = models.ForeignKey(
+        Translation,
+        related_name='navigator_name_description',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
 
     def __str__(self):
         return self.name

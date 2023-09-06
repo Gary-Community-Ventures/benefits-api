@@ -13,8 +13,6 @@ class NavigatorAdmin(TranslatableAdmin):
 
 class UrgentNeedAdmin(TranslatableAdmin):
     search_fields = ('translations__name',)
-    fields = ('name', 'description', 'link', 'type',
-              'phone_number', 'type_short', 'active', 'functions')
 
 
 class UrgentNeedsFunctionAdmin(admin.ModelAdmin):
