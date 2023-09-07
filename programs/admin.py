@@ -7,11 +7,11 @@ class ProgramAdmin(admin.ModelAdmin):
     search_fields = ('name_abbreviated',)
 
 
-class NavigatorAdmin(TranslatableAdmin):
+class NavigatorAdmin(admin.ModelAdmin):
     search_fields = ('translations__name',)
 
 
-class UrgentNeedAdmin(TranslatableAdmin):
+class UrgentNeedAdmin(admin.ModelAdmin):
     search_fields = ('translations__name',)
 
 

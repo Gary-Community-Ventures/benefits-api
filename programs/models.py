@@ -187,7 +187,7 @@ class UrgentNeed(models.Model):
         on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.name
+        return self.name.text
 
 
 class Navigator(models.Model):
@@ -220,7 +220,7 @@ class Navigator(models.Model):
         on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.name
+        return self.name.text
 
 
 class WebHookFunction(models.Model):
