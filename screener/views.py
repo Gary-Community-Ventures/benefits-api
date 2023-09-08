@@ -275,10 +275,11 @@ def default_message(translation):
 
 
 def serialized_navigator(navigator):
+    phone_number = str(navigator.phone_number) if navigator.phone_number else None
     return {
         "id": navigator.id,
         "name": default_message(navigator.name),
-        "phone_number": str(navigator.phone_number),
+        "phone_number": phone_number,
         "email": default_message(navigator.email),
         "assistance_link": default_message(navigator.assistance_link),
         "description": default_message(navigator.description),
@@ -322,12 +323,13 @@ def urgent_need_results(screen):
             if not need_functions[function.name]:
                 eligible = False
         if eligible:
+            phone_number = str(need.phone_number) if need.phone_number else None
             need_data = {
                 "name": default_message(need.name),
                 "description": default_message(need.description),
                 "link": default_message(need.link),
                 "type": default_message(need.type),
-                "phone_number": str(need.phone_number)
+                "phone_number": phone_number
             }
             eligible_urgent_needs.append(need_data)
 

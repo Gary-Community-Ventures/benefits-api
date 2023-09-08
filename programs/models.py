@@ -1,7 +1,6 @@
 from django.db import models
-from parler.models import TranslatableModel, TranslatedFields
+from parler.models import TranslatableModel
 from phonenumber_field.modelfields import PhoneNumberField
-from django.utils.translation import gettext_lazy as _
 from translations.models import Translation
 
 from programs.programs import calculators
@@ -49,19 +48,21 @@ class ProgramManager(models.Manager):
 
     def new_program(self, name_abbreviated, legal_status_required):
         translations = {}
-        for field in ProgramManager.translated_fields:
-            translations[field] = Translation.objects.add_translation(f'program.{name_abbreviated}_temporary_key-{field}', '')
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(
+                f'program.{name_abbreviated}_temporary_key-{field}', ''
+            )
 
         program = self.create(
             name_abbreviated=name_abbreviated,
             legal_status_required=legal_status_required,
-            active=False,
             fpl=None,
-            **translations
+            active=False,
+            **translations,
         )
 
         for [field, translation] in translations.items():
-            translation.label = f'program.{program.name_abbreviated}_{program.id}-{field}'
+            translation.label = f'program.{name_abbreviated}_{program.id}-{field}'
             translation.save()
 
 
@@ -80,7 +81,12 @@ class Program(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT)
-    name = models.ForeignKey(Translation, related_name='program_name', blank=False, null=False, on_delete=models.PROTECT)
+    name = models.ForeignKey(
+        Translation,
+        related_name='program_name',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT)
     description = models.ForeignKey(
         Translation,
         related_name='program_description',
@@ -155,6 +161,31 @@ class UrgentNeedFunction(models.Model):
         return self.name
 
 
+class UrgentNeedManager(models.Manager):
+    translated_fields = (
+        'name',
+        'description',
+        'link',
+        'type',
+    )
+
+    def new_urgent_need(self, name, type, phone_number):
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(f'urgent_need.{name}_temporary_key-{field}', '')
+
+        urgent_need = self.create(
+            phone_number=phone_number,
+            type_short=type,
+            active=False,
+            **translations,
+        )
+
+        for [field, translation] in translations.items():
+            translation.label = f'urgent_need.{name}_{urgent_need.id}-{field}'
+            translation.save()
+
+
 class UrgentNeed(models.Model):
     phone_number = PhoneNumberField(blank=True, null=True)
     type_short = models.CharField(max_length=120)
@@ -186,8 +217,33 @@ class UrgentNeed(models.Model):
         null=False,
         on_delete=models.PROTECT)
 
+    objects = UrgentNeedManager()
+
     def __str__(self):
         return self.name.text
+
+
+class NavigatorManager(models.Manager):
+    translated_fields = (
+        'name',
+        'email',
+        'assistance_link',
+        'description',
+    )
+
+    def new_navigator(self, name, phone_number):
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(f'navigator.{name}_temporary_key-{field}', '')
+
+        navigator = self.create(
+            phone_number=phone_number,
+            **translations,
+        )
+
+        for [field, translation] in translations.items():
+            translation.label = f'navigator.{name}_{navigator.id}-{field}'
+            translation.save()
 
 
 class Navigator(models.Model):
@@ -218,6 +274,8 @@ class Navigator(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT)
+
+    objects = NavigatorManager()
 
     def __str__(self):
         return self.name.text

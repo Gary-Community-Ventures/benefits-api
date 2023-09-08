@@ -18,6 +18,12 @@ class TranslationManager(TranslatableManager):
         parent.edited = manual
         parent.save()
 
+    def deactivate_translation(self, label):
+        return self.get(label=label).update(active=False)
+
+    def activate_translation(self, label):
+        return self.get(label=label).update(active=True)
+
     def all_translations(self):
         all_langs = settings.PARLER_LANGUAGES[None]
         translations = self.prefetch_related('translations')
@@ -34,11 +40,25 @@ class TranslationManager(TranslatableManager):
     def bulk_add(self, translations):
         for lang, translation in translations.items():
             for label, message in translation.items():
-                text, edited = message
+                text, edited, active = message
                 if lang == settings.LANGUAGE_CODE:
                     self.add_translation(label, text)
                 else:
                     self.edit_translation(label, lang, text, edited)
+                if not active:
+                    self.deactivate_translation(label)
+
+    def export_translations(self):
+        all_langs = settings.PARLER_LANGUAGES[None]
+        translations = self.prefetch_related('translations')
+        translations_dict = {}
+        for lang in all_langs:
+            lang_translations = {}
+            for translation in translations:
+                translation.set_current_language(lang['code'])
+                lang_translations[translation.label] = [translation.text, translation.edited, translation.active]
+            translations_dict[lang['code']] = lang_translations
+        return translations_dict
 
 
 class Translation(TranslatableModel):
