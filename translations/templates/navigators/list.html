@@ -1,0 +1,8 @@
+<ul id="navigator-list">
+	{% for navigator in navigators %}
+	<li>
+		<span>{{ navigator.name.text }} </span>
+		<a href="navigators/{{ navigator.id }}">Edit</a>
+	</li>
+	{% endfor %}
+</ul>

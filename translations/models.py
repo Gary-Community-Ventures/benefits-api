@@ -17,6 +17,14 @@ class TranslationManager(TranslatableManager):
         parent.text = translation
         parent.edited = manual
         parent.save()
+        return parent
+
+    def edit_translation_by_id(self, id, lang, translation, manual=True):
+        parent = self.language(lang).get(pk=id)
+        parent.text = translation
+        parent.edited = manual
+        parent.save()
+        return parent
 
     def deactivate_translation(self, label):
         return self.get(label=label).update(active=False)

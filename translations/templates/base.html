@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Translations Admin</title>
+	</head>
+
+	<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}" }'>
+		<nav>
+			<a href="/api/translations/admin">Translations</a>
+			<a href="/api/translations/admin/programs">Programs</a>
+			<a href="/api/translations/admin/navigators">Navigators</a>
+			<a href="/api/translations/admin/urgent_needs">Urgent Needs</a>
+			<hr />
+		</nav>
+		{% block content %} {% endblock content %}
+		<script src="https://unpkg.com/htmx.org@1.9.5"></script>
+	</body>
+</html>

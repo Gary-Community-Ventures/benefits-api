@@ -65,6 +65,8 @@ class ProgramManager(models.Manager):
             translation.label = f'program.{name_abbreviated}_{program.id}-{field}'
             translation.save()
 
+        return program
+
 
 # This model describes all of the benefit programs available in the screener
 # results. Each program has a specific folder in /programs where the specific
@@ -185,6 +187,8 @@ class UrgentNeedManager(models.Manager):
             translation.label = f'urgent_need.{name}_{urgent_need.id}-{field}'
             translation.save()
 
+        return urgent_need
+
 
 class UrgentNeed(models.Model):
     phone_number = PhoneNumberField(blank=True, null=True)
@@ -244,6 +248,8 @@ class NavigatorManager(models.Manager):
         for [field, translation] in translations.items():
             translation.label = f'navigator.{name}_{navigator.id}-{field}'
             translation.save()
+
+        return navigator
 
 
 class Navigator(models.Model):

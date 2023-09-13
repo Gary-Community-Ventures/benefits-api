@@ -173,7 +173,7 @@ PARLER_LANGUAGES = {
     ),
     'default': {
         'fallbacks': ['en-us'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE
-        'hide_untranslated': False,   # the default; let .active_translations() return fallbacks too.
+        'hide_untranslated': True,   # the default; let .active_translations() return fallbacks too.
     }
 }
 

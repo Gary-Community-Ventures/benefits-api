@@ -1,0 +1,22 @@
+{% extends "base.html" %}{% block content %}
+<h2>{{ urgent_need.name.text }}</h2>
+<div>
+	<a href="/admin/programs/urgentneed/{{ urgent_need.id }}/change/">
+		Django Admin
+	</a>
+</div>
+<div>
+	<a href="/api/translations/admin/{{ urgent_need.name.id }}">Name</a>
+</div>
+<div>
+	<a href="/api/translations/admin/{{ urgent_need.description.id }}">
+		Description
+	</a>
+</div>
+<div>
+	<a href="/api/translations/admin/{{ urgent_need.link.id }}">Link</a>
+</div>
+<div>
+	<a href="/api/translations/admin/{{ urgent_need.type.id }}">Type</a>
+</div>
+{% endblock content %}
