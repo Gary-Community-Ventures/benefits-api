@@ -6,9 +6,13 @@ from django.conf import settings
 class TranslationManager(TranslatableManager):
     use_in_migrations = True
 
-    def add_translation(self, label, default_message):
+    def add_translation(self, label, default_message, active=True):
         default_lang = settings.LANGUAGE_CODE
-        parent = self.create(label=label, active=True)
+        parent = self.get_or_create(label=label, defaults={'active': active})[0]
+        if parent.active != active:
+            parent.active = active
+            parent.save()
+
         parent.create_translation(default_lang, text=default_message, edited=True)
         return parent
 
@@ -26,12 +30,6 @@ class TranslationManager(TranslatableManager):
         parent.save()
         return parent
 
-    def deactivate_translation(self, label):
-        return self.get(label=label).update(active=False)
-
-    def activate_translation(self, label):
-        return self.get(label=label).update(active=True)
-
     def all_translations(self):
         all_langs = settings.PARLER_LANGUAGES[None]
         translations = self.prefetch_related('translations')
@@ -45,28 +43,29 @@ class TranslationManager(TranslatableManager):
             translations_dict[lang['code']] = lang_translations
         return translations_dict
 
-    def bulk_add(self, translations):
-        for lang, translation in translations.items():
-            for label, message in translation.items():
-                text, edited, active = message
-                if lang == settings.LANGUAGE_CODE:
-                    self.add_translation(label, text)
-                else:
-                    self.edit_translation(label, lang, text, edited)
-                if not active:
-                    self.deactivate_translation(label)
-
     def export_translations(self):
         all_langs = settings.PARLER_LANGUAGES[None]
         translations = self.prefetch_related('translations')
-        translations_dict = {}
-        for lang in all_langs:
-            lang_translations = {}
-            for translation in translations:
+
+        translations_export = {}
+        for translation in translations:
+            translation.in_program()
+            reference = translation.in_program()
+
+            if reference is True:
+                continue
+
+            translations_export[translation.label] = {
+                'active': translation.active,
+                'langs': {},
+                'reference': reference,
+            }
+
+            for lang in all_langs:
                 translation.set_current_language(lang['code'])
-                lang_translations[translation.label] = [translation.text, translation.edited, translation.active]
-            translations_dict[lang['code']] = lang_translations
-        return translations_dict
+                translations_export[translation.label]['langs'][lang['code']] = (translation.text, translation.edited)
+
+        return translations_export
 
 
 class Translation(TranslatableModel):
@@ -78,6 +77,23 @@ class Translation(TranslatableModel):
     label = models.CharField(max_length=128, null=False, blank=False, unique=True)
 
     objects = TranslationManager()
+
+    def in_program(self):
+        # https://stackoverflow.com/questions/54711671/django-how-to-determine-if-an-object-is-referenced-by-any-other-object
+        has_relationship = False
+        for reverse in (f for f in self._meta.get_fields() if f.auto_created and not f.concrete):
+            if reverse.related_name == 'translations':
+                continue
+            name = reverse.get_accessor_name()
+            has_reverse_other = getattr(self, name).count()
+            if has_reverse_other:
+                external_name = getattr(self, reverse.related_name).first().external_name
+                table = getattr(self, reverse.related_name).first()._meta.db_table
+                if external_name:
+                    return (table, external_name, reverse.related_name)
+                has_relationship = True
+
+        return has_relationship
 
     def __str__(self):
         return self.label

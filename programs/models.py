@@ -73,6 +73,7 @@ class ProgramManager(models.Manager):
 # logic for eligibility and value is stored.
 class Program(models.Model):
     name_abbreviated = models.CharField(max_length=120)
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     legal_status_required = models.CharField(max_length=120)
     active = models.BooleanField(blank=True, default=True)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name='fpl', blank=True, null=True, on_delete=models.SET_NULL)
@@ -191,6 +192,7 @@ class UrgentNeedManager(models.Manager):
 
 
 class UrgentNeed(models.Model):
+    external_name = models.CharField(max_length=120, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
     type_short = models.CharField(max_length=120)
     active = models.BooleanField(blank=True, null=False, default=True)
@@ -254,6 +256,7 @@ class NavigatorManager(models.Manager):
 
 class Navigator(models.Model):
     program = models.ManyToManyField(Program, related_name='navigator')
+    external_name = models.CharField(max_length=120, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
 
     name = models.ForeignKey(
