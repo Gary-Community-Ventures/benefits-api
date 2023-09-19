@@ -72,6 +72,8 @@ def bulk_export(request):
     return Response(translations)
 
 
+@login_required(login_url='/admin/login')
+@staff_member_required
 def bulk_import(request):
     if request.method == 'POST':
         form = ImportForm(request.POST, request.FILES)
