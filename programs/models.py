@@ -192,7 +192,7 @@ class UrgentNeedManager(models.Manager):
 
 
 class UrgentNeed(models.Model):
-    external_name = models.CharField(max_length=120, null=True, unique=True)
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
     type_short = models.CharField(max_length=120)
     active = models.BooleanField(blank=True, null=False, default=True)
@@ -256,7 +256,7 @@ class NavigatorManager(models.Manager):
 
 class Navigator(models.Model):
     program = models.ManyToManyField(Program, related_name='navigator')
-    external_name = models.CharField(max_length=120, null=True, unique=True)
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
 
     name = models.ForeignKey(
