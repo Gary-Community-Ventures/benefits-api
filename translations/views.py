@@ -231,7 +231,7 @@ def programs_filter_view(request):
     if request.method == 'GET':
         programs = Program.objects.all()
         query = request.GET.get('name', '')
-        programs = filter(lambda p: query in p.name.text.lower(), programs)
+        programs = filter(lambda p: query in p.name.text, programs)
 
         context = {
             'programs': programs
@@ -300,7 +300,7 @@ def navigator_filter_view(request):
     if request.method == 'GET':
         navigators = Navigator.objects.all()
         query = request.GET.get('name', '')
-        navigators = filter(lambda p: query in p.name.text.lower(), navigators)
+        navigators = filter(lambda p: query in p.name.text, navigators)
 
         context = {
             'navigators': navigators
@@ -369,7 +369,7 @@ def urgent_need_filter_view(request):
     if request.method == 'GET':
         urgent_needs = UrgentNeed.objects.all()
         query = request.GET.get('name', '')
-        urgent_needs = filter(lambda p: query in p.name.text.lower(), urgent_needs)
+        urgent_needs = filter(lambda p: query in p.name.text, urgent_needs)
 
         context = {
             'urgent_needs': urgent_needs
