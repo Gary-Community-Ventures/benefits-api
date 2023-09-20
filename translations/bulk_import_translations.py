@@ -43,7 +43,7 @@ def bulk_add(translations):
                 obj = UrgentNeed.objects.get(external_name=details['reference'][1])
                 obj.active = True
                 obj.save()
-            getattr(translation, details['reference'][2], obj)
+            getattr(translation, details['reference'][2]).set([obj])
 
         for lang, message in details['langs'].items():
             Translation.objects.edit_translation_by_id(

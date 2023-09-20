@@ -87,6 +87,15 @@ class Translation(TranslatableModel):
             name = reverse.get_accessor_name()
             has_reverse_other = getattr(self, name).count()
             if has_reverse_other:
+                try:
+                    active = getattr(self, reverse.related_name).first().active
+                except AttributeError:
+                    active = True
+
+                if not active:
+                    has_relationship = True
+                    continue
+
                 external_name = getattr(self, reverse.related_name).first().external_name
                 table = getattr(self, reverse.related_name).first()._meta.db_table
                 if external_name:
