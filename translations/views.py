@@ -240,8 +240,6 @@ def programs_filter_view(request):
         return render(request, 'programs/list.html', context)
 
 
-@login_required(login_url='/admin/login')
-@staff_member_required
 class NewNavigatorForm(forms.Form):
     label = forms.CharField(max_length=50)
     phone_number = PhoneNumberField()
