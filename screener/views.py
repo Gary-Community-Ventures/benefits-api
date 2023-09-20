@@ -1,7 +1,4 @@
-from django.conf import settings
 from django.http import HttpResponse
-from django.utils.translation import gettext as _
-from django.utils.translation import override
 from django.shortcuts import get_object_or_404
 from screener.models import (
     Screen,
@@ -26,11 +23,9 @@ from screener.serializers import (
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import programs.programs.urgent_needs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program, Referrer
-from programs.serializers import UrgentNeedSerializer
 from django.core.exceptions import ObjectDoesNotExist
 from .webhooks import eligibility_hooks
 import math
-import copy
 import json
 from datetime import datetime, timezone
 
@@ -112,22 +107,15 @@ class EligibilityTranslationView(views.APIView):
 
     def get(self, request, id):
         screen = Screen.objects.get(uuid=id)
-        data = {}
         eligibility = eligibility_results(screen)
-        urgent_need_programs = {}
+        urgent_needs = urgent_need_results(screen)
 
-        for language in settings.LANGUAGES:
-            translated_eligibility = eligibility_results_translation(eligibility, language[0])
-            data[language[0]] = EligibilitySerializer(translated_eligibility, many=True).data
-            urgent_need_programs[language[0]] = UrgentNeedSerializer(
-                urgent_needs(screen, language), many=True
-                ).data
         results = {
-                "programs": data,
-                "urgent_needs": urgent_need_programs,
-                "screen_id": screen.id,
-                "default_language": screen.request_language_code
-            }
+            "programs": eligibility,
+            "urgent_needs": urgent_needs,
+            "screen_id": screen.id,
+            "default_language": screen.request_language_code
+        }
         hooks = eligibility_hooks()
         if screen.referrer_code in hooks:
             hooks[screen.referrer_code].send(screen, results)
@@ -233,12 +221,12 @@ def eligibility_results(screen, batch=False):
         if not skip and program.active:
             ProgramEligibilitySnapshot.objects.create(
                 eligibility_snapshot=snapshot,
-                name=program.name,
+                name=program.name.text,
                 name_abbreviated=program.name_abbreviated,
-                value_type=program.value_type,
+                value_type=program.value_type.text,
                 estimated_value=eligibility["estimated_value"],
-                estimated_delivery_time=program.estimated_delivery_time,
-                estimated_application_time=program.estimated_application_time,
+                estimated_delivery_time=program.estimated_delivery_time.text,
+                estimated_application_time=program.estimated_application_time.text,
                 legal_status_required=program.legal_status_required,
                 eligible=eligibility["eligible"],
                 failed_tests=json.dumps(eligibility["failed"]),
@@ -248,23 +236,23 @@ def eligibility_results(screen, batch=False):
             data.append(
                 {
                     "program_id": program.id,
-                    "name": program.name,
+                    "name": default_message(program.name),
                     "name_abbreviated": program.name_abbreviated,
                     "estimated_value": eligibility["estimated_value"],
-                    "estimated_delivery_time": program.estimated_delivery_time,
-                    "estimated_application_time": program.estimated_application_time,
-                    "description_short": program.description_short,
+                    "estimated_delivery_time": default_message(program.estimated_delivery_time),
+                    "estimated_application_time": default_message(program.estimated_application_time),
+                    "description_short": default_message(program.description_short),
                     "short_name": program.name_abbreviated,
-                    "description": program.description,
-                    "value_type": program.value_type,
-                    "learn_more_link": program.learn_more_link,
-                    "apply_button_link": program.apply_button_link,
+                    "description": default_message(program.description),
+                    "value_type": default_message(program.value_type),
+                    "learn_more_link": default_message(program.learn_more_link),
+                    "apply_button_link": default_message(program.apply_button_link),
                     "legal_status_required": program.legal_status_required,
-                    "category": program.category,
+                    "category": default_message(program.category),
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],
-                    "navigators": navigators,
+                    "navigators": [serialized_navigator(navigator) for navigator in navigators],
                     "already_has": screen.has_benefit(program.name_abbreviated),
                     "new": new
                 }
@@ -279,41 +267,26 @@ def eligibility_results(screen, batch=False):
     return eligible_programs
 
 
-def eligibility_results_translation(results, language):
-    translated_results = copy.deepcopy(results)
-    with override(language):
-        for k, v in enumerate(results):
-            translated_program = Program.objects.get(pk=translated_results[k]['program_id'])
-            translated_results[k]['name'] = translated_program.name
-            translated_results[k]['name_abbreviated'] = translated_program.name_abbreviated
-            translated_results[k]['estimated_delivery_time'] = translated_program.estimated_delivery_time
-            translated_results[k]['estimated_application_time'] = translated_program.estimated_application_time
-            translated_results[k]['description_short'] = translated_program.description_short
-            translated_results[k]['description'] = translated_program.description
-            translated_results[k]['value_type'] = translated_program.value_type
-            translated_results[k]['category'] = translated_program.category
-            translated_results[k]['learn_more_link'] = translated_program.learn_more_link
-            translated_results[k]['apply_button_link'] = translated_program.apply_button_link
-            translated_results[k]['passed_tests'] = []
-            translated_results[k]['failed_tests'] = []
-            translated_results[k]['navigators'] = translated_results[k]['navigators'].language(language).all()
-
-            for passed_test in results[k]['passed_tests']:
-                translated_message = ''
-                for part in passed_test:
-                    translated_message += _(part)
-                translated_results[k]['passed_tests'].append(translated_message)
-
-            for failed_test in results[k]['failed_tests']:
-                translated_message = ''
-                for part in failed_test:
-                    translated_message += _(part)
-                translated_results[k]['failed_tests'].append(translated_message)
-
-    return translated_results
+def default_message(translation):
+    return {
+        'default_message': translation.text,
+        'label': translation.label
+    }
 
 
-def urgent_needs(screen, language):
+def serialized_navigator(navigator):
+    phone_number = str(navigator.phone_number) if navigator.phone_number else None
+    return {
+        "id": navigator.id,
+        "name": default_message(navigator.name),
+        "phone_number": phone_number,
+        "email": default_message(navigator.email),
+        "assistance_link": default_message(navigator.assistance_link),
+        "description": default_message(navigator.description),
+    }
+
+
+def urgent_need_results(screen):
     possible_needs = {
         'food': screen.needs_food,
         'baby supplies': screen.needs_baby_supplies,
@@ -341,9 +314,7 @@ def urgent_needs(screen, language):
         if has_need:
             list_of_needs.append(need)
 
-    urgent_need_resources = UrgentNeed.objects.filter(
-            type_short__in=list_of_needs, active=True
-        ).language(language[0]).all()
+    urgent_need_resources = UrgentNeed.objects.filter(type_short__in=list_of_needs, active=True)
 
     eligible_urgent_needs = []
     for need in urgent_need_resources:
@@ -352,6 +323,14 @@ def urgent_needs(screen, language):
             if not need_functions[function.name]:
                 eligible = False
         if eligible:
-            eligible_urgent_needs.append(need)
+            phone_number = str(need.phone_number) if need.phone_number else None
+            need_data = {
+                "name": default_message(need.name),
+                "description": default_message(need.description),
+                "link": default_message(need.link),
+                "type": default_message(need.type),
+                "phone_number": phone_number
+            }
+            eligible_urgent_needs.append(need_data)
 
     return eligible_urgent_needs

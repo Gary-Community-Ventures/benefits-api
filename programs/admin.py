@@ -3,18 +3,16 @@ from .models import Program, UrgentNeed, Navigator, UrgentNeedFunction, FederalP
 from parler.admin import TranslatableAdmin
 
 
-class ProgramAdmin(TranslatableAdmin):
+class ProgramAdmin(admin.ModelAdmin):
+    search_fields = ('name_abbreviated',)
+
+
+class NavigatorAdmin(admin.ModelAdmin):
     search_fields = ('translations__name',)
 
 
-class NavigatorAdmin(TranslatableAdmin):
+class UrgentNeedAdmin(admin.ModelAdmin):
     search_fields = ('translations__name',)
-
-
-class UrgentNeedAdmin(TranslatableAdmin):
-    search_fields = ('translations__name',)
-    fields = ('name', 'description', 'link', 'type',
-              'phone_number', 'type_short', 'active', 'functions')
 
 
 class UrgentNeedsFunctionAdmin(admin.ModelAdmin):

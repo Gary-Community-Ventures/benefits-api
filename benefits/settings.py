@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'screener.apps.ScreenerConfig',
     'programs.apps.ProgramsConfig',
     'integrations.apps.IntegrationsConfig',
+    'translations.apps.TranslationsConfig',
     'rest_framework',
     'rest_framework.authtoken',
     'phonenumber_field',
@@ -172,7 +173,7 @@ PARLER_LANGUAGES = {
     ),
     'default': {
         'fallbacks': ['en-us'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE
-        'hide_untranslated': False,   # the default; let .active_translations() return fallbacks too.
+        'hide_untranslated': True,   # the default; let .active_translations() return fallbacks too.
     }
 }
 

@@ -1,0 +1,8 @@
+<ul id="urgent-need-list">
+	{% for urgent_need in urgent_needs %}
+	<li>
+		<span>{{ urgent_need.name.text }} </span>
+		<a href="urgent_needs/{{ urgent_need.id }}">Edit</a>
+	</li>
+	{% endfor %}
+</ul>

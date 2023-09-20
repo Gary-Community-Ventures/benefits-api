@@ -146,7 +146,7 @@ def add_from_json(new_json_str):
     new_json = json.loads(new_json_str)
 
     screen = Screen.objects.create(
-            **{k: v for k, v in new_json.items() if k not in ('household_members', 'id', 'uuid', 'user')},
+            **{k: v for k, v in new_json.items() if k not in ('household_members', 'id', 'uuid', 'user', 'expenses')},
             )
 
     members = []
@@ -162,11 +162,11 @@ def add_from_json(new_json_str):
             incomes.append(IncomeStream(**income,
                                         screen=screen,
                                         household_member=member_model))
-        for expense in member['expenses']:
-            expense = {k: v for k, v in expense.items() if k not in ('household_member', 'screen', 'id')}
-            expenses.append(Expense(**expense,
-                                    screen=screen,
-                                    household_member=member_model))
+    for expense in new_json['expenses']:
+        expense = {k: v for k, v in expense.items() if k not in ('household_member', 'screen', 'id')}
+        expenses.append(Expense(**expense,
+                                screen=screen,
+                                household_member=member_model))
 
     HouseholdMember.objects.bulk_create(members)
     IncomeStream.objects.bulk_create(incomes)

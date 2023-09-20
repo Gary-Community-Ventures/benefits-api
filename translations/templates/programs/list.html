@@ -1,0 +1,8 @@
+<ul id="program-list">
+	{% for program in programs %}
+	<li>
+		<span>{{ program.name.text }} </span>
+		<a href="programs/{{ program.id }}">Edit</a>
+	</li>
+	{% endfor %}
+</ul>

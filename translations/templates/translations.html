@@ -1,0 +1,8 @@
+<ul id="translation-list">
+	{% for translation in translations %}
+	<li>
+		<span>{{translation.label}}</span>
+		<a href="admin/{{ translation.id }}">Edit</a>
+	</li>
+	{% endfor %}
+</ul>
