@@ -307,6 +307,7 @@ def urgent_need_results(screen):
         'bia_food_delivery': urgent_need_functions.bia_food_delivery(screen),
         'trua': urgent_need_functions.trua(screen),
         'eoc': urgent_need_functions.eoc(screen),
+        'co_legal_services': urgent_need_functions.co_legal_services(screen)
     }
 
     list_of_needs = []
