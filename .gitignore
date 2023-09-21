@@ -7,6 +7,7 @@ env/
 
 # Secure Files
 .env
+google_credentials.json
 
 # Project asset folders
 media/
