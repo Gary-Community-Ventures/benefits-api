@@ -1,6 +1,8 @@
 from django.conf import settings
 from decouple import config
-from google.cloud import translate
+import json
+from google.oauth2 import service_account
+from google.cloud import translate_v2 as translate
 
 
 class Translate():
@@ -8,8 +10,15 @@ class Translate():
     main_language = settings.LANGUAGE_CODE
 
     def __init__(self):
-        client = translate.TranslationServiceClient.from_service_account_json('./google_credentials.json')
-        print(client.get_supported_languages(parent='projects/benefits-358119'))
+        info = json.loads(config('GOOGLE_APPLICATION_CREDENTIALS'))
+        creds = service_account.Credentials.from_service_account_info(info)
+        client = translate.Client(credentials=creds)
+        # print(client.get_supported_languages(parent='projects/benefits-358119'))
+        result = client.translate('hello', target_language='es')
+
+        print("Text: {}".format(result["input"]))
+        print("Translation: {}".format(result["translatedText"]))
+        print("Detected source language: {}".format(result["detectedSourceLanguage"]))
         # response = client.translate_text(
         #     parent='projects/benefits-358119',
         #     contents=['hello'],
