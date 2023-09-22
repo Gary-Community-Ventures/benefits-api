@@ -181,14 +181,13 @@ class UrgentNeedManager(models.Manager):
         'type',
     )
 
-    def new_urgent_need(self, name, type, phone_number):
+    def new_urgent_need(self, name, phone_number):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(f'urgent_need.{name}_temporary_key-{field}', '')
 
         urgent_need = self.create(
             phone_number=phone_number,
-            type_short=type,
             active=False,
             **translations,
         )
