@@ -96,5 +96,5 @@ def co_legal_services(screen: Screen):
     '''
     fpl = FederalPoveryLimit.objects.get(year='THIS YEAR').as_dict()
     is_income_eligible = screen.calc_gross_income('yearly', ['all']) < fpl[screen.household_size]
-    is_age_eligble = screen.num_adults(age_max=60)
-    return is_income_eligible or is_age_eligble
+    is_age_eligible = screen.num_adults(age_max=60)
+    return is_income_eligible or is_age_eligible
