@@ -307,6 +307,7 @@ def urgent_need_results(screen):
         'bia_food_delivery': urgent_need_functions.bia_food_delivery(screen),
         'trua': urgent_need_functions.trua(screen),
         'eoc': urgent_need_functions.eoc(screen),
+        'co_legal_services': urgent_need_functions.co_legal_services(screen)
     }
 
     list_of_needs = []
@@ -314,7 +315,7 @@ def urgent_need_results(screen):
         if has_need:
             list_of_needs.append(need)
 
-    urgent_need_resources = UrgentNeed.objects.filter(type_short__in=list_of_needs, active=True)
+    urgent_need_resources = UrgentNeed.objects.filter(type_short__name__in=list_of_needs, active=True).distinct()
 
     eligible_urgent_needs = []
     for need in urgent_need_resources:
