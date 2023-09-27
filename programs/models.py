@@ -32,6 +32,14 @@ class FederalPoveryLimit(models.Model):
         return self.year
 
 
+class LegalStatus(models.Model):
+    status = models.CharField(max_length=256)
+    parent = models.ForeignKey('self', related_name='children', blank=True, null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return self.status
+
+
 class ProgramManager(models.Manager):
     translated_fields = (
         'description_short',
@@ -73,7 +81,7 @@ class ProgramManager(models.Manager):
 class Program(models.Model):
     name_abbreviated = models.CharField(max_length=120)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
-    legal_status_required = models.CharField(max_length=120)
+    legal_status_required = models.ManyToManyField(LegalStatus, related_name='programs')
     active = models.BooleanField(blank=True, default=True)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name='fpl', blank=True, null=True, on_delete=models.SET_NULL)
 
