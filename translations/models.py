@@ -1,7 +1,6 @@
 from django.db import models
 from parler.models import TranslatableModel, TranslatedFields, TranslatableManager
 from django.conf import settings
-import time
 
 
 class TranslationManager(TranslatableManager):
