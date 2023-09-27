@@ -50,7 +50,8 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
             'medicaid',
             'disability_medicaid',
             'has_income',
-            'income_streams'
+            'income_streams',
+            'insurance',
         )
         read_only_fields = ('screen', 'id')
 
