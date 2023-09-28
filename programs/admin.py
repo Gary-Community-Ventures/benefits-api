@@ -1,23 +1,35 @@
 from django.contrib import admin
-from .models import Program, UrgentNeed, Navigator, UrgentNeedFunction, FederalPoveryLimit, Referrer, WebHookFunction
+from .models import (
+    Program,
+    UrgentNeed,
+    Navigator,
+    UrgentNeedFunction,
+    FederalPoveryLimit,
+    Referrer,
+    WebHookFunction,
+    UrgentNeedCategory
+)
 from parler.admin import TranslatableAdmin
 
 
-class ProgramAdmin(TranslatableAdmin):
+class ProgramAdmin(admin.ModelAdmin):
+    search_fields = ('name_abbreviated',)
+
+
+class NavigatorAdmin(admin.ModelAdmin):
     search_fields = ('translations__name',)
 
 
-class NavigatorAdmin(TranslatableAdmin):
+class UrgentNeedAdmin(admin.ModelAdmin):
     search_fields = ('translations__name',)
 
 
-class UrgentNeedAdmin(TranslatableAdmin):
-    search_fields = ('translations__name',)
-    fields = ('name', 'description', 'link', 'type',
-              'phone_number', 'type_short', 'active', 'functions')
+class UrgentNeedCategoryAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
+    fields = ('name',)
 
 
-class UrgentNeedsFunctionAdmin(admin.ModelAdmin):
+class UrgentNeedFunctionAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     fields = ('name',)
 
@@ -37,7 +49,8 @@ class WebHookFunctionsAdmin(admin.ModelAdmin):
 admin.site.register(Program, ProgramAdmin)
 admin.site.register(Navigator, NavigatorAdmin)
 admin.site.register(UrgentNeed, UrgentNeedAdmin)
-admin.site.register(UrgentNeedFunction, UrgentNeedsFunctionAdmin)
+admin.site.register(UrgentNeedCategory, UrgentNeedCategoryAdmin)
+admin.site.register(UrgentNeedFunction, UrgentNeedFunctionAdmin)
 admin.site.register(FederalPoveryLimit, FederalPovertyLimitAdmin)
 admin.site.register(Referrer, ReferrerAdmin)
 admin.site.register(WebHookFunction, WebHookFunctionsAdmin)

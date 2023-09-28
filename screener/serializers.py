@@ -1,7 +1,6 @@
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
-from programs.serializers import NavigatorSerializer
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -72,6 +71,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'start_date',
             'submission_date',
             'agree_to_tos',
+            'is_13_or_older',
             'zipcode',
             'county',
             'referral_source',
@@ -173,19 +173,32 @@ class ScreenSerializer(serializers.ModelSerializer):
         return instance
 
 
+class TranslationSerializer(serializers.Serializer):
+    default_message: serializers.CharField()
+    label: serializers.CharField()
+
+
+class NavigatorSerializer(serializers.Serializer):
+    name: TranslationSerializer()
+    phone_number: serializers.CharField()
+    email: TranslationSerializer()
+    assistance_link: TranslationSerializer()
+    description: TranslationSerializer()
+
+
 class EligibilitySerializer(serializers.Serializer):
-    description_short = serializers.CharField()
-    name = serializers.CharField()
+    description_short = TranslationSerializer()
+    name = TranslationSerializer()
     name_abbreviated = serializers.CharField()
-    description = serializers.CharField()
-    value_type = serializers.CharField()
-    learn_more_link = serializers.CharField()
-    apply_button_link = serializers.CharField()
+    description = TranslationSerializer()
+    value_type = TranslationSerializer()
+    learn_more_link = TranslationSerializer()
+    apply_button_link = TranslationSerializer()
     estimated_value = serializers.IntegerField()
-    estimated_delivery_time = serializers.CharField()
-    estimated_application_time = serializers.CharField()
+    estimated_delivery_time = TranslationSerializer()
+    estimated_application_time = TranslationSerializer()
     legal_status_required = serializers.CharField()
-    category = serializers.CharField()
+    category = TranslationSerializer()
     eligible = serializers.BooleanField()
     failed_tests = serializers.ListField()
     passed_tests = serializers.ListField()
