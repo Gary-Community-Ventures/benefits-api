@@ -19,6 +19,7 @@ class MedicaidChildWithDisability():
     max_income_percent = 3
     earned_deduction = 90
     income_percent = 1 - .33
+    amount = 200
 
     def __init__(self, screen, data, program):
         self.screen = screen
@@ -52,14 +53,13 @@ class MedicaidChildWithDisability():
         income = (earned + unearned) * MedicaidChildWithDisability.income_percent
         self._condition(income <= income_limit, messages.income(income, income_limit))
 
-        self._member_eligibility(self.screen.household_members.all(), [
+        self.eligible_members = self._member_eligibility(self.screen.household_members.all(), [
             (lambda m: m.age <= MedicaidChildWithDisability.max_age, messages.child()),
             (lambda m: m.disabled or m.visually_impaired, messages.has_disability())
         ])
 
     def calc_value(self):
-        value = 12
-        self.value = value
+        self.value = MedicaidChildWithDisability.amount * len(self.eligible_members) * 12
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
@@ -85,4 +85,4 @@ class MedicaidChildWithDisability():
         eligible_members = list(filter(condition, members))
         self._condition(len(eligible_members) >= 1, message)
 
-        self._member_eligibility(eligible_members, conditions)
+        return self._member_eligibility(eligible_members, conditions)
