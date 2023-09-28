@@ -446,7 +446,7 @@ class HouseholdMember(models.Model):
                     return {"is_married": True, "married_to": member}
         return {"is_married": False}
 
-    def has_insurance_type(self, types):
+    def has_insurance_types(self, types):
         return self.insurance in types
 
 

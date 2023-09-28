@@ -38,7 +38,7 @@ class MedicaidChildWithDisability():
 
     def calc_eligibility(self):
         # Does not qualify for Medicaid
-        is_medicaid_eligible = self.screen.has_types_of_insurance()
+        is_medicaid_eligible = self.screen.has_types_of_insurance(('medicaid'))
         for benefit in self.data:
             if benefit["name_abbreviated"] == 'medicaid':
                 is_medicaid_eligible = benefit["eligible"]
@@ -46,10 +46,10 @@ class MedicaidChildWithDisability():
         self._condition(not is_medicaid_eligible, messages.must_not_have_benefit('Medicaid'))
 
         income_limit = self.fpl[self.screen.household_size] * MedicaidChildWithDisability.max_income_percent
-        earned = max(0, float(
+        earned = max(0, int(
             self.screen.calc_gross_income('yearly', ['earned']) - MedicaidChildWithDisability.earned_deduction
         ))
-        unearned = float(self.screen.calc_gross_income('yearly', ['unearned']))
+        unearned = self.screen.calc_gross_income('yearly', ['unearned'])
         income = (earned + unearned) * MedicaidChildWithDisability.income_percent
         self._condition(income <= income_limit, messages.income(income, income_limit))
 
