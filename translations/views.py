@@ -176,7 +176,6 @@ def edit_translation(request, id=0, lang='en-us'):
 
 class NewProgramForm(forms.Form):
     name_abbreviated = forms.CharField(max_length=120)
-    legal_status_required = forms.CharField(max_length=120)
 
 
 @login_required(login_url='/admin/login')
@@ -194,7 +193,6 @@ def programs_view(request):
         if form.is_valid():
             program = Program.objects.new_program(
                 form['name_abbreviated'].value(),
-                form['legal_status_required'].value()
             )
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/programs/{program.id}"
