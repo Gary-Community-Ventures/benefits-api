@@ -81,7 +81,7 @@ class ProgramManager(models.Manager):
 class Program(models.Model):
     name_abbreviated = models.CharField(max_length=120)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
-    legal_status_required = models.ManyToManyField(LegalStatus, related_name='programs')
+    legal_status_required = models.ManyToManyField(LegalStatus, related_name='programs', blank=True)
     active = models.BooleanField(blank=True, default=True)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name='fpl', blank=True, null=True, on_delete=models.SET_NULL)
 
