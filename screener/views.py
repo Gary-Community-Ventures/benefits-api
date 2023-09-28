@@ -228,7 +228,6 @@ def eligibility_results(screen, batch=False):
                 estimated_value=eligibility["estimated_value"],
                 estimated_delivery_time=program.estimated_delivery_time.text,
                 estimated_application_time=program.estimated_application_time.text,
-                legal_status_required=program.legal_status_required,
                 eligible=eligibility["eligible"],
                 failed_tests=json.dumps(eligibility["failed"]),
                 passed_tests=json.dumps(eligibility["passed"]),
