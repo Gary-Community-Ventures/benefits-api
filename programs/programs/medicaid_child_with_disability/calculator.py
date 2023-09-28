@@ -2,7 +2,7 @@ import programs.programs.messages as messages
 
 
 def calculate_medicaid_child_with_disability(screen, data, program):
-    cwd = ChildWithDisability(screen, data)
+    cwd = MedicaidChildWithDisability(screen, data, program)
     eligibility = cwd.eligibility
     value = cwd.value
 
@@ -14,12 +14,16 @@ def calculate_medicaid_child_with_disability(screen, data, program):
     return calculation
 
 
-class ChildWithDisability():
+class MedicaidChildWithDisability():
     max_age = 18
+    max_income_percent = 3
+    earned_deduction = 90
+    income_percent = 1 - .33
 
-    def __init__(self, screen, data):
+    def __init__(self, screen, data, program):
         self.screen = screen
         self.data = data
+        self.fpl = program.fpl.as_dict()
 
         self.eligibility = {
             "eligible": True,
@@ -40,15 +44,21 @@ class ChildWithDisability():
                 break
         self._condition(not is_medicaid_eligible, messages.must_not_have_benefit('Medicaid'))
 
-        # max_income = 0
-
-        self._member_eligibility(self.screen.household_members.all(), (
-            (lambda m: m.age <= ChildWithDisability.max_age, messages.child()),
-            (lambda m: m.disabled or m.visually_impaired, messages.has_disability())
+        income_limit = self.fpl[self.screen.household_size] * MedicaidChildWithDisability.max_income_percent
+        earned = max(0, float(
+            self.screen.calc_gross_income('yearly', ['earned']) - MedicaidChildWithDisability.earned_deduction
         ))
+        unearned = float(self.screen.calc_gross_income('yearly', ['unearned']))
+        income = (earned + unearned) * MedicaidChildWithDisability.income_percent
+        self._condition(income <= income_limit, messages.income(income, income_limit))
+
+        self._member_eligibility(self.screen.household_members.all(), [
+            (lambda m: m.age <= MedicaidChildWithDisability.max_age, messages.child()),
+            (lambda m: m.disabled or m.visually_impaired, messages.has_disability())
+        ])
 
     def calc_value(self):
-        value = 0
+        value = 12
         self.value = value
 
     def _failed(self, msg):
@@ -72,7 +82,7 @@ class ChildWithDisability():
             return members
 
         [condition, message] = conditions.pop()
-        eligible_members = filter(condition, members)
-        self._condition(len(eligible_members), message)
+        eligible_members = list(filter(condition, members))
+        self._condition(len(eligible_members) >= 1, message)
 
         self._member_eligibility(eligible_members, conditions)
