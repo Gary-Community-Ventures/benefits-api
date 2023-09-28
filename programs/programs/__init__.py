@@ -22,6 +22,7 @@ from .universal_preschool.calculator import calculate_universal_preschool
 from .my_spark.calculator import calculate_my_spark
 from .ssdi.calculator import calculate_ssdi
 from .medicaid_child_with_disability.calculator import calculate_medicaid_child_with_disability
+from .medicaid_adult_with_disability.calculator import calculate_medicaid_adult_with_disability
 
 calculators = {
     "acp": calculate_affordable_connectivity,
@@ -48,4 +49,5 @@ calculators = {
     "myspark": calculate_my_spark,
     "ssdi": calculate_ssdi,
     "cwd_medicaid": calculate_medicaid_child_with_disability,
+    "awd_medicaid": calculate_medicaid_adult_with_disability,
 }
