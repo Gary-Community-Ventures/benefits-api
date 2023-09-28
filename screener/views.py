@@ -150,7 +150,7 @@ class MessageViewSet(mixins.CreateModelMixin,
 
 
 def eligibility_results(screen, batch=False):
-    all_programs = Program.objects.all()
+    all_programs = Program.objects.all().prefetch_related('legal_status_required')
     data = []
     try:
         referrer = Referrer.objects.get(referrer_code=screen.referrer_code)
@@ -220,6 +220,7 @@ def eligibility_results(screen, batch=False):
                     new = False
 
         if not skip and program.active:
+            legal_status = [status.status for status in program.legal_status_required.all()]
             ProgramEligibilitySnapshot.objects.create(
                 eligibility_snapshot=snapshot,
                 name=program.name.text,
@@ -228,7 +229,6 @@ def eligibility_results(screen, batch=False):
                 estimated_value=eligibility["estimated_value"],
                 estimated_delivery_time=program.estimated_delivery_time.text,
                 estimated_application_time=program.estimated_application_time.text,
-                legal_status_required=program.legal_status_required,
                 eligible=eligibility["eligible"],
                 failed_tests=json.dumps(eligibility["failed"]),
                 passed_tests=json.dumps(eligibility["passed"]),
@@ -248,7 +248,7 @@ def eligibility_results(screen, batch=False):
                     "value_type": default_message(program.value_type),
                     "learn_more_link": default_message(program.learn_more_link),
                     "apply_button_link": default_message(program.apply_button_link),
-                    "legal_status_required": program.legal_status_required,
+                    "legal_status_required": legal_status,
                     "category": default_message(program.category),
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
