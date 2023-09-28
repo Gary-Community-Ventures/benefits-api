@@ -53,7 +53,7 @@ class ProgramManager(models.Manager):
         'category',
     )
 
-    def new_program(self, name_abbreviated, legal_status_required):
+    def new_program(self, name_abbreviated):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
@@ -62,7 +62,6 @@ class ProgramManager(models.Manager):
 
         program = self.create(
             name_abbreviated=name_abbreviated,
-            legal_status_required=legal_status_required,
             fpl=None,
             active=False,
             **translations,
