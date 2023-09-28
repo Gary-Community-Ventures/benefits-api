@@ -55,7 +55,8 @@ class MedicaidChildWithDisability():
 
         self.eligible_members = self._member_eligibility(self.screen.household_members.all(), [
             (lambda m: m.age <= MedicaidChildWithDisability.max_age, messages.child()),
-            (lambda m: m.disabled or m.visually_impaired, messages.has_disability())
+            (lambda m: m.disabled or m.visually_impaired, messages.has_disability()),
+            (lambda m: not (m.calc_gross_income('yearly', ['earned']) >= 0 and m.age >= 16), None)
         ])
 
     def calc_value(self):
@@ -83,6 +84,7 @@ class MedicaidChildWithDisability():
 
         [condition, message] = conditions.pop()
         eligible_members = list(filter(condition, members))
-        self._condition(len(eligible_members) >= 1, message)
+        if message:
+            self._condition(len(eligible_members) >= 1, message)
 
         return self._member_eligibility(eligible_members, conditions)
