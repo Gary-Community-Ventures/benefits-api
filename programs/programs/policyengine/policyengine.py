@@ -366,7 +366,6 @@ def policy_engine_prepare_params(screen):
             "co_state_supplement": {"2023": None},
             "co_oap": {"2023": None},
             "pell_grant": {"2023": None},
-            "pell_grant_efc": {"2023": None},
             "pell_grant_dependent_available_income": {"2023": int(household_member.calc_gross_income('yearly', ['all']))},
             "pell_grant_countable_assets": {"2023": int(screen.household_assets)},
             "pell_grant_head_allowances": {"2023": 10_000},
