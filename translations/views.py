@@ -66,14 +66,6 @@ def create_translation_view(request):
 
 @login_required(login_url='/admin/login')
 @staff_member_required
-@api_view(('GET',))
-def bulk_export(request):
-    translations = Translation.objects.export_translations()
-    return Response(translations)
-
-
-@login_required(login_url='/admin/login')
-@staff_member_required
 def bulk_import(request):
     if request.method == 'POST':
         form = ImportForm(request.POST, request.FILES)

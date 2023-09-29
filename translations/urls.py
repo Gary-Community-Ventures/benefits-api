@@ -7,7 +7,6 @@ urlpatterns = [
     path('admin', views.admin_view),
     path('admin/filter', views.filter_view),
     path('admin/create', views.create_translation_view),
-    path('admin/export', views.bulk_export),
     path('admin/import', views.bulk_import),
     path('admin/programs', views.programs_view),
     path('admin/programs/filter', views.programs_filter_view),
