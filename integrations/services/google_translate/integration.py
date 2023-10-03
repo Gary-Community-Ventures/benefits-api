@@ -6,9 +6,10 @@ from google.cloud import translate_v2 as translate
 
 
 class Translate():
-    languages: list[str] = [lang['code'] for lang in settings.PARLER_LANGUAGES[None]]
     main_language: str = settings.LANGUAGE_CODE
-    languages.remove(main_language)
+    languages: list[str] = [
+        lang['code'] for lang in settings.PARLER_LANGUAGES[None] if lang['code'] != settings.LANGUAGE_CODE
+    ]
 
     def __init__(self):
         info = json.loads(config('GOOGLE_APPLICATION_CREDENTIALS'))

@@ -47,7 +47,14 @@ def admin_view(request):
     elif request.method == 'POST':
         form = NewTranslationForm(request.POST)
         if form.is_valid():
-            translation = Translation.objects.add_translation(form['label'].value(), form['default_message'].value())
+            text = form['default_message'].value()
+            translation = Translation.objects.add_translation(form['label'].value(), text)
+
+            auto_translations = Translate().bulk_translate(['__all__'], [text])[text]
+
+            for [language, auto_text] in auto_translations.items():
+                print(language, auto_text)
+                Translation.objects.edit_translation_by_id(translation.id, language, auto_text, False)
 
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/{translation.id}"
