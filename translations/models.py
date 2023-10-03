@@ -18,6 +18,10 @@ class TranslationManager(TranslatableManager):
 
     def edit_translation(self, label, lang, translation, manual=True):
         parent = self.language(lang).get(label=label)
+
+        if manual is True and (parent.edited is True or parent.text == ''):
+            return parent
+
         parent.text = translation
         parent.edited = manual
         parent.save()
@@ -25,6 +29,10 @@ class TranslationManager(TranslatableManager):
 
     def edit_translation_by_id(self, id, lang, translation, manual=True):
         parent = self.language(lang).get(pk=id)
+
+        if manual is False and parent.edited is True and parent.text != '':
+            return parent
+
         parent.text = translation
         parent.edited = manual
         parent.save()

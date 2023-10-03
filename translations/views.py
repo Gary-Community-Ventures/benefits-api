@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework.decorators import api_view
 from .bulk_import_translations import bulk_add
+from integrations.services.google_translate.integration import Translate
 import json
 
 
@@ -120,7 +121,7 @@ class LabelForm(forms.Form):
 def translation_view(request, id=0):
     if request.method == 'GET':
         translation = Translation.objects.prefetch_related('translations').get(pk=id)
-        langs = map(lambda l: l['code'], settings.PARLER_LANGUAGES[None])
+        langs = [lang['code'] for lang in settings.PARLER_LANGUAGES[None]]
 
         translations = {t.language_code: TranslationForm({'text': t.text}) for t in translation.translations.all()}
 
@@ -167,11 +168,22 @@ def edit_translation(request, id=0, lang='en-us'):
     if request.method == 'POST':
         form = TranslationForm(request.POST)
         if form.is_valid():
-            translation = Translation.objects.edit_translation_by_id(id, lang, form['text'].value())
+            text = form['text'].value()
+            translation = Translation.objects.edit_translation_by_id(id, lang, text)
+
+            if lang == settings.LANGUAGE_CODE:
+                translations = Translate().bulk_translate(['__all__'], [text])[text]
+
+                for [language, translation] in translations.items():
+                    Translation.objects.edit_translation_by_id(id, language, translation, False)
+
+            parent = Translation.objects.get(pk=id)
+            forms = {t.language_code: TranslationForm({'text': t.text}) for t in parent.translations.all()}
             context = {
-                'form': TranslationForm({'text': translation.text})
+                'translation': parent,
+                'langs': forms,
             }
-            return render(request, "edit/form.html", context)
+            return render(request, "edit/langs.html", context)
 
 
 class NewProgramForm(forms.Form):
