@@ -1,6 +1,5 @@
 asgiref==3.5.2
 attrs==21.4.0
-cachetools==5.2.0
 certifi==2022.6.15
 charset-normalizer==2.1.0
 colorama==0.4.6
@@ -17,11 +16,13 @@ django-sesame==3.1
 djangorestframework==3.13.1
 fonttools==4.34.4
 geographiclib==1.52
-google-api-core==2.8.2
+google-api-core==1.34.0
 google-api-python-client==2.55.0
-google-auth==2.9.1
+google-auth==1.35.0
 google-auth-httplib2==0.1.0
 google-auth-oauthlib==0.5.2
+google-cloud-core==1.7.3
+google-cloud-translate==2.0.1
 googleapis-common-protos==1.56.4
 gunicorn==20.1.0
 httplib2==0.20.4
@@ -29,13 +30,10 @@ hubspot-api-client==7.5.0
 idna==3.3
 iniconfig==1.1.1
 kiwisolver==1.4.4
-numpy==1.23.1
 oauthlib==3.2.0
-packaging==21.3
 phonenumbers==8.12.53
 Pillow==9.2.0
 pluggy==1.0.0
-protobuf==4.21.4
 psycopg2==2.9.3
 psycopg2-binary==2.9.3
 py==1.11.0
