@@ -28,7 +28,8 @@ def bulk_add(translations):
         translation = Translation.objects.add_translation(
             label,
             details['langs'][settings.LANGUAGE_CODE][0],
-            active=details['active']
+            active=details['active'],
+            no_auto=details['no_auto']
         )
         del details['langs'][settings.LANGUAGE_CODE]
 

@@ -6,11 +6,12 @@ from django.conf import settings
 class TranslationManager(TranslatableManager):
     use_in_migrations = True
 
-    def add_translation(self, label, default_message, active=True):
+    def add_translation(self, label, default_message, active=True, no_auto=False):
         default_lang = settings.LANGUAGE_CODE
-        parent = self.get_or_create(label=label, defaults={'active': active})[0]
-        if parent.active != active:
+        parent = self.get_or_create(label=label, defaults={'active': active, 'no_auto': no_auto})[0]
+        if parent.active != active or parent.active != no_auto:
             parent.active = active
+            parent.no_auto = no_auto
             parent.save()
 
         parent.create_translation(default_lang, text=default_message, edited=True)
@@ -68,6 +69,7 @@ class TranslationManager(TranslatableManager):
 
             translations_export[translation.label] = {
                 'active': translation.active,
+                'no_auto': translation.no_auto,
                 'langs': {},
                 'reference': reference,
             }
