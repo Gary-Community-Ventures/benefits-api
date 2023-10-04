@@ -21,7 +21,7 @@ class Translate():
         Translates the text from the default language to the lang param language.
         '''
         if lang not in Translate.languages:
-            raise Exception(f'{lang} is not configured in settings.')
+            raise Exception(f'{lang} is not configured in settings, or is the default language')
 
         result = self.client.translate(text, target_language=lang, source_language=Translate.main_language)
 
@@ -38,7 +38,7 @@ class Translate():
         translations = {text: {} for text in texts}
         for lang in langs:
             if lang not in Translate.languages:
-                raise Exception(f'{lang} is not configured in settings.')
+                raise Exception(f'{lang} is not configured in settings, or is the default language')
 
             results = self.client.translate(texts, target_language=lang, source_language=Translate.main_language)
 

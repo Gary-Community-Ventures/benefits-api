@@ -19,8 +19,9 @@ class TranslationManager(TranslatableManager):
     def edit_translation(self, label, lang, translation, manual=True):
         parent = self.language(lang).get(label=label)
 
-        lang_trans = parent.translations.filter(language_code=lang).first()
-        if manual is False and lang_trans is not None and lang_trans.edited is True and lang_trans.text != '':
+        lang_trans = parent.get_lang(lang)
+        is_edited = lang_trans is not None and lang_trans.edited is True and lang_trans.text != ''
+        if manual is False and (is_edited or parent.no_auto):
             return parent
 
         parent.text = translation
@@ -31,8 +32,9 @@ class TranslationManager(TranslatableManager):
     def edit_translation_by_id(self, id, lang, translation, manual=True):
         parent = self.prefetch_related('translations').language(lang).get(pk=id)
 
-        lang_trans = parent.translations.filter(language_code=lang).first()
-        if manual is False and lang_trans is not None and lang_trans.edited is True and lang_trans.text != '':
+        lang_trans = parent.get_lang(lang)
+        is_edited = lang_trans is not None and lang_trans.edited is True and lang_trans.text != ''
+        if manual is False and (is_edited or parent.no_auto):
             return parent
 
         parent.text = translation
@@ -83,9 +85,13 @@ class Translation(TranslatableModel):
         edited=models.BooleanField(default=False, null=False)
     )
     active = models.BooleanField(default=True, null=False)
+    no_auto = models.BooleanField(default=False, null=False)
     label = models.CharField(max_length=128, null=False, blank=False, unique=True)
 
     objects = TranslationManager()
+
+    def get_lang(self, lang):
+        return self.translations.filter(language_code=lang).first()
 
     def in_program(self):
         # https://stackoverflow.com/questions/54711671/django-how-to-determine-if-an-object-is-referenced-by-any-other-object
