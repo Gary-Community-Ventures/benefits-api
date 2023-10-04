@@ -193,6 +193,27 @@ def edit_translation(request, id=0, lang='en-us'):
             return render(request, "edit/langs.html", context)
 
 
+@login_required(login_url='/admin/login')
+@staff_member_required
+def auto_translate(request, id=0, lang='en-us'):
+    if request.method == 'POST':
+        translation = Translation.objects.language(settings.LANGUAGE_CODE).get(pk=id)
+
+        auto = Translate().translate(lang, translation.text)
+
+        # Set text to manualy edited initially in order to update, and then set it to not edited
+        new_translation = Translation.objects.edit_translation_by_id(translation.id, lang, auto)
+        new_translation.edited = False
+        new_translation.save()
+
+        context = {
+            'form': TranslationForm({'text': new_translation.text}),
+            'lang': lang,
+            'translation': translation,
+        }
+        return render(request, "edit/lang_form.html", context)
+
+
 class NewProgramForm(forms.Form):
     name_abbreviated = forms.CharField(max_length=120)
     legal_status_required = forms.CharField(max_length=120)

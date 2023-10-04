@@ -23,4 +23,5 @@ urlpatterns = [
     path('admin/urgent_needs/<int:id>', views.urgent_need_view),
     path('admin/<int:id>', views.translation_view),
     path('admin/<int:id>/<str:lang>', views.edit_translation),
+    path('admin/<int:id>/<str:lang>/auto', views.auto_translate),
 ]
