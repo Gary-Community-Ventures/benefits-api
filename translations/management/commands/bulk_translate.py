@@ -57,5 +57,5 @@ class Command(BaseCommand):
         for batch in batches:
             auto = translate.bulk_translate([lang], list(batch.keys()))
             for [original_text, new_text] in auto.items():
-                for trans in texts[original_text]:
+                for trans in batch[original_text]:
                     Translation.objects.edit_translation_by_id(trans.id, lang, new_text[lang], manual=False)
