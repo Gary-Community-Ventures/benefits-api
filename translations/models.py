@@ -59,7 +59,6 @@ class TranslationManager(TranslatableManager):
 
         translations_export = {}
         for translation in translations:
-            translation.in_program()
             reference = translation.in_program()
 
             if reference is True:

@@ -74,14 +74,6 @@ def create_translation_view(request):
 
 @login_required(login_url='/admin/login')
 @staff_member_required
-@api_view(('GET',))
-def bulk_export(request):
-    translations = Translation.objects.export_translations()
-    return Response(translations)
-
-
-@login_required(login_url='/admin/login')
-@staff_member_required
 def bulk_import(request):
     if request.method == 'POST':
         form = ImportForm(request.POST, request.FILES)
@@ -349,8 +341,7 @@ def navigator_filter_view(request):
 
 class NewUrgentNeedForm(forms.Form):
     label = forms.CharField(max_length=50)
-    type = forms.CharField(max_length=120)
-    phone_number = PhoneNumberField()
+    phone_number = PhoneNumberField(required=False)
 
 
 @login_required(login_url='/admin/login')
@@ -369,7 +360,6 @@ def urgent_needs_view(request):
         if form.is_valid():
             urgent_need = UrgentNeed.objects.new_urgent_need(
                 form['label'].value(),
-                form['type'].value(),
                 form['phone_number'].value(),
             )
             response = HttpResponse()

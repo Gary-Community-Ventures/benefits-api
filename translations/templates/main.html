@@ -1,7 +1,6 @@
 {% extends "base.html" %} {% block content %}
 <h1>Translations</h1>
 <a href="admin/create">New</a>
-<a href="admin/export" download>Export</a>
 <form hx-post="admin/import" hx-swap="innerHTML" enctype="multipart/form-data">
 	{% include "import_form.html" %}
 </form>

@@ -1,4 +1,5 @@
 from screener.models import Screen
+from programs.models import FederalPoveryLimit
 from .eoc_income_limits import eoc_income_limits
 
 
@@ -87,3 +88,13 @@ def eoc(screen: Screen):
     else:
         return False
     return household_income <= income_limit
+
+
+def co_legal_services(screen: Screen):
+    '''
+    Return True if the household is has an income bellow 200% FPL or someone in the household is over 60 years old
+    '''
+    fpl = FederalPoveryLimit.objects.get(year='THIS YEAR').as_dict()
+    is_income_eligible = screen.calc_gross_income('yearly', ['all']) < fpl[screen.household_size]
+    is_age_eligible = screen.num_adults(age_max=60)
+    return is_income_eligible or is_age_eligible

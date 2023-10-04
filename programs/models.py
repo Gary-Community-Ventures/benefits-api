@@ -2,7 +2,6 @@ from django.db import models
 from parler.models import TranslatableModel
 from phonenumber_field.modelfields import PhoneNumberField
 from translations.models import Translation
-
 from programs.programs import calculators
 
 
@@ -164,6 +163,16 @@ class UrgentNeedFunction(models.Model):
         return self.name
 
 
+class UrgentNeedCategory(models.Model):
+    name = models.CharField(max_length=120)
+
+    class Meta:
+        verbose_name_plural = 'Urgent Need Categories'
+
+    def __str__(self):
+        return self.name
+
+
 class UrgentNeedManager(models.Manager):
     translated_fields = (
         'name',
@@ -172,14 +181,13 @@ class UrgentNeedManager(models.Manager):
         'type',
     )
 
-    def new_urgent_need(self, name, type, phone_number):
+    def new_urgent_need(self, name, phone_number):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(f'urgent_need.{name}_temporary_key-{field}', '')
 
         urgent_need = self.create(
             phone_number=phone_number,
-            type_short=type,
             active=False,
             **translations,
         )
@@ -194,7 +202,7 @@ class UrgentNeedManager(models.Manager):
 class UrgentNeed(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
-    type_short = models.CharField(max_length=120)
+    type_short = models.ManyToManyField(UrgentNeedCategory, related_name='urgent_needs')
     active = models.BooleanField(blank=True, null=False, default=True)
     functions = models.ManyToManyField(UrgentNeedFunction, related_name='function', blank=True)
 
