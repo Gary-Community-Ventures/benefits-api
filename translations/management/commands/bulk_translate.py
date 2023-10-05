@@ -15,7 +15,7 @@ class Command(BaseCommand):
         parser.add_argument('--lang', default=settings.LANGUAGE_CODE, type=str)
 
     def handle(self, *args, **options):
-        limit = 100_000 if options['all'] else min(100_000, options['limit'])
+        limit = 10_000 if options['all'] else min(10_000, options['limit'])
         max_batch_size = 128
         char_limit = 5_000
         lang = options['lang']
