@@ -50,7 +50,8 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
             'medicaid',
             'disability_medicaid',
             'has_income',
-            'income_streams'
+            'income_streams',
+            'insurance',
         )
         read_only_fields = ('screen', 'id')
 
@@ -197,12 +198,11 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_value = serializers.IntegerField()
     estimated_delivery_time = TranslationSerializer()
     estimated_application_time = TranslationSerializer()
-    legal_status_required = serializers.CharField()
+    legal_status_required = serializers.ListField()
     category = TranslationSerializer()
     eligible = serializers.BooleanField()
     failed_tests = serializers.ListField()
     passed_tests = serializers.ListField()
-    estimated_value = serializers.IntegerField()
     navigators = NavigatorSerializer(many=True)
     already_has = serializers.BooleanField()
     new = serializers.BooleanField()
