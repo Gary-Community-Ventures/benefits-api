@@ -10,7 +10,6 @@ from programs.models import Program, Navigator, UrgentNeed
 from phonenumber_field.formfields import PhoneNumberField
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from rest_framework.decorators import api_view
 from .bulk_import_translations import bulk_add
 from integrations.services.google_translate.integration import Translate
 import json
@@ -113,6 +112,7 @@ class TranslationForm(forms.Form):
 class LabelForm(forms.Form):
     label = forms.CharField(max_length=128)
     active = forms.BooleanField(required=False)
+    no_auto = forms.BooleanField(required=False)
 
 
 @login_required(login_url='/admin/login')
@@ -131,7 +131,11 @@ def translation_view(request, id=0):
         context = {
             'translation': translation,
             'langs': translations,
-            'label_form': LabelForm({'label': translation.label, 'active': translation.active})
+            'label_form': LabelForm({
+                'label': translation.label,
+                'active': translation.active,
+                'no_auto': translation.no_auto
+            })
         }
 
         return render(request, "edit/main.html", context)
@@ -141,10 +145,15 @@ def translation_view(request, id=0):
             translation = Translation.objects.get(pk=id)
             translation.label = form['label'].value()
             translation.active = form['active'].value()
+            translation.no_auto = form['no_auto'].value()
             translation.save()
 
             context = {
-                'form': LabelForm({'label': translation.label, 'active': translation.active})
+                'form': LabelForm({
+                    'label': translation.label,
+                    'active': translation.active,
+                    'no_auto': translation.no_auto
+                })
             }
             return render(request, "edit/form.html", context)
     elif request.method == 'DELETE':
@@ -183,6 +192,27 @@ def edit_translation(request, id=0, lang='en-us'):
                 'langs': forms,
             }
             return render(request, "edit/langs.html", context)
+
+
+@login_required(login_url='/admin/login')
+@staff_member_required
+def auto_translate(request, id=0, lang='en-us'):
+    if request.method == 'POST':
+        translation = Translation.objects.language(settings.LANGUAGE_CODE).get(pk=id)
+
+        auto = Translate().translate(lang, translation.text)
+
+        # Set text to manualy edited initially in order to update, and then set it to not edited
+        new_translation = Translation.objects.edit_translation_by_id(translation.id, lang, auto)
+        new_translation.edited = False
+        new_translation.save()
+
+        context = {
+            'form': TranslationForm({'text': new_translation.text}),
+            'lang': lang,
+            'translation': translation,
+        }
+        return render(request, "edit/lang_form.html", context)
 
 
 class NewProgramForm(forms.Form):

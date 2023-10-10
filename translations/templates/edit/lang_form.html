@@ -1,0 +1,10 @@
+{% include "./form.html" with form=form %}
+<button
+	type="button"
+	hx-post="{{ translation.id }}/{{ lang }}/auto"
+	hx-target="#{{ lang }}"
+	hx-swap="innerHTML"
+	hx-confirm="This will override the currect text"
+>
+	Translate
+</button>
