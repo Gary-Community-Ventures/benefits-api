@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import (
+    LegalStatus,
     Program,
     UrgentNeed,
     Navigator,
@@ -14,6 +15,10 @@ from parler.admin import TranslatableAdmin
 
 class ProgramAdmin(admin.ModelAdmin):
     search_fields = ('name_abbreviated',)
+
+
+class LegalStatusAdmin(admin.ModelAdmin):
+    search_fields = ('status',)
 
 
 class NavigatorAdmin(admin.ModelAdmin):
@@ -46,6 +51,7 @@ class WebHookFunctionsAdmin(admin.ModelAdmin):
     search_fields = ('name',)
 
 
+admin.site.register(LegalStatus, LegalStatusAdmin)
 admin.site.register(Program, ProgramAdmin)
 admin.site.register(Navigator, NavigatorAdmin)
 admin.site.register(UrgentNeed, UrgentNeedAdmin)

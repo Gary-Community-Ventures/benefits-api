@@ -64,12 +64,12 @@ class Screen(models.Model):
     has_oap = models.BooleanField(default=False, blank=True, null=True)
     has_coctc = models.BooleanField(default=False, blank=True, null=True)
     has_upk = models.BooleanField(default=False, blank=True, null=True)
-    has_employer_hi = models.BooleanField(default=False, blank=True, null=True)
-    has_private_hi = models.BooleanField(default=False, blank=True, null=True)
-    has_medicaid_hi = models.BooleanField(default=False, blank=True, null=True)
-    has_medicare_hi = models.BooleanField(default=False, blank=True, null=True)
-    has_chp_hi = models.BooleanField(default=False, blank=True, null=True)
-    has_no_hi = models.BooleanField(default=False, blank=True, null=True)
+    has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
+    has_private_hi = models.BooleanField(default=None, blank=True, null=True)
+    has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
+    has_medicare_hi = models.BooleanField(default=None, blank=True, null=True)
+    has_chp_hi = models.BooleanField(default=None, blank=True, null=True)
+    has_no_hi = models.BooleanField(default=None, blank=True, null=True)
     needs_food = models.BooleanField(default=False, blank=True, null=True)
     needs_baby_supplies = models.BooleanField(default=False, blank=True, null=True)
     needs_housing_help = models.BooleanField(default=False, blank=True, null=True)
@@ -227,8 +227,18 @@ class Screen(models.Model):
             'medicaid': self.has_medicaid_hi,
             'medicare': self.has_medicare_hi,
             'chp': self.has_chp_hi,
-            'none': self.has_no_hi
+            'none': self.has_no_hi,
+            'emergency_medicaid': False,
+            'family_planning': False,
         }
+
+        # include new member based insurance model
+        for member in self.household_members.all():
+            if member.insurance == 'dont_know':
+                types_of_hi['none'] = True
+                continue
+
+            types_of_hi[member.insurance] = True
 
         has_type = False
         for insurance in types_of_hi:
@@ -271,7 +281,14 @@ class Screen(models.Model):
             'upk': self.has_upk,
             'medicare': self.has_medicare_hi,
         }
-        return name_map[name_abbreviated] and self.has_benefits == 'true' if name_abbreviated in name_map else False
+
+        has_insurance = self.has_types_of_insurance([name_abbreviated])
+        if name_abbreviated in name_map:
+            has_benefit = name_map[name_abbreviated] and self.has_benefits == 'true'
+        else:
+            has_benefit = False
+
+        return has_insurance or has_benefit
 
     def set_screen_is_test(self):
         referral_source_tests = ['testorprospect', 'test']
@@ -373,6 +390,19 @@ class HouseholdMember(models.Model):
     disability_medicaid = models.BooleanField(blank=True, null=True)
     has_income = models.BooleanField(blank=True, null=True)
     has_expenses = models.BooleanField(blank=True, null=True)
+
+    class InsuranceType(models.TextChoices):
+        DONT_KNOW = 'dont_know'
+        NONE = 'none'
+        EMPLOYER = 'employer'
+        PRIVATE = 'private'
+        CHP = 'chp'
+        MEDICAID = 'medicaid'  # low income health insurance
+        MEDICARE = 'medicare'  # elderly health insurance
+        EMERGENCY_MEDICAID = 'emergency_medicaid'
+        FAMILY_PLANNING = 'family_planning'
+
+    insurance = models.CharField(max_length=64, choices=InsuranceType.choices, default=InsuranceType.DONT_KNOW)
 
     def calc_gross_income(self, frequency, types):
         gross_income = 0
@@ -543,7 +573,6 @@ class ProgramEligibilitySnapshot(models.Model):
     estimated_value = models.DecimalField(decimal_places=2, max_digits=10)
     estimated_delivery_time = models.CharField(max_length=120, blank=True, null=True)
     estimated_application_time = models.CharField(max_length=120, blank=True, null=True)
-    legal_status_required = models.CharField(max_length=120, blank=True, null=True)
     eligible = models.BooleanField()
     failed_tests = models.JSONField(blank=True, null=True)
     passed_tests = models.JSONField(blank=True, null=True)
