@@ -573,7 +573,6 @@ class ProgramEligibilitySnapshot(models.Model):
     estimated_value = models.DecimalField(decimal_places=2, max_digits=10)
     estimated_delivery_time = models.CharField(max_length=120, blank=True, null=True)
     estimated_application_time = models.CharField(max_length=120, blank=True, null=True)
-    legal_status_required = models.CharField(max_length=120, blank=True, null=True)
     eligible = models.BooleanField()
     failed_tests = models.JSONField(blank=True, null=True)
     passed_tests = models.JSONField(blank=True, null=True)
