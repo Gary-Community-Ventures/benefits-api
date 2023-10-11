@@ -3,12 +3,7 @@
 <form hx-post="{{ translation.id }}" hx-swap="innerHTML">
 	{% include "./form.html" with form=label_form %}
 </form>
-{% for lang, form in langs.items %}
-<h3>{{ lang }}</h3>
-<form hx-post="{{ translation.id }}/{{ lang }}" hx-swap="innerHTML">
-	{% include "./form.html" with form=form %}
-</form>
-{% endfor %}
+{% include "./langs.html" %}
 <button
 	hx-delete="{{ translation.id }}"
 	hx-confirm="This is perminant"
