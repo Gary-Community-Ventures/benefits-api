@@ -114,5 +114,5 @@ def is_pregnant():
     Someone in the household must be pregnant
     '''
     return (
-        translation('pregnant', 0, 'Someone in the household must not have health insurance')
+        translation('pregnant', 0, 'Someone in the household must be pregnant'),
     )

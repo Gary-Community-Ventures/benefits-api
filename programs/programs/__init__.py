@@ -23,7 +23,7 @@ from .my_spark.calculator import calculate_my_spark
 from .ssdi.calculator import calculate_ssdi
 from .medicaid.child_with_disability.calculator import calculate_medicaid_child_with_disability
 from .medicaid.adult_with_disability.calculator import calculate_medicaid_adult_with_disability
-# from .medicaid.emergency.calculator import 
+from .medicaid.emergency.calculator import calculate_emergency_medicaid
 
 calculators = {
     "acp": calculate_affordable_connectivity,
@@ -51,4 +51,5 @@ calculators = {
     "ssdi": calculate_ssdi,
     "cwd_medicaid": calculate_medicaid_child_with_disability,
     "awd_medicaid": calculate_medicaid_adult_with_disability,
+    "emergency_medicaid": calculate_emergency_medicaid,
 }
