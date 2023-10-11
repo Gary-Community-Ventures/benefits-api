@@ -39,7 +39,7 @@ class MedicaidAdultWithDisability():
 
     def calc_eligibility(self):
         # Does not qualify for Medicaid
-        is_medicaid_eligible = self.screen.has_types_of_insurance(('medicaid',))
+        is_medicaid_eligible = self.screen.has_types_of_insurance(['medicaid'])
         for benefit in self.data:
             if benefit["name_abbreviated"] == 'medicaid':
                 is_medicaid_eligible = benefit["eligible"]
