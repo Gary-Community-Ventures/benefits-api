@@ -107,3 +107,12 @@ def has_no_insurance():
     return (
         translation('no_insurance', 0, 'Someone in the household must not have health insurance'),
     )
+
+
+def is_pregnant():
+    '''
+    Someone in the household must be pregnant
+    '''
+    return (
+        translation('pregnant', 0, 'Someone in the household must not have health insurance')
+    )
