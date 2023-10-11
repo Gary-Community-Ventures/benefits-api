@@ -217,17 +217,17 @@ class Screen(models.Model):
         return relationship_map
 
     def has_types_of_insurance(self, types, only=False):
-        """
+        '''
         Returns True if family has an insurance in types.
         If only=True then will return False if the family has an insurance that is not in types.
-        """
+        '''
         types_of_hi = {
-            'employer': self.has_employer_hi,
-            'private': self.has_private_hi,
-            'medicaid': self.has_medicaid_hi,
-            'medicare': self.has_medicare_hi,
-            'chp': self.has_chp_hi,
-            'none': self.has_no_hi,
+            'employer': self.has_employer_hi or False,
+            'private': self.has_private_hi or False,
+            'medicaid': self.has_medicaid_hi or False,
+            'medicare': self.has_medicare_hi or False,
+            'chp': self.has_chp_hi or False,
+            'none': self.has_no_hi or False,
             'emergency_medicaid': False,
             'family_planning': False,
         }

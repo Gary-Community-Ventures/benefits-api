@@ -33,12 +33,15 @@ class EmergencyMedicaid():
 
     def calc_eligibility(self):
         # Does qualify for Medicaid
-        is_medicaid_eligible = self.screen.has_types_of_insurance(['medicaid'])
+        is_medicaid_eligible = False
         for benefit in self.data:
             if benefit["name_abbreviated"] == 'medicaid':
                 is_medicaid_eligible = benefit["eligible"]
                 break
         self._condition(is_medicaid_eligible, messages.must_have_benefit('Medicaid'))
+
+        # Does not have any insurance
+        self._condition(self.screen.has_types_of_insurance(['none']), messages.has_no_insurance())
 
         # Household member is pregnant
         is_pregnant = False
