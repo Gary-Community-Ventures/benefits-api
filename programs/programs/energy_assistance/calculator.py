@@ -25,14 +25,14 @@ def eligibility_energy_assistance(screen):
     # Variables that may change over time
     # household size : income limit
     income_bands = {
-        1: 2880,
-        2: 3766,
-        3: 4652,
-        4: 5539,
-        5: 6425,
-        6: 7311,
-        7: 7477,
-        8: 7644
+        1: 3_081,
+        2: 4_030,
+        3: 4_978,
+        4: 5_926,
+        5: 6_875,
+        6: 7_823,
+        7: 8_001,
+        8: 8_179,
     }
     frequency = "monthly"
 
