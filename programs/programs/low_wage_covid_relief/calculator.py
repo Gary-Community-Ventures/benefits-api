@@ -60,7 +60,8 @@ class LowWageCovidRelief():
         income = self.screen.calc_gross_income('monthly', ['all'])
         meets_income_limit = income < income_limit
 
-        self._condition(has_benefit or meets_income_limit, messages.income(income, income_limit))
+        if not (meets_income_limit or has_benefit):
+            self.eligibility['eligible'] = False
 
     def calc_value(self):
         self.value = LowWageCovidRelief.amount
