@@ -2,6 +2,7 @@ from .models import Translation
 from programs.models import Program, Navigator, UrgentNeed
 from django.db import transaction
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from decouple import config
 
 
@@ -27,23 +28,33 @@ def bulk_add(translations):
         translation = Translation.objects.add_translation(
             label,
             details['langs'][settings.LANGUAGE_CODE][0],
-            active=details['active']
+            active=details['active'],
+            no_auto=details['no_auto']
         )
         del details['langs'][settings.LANGUAGE_CODE]
 
         if details['reference'] is not False:
             ref = details['reference']
             if ref[0] == 'programs_program':
-                obj = Program.objects.get(external_name=details['reference'][1])
+                try:
+                    obj = Program.objects.get(external_name=ref[1])
+                except ObjectDoesNotExist:
+                    raise Exception(f'Program with expternal name of {ref[1]} does not exist. Please add it.')
                 obj.active = True
                 obj.save()
             if ref[0] == 'programs_navigator':
-                obj = Navigator.objects.get(external_name=details['reference'][1])
+                try:
+                    obj = Navigator.objects.get(external_name=ref[1])
+                except ObjectDoesNotExist:
+                    raise Exception(f'Navigator with expternal name of {ref[1]} does not exist. Please add it.')
             if ref[0] == 'programs_urgentneed':
-                obj = UrgentNeed.objects.get(external_name=details['reference'][1])
+                try:
+                    obj = UrgentNeed.objects.get(external_name=ref[1])
+                except ObjectDoesNotExist:
+                    raise Exception(f'Urgent Need with expternal name of {ref[1]} does not exist. Please add it.')
                 obj.active = True
                 obj.save()
-            getattr(translation, details['reference'][2]).set([obj])
+            getattr(translation, ref[2]).set([obj])
 
         for lang, message in details['langs'].items():
             Translation.objects.edit_translation_by_id(
