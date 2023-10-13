@@ -58,7 +58,7 @@ class LowWageCovidRelief():
         # meets income limit
         income_limit = LowWageCovidRelief.income_limits[self.screen.household_size]
         income = self.screen.calc_gross_income('monthly', ['all'])
-        meets_income_limit = income < income_limit
+        meets_income_limit = income <= income_limit
 
         if not (meets_income_limit or has_benefit):
             self.eligibility['eligible'] = False
