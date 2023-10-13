@@ -370,7 +370,7 @@ def policy_engine_prepare_params(screen):
             "pell_grant_countable_assets": {"2023": int(screen.household_assets)},
             "pell_grant_head_allowances": {"2023": 10_000},
             "pell_grant_dependent_other_allowances": {"2023": 5_000},
-            "cost_of_attending_college": {"2023": 10_000},
+            "cost_of_attending_college": {"2023": 10_000 * (household_member.age >= 17)},
             "pell_grant_months_in_school": {"2023": 9},
         }
 
