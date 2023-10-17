@@ -164,10 +164,10 @@ class Command(BaseCommand):
             programs.append(new_program)
 
         for navigator in self.navigators:
-            new_nav = Navigator.objects.new_navigator(navigator, '+18884964252')
+            new_nav = Navigator.objects.new_navigator(navigator, None)
             new_nav.program.add(random.choice(programs))
 
         for need in self.urgent_needs:
-            new_need = UrgentNeed.objects.new_urgent_need(need, '+18884964252')
+            new_need = UrgentNeed.objects.new_urgent_need(need, None)
             new_need.type_short.add(random.choice(categories))
             new_need.save()
