@@ -21,6 +21,7 @@ from programs.programs.old_age_pension.calculator import calculate_old_age_pensi
 from programs.programs.universal_preschool.calculator import calculate_universal_preschool
 from programs.programs.my_spark.calculator import calculate_my_spark
 from programs.programs.ssdi.calculator import calculate_ssdi
+from .low_wage_covid_relief.calculator import calculate_low_wage_covid_relief
 
 calculators = {
     "acp": calculate_affordable_connectivity,
@@ -46,4 +47,5 @@ calculators = {
     "upk": calculate_universal_preschool,
     "myspark": calculate_my_spark,
     "ssdi": calculate_ssdi,
+    "lwcr": calculate_low_wage_covid_relief,
 }

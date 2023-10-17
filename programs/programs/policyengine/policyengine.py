@@ -89,6 +89,12 @@ def eligibility_policy_engine(screen):
             "failed": [],
             "estimated_value": 0
         },
+        "pell_grant": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
     }
 
     benefit_data = policy_engine_calculate(screen)['result']
@@ -127,6 +133,11 @@ def eligibility_policy_engine(screen):
                 medicaid_estimated_value = co_aged_medicaid_average
 
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
+
+        # PELL GRANT
+        if pvalue['pell_grant']['2023'] > 0:
+            eligibility['pell_grant']['eligible'] = True
+            eligibility['pell_grant']['estimated_value'] += pvalue['pell_grant']['2023']
 
         # SSI
         if pvalue['ssi']['2023'] > 0:
@@ -247,6 +258,14 @@ def policy_engine_prepare_params(screen):
     else:
         meets_snap_gross_income_test = False
 
+    pell_grant_primary_income = 0
+    pell_grant_dependents_in_college = 0
+    for member in household_members:
+        if member.relationship in ('headOfHousehold', 'spouse'):
+            pell_grant_primary_income += int(member.calc_gross_income('yearly', ['all']))
+        else:
+            pell_grant_dependents_in_college += 1
+
     policy_engine_params = {
         "snap_earned_income_deduction": 0,
         "household": {
@@ -257,7 +276,9 @@ def policy_engine_prepare_params(screen):
                     "earned_income_tax_credit": {"2023": None},
                     "co_eitc": {"2023": None},
                     "ctc": {"2023": None},
-                    "tax_unit_is_joint": {"2023": screen.is_joint()}
+                    "tax_unit_is_joint": {"2023": screen.is_joint()},
+                    "pell_grant_primary_income": {"2023": int(screen.calc_gross_income('yearly', ['all']))},
+                    "pell_grant_dependents_in_college": {"2023": pell_grant_dependents_in_college},
                 }
             },
             "families": {
@@ -344,6 +365,13 @@ def policy_engine_prepare_params(screen):
             "ssi_amount_if_eligible": {"2023": None},
             "co_state_supplement": {"2023": None},
             "co_oap": {"2023": None},
+            "pell_grant": {"2023": None},
+            "pell_grant_dependent_available_income": {"2023": int(household_member.calc_gross_income('yearly', ['all']))},
+            "pell_grant_countable_assets": {"2023": int(screen.household_assets)},
+            "pell_grant_head_allowances": {"2023": 10_000},
+            "pell_grant_dependent_other_allowances": {"2023": 5_000},
+            "cost_of_attending_college": {"2023": 10_000 * (household_member.age >= 16 and household_member.student)},
+            "pell_grant_months_in_school": {"2023": 9},
         }
 
         if household_member.pregnant:

@@ -114,7 +114,7 @@ class Screen(models.Model):
                     return True
         return False
 
-    def num_children(self, age_min=0, age_max=18, include_pregnant=False, child_relationship=['child', 'fosterChild']):
+    def num_children(self, age_min=0, age_max=18, include_pregnant=False, child_relationship=['all']):
         children = 0
 
         household_members = self.household_members.all()
@@ -229,7 +229,7 @@ class Screen(models.Model):
             'chp': self.has_chp_hi,
             'none': self.has_no_hi,
             'emergency_medicaid': False,
-            'family_planning': False
+            'family_planning': False,
         }
 
         # include new member based insurance model
@@ -281,7 +281,14 @@ class Screen(models.Model):
             'upk': self.has_upk,
             'medicare': self.has_medicare_hi,
         }
-        return name_map[name_abbreviated] and self.has_benefits == 'true' if name_abbreviated in name_map else False
+
+        has_insurance = self.has_types_of_insurance([name_abbreviated])
+        if name_abbreviated in name_map:
+            has_benefit = name_map[name_abbreviated] and self.has_benefits == 'true'
+        else:
+            has_benefit = False
+
+        return has_insurance or has_benefit
 
     def set_screen_is_test(self):
         referral_source_tests = ['testorprospect', 'test']

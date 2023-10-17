@@ -180,10 +180,11 @@ def eligibility_results(screen, batch=False):
         'oap',
         'acp',
         'lifeline',
+        'pell_grant'
     )
 
     def sort_first(program):
-        calc_first = ('tanf', 'ssi', 'medicaid', 'nslp')
+        calc_first = ('tanf', 'ssi', 'medicaid', 'nslp', 'leap')
 
         if program.name_abbreviated in calc_first:
             return 0
