@@ -270,7 +270,7 @@ class NavigatorManager(models.Manager):
 
 
 class Navigator(models.Model):
-    program = models.ManyToManyField(Program, related_name='navigator')
+    program = models.ManyToManyField(Program, related_name='navigator', blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
 
