@@ -95,34 +95,34 @@ class Command(BaseCommand):
         {'abbr': 'upk', 'external': 'upk'},
     ]
     urgent_needs = [
-        'bia_food'
-        'coemap'
-        'dbap'
-        'plentiful'
-        'eic'
-        'ccs'
-        'ndbn'
-        'hfc'
-        'rhc'
-        'fps'
-        'better_offer'
-        'cedp'
-        'chc'
-        'cda'
-        'eocbpa'
-        'cls'
-        'trua'
-        'imatter'
+        'bia_food',
+        'coemap',
+        'dbap',
+        'plentiful',
+        'eic',
+        'ccs',
+        'ndbn',
+        'hfc',
+        'rhc',
+        'fps',
+        'better_offer',
+        'cedp',
+        'chc',
+        'cda',
+        'eocbpa',
+        'cls',
+        'trua',
+        'imatter',
     ]
     navigators = [
-        'gac'
-        'bia'
-        'bdt'
-        'acc'
-        'mhuw'
-        'dpp'
-        'uph'
-        'cowicc'
+        'gac',
+        'bia',
+        'bdt',
+        'acc',
+        'mhuw',
+        'dpp',
+        'uph',
+        'cowicc',
     ]
 
     def handle(self, *args, **options):
@@ -153,21 +153,29 @@ class Command(BaseCommand):
         for functions in self.urgent_need_functions:
             UrgentNeedFunction.objects.create(name=functions)
 
+        # create programs
         programs = []
         for program in self.programs:
             new_program = Program.objects.new_program(program['abbr'])
             new_program.external_name = program['external']
             new_program.fpl = fpl
             for status in statuses:
+                # set all legal statuses for each program
                 new_program.legal_status_required.add(status)
             new_program.save()
             programs.append(new_program)
 
+        # create navigators
         for navigator in self.navigators:
             new_nav = Navigator.objects.new_navigator(navigator, None)
+            new_nav.external_name = navigator
+            # give each navigator a random program
             new_nav.program.add(random.choice(programs))
+            new_nav.save()
 
+        # give each program an urgent need
         for need in self.urgent_needs:
             new_need = UrgentNeed.objects.new_urgent_need(need, None)
+            new_need.external_name = need
             new_need.type_short.add(random.choice(categories))
             new_need.save()
