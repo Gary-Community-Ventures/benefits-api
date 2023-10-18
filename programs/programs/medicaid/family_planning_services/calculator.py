@@ -16,7 +16,6 @@ def calculate_family_planning_services(screen, data, program):
 
 class FamilyPlanningServices():
     amount = 404
-    child_max_age = 18
     fpl_percent = 2.6
 
     def __init__(self, screen, data, program):
