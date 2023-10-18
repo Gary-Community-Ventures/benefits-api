@@ -12,7 +12,7 @@ from .omnisalud.calculator import calculate_omnisalud
 from .dental_health_care_seniors.calculator import calculate_dental_health_care_seniors
 from .reproductive_health_care.calculator import calculate_reproductive_health_care
 from .connect_for_health.calculator import calculate_connect_for_health
-from .family_planning_services.calculator import calculate_family_planning_services
+from .medicaid.family_planning_services.calculator import calculate_family_planning_services
 from .denver_preschool_program.calculator import calculate_denver_preschool_program
 from .head_start.calculator import calculate_head_start
 from .every_day_eats.calculator import calculate_every_day_eats
