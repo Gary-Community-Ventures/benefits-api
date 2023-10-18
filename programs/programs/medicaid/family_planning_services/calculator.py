@@ -53,7 +53,7 @@ class FamilyPlanningServices():
 
         self._condition(
             gross_income < income_limit,
-            messages.income(gross_income, income_limit)
+            messages.income(gross_income * 12, income_limit * 12)
         )
 
     def calc_value(self):
