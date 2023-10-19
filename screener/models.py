@@ -454,6 +454,9 @@ class HouseholdMember(models.Model):
         return {"is_married": False}
 
     def has_insurance_types(self, types):
+        if 'none' in types:
+            types += ['dont_know']
+
         return self.insurance in types
 
 
