@@ -173,7 +173,7 @@ class Command(BaseCommand):
             new_nav.program.add(random.choice(programs))
             new_nav.save()
 
-        # give each program an urgent need
+        # create urgent needs
         for need in self.urgent_needs:
             new_need = UrgentNeed.objects.new_urgent_need(need, None)
             new_need.external_name = need
