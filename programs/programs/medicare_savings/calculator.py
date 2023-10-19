@@ -18,16 +18,16 @@ class MedicareSavings():
     valid_insurance = ('none', 'employer', 'private', 'medicare')
     asset_limit = {
         'single': 10_590,
-        'maried': 16_630,
+        'married': 16_630,
     }
     income_limit = {
         'single': 1_660,
-        'maried': 2239,
+        'married': 2239,
     }
+    amount = 165
 
-    def __init__(self, screen, data):
+    def __init__(self, screen):
         self.screen = screen
-        self.data = data
 
         self.eligibility = {
             "eligible": True,
@@ -41,30 +41,35 @@ class MedicareSavings():
 
     def calc_eligibility(self):
         members = self.screen.household_members.all()
-        relationship_map = self.screen.relationship_map()
 
         def asset_limit(member):
-            status = 'single' if relationship_map[member.id] is None else 'maried'
+            status = 'married' if member.is_married()['is_married'] else 'single'
             return self.screen.household_assets < MedicareSavings.asset_limit[status]
 
         def income_limit(member):
-            status = 'single' if relationship_map[member.id] is None else 'maried'
+            is_married = member.is_married()
+            if not is_married['is_married']:
+                status = 'single'
+                spouse_income = 0
+            else:
+                status = 'married'
+                spouse_income = is_married['married_to'].calc_gross_income('monthly', ('all',))
             max_income = MedicareSavings.income_limit[status]
-            income = member.calc_gross_income('monthly', ('all',))
+            income = member.calc_gross_income('monthly', ('all',)) + spouse_income
             return income < max_income
 
         self.eligible_members = self._member_eligibility(
             members,
-            (
+            [
                 (lambda m: m.age >= 65, messages.older_than(65)),
                 (lambda m: m.has_insurance_types(MedicareSavings.valid_insurance), messages.has_no_insurance()),
                 (asset_limit, None),
                 (income_limit, None)
-            )
+            ]
         )
 
     def calc_value(self):
-        self.value = MedicareSavings.amount * len(self.eligible_members)
+        self.value = MedicareSavings.amount * len(self.eligible_members) * 12
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False
