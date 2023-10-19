@@ -21,6 +21,7 @@ from .old_age_pension.calculator import calculate_old_age_pension
 from .universal_preschool.calculator import calculate_universal_preschool
 from .my_spark.calculator import calculate_my_spark
 from .ssdi.calculator import calculate_ssdi
+from .low_wage_covid_relief.calculator import calculate_low_wage_covid_relief
 from .medicaid.child_with_disability.calculator import calculate_medicaid_child_with_disability
 from .medicaid.adult_with_disability.calculator import calculate_medicaid_adult_with_disability
 from .medicaid.emergency.calculator import calculate_emergency_medicaid
@@ -50,6 +51,7 @@ calculators = {
     'upk': calculate_universal_preschool,
     'myspark': calculate_my_spark,
     'ssdi': calculate_ssdi,
+    "lwcr": calculate_low_wage_covid_relief,
     'cwd_medicaid': calculate_medicaid_child_with_disability,
     'awd_medicaid': calculate_medicaid_adult_with_disability,
     'emergency_medicaid': calculate_emergency_medicaid,
