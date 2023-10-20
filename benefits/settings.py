@@ -119,8 +119,8 @@ WSGI_APPLICATION = 'benefits.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'benefits',
-        'USER': 'badmin',
+        'NAME': config('DB_NAME'),
+        'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASS'),
         'HOST': 'localhost'
     }
