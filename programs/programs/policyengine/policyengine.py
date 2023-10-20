@@ -95,6 +95,12 @@ def eligibility_policy_engine(screen):
             "failed": [],
             "estimated_value": 0
         },
+        "chp": {
+            "eligible": False,
+            "passed": [],
+            "failed": [],
+            "estimated_value": 0
+        },
     }
 
     benefit_data = policy_engine_calculate(screen)['result']
@@ -153,6 +159,11 @@ def eligibility_policy_engine(screen):
         if pvalue['co_oap']['2023'] > 0:
             eligibility['oap']['eligible'] = True
             eligibility['oap']['estimated_value'] += pvalue['co_oap']['2023']
+
+        # CHP+
+        if pvalue['co_chp_eligible']['2023'] > 0:
+            eligibility['chp']['eligible'] = True
+            eligibility['chp']['estimated_value'] += 200 * 12
 
     # WIC PRESUMPTIVE ELIGIBILITY
     in_wic_demographic = False
@@ -372,6 +383,7 @@ def policy_engine_prepare_params(screen):
             "pell_grant_dependent_other_allowances": {"2023": 5_000},
             "cost_of_attending_college": {"2023": 10_000 * (household_member.age >= 16 and household_member.student)},
             "pell_grant_months_in_school": {"2023": 9},
+            "co_chp_eligible": {"2023": None},
         }
 
         if household_member.pregnant:
