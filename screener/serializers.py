@@ -115,6 +115,8 @@ class ScreenSerializer(serializers.ModelSerializer):
             'has_oap',
             'has_coctc',
             'has_upk',
+            'has_ssdi',
+            'has_pell_grant',
             'has_employer_hi',
             'has_private_hi',
             'has_medicaid_hi',
