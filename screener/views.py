@@ -181,7 +181,7 @@ def eligibility_results(screen, batch=False):
         'acp',
         'lifeline',
         'pell_grant',
-        # 'chp', wait until Medicaid Income is fixed to use CHP+ from PE
+        'chp',
     )
 
     def sort_first(program):
