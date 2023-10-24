@@ -141,6 +141,12 @@ def eligibility_policy_engine(screen):
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
 
         # PELL GRANT
+        print(pvalue["pell_grant_efc"])
+        print(pvalue["pell_grant_simplified_formula_applies"])
+        print(pvalue["pell_grant_formula"])
+        print(pvalue["pell_grant_head_contribution"])
+        print(pvalue["pell_grant_head_available_income"])
+        print(pvalue["pell_grant_dependent_contribution"])
         if pvalue['pell_grant']['2023'] > 0:
             eligibility['pell_grant']['eligible'] = True
             eligibility['pell_grant']['estimated_value'] += pvalue['pell_grant']['2023']
@@ -206,6 +212,7 @@ def eligibility_policy_engine(screen):
         eligibility['lifeline']['estimated_value'] = benefit_data['spm_units']['spm_unit']['lifeline']['2023']
 
     tax_unit_data = benefit_data['tax_units']['tax_unit']
+    print(tax_unit_data['pell_grant_primary_income'])
 
     # EITC
     if tax_unit_data['earned_income_tax_credit']['2023'] > 0:
@@ -274,7 +281,7 @@ def policy_engine_prepare_params(screen):
     for member in household_members:
         if member.relationship in ('headOfHousehold', 'spouse'):
             pell_grant_primary_income += int(member.calc_gross_income('yearly', ['all']))
-        else:
+        if member.student:
             pell_grant_dependents_in_college += 1
 
     policy_engine_params = {
@@ -379,8 +386,6 @@ def policy_engine_prepare_params(screen):
             "pell_grant": {"2023": None},
             "pell_grant_dependent_available_income": {"2023": int(household_member.calc_gross_income('yearly', ['all']))},
             "pell_grant_countable_assets": {"2023": int(screen.household_assets)},
-            "pell_grant_head_allowances": {"2023": 10_000},
-            "pell_grant_dependent_other_allowances": {"2023": 5_000},
             "cost_of_attending_college": {"2023": 10_000 * (household_member.age >= 16 and household_member.student)},
             "pell_grant_months_in_school": {"2023": 9},
             "co_chp_eligible": {"2023": None},
