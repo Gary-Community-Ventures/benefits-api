@@ -141,12 +141,6 @@ def eligibility_policy_engine(screen):
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
 
         # PELL GRANT
-        print(pvalue["pell_grant_efc"])
-        print(pvalue["pell_grant_simplified_formula_applies"])
-        print(pvalue["pell_grant_formula"])
-        print(pvalue["pell_grant_head_contribution"])
-        print(pvalue["pell_grant_head_available_income"])
-        print(pvalue["pell_grant_dependent_contribution"])
         if pvalue['pell_grant']['2023'] > 0:
             eligibility['pell_grant']['eligible'] = True
             eligibility['pell_grant']['estimated_value'] += pvalue['pell_grant']['2023']
@@ -212,7 +206,6 @@ def eligibility_policy_engine(screen):
         eligibility['lifeline']['estimated_value'] = benefit_data['spm_units']['spm_unit']['lifeline']['2023']
 
     tax_unit_data = benefit_data['tax_units']['tax_unit']
-    print(tax_unit_data['pell_grant_primary_income'])
 
     # EITC
     if tax_unit_data['earned_income_tax_credit']['2023'] > 0:
