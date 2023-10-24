@@ -12,7 +12,6 @@ def text_link(cell, screen, language):
     from_phone_number = config("TWILIO_PHONE_NUMBER")
     client = Client(account_sid, auth_token)
     domain = config("FRONTEND_DOMAIN")
-    # words = _("Thank you for using MyFriendBen. Click here to review your results.")
     words = Translation.objects.get(label='sendResults.email').get_lang(language).text
     url = f"{domain}/{screen.uuid}/results"
     client.messages.create(
