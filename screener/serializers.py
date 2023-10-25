@@ -1,4 +1,4 @@
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
+from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 
@@ -22,6 +22,10 @@ class InsuranceSerializer(serializers.ModelSerializer):
     emergency_medicaid = serializers.BooleanField()
     family_planning = serializers.BooleanField()
 
+    class Meta:
+        model = Insurance
+        fields = '__all__'
+
 
 class IncomeStreamSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
@@ -43,7 +47,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 class HouseholdMemberSerializer(serializers.ModelSerializer):
     income_streams = IncomeStreamSerializer(many=True)
-    insurance = IncomeStreamSerializer()
+    insurance = InsuranceSerializer()
 
     class Meta:
         model = HouseholdMember
