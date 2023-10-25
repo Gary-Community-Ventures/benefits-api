@@ -11,6 +11,18 @@ class MessageSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class InsuranceSerializer(serializers.ModelSerializer):
+    dont_know = serializers.BooleanField()
+    none = serializers.BooleanField()
+    employer = serializers.BooleanField()
+    private = serializers.BooleanField()
+    chp = serializers.BooleanField()
+    medicaid = serializers.BooleanField()
+    medicare = serializers.BooleanField()
+    emergency_medicaid = serializers.BooleanField()
+    family_planning = serializers.BooleanField()
+
+
 class IncomeStreamSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
 
@@ -31,6 +43,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 class HouseholdMemberSerializer(serializers.ModelSerializer):
     income_streams = IncomeStreamSerializer(many=True)
+    insurance = IncomeStreamSerializer()
 
     class Meta:
         model = HouseholdMember
