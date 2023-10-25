@@ -39,7 +39,7 @@ class MedicaidAdultWithDisability():
 
     def calc_eligibility(self):
         # Does not qualify for Medicaid
-        is_medicaid_eligible = self.screen.has_types_of_insurance(['medicaid'])
+        is_medicaid_eligible = self.screen.has_insurance_types(('medicaid',))
         for benefit in self.data:
             if benefit["name_abbreviated"] == 'medicaid':
                 is_medicaid_eligible = benefit["eligible"]
@@ -60,7 +60,7 @@ class MedicaidAdultWithDisability():
         self.eligible_members = self._member_eligibility(self.screen.household_members.all(), [
             (lambda m: m.age >= MedicaidAdultWithDisability.min_age, messages.older_than(min_age=16)),
             (lambda m: m.disabled or m.visually_impaired, messages.has_disability()),
-            (lambda m: m.has_insurance_types(('employer', 'private', 'none', 'dont_know')), None),
+            (lambda m: m.insurance.has_insurance_types(('employer', 'private', 'none', 'dont_know')), None),
             (income_eligible, None)
         ])
 

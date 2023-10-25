@@ -216,33 +216,12 @@ class Screen(models.Model):
                 relationship_map[probabable_spouse] = member['id']
         return relationship_map
 
-    def has_types_of_insurance(self, types, only=False):
-        '''
-        THIS IS ONLY USED FOR LEGACY SCREEN INSURANCES
+    def has_insurance_types(self, types, strict=True):
+        for member in self.household_members:
+            if member.insurance.has_insurance_types(types, strict):
+                return True
 
-        Returns True if family has an insurance in types.
-        If only=True then will return False if the family has an insurance that is not in types.
-        '''
-        types_of_hi = {
-            'employer': self.has_employer_hi or False,
-            'private': self.has_private_hi or False,
-            'medicaid': self.has_medicaid_hi or False,
-            'medicare': self.has_medicare_hi or False,
-            'chp': self.has_chp_hi or False,
-            'none': self.has_no_hi or False,
-        }
-
-        has_type = False
-        for insurance in types_of_hi:
-            if not types_of_hi[insurance]:
-                continue
-
-            if insurance in types:
-                has_type = True
-            elif only:
-                return False
-
-        return has_type
+        return False
 
     def has_benefit(self, name_abbreviated):
         name_map = {
@@ -255,11 +234,9 @@ class Screen(models.Model):
             'coeitc': self.has_coeitc,
             'nslp': self.has_nslp,
             'ctc': self.has_ctc,
-            'medicaid': self.has_medicaid or self.has_medicaid_hi,
             'rtdlive': self.has_rtdlive,
             'cccap': self.has_cccap,
             'mydenver': self.has_mydenver,
-            'chp': self.has_chp or self.has_chp_hi,
             'ccb': self.has_ccb,
             'ssi': self.has_ssi,
             'andcs': self.has_andcs,
@@ -273,13 +250,12 @@ class Screen(models.Model):
             'oap': self.has_oap,
             'coctc': self.has_coctc,
             'upk': self.has_upk,
+            'medicaid': self.has_medicaid or self.has_medicaid_hi,
             'medicare': self.has_medicare_hi,
+            'chp': self.has_chp or self.has_chp_hi,
         }
 
-        has_insurance = self.has_types_of_insurance((name_abbreviated,))
-        for member in self.household_members:
-            if member.insurance.has_insurance_type((name_abbreviated,), strict=False):
-                has_insurance = True
+        has_insurance = self.has_insurance_types((name_abbreviated,), strict=False)
 
         if name_abbreviated in name_map:
             has_benefit = name_map[name_abbreviated] and self.has_benefits == 'true'
@@ -537,7 +513,7 @@ class Insurance(models.Model):
     emergency_medicaid = models.BooleanField(default=False)
     family_planning = models.BooleanField(default=False)
 
-    def has_insurance_type(self, types, strict=True):
+    def has_insurance_types(self, types, strict=True):
         if 'none' in types:
             types = (*types, 'dont_know')
 

@@ -33,15 +33,19 @@ class DentalHealthCareSeniors():
         self.calc_value()
 
     def calc_eligibility(self):
-        # Health insurance
-        has_valid_hi = not self.screen.has_types_of_insurance(['medicaid', 'private'], only=True)
-        has_medicaid = self.screen.has_benefit('medicaid')
-        self._condition(has_valid_hi and not has_medicaid,
-                        messages.must_not_have_benefit('Medicaid'))
-
-        # Age
-        self._condition(self.screen.num_adults(age_max=DentalHealthCareSeniors.min_age) >= 1,
-                        messages.older_than(DentalHealthCareSeniors.min_age))
+        self._member_eligibility(
+            self.screen.household_members.all(),
+            (
+                (
+                    lambda m: m.insurance.has_insurance_type(('medicaid', 'private')),
+                    messages.must_not_have_benefit('Medicaid')
+                ),
+                (
+                    lambda m: m.age > DentalHealthCareSeniors.min_age,
+                    messages.older_than(DentalHealthCareSeniors.min_age)
+                )
+            )
+        )
 
         # Income test
         gross_income = int(self.screen.calc_gross_income("monthly", ["all"]))
@@ -64,3 +68,17 @@ class DentalHealthCareSeniors():
             self._passed(msg)
         else:
             self._failed(msg)
+
+    def _member_eligibility(self, members, conditions):
+        '''
+        Filter out members that do not meet the condition and make eligibility messages
+        '''
+        if len(conditions) <= 0:
+            return members
+
+        [condition, message] = conditions.pop()
+        eligible_members = list(filter(condition, members))
+        if message:
+            self._condition(len(eligible_members) >= 1, message)
+
+        return self._member_eligibility(eligible_members, conditions)

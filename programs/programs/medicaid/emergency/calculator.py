@@ -40,15 +40,19 @@ class EmergencyMedicaid():
                 break
         self._condition(is_medicaid_eligible, messages.must_have_benefit('Medicaid'))
 
-        # Does not have any insurance
-        self._condition(self.screen.has_types_of_insurance(['none']), messages.has_no_insurance())
-
-        # Household member is pregnant
-        is_pregnant = False
-        for member in self.screen.household_members.all():
-            if member.pregnant:
-                is_pregnant = True
-        self._condition(is_pregnant, messages.is_pregnant())
+        self._member_eligibility(
+            self.screen.household_members.all(),
+            (
+                (
+                    lambda m: m.insurance.has_insurance_types(('none',)),
+                    messages.has_no_insurance()
+                ),
+                (
+                    lambda m: m.pregnant,
+                    messages.is_pregnant()
+                )
+            )
+        )
 
     def calc_value(self):
         self.value = EmergencyMedicaid.amount
@@ -65,3 +69,17 @@ class EmergencyMedicaid():
             self._passed(msg)
         else:
             self._failed(msg)
+
+    def _member_eligibility(self, members, conditions):
+        '''
+        Filter out members that do not meet the condition and make eligibility messages
+        '''
+        if len(conditions) <= 0:
+            return members
+
+        [condition, message] = conditions.pop()
+        eligible_members = list(filter(condition, members))
+        if message:
+            self._condition(len(eligible_members) >= 1, message)
+
+        return self._member_eligibility(eligible_members, conditions)
