@@ -13,7 +13,7 @@ from programs.programs.policyengine.policyengine import eligibility_policy_engin
 # The screen is the top most container for all information collected in the
 # app and is synonymous with a household model. In addition to general
 # application fields like submission_date, it also contains non-individual
-# household fields. Screen -> HouseholdMember -> IncomeStream & Expense
+# household fields. Screen -> HouseholdMember -> IncomeStream & Expense & Insurance
 class Screen(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
     completed = models.BooleanField(null=False, blank=False)
