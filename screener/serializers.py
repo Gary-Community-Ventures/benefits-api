@@ -166,9 +166,11 @@ class ScreenSerializer(serializers.ModelSerializer):
         screen.set_screen_is_test()
         for member in household_members:
             incomes = member.pop('income_streams')
+            insurance = member.pop('insurance')
             household_member = HouseholdMember.objects.create(**member, screen=screen)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
+            Insurance.objects.create(**insurance, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=screen)
         return screen
@@ -182,8 +184,10 @@ class ScreenSerializer(serializers.ModelSerializer):
         for member in household_members:
             incomes = member.pop('income_streams')
             household_member = HouseholdMember.objects.create(**member, screen=instance)
+            insurance = member.pop('insurance')
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
+            Insurance.objects.create(**insurance, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=instance)
         instance.refresh_from_db()

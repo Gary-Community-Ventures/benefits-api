@@ -37,7 +37,7 @@ class FamilyPlanningServices():
         # Does not have insurance
         has_no_insurance = False
         for member in self.screen.household_members.all():
-            has_no_insurance = member.has_insurance_types(('none', 'dont_know')) or has_no_insurance
+            has_no_insurance = member.insurance.has_insurance_types(('none', 'dont_know')) or has_no_insurance
         self._condition(has_no_insurance, messages.has_no_insurance())
 
         # Medicade eligibility
