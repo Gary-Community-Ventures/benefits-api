@@ -52,7 +52,6 @@ def admin_view(request):
             auto_translations = Translate().bulk_translate(['__all__'], [text])[text]
 
             for [language, auto_text] in auto_translations.items():
-                print(language, auto_text)
                 Translation.objects.edit_translation_by_id(translation.id, language, auto_text, False)
 
             response = HttpResponse()
