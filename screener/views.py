@@ -28,6 +28,7 @@ from .webhooks import eligibility_hooks
 import math
 import json
 from datetime import datetime, timezone
+from django.conf import settings
 
 
 def index(request):
@@ -180,7 +181,8 @@ def eligibility_results(screen, batch=False):
         'oap',
         'acp',
         'lifeline',
-        'pell_grant'
+        'pell_grant',
+        # 'chp', wait until Medicaid Income is fixed to use CHP+ from PE
     )
 
     def sort_first(program):
@@ -269,6 +271,7 @@ def eligibility_results(screen, batch=False):
 
 
 def default_message(translation):
+    translation.set_current_language(settings.LANGUAGE_CODE)
     return {
         'default_message': translation.text,
         'label': translation.label

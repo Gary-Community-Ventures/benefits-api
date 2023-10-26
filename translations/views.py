@@ -281,7 +281,7 @@ def programs_filter_view(request):
 
 class NewNavigatorForm(forms.Form):
     label = forms.CharField(max_length=50)
-    phone_number = PhoneNumberField()
+    phone_number = PhoneNumberField(required=False)
 
 
 @login_required(login_url='/admin/login')
