@@ -12,19 +12,12 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class InsuranceSerializer(serializers.ModelSerializer):
-    dont_know = serializers.BooleanField()
-    none = serializers.BooleanField()
-    employer = serializers.BooleanField()
-    private = serializers.BooleanField()
-    chp = serializers.BooleanField()
-    medicaid = serializers.BooleanField()
-    medicare = serializers.BooleanField()
-    emergency_medicaid = serializers.BooleanField()
-    family_planning = serializers.BooleanField()
+    id = serializers.ReadOnlyField()
 
     class Meta:
         model = Insurance
         fields = '__all__'
+        read_only_fields = ('household_member',)
 
 
 class IncomeStreamSerializer(serializers.ModelSerializer):
@@ -183,8 +176,8 @@ class ScreenSerializer(serializers.ModelSerializer):
         Expense.objects.filter(screen=instance).delete()
         for member in household_members:
             incomes = member.pop('income_streams')
-            household_member = HouseholdMember.objects.create(**member, screen=instance)
             insurance = member.pop('insurance')
+            household_member = HouseholdMember.objects.create(**member, screen=instance)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
             Insurance.objects.create(**insurance, household_member=household_member)
