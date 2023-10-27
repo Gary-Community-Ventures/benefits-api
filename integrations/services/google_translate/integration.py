@@ -3,6 +3,7 @@ from decouple import config
 import json
 from google.oauth2 import service_account
 from google.cloud import translate_v2 as translate
+import html
 
 
 class Translate():
@@ -25,7 +26,7 @@ class Translate():
 
         result = self.client.translate(text, target_language=lang, source_language=Translate.main_language)
 
-        return result['translatedText']
+        return html.unescape(result['translatedText'])
 
     def bulk_translate(self, langs: list[str], texts: list[str]):
         '''
@@ -43,6 +44,6 @@ class Translate():
             results = self.client.translate(texts, target_language=lang, source_language=Translate.main_language)
 
             for result in results:
-                translations[result['input']][lang] = result['translatedText']
+                translations[result['input']][lang] = html.unescape(result['translatedText'])
 
         return translations
