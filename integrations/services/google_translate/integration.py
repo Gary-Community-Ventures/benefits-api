@@ -26,7 +26,7 @@ class Translate():
 
         result = self.client.translate(text, target_language=lang, source_language=Translate.main_language)
 
-        return html.unescape(result['translatedText'])
+        return self.format_text(result)
 
     def bulk_translate(self, langs: list[str], texts: list[str]):
         '''
@@ -44,6 +44,12 @@ class Translate():
             results = self.client.translate(texts, target_language=lang, source_language=Translate.main_language)
 
             for result in results:
-                translations[result['input']][lang] = html.unescape(result['translatedText'])
+                translations[result['input']][lang] = self.format_text(result)
 
         return translations
+
+    def format_text(self, result):
+        leading_spaces = len(result['input']) - len(result['input'].lstrip(' '))
+        trailing_spaces = len(result['input']) - len(result['input'].rstrip(' '))
+
+        return ' ' * leading_spaces + html.unescape(result['translatedText']) + ' ' * trailing_spaces
