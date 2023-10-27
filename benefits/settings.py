@@ -154,7 +154,9 @@ LANGUAGE_CODE = 'en-us'
 LANGUAGES = (
     ('en-us', _("US English")),
     ('es', _('Spanish')),
-    ('vi', _('Vietnamese'))
+    ('vi', _('Vietnamese')),
+    ('fr', _('French')),
+    ('am', _('Amharic')),
 )
 
 TIME_ZONE = 'UTC'
@@ -169,7 +171,9 @@ PARLER_LANGUAGES = {
     None: (
         {'code': 'en-us'},
         {'code': 'es'},
-        {'code': 'vi'}
+        {'code': 'vi'},
+        {'code': 'fr'},
+        {'code': 'am'},
     ),
     'default': {
         'fallbacks': ['en-us'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE
