@@ -191,16 +191,16 @@ class ScreenSerializer(serializers.ModelSerializer):
 
 
 class TranslationSerializer(serializers.Serializer):
-    default_message: serializers.CharField()
-    label: serializers.CharField()
+    default_message = serializers.CharField()
+    label = serializers.CharField()
 
 
 class NavigatorSerializer(serializers.Serializer):
-    name: TranslationSerializer()
-    phone_number: serializers.CharField()
-    email: TranslationSerializer()
-    assistance_link: TranslationSerializer()
-    description: TranslationSerializer()
+    name = TranslationSerializer()
+    phone_number = serializers.CharField()
+    email = TranslationSerializer()
+    assistance_link = TranslationSerializer()
+    description = TranslationSerializer()
 
 
 class EligibilitySerializer(serializers.Serializer):
@@ -232,3 +232,18 @@ class EligibilityTranslationSerializer(serializers.Serializer):
 
     class Meta:
         fields = ('translations',)
+
+
+class UrgentNeedSerializer(serializers.Serializer):
+    name = TranslationSerializer()
+    description = TranslationSerializer()
+    link = TranslationSerializer()
+    type = TranslationSerializer()
+    phone_number = serializers.CharField()
+
+
+class ResultsSerializer(serializers.Serializer):
+    programs = EligibilitySerializer(many=True)
+    urgent_needs = UrgentNeedSerializer(many=True)
+    screen_id = serializers.CharField()
+    default_language = serializers.CharField()

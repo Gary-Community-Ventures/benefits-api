@@ -19,12 +19,14 @@ from screener.serializers import (
     ExpenseSerializer,
     EligibilitySerializer,
     MessageSerializer,
+    ResultsSerializer,
 )
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 import programs.programs.urgent_needs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program, Referrer
 from django.core.exceptions import ObjectDoesNotExist
 from .webhooks import eligibility_hooks
+from drf_yasg.utils import swagger_auto_schema
 import math
 import json
 from datetime import datetime, timezone
@@ -106,6 +108,7 @@ class EligibilityView(views.APIView):
 
 class EligibilityTranslationView(views.APIView):
 
+    @swagger_auto_schema(responses={200: ResultsSerializer()})
     def get(self, request, id):
         screen = Screen.objects.get(uuid=id)
         eligibility = eligibility_results(screen)
@@ -182,7 +185,7 @@ def eligibility_results(screen, batch=False):
         'acp',
         'lifeline',
         'pell_grant',
-        # 'chp', wait until Medicaid Income is fixed to use CHP+ from PE
+        'chp',
     )
 
     def sort_first(program):
