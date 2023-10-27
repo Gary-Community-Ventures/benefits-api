@@ -274,7 +274,7 @@ def policy_engine_prepare_params(screen):
     for member in household_members:
         if member.relationship in ('headOfHousehold', 'spouse'):
             pell_grant_primary_income += int(member.calc_gross_income('yearly', ['all']))
-        else:
+        if member.student:
             pell_grant_dependents_in_college += 1
 
     policy_engine_params = {
@@ -379,9 +379,7 @@ def policy_engine_prepare_params(screen):
             "pell_grant": {"2023": None},
             "pell_grant_dependent_available_income": {"2023": int(household_member.calc_gross_income('yearly', ['all']))},
             "pell_grant_countable_assets": {"2023": int(screen.household_assets)},
-            "pell_grant_head_allowances": {"2023": 10_000},
-            "pell_grant_dependent_other_allowances": {"2023": 5_000},
-            "cost_of_attending_college": {"2023": 10_000 * (household_member.age >= 16 and household_member.student)},
+            "cost_of_attending_college": {"2023": 22_288 * (household_member.age >= 16 and household_member.student)},
             "pell_grant_months_in_school": {"2023": 9},
             "co_chp_eligible": {"2023": None},
         }
