@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models.signals import post_save
 from django.utils.translation import override
-from screener.communications import email_pdf, text_link
+from integrations.services.communications import email_link, text_link
 from integrations.services.hubspot.integration import upsert_user_hubspot
 from .models import (
     Message,
@@ -63,7 +63,7 @@ def send_screener_email(sender, instance, created, **kwargs):
                 language = instance.screen.request_language_code
 
             with override(language):
-                email_pdf(instance.email, instance.screen.id, language)
+                email_link(instance.email, instance.screen.id, language)
     if created and instance.type == 'textScreen':
         if instance.cell and instance.screen:
             language = 'en-us'
