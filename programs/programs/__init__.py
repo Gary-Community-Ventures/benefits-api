@@ -22,6 +22,7 @@ from programs.programs.universal_preschool.calculator import calculate_universal
 from programs.programs.my_spark.calculator import calculate_my_spark
 from programs.programs.ssdi.calculator import calculate_ssdi
 from .low_wage_covid_relief.calculator import calculate_low_wage_covid_relief
+from .basic_cash_assistance.calculator import calculate_basic_cash_assistance
 
 calculators = {
     "acp": calculate_affordable_connectivity,
@@ -48,4 +49,5 @@ calculators = {
     "myspark": calculate_my_spark,
     "ssdi": calculate_ssdi,
     "lwcr": calculate_low_wage_covid_relief,
+    "bca": calculate_basic_cash_assistance,
 }
