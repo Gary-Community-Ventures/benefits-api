@@ -219,7 +219,7 @@ class Screen(models.Model):
         return relationship_map
 
     def has_insurance_types(self, types, strict=True):
-        for member in self.household_members:
+        for member in self.household_members.all():
             if member.insurance.has_insurance_types(types, strict):
                 return True
 
