@@ -49,5 +49,5 @@ calculators = {
     "myspark": calculate_my_spark,
     "ssdi": calculate_ssdi,
     "lwcr": calculate_low_wage_covid_relief,
-    "bca": calculate_basic_cash_assistance,
+    'bca': calculate_basic_cash_assistance,
 }
