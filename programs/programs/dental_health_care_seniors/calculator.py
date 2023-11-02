@@ -35,7 +35,7 @@ class DentalHealthCareSeniors():
     def calc_eligibility(self):
         self._member_eligibility(
             self.screen.household_members.all(),
-            (
+            [
                 (
                     lambda m: m.insurance.has_insurance_type(('medicaid', 'private')),
                     messages.must_not_have_benefit('Medicaid')
@@ -44,7 +44,7 @@ class DentalHealthCareSeniors():
                     lambda m: m.age > DentalHealthCareSeniors.min_age,
                     messages.older_than(DentalHealthCareSeniors.min_age)
                 )
-            )
+            ]
         )
 
         # Income test
