@@ -161,7 +161,7 @@ def eligibility_policy_engine(screen):
             eligibility['oap']['estimated_value'] += pvalue['co_oap']['2023']
 
         # CHP+
-        if pvalue['co_chp_eligible']['2023'] > 0:
+        if pvalue['co_chp_eligible']['2023'] > 0 and screen.has_insurance_types(('none',)):
             eligibility['chp']['eligible'] = True
             eligibility['chp']['estimated_value'] += 200 * 12
 

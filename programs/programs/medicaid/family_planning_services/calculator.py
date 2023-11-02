@@ -40,7 +40,7 @@ class FamilyPlanningServices():
             has_no_insurance = member.insurance.has_insurance_types(('none', 'dont_know')) or has_no_insurance
         self._condition(has_no_insurance, messages.has_no_insurance())
 
-        # Medicade eligibility
+        # Not Medicade eligibility
         is_medicaid_eligible = self.screen.has_benefit('medicaid')
         for benefit in self.data:
             if benefit["name_abbreviated"] == 'medicaid':
@@ -53,12 +53,12 @@ class FamilyPlanningServices():
         )
 
         # Income
-        income_limit = int(FamilyPlanningServices.fpl_percent * self.fpl[self.screen.household_size] / 12)
-        gross_income = int(self.screen.calc_gross_income('monthly', ['all']))
+        income_limit = int(FamilyPlanningServices.fpl_percent * self.fpl[self.screen.household_size])
+        gross_income = int(self.screen.calc_gross_income('yearly', ['all']))
 
         self._condition(
             gross_income < income_limit,
-            messages.income(gross_income * 12, income_limit * 12)
+            messages.income(gross_income, income_limit)
         )
 
     def calc_value(self):
