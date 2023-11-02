@@ -51,7 +51,7 @@ calculators = {
     'upk': calculate_universal_preschool,
     'myspark': calculate_my_spark,
     'ssdi': calculate_ssdi,
-    "lwcr": calculate_low_wage_covid_relief,
+    'lwcr': calculate_low_wage_covid_relief,
     'cwd_medicaid': calculate_medicaid_child_with_disability,
     'awd_medicaid': calculate_medicaid_adult_with_disability,
     'emergency_medicaid': calculate_emergency_medicaid,
