@@ -37,7 +37,7 @@ class DentalHealthCareSeniors():
             self.screen.household_members.all(),
             [
                 (
-                    lambda m: m.insurance.has_insurance_type(('medicaid', 'private')),
+                    lambda m: m.insurance.has_insurance_types(('medicaid', 'private')),
                     messages.must_not_have_benefit('Medicaid')
                 ),
                 (

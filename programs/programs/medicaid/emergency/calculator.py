@@ -42,7 +42,7 @@ class EmergencyMedicaid():
 
         self._member_eligibility(
             self.screen.household_members.all(),
-            (
+            [
                 (
                     lambda m: m.insurance.has_insurance_types(('none',)),
                     messages.has_no_insurance()
@@ -51,7 +51,7 @@ class EmergencyMedicaid():
                     lambda m: m.pregnant,
                     messages.is_pregnant()
                 )
-            )
+            ]
         )
 
     def calc_value(self):

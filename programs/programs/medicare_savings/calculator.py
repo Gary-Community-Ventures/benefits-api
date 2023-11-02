@@ -60,7 +60,7 @@ class MedicareSavings():
 
         self.eligible_members = self._member_eligibility(
             members,
-            (
+            [
                 (lambda m: m.age >= 65, messages.older_than(65)),
                 (
                     lambda m: m.insurance.has_insurance_types(MedicareSavings.valid_insurance),
@@ -68,7 +68,7 @@ class MedicareSavings():
                 ),
                 (asset_limit, None),
                 (income_limit, None)
-            )
+            ]
         )
 
     def calc_value(self):

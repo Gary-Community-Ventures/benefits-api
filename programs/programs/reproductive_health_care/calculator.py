@@ -33,7 +33,7 @@ class ReproductiveHealthCare():
 
     def calc_eligibility(self):
         # No health insurance
-        has_no_hi = self.screen.has_insurance_type(('none',))
+        has_no_hi = self.screen.has_insurance_types(('none',))
         self._condition(has_no_hi,
                         messages.has_no_insurance())
 
