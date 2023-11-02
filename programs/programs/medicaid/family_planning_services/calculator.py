@@ -40,7 +40,7 @@ class FamilyPlanningServices():
             has_no_insurance = member.insurance.has_insurance_types(('none', 'dont_know')) or has_no_insurance
         self._condition(has_no_insurance, messages.has_no_insurance())
 
-        # Not Medicade eligibility
+        # Not Medicaid eligibility
         is_medicaid_eligible = self.screen.has_benefit('medicaid')
         for benefit in self.data:
             if benefit["name_abbreviated"] == 'medicaid':
