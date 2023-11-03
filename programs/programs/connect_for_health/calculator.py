@@ -45,7 +45,7 @@ class ConnectForHealth():
                         messages.must_not_have_benefit("Medicaid"))
 
         # Someone has no health insurance
-        has_no_hi = self.screen.has_types_of_insurance(['none'])
+        has_no_hi = self.screen.has_insurance_types(('none', 'private'))
         self._condition(has_no_hi,
                         messages.has_no_insurance())
 

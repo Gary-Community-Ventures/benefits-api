@@ -13,7 +13,7 @@ from programs.programs.policyengine.policyengine import eligibility_policy_engin
 # The screen is the top most container for all information collected in the
 # app and is synonymous with a household model. In addition to general
 # application fields like submission_date, it also contains non-individual
-# household fields. Screen -> HouseholdMember -> IncomeStream & Expense
+# household fields. Screen -> HouseholdMember -> IncomeStream & Expense & Insurance
 class Screen(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
     completed = models.BooleanField(null=False, blank=False)
@@ -218,39 +218,12 @@ class Screen(models.Model):
                 relationship_map[probabable_spouse] = member['id']
         return relationship_map
 
-    def has_types_of_insurance(self, types, only=False):
-        """
-        Returns True if family has an insurance in types.
-        If only=True then will return False if the family has an insurance that is not in types.
-        """
-        types_of_hi = {
-            'employer': self.has_employer_hi,
-            'private': self.has_private_hi,
-            'medicaid': self.has_medicaid_hi,
-            'medicare': self.has_medicare_hi,
-            'chp': self.has_chp_hi,
-            'none': self.has_no_hi,
-            'emergency_medicaid': False,
-            'family_planning': False,
-        }
-
-        # include new member based insurance model
+    def has_insurance_types(self, types, strict=True):
         for member in self.household_members.all():
-            if member.insurance == 'dont_know':
-                types_of_hi['none'] = True
-                continue
+            if member.insurance.has_insurance_types(types, strict):
+                return True
 
-            types_of_hi[member.insurance] = True
-
-        has_type = False
-        for insurance in types_of_hi:
-            if not types_of_hi[insurance]:
-                continue
-            if insurance in types:
-                has_type = True
-            elif only:
-                return False
-        return has_type
+        return False
 
     def has_benefit(self, name_abbreviated):
         name_map = {
@@ -263,11 +236,9 @@ class Screen(models.Model):
             'coeitc': self.has_coeitc,
             'nslp': self.has_nslp,
             'ctc': self.has_ctc,
-            'medicaid': self.has_medicaid or self.has_medicaid_hi,
             'rtdlive': self.has_rtdlive,
             'cccap': self.has_cccap,
             'mydenver': self.has_mydenver,
-            'chp': self.has_chp or self.has_chp_hi,
             'ccb': self.has_ccb,
             'ssi': self.has_ssi,
             'andcs': self.has_andcs,
@@ -283,10 +254,13 @@ class Screen(models.Model):
             'upk': self.has_upk,
             'ssdi': self.has_ssdi,
             'pell_grant': self.has_pell_grant,
+            'medicaid': self.has_medicaid or self.has_medicaid_hi,
             'medicare': self.has_medicare_hi,
+            'chp': self.has_chp or self.has_chp_hi,
         }
 
-        has_insurance = self.has_types_of_insurance([name_abbreviated])
+        has_insurance = self.has_insurance_types((name_abbreviated,), strict=False)
+
         if name_abbreviated in name_map:
             has_benefit = name_map[name_abbreviated] and self.has_benefits == 'true'
         else:
@@ -394,19 +368,6 @@ class HouseholdMember(models.Model):
     disability_medicaid = models.BooleanField(blank=True, null=True)
     has_income = models.BooleanField(blank=True, null=True)
     has_expenses = models.BooleanField(blank=True, null=True)
-
-    class InsuranceType(models.TextChoices):
-        DONT_KNOW = 'dont_know'
-        NONE = 'none'
-        EMPLOYER = 'employer'
-        PRIVATE = 'private'
-        CHP = 'chp'
-        MEDICAID = 'medicaid'  # low income health insurance
-        MEDICARE = 'medicare'  # elderly health insurance
-        EMERGENCY_MEDICAID = 'emergency_medicaid'
-        FAMILY_PLANNING = 'family_planning'
-
-    insurance = models.CharField(max_length=64, choices=InsuranceType.choices, default=InsuranceType.DONT_KNOW)
 
     def calc_gross_income(self, frequency, types):
         gross_income = 0
@@ -537,6 +498,53 @@ class Expense(models.Model):
             yearly = self.amount
 
         return yearly
+
+
+class Insurance(models.Model):
+    household_member = models.OneToOneField(
+        HouseholdMember,
+        related_name='insurance',
+        null=False,
+        on_delete=models.CASCADE
+    )
+    dont_know = models.BooleanField(default=True)
+    none = models.BooleanField(default=False)
+    employer = models.BooleanField(default=False)
+    private = models.BooleanField(default=False)
+    chp = models.BooleanField(default=False)
+    medicaid = models.BooleanField(default=False)  # low income health insurance
+    medicare = models.BooleanField(default=False)  # elderly health insurance
+    emergency_medicaid = models.BooleanField(default=False)
+    family_planning = models.BooleanField(default=False)
+
+    def has_insurance_types(self, types, strict=True):
+        if 'none' in types:
+            types = (*types, 'dont_know')
+
+        insurance = self.insurance_map()
+        for hi_type in types:
+            if hi_type not in insurance:
+                if strict:
+                    raise KeyError(f'{hi_type} not in insurance types')
+                continue
+
+            if insurance[hi_type]:
+                return True
+
+        return False
+
+    def insurance_map(self):
+        return {
+            'dont_know': self.dont_know,
+            'none': self.none,
+            'employer': self.employer,
+            'private': self.private,
+            'chp': self.chp,
+            'medicaid': self.medicaid,
+            'medicare': self.medicare,
+            'emergency_medicaid': self.emergency_medicaid,
+            'family_planning': self.family_planning,
+        }
 
 
 # A point in time log table to capture the exact eligibility and value results
