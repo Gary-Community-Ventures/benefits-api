@@ -56,6 +56,10 @@ class Command(BaseCommand):
         'denver',
     ]
     programs = [
+        {'abbr': 'cwd_medicaid', 'external': 'cwd_medicaid'},
+        {'abbr': 'awd_medicaid', 'external': 'awd_medivaid'},
+        {'abbr': 'emergency_medicaid', 'external': 'emergency_medicaid'},
+        {'abbr': 'medicare_savings', 'external': 'medicare_savings'},
         {'abbr': 'ssi', 'external': 'ssi'},
         {'abbr': 'trua', 'external': 'trua'},
         {'abbr': 'rhc', 'external': 'rhc'},

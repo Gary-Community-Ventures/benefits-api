@@ -1,4 +1,4 @@
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message
+from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 
@@ -9,6 +9,15 @@ class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = '__all__'
+
+
+class InsuranceSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Insurance
+        fields = '__all__'
+        read_only_fields = ('household_member',)
 
 
 class IncomeStreamSerializer(serializers.ModelSerializer):
@@ -31,6 +40,7 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
 class HouseholdMemberSerializer(serializers.ModelSerializer):
     income_streams = IncomeStreamSerializer(many=True)
+    insurance = InsuranceSerializer()
 
     class Meta:
         model = HouseholdMember
@@ -151,9 +161,11 @@ class ScreenSerializer(serializers.ModelSerializer):
         screen.set_screen_is_test()
         for member in household_members:
             incomes = member.pop('income_streams')
+            insurance = member.pop('insurance')
             household_member = HouseholdMember.objects.create(**member, screen=screen)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
+            Insurance.objects.create(**insurance, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=screen)
         return screen
@@ -166,9 +178,11 @@ class ScreenSerializer(serializers.ModelSerializer):
         Expense.objects.filter(screen=instance).delete()
         for member in household_members:
             incomes = member.pop('income_streams')
+            insurance = member.pop('insurance')
             household_member = HouseholdMember.objects.create(**member, screen=instance)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
+            Insurance.objects.create(**insurance, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=instance)
         instance.refresh_from_db()

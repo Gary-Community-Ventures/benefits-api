@@ -1,10 +1,10 @@
 import programs.programs.messages as messages
 
 
-def calculate_dental_health_care_seniors(screen, data, program):
-    cdhcs = DentalHealthCareSeniors(screen, program)
-    eligibility = cdhcs.eligibility
-    value = cdhcs.value
+def calculate_emergency_medicaid(screen, data, program):
+    emergency_medicaid = EmergencyMedicaid(screen, data)
+    eligibility = emergency_medicaid.eligibility
+    value = emergency_medicaid.value
 
     calculation = {
         'eligibility': eligibility,
@@ -14,13 +14,12 @@ def calculate_dental_health_care_seniors(screen, data, program):
     return calculation
 
 
-class DentalHealthCareSeniors():
-    amount = 80
-    min_age = 60
+class EmergencyMedicaid():
+    amount = 9_540
 
-    def __init__(self, screen, program):
+    def __init__(self, screen, data):
         self.screen = screen
-        self.fpl = program.fpl.as_dict()
+        self.data = data
 
         self.eligibility = {
             "eligible": True,
@@ -33,28 +32,30 @@ class DentalHealthCareSeniors():
         self.calc_value()
 
     def calc_eligibility(self):
+        # Does qualify for Medicaid
+        is_medicaid_eligible = False
+        for benefit in self.data:
+            if benefit["name_abbreviated"] == 'medicaid':
+                is_medicaid_eligible = benefit["eligible"]
+                break
+        self._condition(is_medicaid_eligible, messages.must_have_benefit('Medicaid'))
+
         self._member_eligibility(
             self.screen.household_members.all(),
             [
                 (
-                    lambda m: m.insurance.has_insurance_types(('medicaid', 'private')),
-                    messages.must_not_have_benefit('Medicaid')
+                    lambda m: m.insurance.has_insurance_types(('none',)),
+                    messages.has_no_insurance()
                 ),
                 (
-                    lambda m: m.age > DentalHealthCareSeniors.min_age,
-                    messages.older_than(DentalHealthCareSeniors.min_age)
+                    lambda m: m.pregnant,
+                    messages.is_pregnant()
                 )
             ]
         )
 
-        # Income test
-        gross_income = int(self.screen.calc_gross_income("monthly", ["all"]))
-        income_band = int(2.5 * self.fpl[self.screen.household_size]/12)
-        self._condition(gross_income <= income_band,
-                        messages.income(gross_income, income_band))
-
     def calc_value(self):
-        self.value = DentalHealthCareSeniors.amount * self.screen.num_adults(age_max=DentalHealthCareSeniors.min_age) * 12
+        self.value = EmergencyMedicaid.amount
 
     def _failed(self, msg):
         self.eligibility["eligible"] = False

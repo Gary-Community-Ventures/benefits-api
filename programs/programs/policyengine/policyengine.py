@@ -140,6 +140,7 @@ def eligibility_policy_engine(screen):
 
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
 
+        print(pvalue['pell_grant_efc']['2023'])
         # PELL GRANT
         if pvalue['pell_grant']['2023'] > 0:
             eligibility['pell_grant']['eligible'] = True
@@ -161,7 +162,7 @@ def eligibility_policy_engine(screen):
             eligibility['oap']['estimated_value'] += pvalue['co_oap']['2023']
 
         # CHP+
-        if pvalue['co_chp_eligible']['2023'] > 0:
+        if pvalue['co_chp_eligible']['2023'] > 0 and screen.has_insurance_types(('none',)):
             eligibility['chp']['eligible'] = True
             eligibility['chp']['estimated_value'] += 200 * 12
 
@@ -381,6 +382,7 @@ def policy_engine_prepare_params(screen):
             "pell_grant_countable_assets": {"2023": int(screen.household_assets)},
             "cost_of_attending_college": {"2023": 22_288 * (household_member.age >= 16 and household_member.student)},
             "pell_grant_months_in_school": {"2023": 9},
+            "pell_grant_efc": {"2023": None},
             "co_chp_eligible": {"2023": None},
         }
 

@@ -16,7 +16,7 @@ def calculate_family_planning_services(screen, data, program):
 
 class FamilyPlanningServices():
     amount = 404
-    child_max_age = 18
+    fpl_percent = 2.6
 
     def __init__(self, screen, data, program):
         self.screen = screen
@@ -34,29 +34,32 @@ class FamilyPlanningServices():
         self.calc_value()
 
     def calc_eligibility(self):
-        # Medicade eligibility
-        is_medicaid_eligible = False
+        # Does not have insurance
+        has_no_insurance = False
+        for member in self.screen.household_members.all():
+            has_no_insurance = member.insurance.has_insurance_types(('none', 'dont_know')) or has_no_insurance
+        self._condition(has_no_insurance, messages.has_no_insurance())
+
+        # Not Medicaid eligible
+        is_medicaid_eligible = self.screen.has_benefit('medicaid')
         for benefit in self.data:
             if benefit["name_abbreviated"] == 'medicaid':
-                is_medicaid_eligible = benefit["eligible"]
+                is_medicaid_eligible = benefit["eligible"] or is_medicaid_eligible
                 break
 
-        self._condition(not (self.screen.has_benefit('medicaid') or is_medicaid_eligible),
-                        messages.must_not_have_benefit('Medicaid'))
-
-        # Child or Pregnant
-        eligible_children = self.screen.num_children(age_max=FamilyPlanningServices.child_max_age,
-                                                     include_pregnant=True)
-        self._condition(eligible_children >= 1,
-                        messages.child(0, FamilyPlanningServices.child_max_age))
+        self._condition(
+            not is_medicaid_eligible,
+            messages.must_not_have_benefit('Medicaid')
+        )
 
         # Income
-        income_limit = int(2.6 * self.fpl[self.screen.household_size]/12)
-        income_types = ["wages", "selfEmployment"]
-        gross_income = int(self.screen.calc_gross_income('monthly', income_types))
+        income_limit = int(FamilyPlanningServices.fpl_percent * self.fpl[self.screen.household_size])
+        gross_income = int(self.screen.calc_gross_income('yearly', ['all']))
 
-        self._condition(gross_income < income_limit,
-                        messages.income(gross_income, income_limit))
+        self._condition(
+            gross_income < income_limit,
+            messages.income(gross_income, income_limit)
+        )
 
     def calc_value(self):
         self.value = FamilyPlanningServices.amount

@@ -36,13 +36,11 @@ class OmniSalud():
         # Income test
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
         income_band = OmniSalud.family_4_limit if self.screen.household_size >= 4 else OmniSalud.individual_limit
-        self._condition(gross_income <= income_band,
-                        messages.income(gross_income, income_band))
+        self._condition(gross_income <= income_band, messages.income(gross_income, income_band))
 
         # No health insurance
-        has_no_hi = self.screen.has_types_of_insurance(['none'])
-        self._condition(has_no_hi,
-                        messages.has_no_insurance())
+        has_no_hi = self.screen.has_insurance_types(('none',))
+        self._condition(has_no_hi, messages.has_no_insurance())
 
     def calc_value(self):
         child_value = OmniSalud.amount['child'] * self.screen.num_children()
