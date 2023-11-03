@@ -26,6 +26,7 @@ from .medicaid.child_with_disability.calculator import calculate_medicaid_child_
 from .medicaid.adult_with_disability.calculator import calculate_medicaid_adult_with_disability
 from .medicaid.emergency.calculator import calculate_emergency_medicaid
 from .medicare_savings.calculator import calculate_medicare_savings
+from .basic_cash_assistance.calculator import calculate_basic_cash_assistance
 
 calculators = {
     'acp': calculate_affordable_connectivity,
@@ -56,4 +57,5 @@ calculators = {
     'awd_medicaid': calculate_medicaid_adult_with_disability,
     'emergency_medicaid': calculate_emergency_medicaid,
     'medicare_savings': calculate_medicare_savings,
+    'bca': calculate_basic_cash_assistance,
 }
