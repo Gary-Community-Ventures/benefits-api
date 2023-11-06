@@ -419,6 +419,9 @@ class HouseholdMember(models.Model):
                     return {"is_married": True, "married_to": member}
         return {"is_married": False}
 
+    def has_disability(self):
+        return self.disabled or self.visually_impaired or self.long_term_disability
+
 
 # HouseholdMember income streams
 class IncomeStream(models.Model):

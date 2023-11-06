@@ -38,7 +38,7 @@ class Ssdi():
         lowest_income = float('inf')
         self.members_eligible = 0
         for member in self.screen.household_members.all():
-            member_is_disabled = member.disabled or member.visually_impaired
+            member_is_disabled = member.has_disability()
             someone_is_disabled = someone_is_disabled or member_is_disabled
 
             income_limit = Ssdi.income_limit_blind if member.visually_impaired else Ssdi.income_limit

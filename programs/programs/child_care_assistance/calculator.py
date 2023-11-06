@@ -78,7 +78,7 @@ def value_child_care_assistance(screen):
             value += afterschool_value
         elif household_member.age >= 13 and \
                 household_member.age <= 19 and \
-                household_member.disabled:
+                household_member.has_disability():
             value += afterschool_value
 
     return value
@@ -121,7 +121,7 @@ def num_cccap_children(screen):
             children += 1
         elif household_member.age >= 13 and \
                 household_member.age <= 19 and \
-                household_member.disabled:
+                household_member.has_disability():
             children += 1
 
     return children
