@@ -278,7 +278,6 @@ def policy_engine_prepare_params(screen):
             pell_grant_dependents_in_college += 1
 
     policy_engine_params = {
-        "snap_earned_income_deduction": 0,
         "household": {
             "people": {},
             "tax_units": {
