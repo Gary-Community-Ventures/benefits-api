@@ -55,7 +55,7 @@ class MedicaidChildWithDisability():
 
         self.eligible_members = self._member_eligibility(self.screen.household_members.all(), [
             (lambda m: m.age <= MedicaidChildWithDisability.max_age, messages.child()),
-            (lambda m: m.disabled or m.visually_impaired, messages.has_disability()),
+            (lambda m: m.long_term_disability or m.visually_impaired, messages.has_disability()),
             (lambda m: m.insurance.has_insurance_types(('employer', 'private', 'none', 'dont_know')), None),
             (lambda m: not (m.calc_gross_income('yearly', ['earned']) >= 0 and m.age >= 16), None),
         ])
