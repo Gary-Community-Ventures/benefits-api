@@ -89,7 +89,7 @@ class Screen(models.Model):
 
         for household_member in household_members:
             gross_income += household_member.calc_gross_income(frequency, types)
-        return gross_income
+        return float(gross_income)
 
     def calc_expenses(self, frequency, types):
         expenses = self.expenses.all()
@@ -102,7 +102,7 @@ class Screen(models.Model):
                 elif frequency == "yearly":
                     total_expense += expense.yearly()
 
-        return total_expense
+        return float(total_expense)
 
     def has_expense(self, expense_types):
         """
@@ -180,7 +180,7 @@ class Screen(models.Model):
             expenses = self.calc_expenses(frequency, expense_types)
             net_income = gross_income - expenses
 
-        return net_income
+        return float(net_income)
 
     def relationship_map(self):
         relationship_map = {}
@@ -384,7 +384,7 @@ class HouseholdMember(models.Model):
                     gross_income += income_stream.monthly()
                 elif frequency == "yearly":
                     gross_income += income_stream.yearly()
-        return gross_income
+        return float(gross_income)
 
     def calc_expenses(self, frequency, types):
         total_expense = 0
@@ -396,7 +396,7 @@ class HouseholdMember(models.Model):
                     total_expense += expense.monthly()
                 elif frequency == "yearly":
                     total_expense += expense.yearly()
-        return total_expense
+        return float(total_expense)
 
     def calc_net_income(self, frequency, income_types, expense_types):
         net_income = None
@@ -405,7 +405,7 @@ class HouseholdMember(models.Model):
             expenses = self.calc_expenses(frequency, expense_types)
             net_income = gross_income - expenses
 
-        return net_income
+        return float(net_income)
 
     def is_married(self):
         if self.relationship in ('spouse', 'domesticPartner'):
