@@ -240,7 +240,7 @@ class Screen(models.Model):
             'cccap': self.has_cccap,
             'mydenver': self.has_mydenver,
             'ccb': self.has_ccb,
-            'ssi': self.has_ssi,
+            'ssi': self.has_ssi or self.calc_gross_income('yearly', ('sSI',)) > 0,
             'andcs': self.has_andcs,
             'chs': self.has_chs,
             'cpcr': self.has_cpcr,
@@ -252,7 +252,7 @@ class Screen(models.Model):
             'oap': self.has_oap,
             'coctc': self.has_coctc,
             'upk': self.has_upk,
-            'ssdi': self.has_ssdi,
+            'ssdi': self.has_ssdi or self.calc_gross_income('yearly', ('sSDisability',)) > 0,
             'pell_grant': self.has_pell_grant,
             'medicaid': self.has_medicaid or self.has_medicaid_hi,
             'medicare': self.has_medicare_hi,
@@ -262,7 +262,7 @@ class Screen(models.Model):
         has_insurance = self.has_insurance_types((name_abbreviated,), strict=False)
 
         if name_abbreviated in name_map:
-            has_benefit = name_map[name_abbreviated] and self.has_benefits == 'true'
+            has_benefit = name_map[name_abbreviated]
         else:
             has_benefit = False
 
