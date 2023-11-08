@@ -187,9 +187,8 @@ class Screen(models.Model):
 
         all_members = self.household_members.values()
         for member in all_members:
-            if member['id'] in relationship_map:
-                if relationship_map[member['id']] is not None:
-                    continue
+            if member['id'] in relationship_map and relationship_map[member['id']] is not None:
+                continue
 
             relationship = member['relationship']
             probabable_spouse = None
@@ -214,7 +213,7 @@ class Screen(models.Model):
                         probabable_spouse = other_member['id']
                         break
             relationship_map[member['id']] = probabable_spouse
-            if probabable_spouse is None:
+            if probabable_spouse is not None:
                 relationship_map[probabable_spouse] = member['id']
         return relationship_map
 

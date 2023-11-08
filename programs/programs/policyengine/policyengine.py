@@ -341,7 +341,8 @@ def policy_engine_prepare_params(screen):
                     "co_tanf_countable_earned_income_grant_standard": {"2023": None},
                     "broadband_cost": {"2023": 500},
                 }
-            }
+            },
+            "marital_units": {}
         }
     }
 
@@ -396,5 +397,9 @@ def policy_engine_prepare_params(screen):
         policy_engine_params['household']['families']['family']['members'].append(member_id)
         policy_engine_params['household']['households']['household']['members'].append(member_id)
         policy_engine_params['household']['spm_units']['spm_unit']['members'].append(member_id)
+
+    for member_1, member_2 in screen.relationship_map().items():
+        marital_unit = (str(member_1), str(member_2)) if member_2 is not None else (str(member_1),)
+        policy_engine_params['household']['marital_units']['-'.join(marital_unit)] = {'members': marital_unit}
 
     return policy_engine_params
