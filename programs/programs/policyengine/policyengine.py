@@ -208,7 +208,7 @@ def eligibility_policy_engine(screen):
     tax_unit_data = benefit_data['tax_units']['tax_unit']
 
     # EITC
-    if tax_unit_data['earned_income_tax_credit']['2023'] > 0:
+    if tax_unit_data['eitc']['2023'] > 0:
         eligibility['eitc']['eligible'] = True
         eligibility['eitc']['estimated_value'] = tax_unit_data['earned_income_tax_credit']['2023']
 
@@ -278,13 +278,12 @@ def policy_engine_prepare_params(screen):
             pell_grant_dependents_in_college += 1
 
     policy_engine_params = {
-        "snap_earned_income_deduction": 0,
         "household": {
             "people": {},
             "tax_units": {
                 "tax_unit": {
                     "members": [],
-                    "earned_income_tax_credit": {"2023": None},
+                    "eitc": {"2023": None},
                     "co_eitc": {"2023": None},
                     "ctc": {"2023": None},
                     "tax_unit_is_joint": {"2023": screen.is_joint()},
@@ -308,8 +307,7 @@ def policy_engine_prepare_params(screen):
                     "members": [],
                     "snap_child_support_deduction": {"2023": int(screen.calc_expenses("yearly", ["childSupport"]))},
                     "snap_dependent_care_deduction": {"2023": int(screen.calc_expenses("yearly", ["childCare", "dependentCare"]))},
-                    "snap_earned_income": {"2023": None},
-                    "snap_earned_income_deduction": {"2023": int(snap_gross_income) * .2},
+                    "snap_earned_income": {"2023": screen.calc_gross_income('yearly', ['earned'])},
                     "snap_standard_deduction": {"2023": None},
                     "snap_net_income_pre_shelter": {"2023": None},
                     "snap_excess_shelter_expense_deduction": {"2023": None},
