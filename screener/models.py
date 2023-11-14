@@ -215,6 +215,7 @@ class Screen(models.Model):
             relationship_map[member['id']] = probable_spouse
             if probable_spouse is not None:
                 relationship_map[probable_spouse] = member['id']
+
         return relationship_map
 
     def has_insurance_types(self, types, strict=True):
