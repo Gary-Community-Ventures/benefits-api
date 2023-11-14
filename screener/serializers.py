@@ -56,6 +56,7 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
             'worked_in_last_18_mos',
             'visually_impaired',
             'disabled',
+            'long_term_disability',
             'veteran',
             'medicaid',
             'disability_medicaid',

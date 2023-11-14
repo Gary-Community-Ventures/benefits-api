@@ -362,6 +362,7 @@ class HouseholdMember(models.Model):
     worked_in_last_18_mos = models.BooleanField(blank=True, null=True)
     visually_impaired = models.BooleanField(blank=True, null=True)
     disabled = models.BooleanField(blank=True, null=True)
+    long_term_disability = models.BooleanField(blank=True, null=True)
     veteran = models.BooleanField(blank=True, null=True)
     medicaid = models.BooleanField(blank=True, null=True)
     disability_medicaid = models.BooleanField(blank=True, null=True)
@@ -416,6 +417,9 @@ class HouseholdMember(models.Model):
                 if member.relationship in ('spouse', 'domesticPartner'):
                     return {"is_married": True, "married_to": member}
         return {"is_married": False}
+
+    def has_disability(self):
+        return self.disabled or self.visually_impaired or self.long_term_disability
 
 
 # HouseholdMember income streams

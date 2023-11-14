@@ -59,7 +59,7 @@ class AidForDisabledBlind():
         self.possible_eligible_members = []
 
         for member in self.screen.household_members.all():
-            if member.disabled is True or member.visually_impaired is True:
+            if member.has_disability():
                 self.possible_eligible_members.append(member)
 
         self._condition(len(self.possible_eligible_members) >= 1,

@@ -59,7 +59,7 @@ class MedicaidAdultWithDisability():
 
         self.eligible_members = self._member_eligibility(self.screen.household_members.all(), [
             (lambda m: m.age >= MedicaidAdultWithDisability.min_age, messages.older_than(min_age=16)),
-            (lambda m: m.disabled or m.visually_impaired, messages.has_disability()),
+            (lambda m: m.long_term_disability or m.visually_impaired, messages.has_disability()),
             (lambda m: m.insurance.has_insurance_types(('employer', 'private', 'none', 'dont_know')), None),
             (income_eligible, None)
         ])
