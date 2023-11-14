@@ -187,35 +187,34 @@ class Screen(models.Model):
 
         all_members = self.household_members.values()
         for member in all_members:
-            if member['id'] in relationship_map:
-                if relationship_map[member['id']] is not None:
-                    continue
+            if member['id'] in relationship_map and relationship_map[member['id']] is not None:
+                continue
 
             relationship = member['relationship']
-            probabable_spouse = None
+            probable_spouse = None
 
             if relationship == 'headOfHousehold':
                 for other_member in all_members:
                     if other_member['relationship'] in ('spouse', 'domesticPartner') and\
                             other_member['id'] not in relationship_map:
-                        probabable_spouse = other_member['id']
+                        probable_spouse = other_member['id']
                         break
             elif relationship in ('spouse', 'domesticPartner'):
                 for other_member in all_members:
                     if other_member['relationship'] == 'headOfHousehold' and\
                             other_member['id'] not in relationship_map:
-                        probabable_spouse = other_member['id']
+                        probable_spouse = other_member['id']
                         break
             elif relationship in ('parent', 'fosterParent', 'stepParent', 'grandParent'):
                 for other_member in all_members:
                     if other_member['relationship'] == relationship and\
                             other_member['id'] != member['id'] and\
                             other_member['id'] not in relationship_map:
-                        probabable_spouse = other_member['id']
+                        probable_spouse = other_member['id']
                         break
-            relationship_map[member['id']] = probabable_spouse
-            if probabable_spouse is None:
-                relationship_map[probabable_spouse] = member['id']
+            relationship_map[member['id']] = probable_spouse
+            if probable_spouse is not None:
+                relationship_map[probable_spouse] = member['id']
         return relationship_map
 
     def has_insurance_types(self, types, strict=True):
