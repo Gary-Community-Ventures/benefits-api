@@ -49,7 +49,9 @@ class LowWageCovidRelief():
         self._condition(in_adams_county, messages.location())
 
         # other benefits
-        has_benefit = self.screen.has_benefit(LowWageCovidRelief.auto_eligible_benefits)
+        for benefit in LowWageCovidRelief.auto_eligible_benefits:
+            has_benefit = self.screen.has_benefit(benefit)
+
         for benefit in self.data:
             if benefit['name_abbreviated'] in LowWageCovidRelief.auto_eligible_benefits and benefit['eligible']:
                 has_benefit = True
