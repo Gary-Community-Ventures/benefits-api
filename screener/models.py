@@ -212,6 +212,7 @@ class Screen(models.Model):
                             other_member['id'] not in relationship_map:
                         probable_spouse = other_member['id']
                         break
+
             relationship_map[member['id']] = probable_spouse
             if probable_spouse is not None:
                 relationship_map[probable_spouse] = member['id']
