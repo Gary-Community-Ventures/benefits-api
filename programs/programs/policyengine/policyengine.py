@@ -398,10 +398,10 @@ def policy_engine_prepare_params(screen):
 
     already_added = set()
     for member_1, member_2 in screen.relationship_map().items():
-        if member_1 in already_added or member_2 in already_added:
+        if member_1 in already_added or member_2 in already_added or member_1 is None or member_2 is None:
             continue
 
-        marital_unit = (str(member_1), str(member_2)) if member_2 is not None else (str(member_1),)
+        marital_unit = (str(member_1), str(member_2))
         policy_engine_params['household']['marital_units']['-'.join(marital_unit)] = {'members': marital_unit}
         already_added.add(member_1)
         already_added.add(member_2)
