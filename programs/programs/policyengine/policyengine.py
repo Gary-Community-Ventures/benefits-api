@@ -210,7 +210,7 @@ def eligibility_policy_engine(screen):
     # EITC
     if tax_unit_data['eitc']['2023'] > 0:
         eligibility['eitc']['eligible'] = True
-        eligibility['eitc']['estimated_value'] = tax_unit_data['earned_income_tax_credit']['2023']
+        eligibility['eitc']['estimated_value'] = tax_unit_data['eitc']['2023']
 
     # COEITC
     if tax_unit_data['co_eitc']['2023'] > 0:
