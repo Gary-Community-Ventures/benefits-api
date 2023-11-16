@@ -105,7 +105,6 @@ def eligibility_policy_engine(screen):
 
     benefit_data = policy_engine_calculate(screen)['result']
 
-    # WIC & MEDICAID & SSI
     for pkey, pvalue in benefit_data['people'].items():
         wic_categories = {
             'NONE': 0,
@@ -344,13 +343,21 @@ def policy_engine_prepare_params(screen):
         }
     }
 
+    relationship_map = screen.relationship_map()
+    head_id = screen.get_head().id
+    spouse_id = relationship_map[head_id]
+
     for household_member in household_members:
         member_id = str(household_member.id)
 
-        if household_member.relationship == "headOfHousehold":
-            is_tax_unit_head = True
-        else:
-            is_tax_unit_head = False
+        is_tax_unit_head = member_id == str(head_id)
+        is_tax_unit_spouse = member_id == str(spouse_id)
+
+        is_tax_unit_dependent = (
+            household_member.age <= 18 or
+            (household_member.student and household_member.age <= 23) or
+            household_member.has_disability()
+        ) and not (is_tax_unit_head or is_tax_unit_spouse)
 
         ssi_assets = 0
         if household_member.age >= 19:
@@ -364,6 +371,8 @@ def policy_engine_prepare_params(screen):
             "age": {"2023": household_member.age, "2022": household_member.age},
             "is_pregnant": {"2023": household_member.pregnant},
             "is_tax_unit_head": {"2023": is_tax_unit_head, "2022": is_tax_unit_head},
+            "is_tax_unit_spouse": {"2023": is_tax_unit_spouse, "2022": is_tax_unit_spouse},
+            "is_tax_unit_dependent": {"2023": is_tax_unit_dependent, "2022": is_tax_unit_dependent},
             "wic_category": {"2023": None},
             "wic": {"2023": None},
             "medicaid": {"2023": None},
@@ -391,13 +400,15 @@ def policy_engine_prepare_params(screen):
         # if household_member.disabled and household_member.age >= 18:
             # policy_engine_params['household']['people'][member_id]['is_ssi_disabled'] = {'2023': True}
 
-        policy_engine_params['household']['tax_units']['tax_unit']['members'].append(member_id)
         policy_engine_params['household']['families']['family']['members'].append(member_id)
         policy_engine_params['household']['households']['household']['members'].append(member_id)
         policy_engine_params['household']['spm_units']['spm_unit']['members'].append(member_id)
 
+        if is_tax_unit_head or is_tax_unit_spouse or is_tax_unit_dependent:
+            policy_engine_params['household']['tax_units']['tax_unit']['members'].append(member_id)
+
     already_added = set()
-    for member_1, member_2 in screen.relationship_map().items():
+    for member_1, member_2 in relationship_map.items():
         if member_1 in already_added or member_2 in already_added or member_1 is None or member_2 is None:
             continue
 

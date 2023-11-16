@@ -277,6 +277,13 @@ class Screen(models.Model):
             (self.referrer_code is not None and self.referrer_code.lower() in referral_source_tests)
         self.save()
 
+    def get_head(self):
+        for member in self.household_members.all():
+            if member.relationship == 'headOfHousehold':
+                return member
+
+        raise Exception('No head of household')
+
     def eligibility_results(self):
         all_programs = Program.objects.all()
         screen = self
