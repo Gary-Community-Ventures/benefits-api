@@ -16,6 +16,9 @@ from decouple import config
 
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -197,5 +200,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SWAGGER_SETTINGS = {
     'SUPPORTED_SUBMIT_METHODS': ('get',)
 }
+
+# Enable logging with Sentry if it is enabled
+if config('SENTRY_DSN', None) is not None:
+    sentry_sdk.init(dsn=config('SENTRY_DSN'), integrations=[DjangoIntegration()])
 
 django_heroku.settings(locals())
