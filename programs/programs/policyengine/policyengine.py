@@ -357,6 +357,10 @@ def policy_engine_prepare_params(screen):
     for household_member in household_members:
         member_id = str(household_member.id)
 
+        member_earned_income = int(household_member.calc_gross_income('yearly', ['earned']))
+        member_unearned_income = int(household_member.calc_gross_income('yearly', ['unearned']))
+        member_all_income = int(household_member.calc_gross_income('yearly', ['all']))
+
         is_tax_unit_head = member_id == str(head_id)
         is_tax_unit_spouse = member_id == str(spouse_id)
 
@@ -364,11 +368,11 @@ def policy_engine_prepare_params(screen):
             household_member.age <= 18 or
             (household_member.student and household_member.age <= 23) or
             household_member.has_disability()
-        ) and not (is_tax_unit_head or is_tax_unit_spouse)
-
-        member_earned_income = int(household_member.calc_gross_income('yearly', ['earned']))
-        member_unearned_income = int(household_member.calc_gross_income('yearly', ['unearned']))
-        member_all_income = int(household_member.calc_gross_income('yearly', ['all']))
+        ) and (
+            member_all_income < screen.calc_gross_income('yearly', ['all']) / 2
+        ) and (
+            not (is_tax_unit_head or is_tax_unit_spouse)
+        )
 
         ssi_assets = 0
         if household_member.age >= 19:
@@ -403,22 +407,20 @@ def policy_engine_prepare_params(screen):
             "co_chp_eligible": {"2023": None},
         }
 
+        pe_household = policy_engine_params['household']
         if is_tax_unit_head or is_tax_unit_spouse:
-            policy_engine_params['household']['tax_units']['tax_unit']['pell_grant_primary_income'] += member_all_income
+            pe_household['tax_units']['tax_unit']['pell_grant_primary_income']['2023'] += member_all_income
         if household_member.pregnant:
-            policy_engine_params['household']['people'][member_id]['is_pregnant'] = {'2023': True}
+            pe_household['people'][member_id]['is_pregnant'] = {'2023': True}
         if household_member.visually_impaired:
-            policy_engine_params['household']['people'][member_id]['is_blind'] = {'2023': True}
-        # TODO: this check should use the SSI disabled income as determination
-        # if household_member.disabled and household_member.age >= 18:
-            # policy_engine_params['household']['people'][member_id]['is_ssi_disabled'] = {'2023': True}
+            pe_household['people'][member_id]['is_blind'] = {'2023': True}
 
-        policy_engine_params['household']['families']['family']['members'].append(member_id)
-        policy_engine_params['household']['households']['household']['members'].append(member_id)
-        policy_engine_params['household']['spm_units']['spm_unit']['members'].append(member_id)
+        pe_household['families']['family']['members'].append(member_id)
+        pe_household['households']['household']['members'].append(member_id)
+        pe_household['spm_units']['spm_unit']['members'].append(member_id)
 
         if is_tax_unit_head or is_tax_unit_spouse or is_tax_unit_dependent:
-            policy_engine_params['household']['tax_units']['tax_unit']['members'].append(member_id)
+            pe_household['tax_units']['tax_unit']['members'].append(member_id)
 
     already_added = set()
     for member_1, member_2 in relationship_map.items():
