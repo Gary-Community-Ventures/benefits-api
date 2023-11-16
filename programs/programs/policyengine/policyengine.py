@@ -293,7 +293,7 @@ def policy_engine_prepare_params(screen):
                     "co_eitc": {"2023": None},
                     "ctc": {"2023": None},
                     "tax_unit_is_joint": {"2023": screen.is_joint()},
-                    "pell_grant_primary_income": {"2023": int(screen.calc_gross_income('yearly', ['all']))},
+                    "pell_grant_primary_income": {"2023": 0},
                     "pell_grant_dependents_in_college": {"2023": pell_grant_dependents_in_college},
                 }
             },
@@ -366,6 +366,10 @@ def policy_engine_prepare_params(screen):
             household_member.has_disability()
         ) and not (is_tax_unit_head or is_tax_unit_spouse)
 
+        member_earned_income = int(household_member.calc_gross_income('yearly', ['earned']))
+        member_unearned_income = int(household_member.calc_gross_income('yearly', ['unearned']))
+        member_all_income = int(household_member.calc_gross_income('yearly', ['all']))
+
         ssi_assets = 0
         if household_member.age >= 19:
             ssi_assets = screen.household_assets / screen.num_adults()
@@ -384,21 +388,23 @@ def policy_engine_prepare_params(screen):
             "wic": {"2023": None},
             "medicaid": {"2023": None},
             "ssi": {"2023": None},
-            "ssi_earned_income": {"2023": int(household_member.calc_gross_income('yearly', ['earned']))},
-            "ssi_unearned_income": {"2023": int(household_member.calc_gross_income('yearly', ['unearned']))},
+            "ssi_earned_income": {"2023": member_earned_income},
+            "ssi_unearned_income": {"2023": member_unearned_income},
             "is_ssi_disabled": {"2023": household_member.has_disability()},
             "ssi_countable_resources": {"2023": int(ssi_assets)},
             "ssi_amount_if_eligible": {"2023": None},
             "co_state_supplement": {"2023": None},
             "co_oap": {"2023": None},
             "pell_grant": {"2023": None},
-            "pell_grant_dependent_available_income": {"2023": int(household_member.calc_gross_income('yearly', ['all']))},
+            "pell_grant_dependent_available_income": {"2023": member_all_income},
             "pell_grant_countable_assets": {"2023": int(screen.household_assets)},
             "cost_of_attending_college": {"2023": 22_288 * (household_member.age >= 16 and household_member.student)},
             "pell_grant_months_in_school": {"2023": 9},
             "co_chp_eligible": {"2023": None},
         }
 
+        if is_tax_unit_head or is_tax_unit_spouse:
+            policy_engine_params['household']['tax_units']['tax_unit']['pell_grant_primary_income'] += member_all_income
         if household_member.pregnant:
             policy_engine_params['household']['people'][member_id]['is_pregnant'] = {'2023': True}
         if household_member.visually_impaired:
