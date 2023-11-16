@@ -119,6 +119,13 @@ def eligibility_policy_engine(screen):
             eligibility['wic']['eligible'] = True
             eligibility['wic']['estimated_value'] += wic_categories[pvalue['wic_category']['2023']] * 12
 
+        in_tax_unit = str(pkey) in benefit_data['tax_units']['tax_unit']['members']
+
+        # The following programs use income from the tax unit,
+        # so we want to skip any members that are not in the tax unit.
+        if not in_tax_unit:
+            continue
+
         # MEDICAID
         if pvalue['medicaid']['2023'] > 0:
             eligibility['medicaid']['eligible'] = True
