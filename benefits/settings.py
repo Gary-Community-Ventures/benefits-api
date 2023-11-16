@@ -202,7 +202,7 @@ SWAGGER_SETTINGS = {
 }
 
 # Enable logging with Sentry if it is enabled
-if config('SENTRY_DNS', False):
+if config('SENTRY_DSN', None) is not None:
     sentry_sdk.init(dsn=config('SENTRY_DSN'), integrations=[DjangoIntegration()])
 
 django_heroku.settings(locals())
