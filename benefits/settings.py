@@ -201,6 +201,7 @@ SWAGGER_SETTINGS = {
     'SUPPORTED_SUBMIT_METHODS': ('get',)
 }
 
+# Enable logging with Sentry if it is enabled
 if config('SENTRY_DNS', False):
     sentry_sdk.init(dsn=config('SENTRY_DSN'), integrations=[DjangoIntegration()])
 
