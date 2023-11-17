@@ -102,6 +102,8 @@ def eligibility_policy_engine(screen):
             "estimated_value": 0
         },
     }
+    year = '2023'
+    snap_month = '2023-10'
 
     benefit_data = policy_engine_calculate(screen)['result']
 
@@ -116,12 +118,12 @@ def eligibility_policy_engine(screen):
             "BREASTFEEDING": 100,
         }
         # WIC
-        if pvalue['wic']['2023'] > 0:
+        if pvalue['wic'][year] > 0:
             eligibility['wic']['eligible'] = True
-            eligibility['wic']['estimated_value'] += wic_categories[pvalue['wic_category']['2023']] * 12
+            eligibility['wic']['estimated_value'] += wic_categories[pvalue['wic_category'][year]] * 12
 
         # MEDICAID
-        if pvalue['medicaid']['2023'] > 0:
+        if pvalue['medicaid'][year] > 0:
             eligibility['medicaid']['eligible'] = True
 
             # here we need to adjust for children as policy engine
@@ -131,37 +133,37 @@ def eligibility_policy_engine(screen):
             co_adult_medicaid_average = 310 * 12
             co_aged_medicaid_average = 170 * 12
 
-            if pvalue['age']['2023'] <= 18:
+            if pvalue['age'][year] <= 18:
                 medicaid_estimated_value = co_child_medicaid_average
-            elif pvalue['age']['2023'] > 18 and pvalue['age']['2023'] < 65:
+            elif pvalue['age'][year] > 18 and pvalue['age'][year] < 65:
                 medicaid_estimated_value = co_adult_medicaid_average
-            elif pvalue['age']['2023'] >= 65:
+            elif pvalue['age'][year] >= 65:
                 medicaid_estimated_value = co_aged_medicaid_average
 
             eligibility['medicaid']['estimated_value'] += medicaid_estimated_value
 
         # PELL GRANT
-        if pvalue['pell_grant']['2023'] > 0:
+        if pvalue['pell_grant'][year] > 0:
             eligibility['pell_grant']['eligible'] = True
-            eligibility['pell_grant']['estimated_value'] += pvalue['pell_grant']['2023']
+            eligibility['pell_grant']['estimated_value'] += pvalue['pell_grant'][year]
 
         # SSI
-        if pvalue['ssi']['2023'] > 0:
+        if pvalue['ssi'][year] > 0:
             eligibility['ssi']['eligible'] = True
-            eligibility['ssi']['estimated_value'] += pvalue['ssi']['2023']
+            eligibility['ssi']['estimated_value'] += pvalue['ssi'][year]
 
         # AND-CS
-        if pvalue['co_state_supplement']['2023'] > 0:
+        if pvalue['co_state_supplement'][year] > 0:
             eligibility['andcs']['eligible'] = True
-            eligibility['andcs']['estimated_value'] += pvalue['co_state_supplement']['2023']
+            eligibility['andcs']['estimated_value'] += pvalue['co_state_supplement'][year]
 
         # OAP
-        if pvalue['co_oap']['2023'] > 0:
+        if pvalue['co_oap'][year] > 0:
             eligibility['oap']['eligible'] = True
-            eligibility['oap']['estimated_value'] += pvalue['co_oap']['2023']
+            eligibility['oap']['estimated_value'] += pvalue['co_oap'][year]
 
         # CHP+
-        if pvalue['co_chp_eligible']['2023'] > 0 and screen.has_insurance_types(('none',)):
+        if pvalue['co_chp_eligible'][year] > 0 and screen.has_insurance_types(('none',)):
             eligibility['chp']['eligible'] = True
             eligibility['chp']['estimated_value'] += 200 * 12
 
@@ -178,52 +180,52 @@ def eligibility_policy_engine(screen):
             eligibility['wic']['estimated_value'] = 74 * 12
 
     # SNAP
-    if benefit_data['spm_units']['spm_unit']['snap']['2023'] > 0:
+    if benefit_data['spm_units']['spm_unit']['snap'][snap_month] > 0:
         eligibility['snap']['eligible'] = True
         eligibility['snap']['estimated_value'] = \
-            benefit_data['spm_units']['spm_unit']['snap']['2023']
+            benefit_data['spm_units']['spm_unit']['snap'][snap_month]
 
     # NSLP
     num_children = screen.num_children(3, 18)
-    if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy']['2023'] > 0 and num_children > 0:
-        if benefit_data['spm_units']['spm_unit']['school_meal_tier']['2023'] != 'PAID':
+    if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy'][year] > 0 and num_children > 0:
+        if benefit_data['spm_units']['spm_unit']['school_meal_tier'][year] != 'PAID':
             eligibility['nslp']['eligible'] = True
             eligibility['nslp']['estimated_value'] = 680 * num_children
 
     # TANF
-    if benefit_data['spm_units']['spm_unit']['co_tanf']['2023'] > 0:
+    if benefit_data['spm_units']['spm_unit']['co_tanf'][year] > 0:
         eligibility['tanf']['eligible'] = True
-        eligibility['tanf']['estimated_value'] = benefit_data['spm_units']['spm_unit']['co_tanf']['2023']
+        eligibility['tanf']['estimated_value'] = benefit_data['spm_units']['spm_unit']['co_tanf'][year]
 
     # ACP
-    if benefit_data['spm_units']['spm_unit']['acp']['2023'] > 0:
+    if benefit_data['spm_units']['spm_unit']['acp'][year] > 0:
         eligibility['acp']['eligible'] = True
-        eligibility['acp']['estimated_value'] = benefit_data['spm_units']['spm_unit']['acp']['2023']
+        eligibility['acp']['estimated_value'] = benefit_data['spm_units']['spm_unit']['acp'][year]
 
     # Lifeline
-    if benefit_data['spm_units']['spm_unit']['lifeline']['2023'] > 0:
+    if benefit_data['spm_units']['spm_unit']['lifeline'][year] > 0:
         eligibility['lifeline']['eligible'] = True
-        eligibility['lifeline']['estimated_value'] = benefit_data['spm_units']['spm_unit']['lifeline']['2023']
+        eligibility['lifeline']['estimated_value'] = benefit_data['spm_units']['spm_unit']['lifeline'][year]
 
     tax_unit_data = benefit_data['tax_units']['tax_unit']
 
     # EITC
-    if tax_unit_data['eitc']['2023'] > 0:
+    if tax_unit_data['eitc'][year] > 0:
         eligibility['eitc']['eligible'] = True
-        eligibility['eitc']['estimated_value'] = tax_unit_data['eitc']['2023']
+        eligibility['eitc']['estimated_value'] = tax_unit_data['eitc'][year]
 
     # COEITC
-    if tax_unit_data['co_eitc']['2023'] > 0:
+    if tax_unit_data['co_eitc'][year] > 0:
         eligibility['coeitc']['eligible'] = True
-        eligibility['coeitc']['estimated_value'] = tax_unit_data['co_eitc']['2023']
+        eligibility['coeitc']['estimated_value'] = tax_unit_data['co_eitc'][year]
 
     # CTC
-    if tax_unit_data['ctc']['2023'] > 0:
+    if tax_unit_data['ctc'][year] > 0:
         eligibility['ctc']['eligible'] = True
-        eligibility['ctc']['estimated_value'] = tax_unit_data['ctc']['2023']
+        eligibility['ctc']['estimated_value'] = tax_unit_data['ctc'][year]
 
     # CO Child Tax Credit
-    if tax_unit_data['ctc']['2023'] > 0 and screen.num_children(age_max=6):
+    if tax_unit_data['ctc'][year] > 0 and screen.num_children(age_max=6):
         income_bands = {
             "single": [{"max": 25000, "percent": .6}, {"max": 50000, "percent": .3}, {"max": 75000, "percent": .1}],
             "maried": [{"max": 35000, "percent": .6}, {"max": 60000, "percent": .3}, {"max": 85000, "percent": .1}]
@@ -238,7 +240,7 @@ def eligibility_policy_engine(screen):
                 break
 
         eligibility['coctc']['eligible'] = multiplier != 0
-        eligibility['coctc']['estimated_value'] = tax_unit_data['ctc']['2023'] * multiplier
+        eligibility['coctc']['estimated_value'] = tax_unit_data['ctc'][year] * multiplier
 
     return eligibility
 
@@ -256,6 +258,9 @@ def policy_engine_calculate(screen):
 
 # TODO: add medicical expense deduction for over 60 snap
 def policy_engine_prepare_params(screen):
+    year = '2023'
+    snap_month = '2023-10'
+
     household_members = screen.household_members.all()
 
     # We have to manually calculate SNAP gross eligibility as colorado uses
@@ -283,12 +288,12 @@ def policy_engine_prepare_params(screen):
             "tax_units": {
                 "tax_unit": {
                     "members": [],
-                    "eitc": {"2023": None},
-                    "co_eitc": {"2023": None},
-                    "ctc": {"2023": None},
-                    "tax_unit_is_joint": {"2023": screen.is_joint()},
-                    "pell_grant_primary_income": {"2023": int(screen.calc_gross_income('yearly', ['all']))},
-                    "pell_grant_dependents_in_college": {"2023": pell_grant_dependents_in_college},
+                    "eitc": {year: None},
+                    "co_eitc": {year: None},
+                    "ctc": {year: None},
+                    "tax_unit_is_joint": {year: screen.is_joint()},
+                    "pell_grant_primary_income": {year: int(screen.calc_gross_income('yearly', ['all']))},
+                    "pell_grant_dependents_in_college": {year: pell_grant_dependents_in_college},
                 }
             },
             "families": {
@@ -298,46 +303,46 @@ def policy_engine_prepare_params(screen):
             },
             "households": {
                 "household": {
-                    "state_code_str": {"2023": "CO"},
+                    "state_code_str": {year: "CO"},
                     "members": []
                 }
             },
             "spm_units": {
                 "spm_unit": {
                     "members": [],
-                    "snap_child_support_deduction": {"2023": int(screen.calc_expenses("yearly", ["childSupport"]))},
-                    "snap_dependent_care_deduction": {"2023": int(screen.calc_expenses("yearly", ["childCare", "dependentCare"]))},
-                    "snap_earned_income": {"2023": screen.calc_gross_income('yearly', ['earned'])},
-                    "snap_standard_deduction": {"2023": None},
-                    "snap_net_income_pre_shelter": {"2023": None},
-                    "snap_excess_shelter_expense_deduction": {"2023": None},
-                    "housing_cost": {"2023": int(screen.calc_expenses("yearly", ["rent", "mortgage"]))},
-                    "snap_assets": {"2023": int(screen.household_assets)},
-                    "snap_gross_income": {"2023": int(snap_gross_income)},
-                    "snap_net_income": {"2023": None},
-                    "snap_deductions": {"2023": None},
-                    "meets_snap_net_income_test": {"2023": None},
-                    "meets_snap_gross_income_test": {"2023": meets_snap_gross_income_test},
-                    "meets_snap_asset_test": {"2023": True},
-                    "is_snap_eligible": {"2023": None},
-                    "meets_snap_categorical_eligibility": {"2023": False},
-                    "snap_utility_allowance": {"2023": None},
-                    "has_heating_cooling_expense": {"2023": screen.has_expense(["heating", "cooling"])},
-                    "has_phone_expense": {"2023": screen.has_expense(["telephone"])},
-                    "utility_expense": {"2023": int(screen.calc_expenses("yearly", ["otherUtilities", "heating", "cooling"]))},
-                    "snap_emergency_allotment": {"2023": 0},
-                    "snap": {"2023": None},
-                    "acp": {"2023": None},
-                    "school_meal_daily_subsidy": {"2023": None},
-                    "school_meal_tier": {"2023": None},
-                    "meets_school_meal_categorical_eligibility": {"2023": None},
-                    "lifeline": {"2023": None},
-                    "co_tanf_countable_gross_earned_income": {"2023": int(screen.calc_gross_income('yearly', ['earned']))},
-                    "co_tanf_countable_gross_unearned_income": {"2023": int(screen.calc_gross_income('yearly', ['unearned']))},
-                    "co_tanf": {"2023": None},
-                    "co_tanf_grant_standard": {"2023": None},
-                    "co_tanf_countable_earned_income_grant_standard": {"2023": None},
-                    "broadband_cost": {"2023": 500},
+                    "snap_child_support_deduction": {year: int(screen.calc_expenses("yearly", ["childSupport"]))},
+                    "snap_dependent_care_deduction": {year: int(screen.calc_expenses("yearly", ["childCare", "dependentCare"]))},
+                    "snap_earned_income": {year: screen.calc_gross_income('yearly', ['earned'])},
+                    "snap_standard_deduction": {year: None},
+                    "snap_net_income_pre_shelter": {year: None},
+                    "snap_excess_shelter_expense_deduction": {year: None},
+                    "housing_cost": {year: int(screen.calc_expenses("yearly", ["rent", "mortgage"]))},
+                    "snap_assets": {year: int(screen.household_assets)},
+                    "snap_gross_income": {year: int(snap_gross_income)},
+                    "snap_net_income": {year: None},
+                    "snap_deductions": {year: None},
+                    "meets_snap_net_income_test": {year: None},
+                    "meets_snap_gross_income_test": {year: meets_snap_gross_income_test},
+                    "meets_snap_asset_test": {year: True},
+                    "is_snap_eligible": {year: None},
+                    "meets_snap_categorical_eligibility": {year: False},
+                    "snap_utility_allowance": {year: None},
+                    "has_heating_cooling_expense": {year: screen.has_expense(["heating", "cooling"])},
+                    "has_phone_expense": {year: screen.has_expense(["telephone"])},
+                    "utility_expense": {year: int(screen.calc_expenses("yearly", ["otherUtilities", "heating", "cooling"]))},
+                    "snap_emergency_allotment": {year: 0},
+                    "snap": {snap_month: None},
+                    "acp": {year: None},
+                    "school_meal_daily_subsidy": {year: None},
+                    "school_meal_tier": {year: None},
+                    "meets_school_meal_categorical_eligibility": {year: None},
+                    "lifeline": {year: None},
+                    "co_tanf_countable_gross_earned_income": {year: int(screen.calc_gross_income('yearly', ['earned']))},
+                    "co_tanf_countable_gross_unearned_income": {year: int(screen.calc_gross_income('yearly', ['unearned']))},
+                    "co_tanf": {year: None},
+                    "co_tanf_grant_standard": {year: None},
+                    "co_tanf_countable_earned_income_grant_standard": {year: None},
+                    "broadband_cost": {year: 500},
                 }
             },
             "marital_units": {}
@@ -358,38 +363,38 @@ def policy_engine_prepare_params(screen):
 
         policy_engine_params['household']['people'][member_id] = {
             "employment_income": {
-                "2023": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment'])),
+                year: int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment'])),
                 "2022": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
             },
-            "age": {"2023": household_member.age, "2022": household_member.age},
-            "is_pregnant": {"2023": household_member.pregnant},
-            "is_tax_unit_head": {"2023": is_tax_unit_head, "2022": is_tax_unit_head},
-            "wic_category": {"2023": None},
-            "wic": {"2023": None},
-            "medicaid": {"2023": None},
-            "ssi": {"2023": None},
-            "ssi_earned_income": {"2023": int(household_member.calc_gross_income('yearly', ['earned']))},
-            "ssi_unearned_income": {"2023": int(household_member.calc_gross_income('yearly', ['unearned']))},
-            "is_ssi_disabled": {"2023": household_member.has_disability()},
-            "ssi_countable_resources": {"2023": int(ssi_assets)},
-            "ssi_amount_if_eligible": {"2023": None},
-            "co_state_supplement": {"2023": None},
-            "co_oap": {"2023": None},
-            "pell_grant": {"2023": None},
-            "pell_grant_dependent_available_income": {"2023": int(household_member.calc_gross_income('yearly', ['all']))},
-            "pell_grant_countable_assets": {"2023": int(screen.household_assets)},
-            "cost_of_attending_college": {"2023": 22_288 * (household_member.age >= 16 and household_member.student)},
-            "pell_grant_months_in_school": {"2023": 9},
-            "co_chp_eligible": {"2023": None},
+            "age": {year: household_member.age, "2022": household_member.age},
+            "is_pregnant": {year: household_member.pregnant},
+            "is_tax_unit_head": {year: is_tax_unit_head, "2022": is_tax_unit_head},
+            "wic_category": {year: None},
+            "wic": {year: None},
+            "medicaid": {year: None},
+            "ssi": {year: None},
+            "ssi_earned_income": {year: int(household_member.calc_gross_income('yearly', ['earned']))},
+            "ssi_unearned_income": {year: int(household_member.calc_gross_income('yearly', ['unearned']))},
+            "is_ssi_disabled": {year: household_member.has_disability()},
+            "ssi_countable_resources": {year: int(ssi_assets)},
+            "ssi_amount_if_eligible": {year: None},
+            "co_state_supplement": {year: None},
+            "co_oap": {year: None},
+            "pell_grant": {year: None},
+            "pell_grant_dependent_available_income": {year: int(household_member.calc_gross_income('yearly', ['all']))},
+            "pell_grant_countable_assets": {year: int(screen.household_assets)},
+            "cost_of_attending_college": {year: 22_288 * (household_member.age >= 16 and household_member.student)},
+            "pell_grant_months_in_school": {year: 9},
+            "co_chp_eligible": {year: None},
         }
 
         if household_member.pregnant:
-            policy_engine_params['household']['people'][member_id]['is_pregnant'] = {'2023': True}
+            policy_engine_params['household']['people'][member_id]['is_pregnant'] = {year: True}
         if household_member.visually_impaired:
-            policy_engine_params['household']['people'][member_id]['is_blind'] = {'2023': True}
+            policy_engine_params['household']['people'][member_id]['is_blind'] = {year: True}
         # TODO: this check should use the SSI disabled income as determination
         # if household_member.disabled and household_member.age >= 18:
-            # policy_engine_params['household']['people'][member_id]['is_ssi_disabled'] = {'2023': True}
+            # policy_engine_params['household']['people'][member_id]['is_ssi_disabled'] = {year: True}
 
         policy_engine_params['household']['tax_units']['tax_unit']['members'].append(member_id)
         policy_engine_params['household']['families']['family']['members'].append(member_id)
