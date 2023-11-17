@@ -16,8 +16,6 @@ def catch_400_view(*args, **kwargs):
 
 
 def drf_exception_handler(exc, context):
-    # Call REST framework's default exception handler first,
-    # to get the standard error response.
     response = exception_handler(exc, context)
     capture_message(
         response.reason_phrase,
