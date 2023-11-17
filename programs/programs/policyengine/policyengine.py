@@ -182,8 +182,7 @@ def eligibility_policy_engine(screen):
     # SNAP
     if benefit_data['spm_units']['spm_unit']['snap'][snap_month] > 0:
         eligibility['snap']['eligible'] = True
-        eligibility['snap']['estimated_value'] = \
-            benefit_data['spm_units']['spm_unit']['snap'][snap_month]
+        eligibility['snap']['estimated_value'] = benefit_data['spm_units']['spm_unit']['snap'][snap_month] * 12
 
     # NSLP
     num_children = screen.num_children(3, 18)
