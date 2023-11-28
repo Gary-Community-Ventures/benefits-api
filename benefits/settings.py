@@ -51,11 +51,10 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication'
+        'rest_framework.authentication.TokenAuthentication',
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated'
-    ]
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
+    'EXCEPTION_HANDLER': 'benefits.views.drf_exception_handler',
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -93,7 +92,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware'
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'benefits.urls'
@@ -126,7 +125,7 @@ DATABASES = {
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASS'),
-        'HOST': 'localhost'
+        'HOST': 'localhost',
     }
 }
 
@@ -180,9 +179,9 @@ PARLER_LANGUAGES = {
         {'code': 'am'},
     ),
     'default': {
-        'fallbacks': ['en-us'],          # defaults to PARLER_DEFAULT_LANGUAGE_CODE
-        'hide_untranslated': True,   # the default; let .active_translations() return fallbacks too.
-    }
+        'fallbacks': ['en-us'],  # defaults to PARLER_DEFAULT_LANGUAGE_CODE
+        'hide_untranslated': True,  # the default; let .active_translations() return fallbacks too.
+    },
 }
 
 # Static files (CSS, JavaScript, Images)
@@ -196,13 +195,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+CSRF_FAILURE_VIEW = 'benefits.views.catch_403_view'
 
-SWAGGER_SETTINGS = {
-    'SUPPORTED_SUBMIT_METHODS': ('get',)
-}
+SWAGGER_SETTINGS = {'SUPPORTED_SUBMIT_METHODS': ('get',)}
 
 # Enable logging with Sentry if it is enabled
 if config('SENTRY_DSN', None) is not None:
-    sentry_sdk.init(dsn=config('SENTRY_DSN'), integrations=[DjangoIntegration()])
+    sentry_sdk.init(
+        dsn=config('SENTRY_DSN'),
+        integrations=[DjangoIntegration()],
+        environment='dev' if DEBUG else 'production',
+    )
 
 django_heroku.settings(locals())
