@@ -107,7 +107,6 @@ def eligibility_policy_engine(screen):
 
     benefit_data = policy_engine_calculate(screen)['result']
 
-    # WIC & MEDICAID & SSI
     for pkey, pvalue in benefit_data['people'].items():
         wic_categories = {
             'NONE': 0,
@@ -121,6 +120,13 @@ def eligibility_policy_engine(screen):
         if pvalue['wic'][year] > 0:
             eligibility['wic']['eligible'] = True
             eligibility['wic']['estimated_value'] += wic_categories[pvalue['wic_category'][year]] * 12
+
+        in_tax_unit = str(pkey) in benefit_data['tax_units']['tax_unit']['members']
+
+        # The following programs use income from the tax unit,
+        # so we want to skip any members that are not in the tax unit.
+        if not in_tax_unit:
+            continue
 
         # MEDICAID
         if pvalue['medicaid'][year] > 0:
@@ -291,7 +297,7 @@ def policy_engine_prepare_params(screen):
                     "co_eitc": {year: None},
                     "ctc": {year: None},
                     "tax_unit_is_joint": {year: screen.is_joint()},
-                    "pell_grant_primary_income": {year: int(screen.calc_gross_income('yearly', ['all']))},
+                    "pell_grant_primary_income": {year: 0},
                     "pell_grant_dependents_in_college": {year: pell_grant_dependents_in_college},
                 }
             },
@@ -348,13 +354,29 @@ def policy_engine_prepare_params(screen):
         }
     }
 
+    relationship_map = screen.relationship_map()
+    head_id = screen.get_head().id
+    spouse_id = relationship_map[head_id]
+
     for household_member in household_members:
         member_id = str(household_member.id)
 
-        if household_member.relationship == "headOfHousehold":
-            is_tax_unit_head = True
-        else:
-            is_tax_unit_head = False
+        member_earned_income = int(household_member.calc_gross_income('yearly', ['earned']))
+        member_unearned_income = int(household_member.calc_gross_income('yearly', ['unearned']))
+        member_all_income = int(household_member.calc_gross_income('yearly', ['all']))
+
+        is_tax_unit_head = member_id == str(head_id)
+        is_tax_unit_spouse = member_id == str(spouse_id)
+
+        is_tax_unit_dependent = (
+            household_member.age <= 18 or
+            (household_member.student and household_member.age <= 23) or
+            household_member.has_disability()
+        ) and (
+            member_all_income < screen.calc_gross_income('yearly', ['all']) / 2
+        ) and (
+            not (is_tax_unit_head or is_tax_unit_spouse)
+        )
 
         ssi_assets = 0
         if household_member.age >= 19:
@@ -368,40 +390,44 @@ def policy_engine_prepare_params(screen):
             "age": {year: household_member.age, "2022": household_member.age},
             "is_pregnant": {year: household_member.pregnant},
             "is_tax_unit_head": {year: is_tax_unit_head, "2022": is_tax_unit_head},
+            "is_tax_unit_spouse": {"2023": is_tax_unit_spouse, "2022": is_tax_unit_spouse},
+            "is_tax_unit_dependent": {"2023": is_tax_unit_dependent, "2022": is_tax_unit_dependent},
             "wic_category": {year: None},
             "wic": {year: None},
             "medicaid": {year: None},
             "ssi": {year: None},
-            "ssi_earned_income": {year: int(household_member.calc_gross_income('yearly', ['earned']))},
-            "ssi_unearned_income": {year: int(household_member.calc_gross_income('yearly', ['unearned']))},
+            "ssi_earned_income": {year: member_earned_income},
+            "ssi_unearned_income": {year: member_unearned_income},
             "is_ssi_disabled": {year: household_member.has_disability()},
             "ssi_countable_resources": {year: int(ssi_assets)},
             "ssi_amount_if_eligible": {year: None},
             "co_state_supplement": {year: None},
             "co_oap": {year: None},
             "pell_grant": {year: None},
-            "pell_grant_dependent_available_income": {year: int(household_member.calc_gross_income('yearly', ['all']))},
+            "pell_grant_dependent_available_income": {year: member_all_income},
             "pell_grant_countable_assets": {year: int(screen.household_assets)},
             "cost_of_attending_college": {year: 22_288 * (household_member.age >= 16 and household_member.student)},
             "pell_grant_months_in_school": {year: 9},
             "co_chp_eligible": {year: None},
         }
 
+        pe_household = policy_engine_params['household']
+        if is_tax_unit_head or is_tax_unit_spouse:
+            pe_household['tax_units']['tax_unit']['pell_grant_primary_income'][year] += member_all_income
         if household_member.pregnant:
-            policy_engine_params['household']['people'][member_id]['is_pregnant'] = {year: True}
+            pe_household['people'][member_id]['is_pregnant'] = {year: True}
         if household_member.visually_impaired:
-            policy_engine_params['household']['people'][member_id]['is_blind'] = {year: True}
-        # TODO: this check should use the SSI disabled income as determination
-        # if household_member.disabled and household_member.age >= 18:
-            # policy_engine_params['household']['people'][member_id]['is_ssi_disabled'] = {year: True}
+            pe_household['people'][member_id]['is_blind'] = {year: True}
 
-        policy_engine_params['household']['tax_units']['tax_unit']['members'].append(member_id)
-        policy_engine_params['household']['families']['family']['members'].append(member_id)
-        policy_engine_params['household']['households']['household']['members'].append(member_id)
-        policy_engine_params['household']['spm_units']['spm_unit']['members'].append(member_id)
+        pe_household['families']['family']['members'].append(member_id)
+        pe_household['households']['household']['members'].append(member_id)
+        pe_household['spm_units']['spm_unit']['members'].append(member_id)
+
+        if is_tax_unit_head or is_tax_unit_spouse or is_tax_unit_dependent:
+            pe_household['tax_units']['tax_unit']['members'].append(member_id)
 
     already_added = set()
-    for member_1, member_2 in screen.relationship_map().items():
+    for member_1, member_2 in relationship_map.items():
         if member_1 in already_added or member_2 in already_added or member_1 is None or member_2 is None:
             continue
 
