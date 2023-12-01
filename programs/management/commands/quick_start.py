@@ -12,7 +12,9 @@ import random
 
 
 class Command(BaseCommand):
-    help = 'create programs, navigators, urgent needs, and other starting database stuff'
+    help = (
+        'create programs, navigators, urgent needs, and other starting database stuff'
+    )
 
     fpl = {
         1: 13_590,
@@ -25,7 +27,6 @@ class Command(BaseCommand):
         8: 41_910,
     }
     legal_statuses = [
-        'gc_under19_pregnant_no5',
         'gc_under18_no5',
         'gc_18plus_no5',
         'gc_5plus',
@@ -33,6 +34,10 @@ class Command(BaseCommand):
         'green_card',
         'non_citizen',
         'citizen',
+        'other',
+        'otherHealthCarePregnant',
+        'otherHealthCareUnder19',
+        'otherWithWorkPermission',
     ]
     urgent_need_categories = [
         'legal services',
