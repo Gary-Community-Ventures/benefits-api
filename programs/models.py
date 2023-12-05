@@ -312,11 +312,12 @@ class WebHookFunction(models.Model):
         return self.name
 
 
-class Referrer(TranslatableModel):
+class Referrer(models.Model):
     referrer_code = models.CharField(max_length=64, unique=True)
     webhook_url = models.CharField(max_length=320, blank=True, null=True)
     webhook_functions = models.ManyToManyField(WebHookFunction, related_name='web_hook', blank=True)
     primary_navigators = models.ManyToManyField(Navigator, related_name='primary_navigators', blank=True)
+    remove_programs = models.ManyToManyField(Program, related_name='removed_programs', blank=True)
 
     def __str__(self):
         return self.referrer_code
