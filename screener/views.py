@@ -154,12 +154,17 @@ class MessageViewSet(mixins.CreateModelMixin,
 
 
 def eligibility_results(screen, batch=False):
-    all_programs = Program.objects.all().prefetch_related('legal_status_required')
-    data = []
     try:
         referrer = Referrer.objects.get(referrer_code=screen.referrer_code)
     except ObjectDoesNotExist:
         referrer = None
+
+    excluded_programs = []
+    if referrer is not None:
+        excluded_programs = referrer.remove_programs.values('id')
+
+    all_programs = Program.objects.exclude(id__in=excluded_programs).prefetch_related('legal_status_required')
+    data = []
 
     try:
         previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen).latest('submission_date')
