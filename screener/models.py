@@ -7,6 +7,7 @@ from authentication.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 from programs.models import Program
+from programs.util import Dependencies
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
 
 
@@ -27,7 +28,7 @@ class Screen(models.Model):
     county = models.CharField(max_length=120, default=None, blank=True, null=True)
     household_size = models.IntegerField(blank=True, null=True)
     last_tax_filing_year = models.CharField(max_length=120, default=None, blank=True, null=True)
-    household_assets = models.DecimalField(decimal_places=2, max_digits=10, default=0, blank=True, null=True)
+    household_assets = models.DecimalField(decimal_places=2, max_digits=10, default=None, blank=True, null=True)
     housing_situation = models.CharField(max_length=30, blank=True, null=True, default=None)
     last_email_request_date = models.DateTimeField(blank=True, null=True)
     is_test = models.BooleanField(default=False, blank=True)
@@ -284,6 +285,23 @@ class Screen(models.Model):
 
         raise Exception('No head of household')
 
+    def missing_fields(self):
+        screen_fields = ('zipcode', 'county', 'household_size', 'household_assets')
+
+        missing_fields = Dependencies()
+
+        for field in screen_fields:
+            if getattr(self, field) is None:
+                missing_fields.add(field)
+
+        for member in self.household_members.all():
+            missing_fields.update(member.missing_fields())
+
+        for expence in self.expenses.all():
+            missing_fields.update(expence.missing_fields())
+
+        return missing_fields
+
     def eligibility_results(self):
         all_programs = Program.objects.all()
         screen = self
@@ -430,6 +448,29 @@ class HouseholdMember(models.Model):
     def has_disability(self):
         return self.disabled or self.visually_impaired or self.long_term_disability
 
+    def missing_fields(self):
+        member_fields = (
+            'relationship',
+            'age',
+            'student',
+            'pregnant',
+            'visually_impaired',
+            'disabled',
+            'long_term_disability',
+            'insurance'
+        )
+
+        missing_fields = Dependencies()
+
+        for field in member_fields:
+            if getattr(self, field) is None:
+                missing_fields.add(field)
+
+        for income in self.income_streams.all():
+            missing_fields.update(income.missing_fields())
+
+        return missing_fields
+
 
 # HouseholdMember income streams
 class IncomeStream(models.Model):
@@ -475,6 +516,16 @@ class IncomeStream(models.Model):
     def _hour_to_month(self):
         return self.amount * self.hours_worked * Decimal(4.35)
 
+    def missing_fields(self):
+        income_fields = ('type', 'amount', 'frequency', 'hours_worked')
+
+        missing_fields = Dependencies()
+        for field in income_fields:
+            if getattr(self, field) is None:
+                missing_fields.add(field)
+
+        return missing_fields
+
 
 # HouseholdMember expenses
 class Expense(models.Model):
@@ -510,6 +561,17 @@ class Expense(models.Model):
             yearly = self.amount
 
         return yearly
+
+    def missing_fields(self):
+        expense_fields = ('type', 'amount')
+
+        missing_fields = Dependencies()
+
+        for field in expense_fields:
+            if getattr(self, field) is None:
+                missing_fields.add(field)
+
+        return missing_fields
 
 
 class Insurance(models.Model):

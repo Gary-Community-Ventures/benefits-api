@@ -1,5 +1,4 @@
 from django.db import models
-from parler.models import TranslatableModel
 from phonenumber_field.modelfields import PhoneNumberField
 from translations.models import Translation
 from programs.programs import calculators
