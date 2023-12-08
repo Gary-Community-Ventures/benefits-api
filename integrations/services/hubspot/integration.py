@@ -48,7 +48,6 @@ class Hubspot():
                     print(f)
                     return False
             else:
-                print(http_body)
                 return False
         return contact_id
 

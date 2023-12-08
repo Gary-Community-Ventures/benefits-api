@@ -4,6 +4,7 @@ from screener.models import Screen
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
 from authentication.serializers import UserSerializer, UserOffersSerializer
+from sentry_sdk import capture_message
 from integrations.services.hubspot.integration import update_send_offers_hubspot, upsert_user_hubspot
 
 
@@ -35,6 +36,10 @@ class UserViewSet(mixins.UpdateModelMixin,
                 try:
                     upsert_user_to_hubspot(screen, user)
                 except Exception:
+                    capture_message(
+                        'HubSpot upsert failed',
+                        level='warning',
+                    )
                     return Response("Invalid Email", status=400)
 
             return Response(status=204)
