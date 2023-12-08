@@ -4,7 +4,7 @@ from screener.models import Screen
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
 from authentication.serializers import UserSerializer, UserOffersSerializer
-from integrations.services.hubspot.integration import update_send_offers_hubspot
+from integrations.services.hubspot.integration import update_send_offers_hubspot, upsert_user_hubspot
 
 
 class UserViewSet(mixins.UpdateModelMixin,
@@ -31,6 +31,33 @@ class UserViewSet(mixins.UpdateModelMixin,
             screen.save()
             if user and user.external_id and not screen.is_test_data and not settings.DEBUG:
                 update_send_offers_hubspot(user.external_id, user.send_offers, user.send_updates)
+            else:
+                try:
+                    upsert_user_to_hubspot(screen, user)
+                except Exception:
+                    return Response("Invalid Email", status=400)
 
             return Response(status=204)
         return Response(serializer.errors, status=400)
+
+
+def upsert_user_to_hubspot(screen, user):
+    if settings.DEBUG:
+        return
+    if user is None or screen.is_test_data is None:
+        return
+    should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
+    if not should_upsert_user or screen.is_test_data:
+        return
+
+    hubspot_id = upsert_user_hubspot(user, screen=screen)
+    if hubspot_id:
+        user.external_id = hubspot_id
+        user.email_or_cell = hubspot_id + "@myfriendben.org"
+        user.first_name = None
+        user.last_name = None
+        user.cell = None
+        user.email = None
+        user.save()
+    else:
+        raise Exception('Failed to upsert user')
