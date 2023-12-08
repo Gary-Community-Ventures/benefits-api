@@ -279,11 +279,8 @@ def policy_engine_prepare_params(screen):
     else:
         meets_snap_gross_income_test = False
 
-    pell_grant_primary_income = 0
     pell_grant_dependents_in_college = 0
     for member in household_members:
-        if member.relationship in ('headOfHousehold', 'spouse'):
-            pell_grant_primary_income += int(member.calc_gross_income('yearly', ['all']))
         if member.student:
             pell_grant_dependents_in_college += 1
 
@@ -346,7 +343,6 @@ def policy_engine_prepare_params(screen):
                     "co_tanf_countable_gross_unearned_income": {year: int(screen.calc_gross_income('yearly', ['unearned']))},
                     "co_tanf": {year: None},
                     "co_tanf_grant_standard": {year: None},
-                    "co_tanf_countable_earned_income_grant_standard": {year: None},
                     "broadband_cost": {year: 500},
                 }
             },

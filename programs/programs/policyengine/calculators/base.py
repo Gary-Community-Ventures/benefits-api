@@ -1,15 +1,21 @@
 from screener.models import Screen
-from programs.models import Program
 from programs.calc import Eligibility, ProgramCalculator
+from .dependencies import PolicyEngineScreenInput
+from typing import List
 
 
 class PolicyEnigineCalulator(ProgramCalculator):
+    dependencies: List[type[str]] = []
+
+    pe_inputs: List[type[PolicyEngineScreenInput]] = []
+    pe_outputs: List[type[PolicyEngineScreenInput]] = []
+
     pe_name = ''
     pe_category = ''
     pe_sub_category = ''
 
-    def __init__(self, screen: Screen, program: Program, data, pe_data, year, month):
-        super.__init__(screen, program, data)
+    def __init__(self, screen: Screen, pe_data, year, month):
+        self.screen = screen
         self.pe_data = pe_data
         self.year = year
         self.month = month

@@ -206,11 +206,9 @@ def eligibility_results(screen, batch=False):
 
     for program in all_programs:
         skip = False
-        # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
         if program.name_abbreviated not in pe_programs and program.active:
             eligibility = program.eligibility(screen, data)
         elif program.active:
-            # skip = True
             eligibility = pe_eligibility[program.name_abbreviated]
 
         all_navigators = program.navigator.all()
