@@ -27,31 +27,6 @@ admin.site.register(Message)
 admin.site.register(IncomeStream)
 
 
-@receiver(post_save, sender=Screen)
-def upsert_user_to_hubspot(sender, instance, created, **kwargs):
-    if settings.DEBUG:
-        return
-    screen = instance
-    user = instance.user
-    if user is None or screen.is_test_data is None:
-        return
-    should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
-    if not should_upsert_user or screen.is_test_data:
-        return
-
-    hubspot_id = upsert_user_hubspot(user, screen=screen)
-    if hubspot_id:
-        user.external_id = hubspot_id
-        user.email_or_cell = hubspot_id + "@myfriendben.org"
-        user.first_name = None
-        user.last_name = None
-        user.cell = None
-        user.email = None
-        user.save()
-    else:
-        raise Exception('Failed to upsert user')
-
-
 @receiver(post_save, sender=Message)
 def send_screener_email(sender, instance, created, **kwargs):
     instance.screen.last_email_request_date = timezone.now()
