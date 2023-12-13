@@ -160,7 +160,7 @@ LANGUAGES = (
     ('vi', _('Vietnamese')),
     ('fr', _('French')),
     ('am', _('Amharic')),
-    ('so', _('Soomali')),
+    ('so', _('Somali')),
     ('ru', _('Russian')),
     ('ne', _('Nepali')),
     ('my', _('Burmese')),
