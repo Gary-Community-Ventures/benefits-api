@@ -17,6 +17,10 @@ def catch_400_view(*args, **kwargs):
 
 def drf_exception_handler(exc, context):
     response = exception_handler(exc, context)
+
+    if response is None:
+        return None
+
     capture_message(
         response.reason_phrase,
         level='warning',
