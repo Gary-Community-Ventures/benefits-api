@@ -38,7 +38,7 @@ def send_screener_email(sender, instance, created, **kwargs):
                 language = instance.screen.request_language_code
 
             with override(language):
-                email_link(instance.email, instance.screen.id, language)
+                email_link(instance.email, instance.screen.id, language.lower())
     if created and instance.type == 'textScreen':
         if instance.cell and instance.screen:
             language = 'en-us'
@@ -46,7 +46,7 @@ def send_screener_email(sender, instance, created, **kwargs):
                 language = instance.screen.request_language_code
 
             with override(language):
-                text_link(instance.cell, instance.screen, language)
+                text_link(instance.cell, instance.screen, language.lower())
 
 
 def generate_bwf_snapshots():
