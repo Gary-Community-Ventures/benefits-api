@@ -160,6 +160,11 @@ LANGUAGES = (
     ('vi', _('Vietnamese')),
     ('fr', _('French')),
     ('am', _('Amharic')),
+    ('so', _('Somali')),
+    ('ru', _('Russian')),
+    ('ne', _('Nepali')),
+    ('my', _('Burmese')),
+    ('zh', _('Chinese')),
 )
 
 TIME_ZONE = 'UTC'
@@ -177,6 +182,11 @@ PARLER_LANGUAGES = {
         {'code': 'vi'},
         {'code': 'fr'},
         {'code': 'am'},
+        {'code': 'so'},
+        {'code': 'ru'},
+        {'code': 'ne'},
+        {'code': 'my'},
+        {'code': 'zh'},
     ),
     'default': {
         'fallbacks': ['en-us'],  # defaults to PARLER_DEFAULT_LANGUAGE_CODE
