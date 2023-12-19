@@ -43,7 +43,7 @@ class FederalPovertyLimitAdmin(admin.ModelAdmin):
     search_fields = ('year',)
 
 
-class ReferrerAdmin(TranslatableAdmin):
+class ReferrerAdmin(admin.ModelAdmin):
     search_fields = ('referrer_code',)
 
 
