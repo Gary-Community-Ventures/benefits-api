@@ -195,7 +195,7 @@ def eligibility_policy_engine(screen):
     if benefit_data['spm_units']['spm_unit']['school_meal_daily_subsidy'][year] > 0 and num_children > 0:
         if benefit_data['spm_units']['spm_unit']['school_meal_tier'][year] != 'PAID':
             eligibility['nslp']['eligible'] = True
-            eligibility['nslp']['estimated_value'] = 680 * num_children
+            eligibility['nslp']['estimated_value'] = 120 * num_children
 
     # TANF
     if benefit_data['spm_units']['spm_unit']['co_tanf'][year] > 0:
