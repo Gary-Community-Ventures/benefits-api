@@ -4,6 +4,7 @@ from .models import (
     HouseholdMember,
     IncomeStream,
     Expense,
+    Insurance,
 )
 import json
 import uuid
@@ -130,5 +131,21 @@ def update_is_test_data():
 
     for screen in screens:
         screen.set_screen_is_test()
+
+    print('done')
+
+
+def fix_insurance():
+    screens = Screen.objects.all()
+
+    for screen in screens:
+        members = screen.household_members.all()
+
+        for member in members:
+            try:
+                member.insurance
+            except Insurance.DoesNotExist:
+                member.insurance = Insurance.objects.create(household_member=member)
+                member.save()
 
     print('done')
