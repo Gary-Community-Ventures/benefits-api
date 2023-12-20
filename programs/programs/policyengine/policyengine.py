@@ -102,7 +102,8 @@ def eligibility_policy_engine(screen):
             "estimated_value": 0
         },
     }
-    year = '2023'
+    year = '2024'
+    tax_year = '2023'
     snap_month = '2023-10'
 
     benefit_data = policy_engine_calculate(screen)['result']
@@ -215,22 +216,22 @@ def eligibility_policy_engine(screen):
     tax_unit_data = benefit_data['tax_units']['tax_unit']
 
     # EITC
-    if tax_unit_data['eitc'][year] > 0:
+    if tax_unit_data['eitc'][tax_year] > 0:
         eligibility['eitc']['eligible'] = True
-        eligibility['eitc']['estimated_value'] = tax_unit_data['eitc'][year]
+        eligibility['eitc']['estimated_value'] = tax_unit_data['eitc'][tax_year]
 
     # COEITC
-    if tax_unit_data['co_eitc'][year] > 0:
+    if tax_unit_data['co_eitc'][tax_year] > 0:
         eligibility['coeitc']['eligible'] = True
-        eligibility['coeitc']['estimated_value'] = tax_unit_data['co_eitc'][year]
+        eligibility['coeitc']['estimated_value'] = tax_unit_data['co_eitc'][tax_year]
 
     # CTC
-    if tax_unit_data['ctc'][year] > 0:
+    if tax_unit_data['ctc'][tax_year] > 0:
         eligibility['ctc']['eligible'] = True
-        eligibility['ctc']['estimated_value'] = tax_unit_data['ctc'][year]
+        eligibility['ctc']['estimated_value'] = tax_unit_data['ctc'][tax_year]
 
     # CO Child Tax Credit
-    if tax_unit_data['ctc'][year] > 0 and screen.num_children(age_max=6):
+    if tax_unit_data['ctc'][tax_year] > 0 and screen.num_children(age_max=6):
         income_bands = {
             "single": [{"max": 25000, "percent": .6}, {"max": 50000, "percent": .3}, {"max": 75000, "percent": .1}],
             "maried": [{"max": 35000, "percent": .6}, {"max": 60000, "percent": .3}, {"max": 85000, "percent": .1}]
@@ -245,7 +246,7 @@ def eligibility_policy_engine(screen):
                 break
 
         eligibility['coctc']['eligible'] = multiplier != 0
-        eligibility['coctc']['estimated_value'] = tax_unit_data['ctc'][year] * multiplier
+        eligibility['coctc']['estimated_value'] = tax_unit_data['ctc'][tax_year] * multiplier
 
     return eligibility
 
@@ -263,7 +264,8 @@ def policy_engine_calculate(screen):
 
 # TODO: add medicical expense deduction for over 60 snap
 def policy_engine_prepare_params(screen):
-    year = '2023'
+    year = '2024'
+    tax_year = '2023'
     snap_month = '2023-10'
 
     household_members = screen.household_members.all()
@@ -293,10 +295,10 @@ def policy_engine_prepare_params(screen):
             "tax_units": {
                 "tax_unit": {
                     "members": [],
-                    "eitc": {year: None},
-                    "co_eitc": {year: None},
-                    "ctc": {year: None},
-                    "tax_unit_is_joint": {year: screen.is_joint()},
+                    "eitc": {tax_year: None},
+                    "co_eitc": {tax_year: None},
+                    "ctc": {tax_year: None},
+                    "tax_unit_is_joint": {tax_year: screen.is_joint()},
                     "pell_grant_primary_income": {year: 0},
                     "pell_grant_dependents_in_college": {year: pell_grant_dependents_in_college},
                 }
@@ -308,7 +310,7 @@ def policy_engine_prepare_params(screen):
             },
             "households": {
                 "household": {
-                    "state_code_str": {year: "CO"},
+                    "state_code_str": {year: 'CO', tax_year: 'CO'},
                     "members": []
                 }
             },
@@ -385,13 +387,13 @@ def policy_engine_prepare_params(screen):
         policy_engine_params['household']['people'][member_id] = {
             "employment_income": {
                 year: int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment'])),
-                "2022": int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
+                tax_year: int(household_member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
             },
-            "age": {year: household_member.age, "2022": household_member.age},
+            "age": {year: household_member.age, tax_year: household_member.age},
             "is_pregnant": {year: household_member.pregnant},
-            "is_tax_unit_head": {year: is_tax_unit_head, "2022": is_tax_unit_head},
-            "is_tax_unit_spouse": {"2023": is_tax_unit_spouse, "2022": is_tax_unit_spouse},
-            "is_tax_unit_dependent": {"2023": is_tax_unit_dependent, "2022": is_tax_unit_dependent},
+            "is_tax_unit_head": {year: is_tax_unit_head, tax_year: is_tax_unit_head},
+            "is_tax_unit_spouse": {year: is_tax_unit_spouse, tax_year: is_tax_unit_spouse},
+            "is_tax_unit_dependent": {year: is_tax_unit_dependent, tax_year: is_tax_unit_dependent},
             "wic_category": {year: None},
             "wic": {year: None},
             "medicaid": {year: None},
