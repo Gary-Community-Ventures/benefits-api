@@ -24,7 +24,7 @@ class MedicareSavings():
         'single': 1_660,
         'married': 2239,
     }
-    amount = 165
+    amount = 175
 
     def __init__(self, screen):
         self.screen = screen
