@@ -1,13 +1,6 @@
 from programs.programs.policyengine.calculators.dependencies import Member
 
 
-member_earned_income = int(household_member.calc_gross_income('yearly', ['earned']))
-member_unearned_income = int(household_member.calc_gross_income('yearly', ['unearned']))
-member_all_income = int(household_member.calc_gross_income('yearly', ['all']))
-
-is_tax_unit_head = member_id == str(head_id)
-is_tax_unit_spouse = member_id == str(spouse_id)
-
 class EmploymentIncomeDepnedency(Member):
     field = "employment_income"
 
@@ -48,12 +41,13 @@ class TaxUnitDependentDependency(Member):
 
     def value(self):
         is_tax_unit_spouse = TaxUnitSpouseDependency(self.screen, self.member, self.relationship_map)
+        is_tax_unit_head = TaxUnitHeadDependency(self.screen, self.member, self.relationship_map)
         is_tax_unit_dependent = (
             self.member.age <= 18 or
             (self.member.student and self.member.age <= 23) or
             self.member.has_disability()
         ) and (
-            member_all_income < self.screen.calc_gross_income('yearly', ['all']) / 2
+            self.member.calc_gross_income('yearly', ['all']) < self.screen.calc_gross_income('yearly', ['all']) / 2
         ) and (
             not (is_tax_unit_head or is_tax_unit_spouse)
         )
@@ -81,14 +75,14 @@ class SsiEarnedIncomeDependency(Member):
     field = "ssi_earned_income"
 
     def value(self):
-        return member_earned_income
+        return int(self.member.calc_gross_income('yearly', ['earned']))
 
 
 class SsiUnearnedIncomeDependency(Member):
     field = "ssi_unearned_income"
 
     def value(self):
-        return member_unearned_income
+        return int(self.member.calc_gross_income('yearly', ['unearned']))
 
 
 class SsiDisabledDependency(Member):
@@ -102,6 +96,10 @@ class SsiCountableResourcesDependency(Member):
     field = "ssi_countable_resources"
 
     def value(self):
+        ssi_assets = 0
+        if self.member.age >= 19:
+            ssi_assets = self.screen.household_assets / self.screen.num_adults()
+
         return int(ssi_assets)
 
 
@@ -125,7 +123,7 @@ class PellGrantDependentAvailableIncomeDependency(Member):
     field = "pell_grant_dependent_available_income"
 
     def value(self):
-        return member_all_income,
+        return int(self.member.calc_gross_income('yearly', ['all'])),
 
 
 class PellGrantCountableAssetsDependency(Member):
