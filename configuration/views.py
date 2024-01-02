@@ -17,7 +17,6 @@ class ConfigurationView(viewsets.ReadOnlyModelViewSet):
 
 
     def retrieve(self, request, pk=None):
-        queryset = Configuration.objects.all()
-        configuration = get_object_or_404(queryset, name=pk)
+        configuration = get_object_or_404(self.queryset, name=pk)
         serializer = ConfigurationSerializer(configuration)
         return Response(serializer.data)
