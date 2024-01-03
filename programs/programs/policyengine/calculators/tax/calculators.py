@@ -2,22 +2,18 @@ from .base import PolicyEngineTaxUnitCalulator
 
 
 class Eitc(PolicyEngineTaxUnitCalulator):
-    dependencies = []
     pe_name = 'eitc'
 
 
 class Coeitc(PolicyEngineTaxUnitCalulator):
-    dependencies = []
     pe_name = 'co_eitc'
 
 
 class Ctc(PolicyEngineTaxUnitCalulator):
-    dependencies = []
     pe_name = 'ctc'
 
 
 class Coctc(PolicyEngineTaxUnitCalulator):
-    dependencies = []
     pe_name = 'ctc'
 
     income_bands = {

@@ -2,7 +2,6 @@ from .base import PolicyEngineMembersCalculator
 
 
 class WIC(PolicyEngineMembersCalculator):
-    dependencies = []
     wic_categories = {
         'NONE': 0,
         'INFANT': 130,
@@ -24,7 +23,6 @@ class WIC(PolicyEngineMembersCalculator):
 
 
 class Medicaid(PolicyEngineMembersCalculator):
-    dependencies = []
     pe_name = 'medicaid'
 
     co_child_medicaid_average = 200 * 12
@@ -66,27 +64,22 @@ class Medicaid(PolicyEngineMembersCalculator):
 
 
 class PellGrant(PolicyEngineMembersCalculator):
-    dependencies = []
     pe_name = 'pell_grant'
 
 
 class Ssi(PolicyEngineMembersCalculator):
-    dependencies = []
     pe_name = 'ssi'
 
 
 class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
-    dependencies = []
     pe_name = 'co_state_supplement'
 
 
 class OldAgePension(PolicyEngineMembersCalculator):
-    dependencies = []
     pe_name = 'co_oap'
 
 
 class Chp(PolicyEngineMembersCalculator):
-    dependencies = []
     pe_name = 'co_chp'
 
     amount = 200 * 12

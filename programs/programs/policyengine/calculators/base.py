@@ -28,7 +28,7 @@ class PolicyEnigineCalulator(ProgramCalculator):
         return e
 
     def value(self):
-        return self.pe_data[self.pe_category][self.pe_sub_category][self.pe_name][self.year]
+        return self.get_data()[self.pe_name][self.year]
 
     def get_data(self):
         return self.pe_data[self.pe_category][self.pe_sub_category]

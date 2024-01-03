@@ -2,7 +2,6 @@ from .base import PolicyEngineSpmCalulator
 
 
 class Snap(PolicyEngineSpmCalulator):
-    dependencies = []
     pe_name = 'snap'
 
     def value(self):
@@ -10,7 +9,6 @@ class Snap(PolicyEngineSpmCalulator):
 
 
 class SchoolLunch(PolicyEngineSpmCalulator):
-    dependencies = []
     pe_name = 'school_meal_daily_subsidy'
 
     def value(self):
@@ -25,15 +23,12 @@ class SchoolLunch(PolicyEngineSpmCalulator):
 
 
 class Tanf(PolicyEngineSpmCalulator):
-    dependencies = []
     pe_name = 'co_tanf'
 
 
 class Acp(PolicyEngineSpmCalulator):
-    dependencies = []
     pe_name = 'acp'
 
 
 class Lifeline(PolicyEngineSpmCalulator):
-    dependencies = []
     pe_name = 'lifeline'
