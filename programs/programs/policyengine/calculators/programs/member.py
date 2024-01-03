@@ -1,4 +1,4 @@
-from programs.programs.policyengine.calculators.base import PolicyEnigineCalulator
+from ..base import PolicyEnigineCalulator
 
 
 class PolicyEngineMembersCalculator(PolicyEnigineCalulator):

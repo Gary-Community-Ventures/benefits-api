@@ -50,6 +50,12 @@ class Tanf(PolicyEngineSpmCalulator):
 
 class Acp(PolicyEngineSpmCalulator):
     pe_name = 'acp'
+    pe_inputs = [
+        dependency.member.EmploymentIncomeDependency,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.spm.BroadbandCostDependency,
+    ]
+    pe_outputs = [dependency.spm.Acp]
 
 
 class Lifeline(PolicyEngineSpmCalulator):
