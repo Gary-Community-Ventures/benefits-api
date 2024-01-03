@@ -517,12 +517,12 @@ class IncomeStream(models.Model):
         return self.amount * self.hours_worked * Decimal(4.35)
 
     def missing_fields(self):
-        income_fields = ('type', 'amount', 'frequency', 'hours_worked')
+        income_fields = ('type', 'amount', 'frequency',)
 
         missing_fields = Dependencies()
         for field in income_fields:
             if getattr(self, field) is None:
-                missing_fields.add(field)
+                missing_fields.add('income_' + field)
 
         return missing_fields
 
@@ -569,7 +569,7 @@ class Expense(models.Model):
 
         for field in expense_fields:
             if getattr(self, field) is None:
-                missing_fields.add(field)
+                missing_fields.add('expense_' + field)
 
         return missing_fields
 

@@ -29,6 +29,7 @@ class PellGrantPrimaryIncomeDependency(TaxUnit):
 
 class PellGrantDependentsInCollegeDependency(TaxUnit):
     field = 'pell_grant_dependents_in_college'
+    dependencies = ('student',)
 
     def value(self):
         pell_grant_dependents_in_college = 0

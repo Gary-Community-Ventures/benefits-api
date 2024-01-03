@@ -45,6 +45,9 @@ def policy_engine_calculate(data):
 
 
 def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
+    '''
+    Generate Policy Engine API request from the list of programs.
+    '''
     raw_input = {
         "household": {
             "people": {},

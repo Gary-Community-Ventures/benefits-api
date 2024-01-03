@@ -7,6 +7,7 @@ class PolicyEngineScreenInput:
     unit = ''
     sub_unit = ''
     field = ''
+    dependencies = tuple()
 
     def __init__(self, screen: Screen, members: List[HouseholdMember], relationship_map):
         self.screen = screen

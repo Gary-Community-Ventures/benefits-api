@@ -4,6 +4,11 @@ from programs.models import FederalPoveryLimit
 
 class SnapChildSupportDeductionDependency(SpmUnit):
     field = 'snap_child_support_deduction'
+    dependencies = (
+        'income_type',
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
         return self.screen.calc_expenses('yearly', ['childSupport'])
@@ -11,6 +16,11 @@ class SnapChildSupportDeductionDependency(SpmUnit):
 
 class SnapEarnedIncomeDependency(SpmUnit):
     field = 'snap_earned_income'
+    dependencies = (
+        'income_type',
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
         return self.screen.calc_gross_income('yearly', ['earned'])
@@ -18,6 +28,10 @@ class SnapEarnedIncomeDependency(SpmUnit):
 
 class HousingCostDependency(SpmUnit):
     field = 'housing_cost'
+    dependencies = (
+        'expense_type',
+        'expense_amount',
+    )
 
     def value(self):
         return int(self.screen.calc_expenses('yearly', ['rent', 'mortgage']))
@@ -25,6 +39,7 @@ class HousingCostDependency(SpmUnit):
 
 class SnapAssetsDependency(SpmUnit):
     field = 'snap_assets'
+    dependencies = ('household_assets',)
 
     def value(self):
         return int(self.screen.household_assets)
@@ -32,6 +47,10 @@ class SnapAssetsDependency(SpmUnit):
 
 class SnapGrossIncomeDependency(SpmUnit):
     field = 'snap_gross_income'
+    dependencies = (
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
         return int(self.screen.calc_gross_income('yearly', ['all']))
@@ -39,6 +58,10 @@ class SnapGrossIncomeDependency(SpmUnit):
 
 class MeetsSnapGrossIncomeTestDependency(SpmUnit):
     field = 'meets_snap_gross_income_test'
+    dependencies = (
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
         fpl = FederalPoveryLimit.objects.get(year='THIS YEAR').as_dict()
@@ -64,6 +87,10 @@ class MeetsSnapCategoricalEligibilityDependency(SpmUnit):
 
 class HasHeatingCoolingExpenseDependency(SpmUnit):
     field = 'has_heating_cooling_expense'
+    dependencies = (
+        'expense_type',
+        'expense_amount',
+    )
 
     def value(self):
         return self.screen.has_expense(['heating', 'cooling'])
@@ -71,6 +98,10 @@ class HasHeatingCoolingExpenseDependency(SpmUnit):
 
 class HasPhoneExpenseDependency(SpmUnit):
     field = 'has_phone_expense'
+    dependencies = (
+        'expense_type',
+        'expense_amount',
+    )
 
     def value(self):
         return self.screen.has_expense(['telephone'])
@@ -78,9 +109,17 @@ class HasPhoneExpenseDependency(SpmUnit):
 
 class UtilityExpenseDependency(SpmUnit):
     field = 'utility_expense'
+    dependencies = (
+        'expense_type',
+        'expense_amount',
+    )
 
     def value(self):
-        return int(self.screen.calc_expenses('yearly', ['otherUtilities', 'heating', 'cooling']))
+        return int(
+            self.screen.calc_expenses(
+                'yearly', ['otherUtilities', 'heating', 'cooling']
+            )
+        )
 
 
 class SnapEmergencyAllotmentDependency(SpmUnit):
@@ -112,16 +151,26 @@ class Lifeline(SpmUnit):
 
 class TanfCountableGrossIncomeDependency(SpmUnit):
     field = 'co_tanf_countable_gross_earned_income'
+    dependencies = (
+        'income_type',
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
-        return int(self.screen.calc_gross_income('yearly' ['earned']))
+        return int(self.screen.calc_gross_income('yearly'['earned']))
 
 
 class TanfCountableGrossUnearnedIncomeDependency(SpmUnit):
     field = 'co_tanf_countable_gross_unearned_income'
+    dependencies = (
+        'income_type',
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
-        return int(self.screen.calc_gross_income('yearly' ['unearned']))
+        return int(self.screen.calc_gross_income('yearly'['unearned']))
 
 
 class Tanf(SpmUnit):

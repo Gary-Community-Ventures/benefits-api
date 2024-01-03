@@ -1,3 +1,4 @@
+from programs.util import Dependencies
 from screener.models import Screen
 from programs.calc import Eligibility, ProgramCalculator
 from .dependencies import PolicyEngineScreenInput
@@ -5,8 +6,6 @@ from typing import List
 
 
 class PolicyEnigineCalulator(ProgramCalculator):
-    dependencies: List[type[str]] = []
-
     pe_inputs: List[type[PolicyEngineScreenInput]] = []
     pe_outputs: List[type[PolicyEngineScreenInput]] = []
 
@@ -36,3 +35,10 @@ class PolicyEnigineCalulator(ProgramCalculator):
 
     def format_month(self) -> str:
         return self.year + '-' + self.month
+
+    def can_calc(self, missing_dependencies: Dependencies):
+        for input in self.pe_inputs:
+            if missing_dependencies.has(input.dependencies):
+                return False
+
+        return True

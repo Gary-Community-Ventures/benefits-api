@@ -1,8 +1,13 @@
 from programs.programs.policyengine.calculators.dependencies import Member
 
 
-class EmploymentIncomeDepnedency(Member):
+class EmploymentIncomeDependency(Member):
     field = "employment_income"
+    dependencies = (
+        'income_type',
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
         return int(self.member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
@@ -10,6 +15,7 @@ class EmploymentIncomeDepnedency(Member):
 
 class AgeDependency(Member):
     field = "age"
+    dependencies = ('age',)
 
     def value(self):
         return self.member.age
@@ -17,6 +23,7 @@ class AgeDependency(Member):
 
 class PregnancyDependency(Member):
     field = "is_pregnant"
+    dependencies = ('pregnant',)
 
     def value(self):
         return self.member.pregnant
@@ -24,6 +31,7 @@ class PregnancyDependency(Member):
 
 class TaxUnitHeadDependency(Member):
     field = "is_tax_unit_head"
+    dependencies = ('relationship',)
 
     def value(self):
         return self.screen.get_head().id == self.member.id
@@ -31,6 +39,7 @@ class TaxUnitHeadDependency(Member):
 
 class TaxUnitSpouseDependency(Member):
     field = "is_tax_unit_spouse"
+    dependencies = ('relationship',)
 
     def value(self):
         return self.relationship_map[self.screen.get_head().id] == self.member.id
@@ -38,6 +47,12 @@ class TaxUnitSpouseDependency(Member):
 
 class TaxUnitDependentDependency(Member):
     field = "is_tax_unit_dependent"
+    dependencies = (
+        'relationship',
+        'age',
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
         is_tax_unit_spouse = TaxUnitSpouseDependency(self.screen, self.member, self.relationship_map)
@@ -73,6 +88,11 @@ class Ssi(Member):
 
 class SsiEarnedIncomeDependency(Member):
     field = "ssi_earned_income"
+    dependencies = (
+        'income_type',
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
         return int(self.member.calc_gross_income('yearly', ['earned']))
@@ -80,6 +100,11 @@ class SsiEarnedIncomeDependency(Member):
 
 class SsiUnearnedIncomeDependency(Member):
     field = "ssi_unearned_income"
+    dependencies = (
+        'income_type',
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
         return int(self.member.calc_gross_income('yearly', ['unearned']))
@@ -94,6 +119,10 @@ class SsiDisabledDependency(Member):
 
 class SsiCountableResourcesDependency(Member):
     field = "ssi_countable_resources"
+    dependencies = (
+        'household_assets',
+        'age',
+    )
 
     def value(self):
         ssi_assets = 0
@@ -121,6 +150,11 @@ class PellGrant(Member):
 
 class PellGrantDependentAvailableIncomeDependency(Member):
     field = "pell_grant_dependent_available_income"
+    dependencies = (
+        'income_type',
+        'income_amount',
+        'income_frequency',
+    )
 
     def value(self):
         return int(self.member.calc_gross_income('yearly', ['all'])),
@@ -128,6 +162,7 @@ class PellGrantDependentAvailableIncomeDependency(Member):
 
 class PellGrantCountableAssetsDependency(Member):
     field = "pell_grant_countable_assets"
+    dependencies = ('household_assets',)
 
     def value(self):
         return int(self.screen.household_assets)
@@ -135,6 +170,7 @@ class PellGrantCountableAssetsDependency(Member):
 
 class CostOfAttendingCollegeDependency(Member):
     field = "cost_of_attending_college"
+    dependencies = ('age',)
 
     def value(self):
         return 22_288 * (self.member.age >= 16 and self.member.student)
