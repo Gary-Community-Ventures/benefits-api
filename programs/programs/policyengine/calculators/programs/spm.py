@@ -8,6 +8,14 @@ class PolicyEngineSpmCalulator(PolicyEnigineCalulator):
 
 class Snap(PolicyEngineSpmCalulator):
     pe_name = 'snap'
+    pe_inputs = [
+        dependency.spm.SnapChildSupportDeductionDependency,
+        dependency.spm.SnapGrossIncomeDependency,
+        dependency.spm.SnapAssetsDependency,
+        dependency.spm.MeetsSnapCategoricalEligibilityDependency,
+        dependency.spm.SnapEmergencyAllotmentDependency,
+    ]
+    pe_outputs = [dependency.spm.Snap]
 
     def value(self):
         return self.get_data()[self.pe_name][self.pe_period]
