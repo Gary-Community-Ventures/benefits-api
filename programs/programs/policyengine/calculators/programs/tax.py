@@ -1,8 +1,16 @@
-from .base import PolicyEngineTaxUnitCalulator
+import programs.programs.policyengine.calculators.dependencies.tax as dependency
+from programs.programs.policyengine.calculators.base import PolicyEnigineCalulator
+
+
+class PolicyEngineTaxUnitCalulator(PolicyEnigineCalulator):
+    pe_category = 'tax_units'
+    pe_sub_category = 'tax_unit'
 
 
 class Eitc(PolicyEngineTaxUnitCalulator):
     pe_name = 'eitc'
+    pe_inputs = []
+    pe_outputs = [dependency.Eitc]
 
 
 class Coeitc(PolicyEngineTaxUnitCalulator):

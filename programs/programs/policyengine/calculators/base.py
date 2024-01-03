@@ -1,7 +1,7 @@
 from programs.util import Dependencies
 from screener.models import Screen
 from programs.calc import Eligibility, ProgramCalculator
-from .dependencies import PolicyEngineScreenInput
+from .dependencies.base import PolicyEngineScreenInput
 from typing import List
 from . import YEAR
 

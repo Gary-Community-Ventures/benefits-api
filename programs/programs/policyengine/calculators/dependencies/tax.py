@@ -1,4 +1,4 @@
-from programs.programs.policyengine.calculators.dependencies import TaxUnit
+from .base import TaxUnit
 
 
 class Eitc(TaxUnit):

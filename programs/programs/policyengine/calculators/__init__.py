@@ -1,6 +1,4 @@
-from .member import member_calculators
-from .spm import spm_unit_calculators
-from .tax import tax_unit_calculators
+from .programs import member_calculators, spm_unit_calculators, tax_unit_calculators
 from .base import PolicyEnigineCalulator
 from .constants import YEAR, MONTH, YEAR_MONTH
 

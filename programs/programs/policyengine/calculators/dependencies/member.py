@@ -1,4 +1,4 @@
-from programs.programs.policyengine.calculators.dependencies import Member
+from .base import Member
 
 
 class EmploymentIncomeDependency(Member):

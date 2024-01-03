@@ -1,4 +1,4 @@
-from programs.programs.policyengine.calculators.dependencies import SpmUnit
+from .base import SpmUnit
 from programs.models import FederalPoveryLimit
 
 

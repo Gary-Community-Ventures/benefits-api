@@ -1,7 +1,7 @@
 from screener.models import Screen
 from .calculators import all_calculators, PolicyEnigineCalulator
 from programs.programs.calc import Eligibility
-from .calculators.dependencies import DependencyError
+from .calculators.dependencies.base import DependencyError
 from typing import List
 import requests
 from .calculators import YEAR
