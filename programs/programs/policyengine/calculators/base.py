@@ -28,13 +28,10 @@ class PolicyEnigineCalulator(ProgramCalculator):
         return e
 
     def value(self):
-        return self.get_data()[self.pe_name][self.year]
+        return self.get_data()[self.pe_name][self.pe_period]
 
     def get_data(self):
         return self.pe_data[self.pe_category][self.pe_sub_category]
-
-    def format_month(self) -> str:
-        return self.year + '-' + self.month
 
     def can_calc(self, missing_dependencies: Dependencies):
         for input in self.pe_inputs:

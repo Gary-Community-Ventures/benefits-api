@@ -5,7 +5,7 @@ class Snap(PolicyEngineSpmCalulator):
     pe_name = 'snap'
 
     def value(self):
-        return self.get_data()[self.pe_name][self.format_month()]
+        return self.get_data()[self.pe_name][self.pe_period]
 
 
 class SchoolLunch(PolicyEngineSpmCalulator):
@@ -15,8 +15,8 @@ class SchoolLunch(PolicyEngineSpmCalulator):
         total = 0
         num_children = self.screen.num_children(3, 18)
 
-        if self.get_data()[self.pe_name][self.year] > 0 and num_children > 0:
-            if self.get_data()['school_meal_tier'][self.year] != 'PAID':
+        if self.get_data()[self.pe_name][self.pe_period] > 0 and num_children > 0:
+            if self.get_data()['school_meal_tier'][self.pe_period] != 'PAID':
                 total = 680 * num_children
 
         return total

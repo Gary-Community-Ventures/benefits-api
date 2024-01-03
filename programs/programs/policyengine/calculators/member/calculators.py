@@ -16,8 +16,8 @@ class WIC(PolicyEngineMembersCalculator):
         total = 0
 
         for _, pvalue in self.pe_data['people'].items():
-            if pvalue[self.pe_name][self.year] > 0:
-                total += self.wic_categories[pvalue['wic_category'][self.year]] * 12
+            if pvalue[self.pe_name][self.pe_period] > 0:
+                total += self.wic_categories[pvalue['wic_category'][self.pe_period]] * 12
 
         return total
 
@@ -39,11 +39,11 @@ class Medicaid(PolicyEngineMembersCalculator):
             # just uses the average which skews very high for adults and
             # aged adults
 
-            if pvalue['age'][self.year] <= 18:
+            if pvalue['age'][self.pe_period] <= 18:
                 medicaid_estimated_value = self.co_child_medicaid_average
-            elif pvalue['age'][self.year] > 18 and pvalue['age'][self.year] < 65:
+            elif pvalue['age'][self.pe_period] > 18 and pvalue['age'][self.pe_period] < 65:
                 medicaid_estimated_value = self.co_adult_medicaid_average
-            elif pvalue['age'][self.year] >= 65:
+            elif pvalue['age'][self.pe_period] >= 65:
                 medicaid_estimated_value = self.co_aged_medicaid_average
             else:
                 medicaid_estimated_value = 0
@@ -88,7 +88,7 @@ class Chp(PolicyEngineMembersCalculator):
         total = 0
 
         for _, pvalue in self.pe_data['people'].items():
-            if pvalue['co_chp_eligible'][self.year] > 0 and self.screen.has_insurance_types(('none',)):
+            if pvalue['co_chp_eligible'][self.pe_period] > 0 and self.screen.has_insurance_types(('none',)):
                 total += self.amount
 
         return total
