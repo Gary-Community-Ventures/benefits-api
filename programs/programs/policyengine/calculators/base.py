@@ -3,6 +3,7 @@ from screener.models import Screen
 from programs.calc import Eligibility, ProgramCalculator
 from .dependencies import PolicyEngineScreenInput
 from typing import List
+from . import YEAR
 
 
 class PolicyEnigineCalulator(ProgramCalculator):
@@ -12,12 +13,11 @@ class PolicyEnigineCalulator(ProgramCalculator):
     pe_name = ''
     pe_category = ''
     pe_sub_category = ''
+    pe_period = YEAR
 
-    def __init__(self, screen: Screen, pe_data, year, month):
+    def __init__(self, screen: Screen, pe_data):
         self.screen = screen
         self.pe_data = pe_data
-        self.year = year
-        self.month = month
 
     def eligible(self) -> Eligibility:
         e = Eligibility()

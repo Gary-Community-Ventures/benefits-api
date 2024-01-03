@@ -1,0 +1,3 @@
+YEAR = '2023'
+MONTH = '10'
+YEAR_MONTH = YEAR + '-' + MONTH
