@@ -1,7 +1,7 @@
 from programs.programs.policyengine.calculators.dependencies import TaxUnit
 
 
-class Eitch(TaxUnit):
+class Eitc(TaxUnit):
     field = 'eitc'
 
 
