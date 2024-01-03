@@ -1,5 +1,5 @@
-import programs.programs.policyengine.calculators.dependencies.tax as dependency
-from programs.programs.policyengine.calculators.base import PolicyEnigineCalulator
+from ..base import PolicyEnigineCalulator
+import programs.programs.policyengine.calculators.dependencies as dependency
 
 
 class PolicyEngineTaxUnitCalulator(PolicyEnigineCalulator):
@@ -9,20 +9,41 @@ class PolicyEngineTaxUnitCalulator(PolicyEnigineCalulator):
 
 class Eitc(PolicyEngineTaxUnitCalulator):
     pe_name = 'eitc'
-    pe_inputs = []
-    pe_outputs = [dependency.Eitc]
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.TaxUnitSpouseDependency,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.member.EmploymentIncomeDependency,
+    ]
+    pe_outputs = [dependency.tax.Eitc]
 
 
 class Coeitc(PolicyEngineTaxUnitCalulator):
     pe_name = 'co_eitc'
+    pe_inputs = Eitc.pe_inputs
+    pe_outputs = [dependency.tax.Coeitc]
 
 
 class Ctc(PolicyEngineTaxUnitCalulator):
     pe_name = 'ctc'
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.member.TaxUnitSpouseDependency,
+        dependency.member.EmploymentIncomeDependency,
+    ]
+    pe_outputs = [dependency.tax.Ctc]
 
 
 class Coctc(PolicyEngineTaxUnitCalulator):
     pe_name = 'ctc'
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.member.TaxUnitSpouseDependency,
+        dependency.member.EmploymentIncomeDependency,
+    ]
+    pe_outputs = [dependency.tax.Ctc]
 
     income_bands = {
         "single": [{"max": 25000, "percent": .6}, {"max": 50000, "percent": .3}, {"max": 75000, "percent": .1}],
