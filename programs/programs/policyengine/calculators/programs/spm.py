@@ -40,6 +40,12 @@ class SchoolLunch(PolicyEngineSpmCalulator):
 
 class Tanf(PolicyEngineSpmCalulator):
     pe_name = 'co_tanf'
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.PregnancyDependency,
+        dependency.member.EmploymentIncomeDependency
+    ]
+    pe_outputs = [dependency.spm.Tanf]
 
 
 class Acp(PolicyEngineSpmCalulator):
