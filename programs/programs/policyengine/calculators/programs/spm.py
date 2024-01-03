@@ -1,4 +1,5 @@
 from ..base import PolicyEnigineCalulator
+import programs.programs.policyengine.calculators.dependencies as dependency
 
 
 class PolicyEngineSpmCalulator(PolicyEnigineCalulator):
@@ -23,6 +24,8 @@ class Snap(PolicyEngineSpmCalulator):
 
 class SchoolLunch(PolicyEngineSpmCalulator):
     pe_name = 'school_meal_daily_subsidy'
+    pe_inputs = [dependency.member.EmploymentIncomeDependency]
+    pe_outputs = [dependency.spm.SchoolMealDailySubsidy, dependency.spm.SchoolMealTier]
 
     def value(self):
         total = 0
