@@ -60,3 +60,8 @@ class Acp(PolicyEngineSpmCalulator):
 
 class Lifeline(PolicyEngineSpmCalulator):
     pe_name = 'lifeline'
+    pe_inputs = [
+        dependency.member.TaxUnitDependentDependency,
+        dependency.member.EmploymentIncomeDependency
+    ]
+    pe_outputs = [dependency.spm.Lifeline]
