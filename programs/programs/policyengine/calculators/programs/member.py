@@ -127,6 +127,18 @@ class Ssi(PolicyEngineMembersCalculator):
 
 class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
     pe_name = 'co_state_supplement'
+    pe_inputs = [
+        dependency.member.SsiCountableResourcesDependency,
+        dependency.member.SsiDisabledDependency,
+        dependency.member.SsiEarnedIncomeDependency,
+        dependency.member.SsiUnearnedIncomeDependency,
+        dependency.member.AgeDependency,
+        dependency.member.TaxUnitSpouseDependency,
+        dependency.member.TaxUnitHeadDependency,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.member.EmploymentIncomeDependency,
+    ]
+    pe_outputs = [dependency.member.Andcs]
 
 
 class OldAgePension(PolicyEngineMembersCalculator):
