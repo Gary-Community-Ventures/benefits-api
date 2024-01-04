@@ -50,6 +50,8 @@ class Wic(PolicyEngineMembersCalculator):
 
 class Medicaid(PolicyEngineMembersCalculator):
     pe_name = 'medicaid'
+    pe_inputs = [dependency.member.AgeDependency, dependency.member.EmploymentIncomeDependency]
+    pe_outputs = [dependency.member.AgeDependency, dependency.member.Medicaid]
 
     co_child_medicaid_average = 200 * 12
     co_adult_medicaid_average = 310 * 12
@@ -61,6 +63,9 @@ class Medicaid(PolicyEngineMembersCalculator):
         total = 0
 
         for _, pvalue in self.pe_data['people'].items():
+            if pvalue[self.pe_name][self.pe_period] <= 0:
+                continue
+
             # here we need to adjust for children as policy engine
             # just uses the average which skews very high for adults and
             # aged adults
