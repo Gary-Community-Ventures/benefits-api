@@ -96,6 +96,18 @@ class Medicaid(PolicyEngineMembersCalculator):
 
 class PellGrant(PolicyEngineMembersCalculator):
     pe_name = 'pell_grant'
+    pe_inputs = [
+        dependency.member.PellGrantDependentAvailableIncomeDependency,
+        dependency.member.PellGrantCountableAssetsDependency,
+        dependency.member.CostOfAttendingCollegeDependency,
+        dependency.member.PellGrantMonthsInSchoolDependency,
+        dependency.tax.PellGrantPrimaryIncomeDependency,
+        dependency.tax.PellGrantDependentsInCollegeDependency,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.member.TaxUnitHeadDependency,
+        dependency.member.TaxUnitSpouseDependency,
+    ]
+    pe_outputs = [dependency.member.PellGrant]
 
 
 class Ssi(PolicyEngineMembersCalculator):
