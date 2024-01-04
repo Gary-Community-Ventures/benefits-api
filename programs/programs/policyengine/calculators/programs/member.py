@@ -157,6 +157,8 @@ class OldAgePension(PolicyEngineMembersCalculator):
 
 class Chp(PolicyEngineMembersCalculator):
     pe_name = 'co_chp'
+    pe_inputs = [dependency.member.AgeDependency, dependency.member.EmploymentIncomeDependency]
+    pe_outputs = [dependency.member.ChpEligible]
 
     amount = 200 * 12
 
