@@ -143,6 +143,16 @@ class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
 
 class OldAgePension(PolicyEngineMembersCalculator):
     pe_name = 'co_oap'
+    pe_inputs = [
+        dependency.member.SsiCountableResourcesDependency,
+        dependency.member.SsiEarnedIncomeDependency,
+        dependency.member.SsiUnearnedIncomeDependency,
+        dependency.member.AgeDependency,
+        dependency.member.TaxUnitSpouseDependency,
+        dependency.member.TaxUnitHeadDependency,
+        dependency.member.TaxUnitDependentDependency,
+    ]
+    pe_outputs = [dependency.member.Oap]
 
 
 class Chp(PolicyEngineMembersCalculator):
