@@ -4,7 +4,7 @@ import programs.programs.policyengine.calculators.programs.tax as tax
 
 
 member_calculators = {
-    'wic': member.WIC,
+    'wic': member.Wic,
     'medicaid': member.Medicaid,
     'pell_grant': member.PellGrant,
     'ssi': member.Ssi,

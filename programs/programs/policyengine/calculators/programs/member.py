@@ -1,4 +1,5 @@
 from ..base import PolicyEnigineCalulator
+import programs.programs.policyengine.calculators.dependencies as dependency
 
 
 class PolicyEngineMembersCalculator(PolicyEnigineCalulator):
@@ -21,7 +22,7 @@ class PolicyEngineMembersCalculator(PolicyEnigineCalulator):
         return total
 
 
-class WIC(PolicyEngineMembersCalculator):
+class Wic(PolicyEngineMembersCalculator):
     wic_categories = {
         'NONE': 0,
         'INFANT': 130,
@@ -31,6 +32,11 @@ class WIC(PolicyEngineMembersCalculator):
         "BREASTFEEDING": 100,
     }
     pe_name = 'wic'
+    pe_inputs = [
+        dependency.member.PregnancyDependency,
+        dependency.member.AgeDependency,
+    ]
+    pe_outputs = [dependency.member.Wic, dependency.member.WicCategory]
 
     def value(self):
         total = 0
