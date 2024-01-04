@@ -112,6 +112,17 @@ class PellGrant(PolicyEngineMembersCalculator):
 
 class Ssi(PolicyEngineMembersCalculator):
     pe_name = 'ssi'
+    pe_inputs = [
+        dependency.member.SsiCountableResourcesDependency,
+        dependency.member.SsiDisabledDependency,
+        dependency.member.SsiEarnedIncomeDependency,
+        dependency.member.SsiUnearnedIncomeDependency,
+        dependency.member.AgeDependency,
+        dependency.member.TaxUnitSpouseDependency,
+        dependency.member.TaxUnitHeadDependency,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.member.EmploymentIncomeDependency,
+    ]
 
 
 class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
