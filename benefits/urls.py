@@ -35,6 +35,7 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    path('api/', include('configuration.urls')),
     path('api/', include('screener.urls')),
     path('api/', include('programs.urls')),
     path('api/', include('authentication.urls')),

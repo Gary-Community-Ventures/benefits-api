@@ -2,6 +2,7 @@ from programs.sheets import sheets_get_data
 from programs.co_county_zips import counties_from_zip
 import re
 import programs.programs.messages as messages
+from integrations.util import Cache
 
 
 def calculate_child_care_assistance(screen, data, program):
@@ -86,11 +87,7 @@ def value_child_care_assistance(screen):
 
 def cccap_county_values(county_name):
     match = False
-    spreadsheet_id = '1WzobLnLoxGbN_JfTuw3jUCZV5N7IA_0uvwEkIoMt3Wk'
-    range_name = 'Sheet1!A14:J78'
-    sheet_values = sheets_get_data(spreadsheet_id, range_name)
-    if not sheet_values:
-        return match
+    sheet_values = cache.fetch()
 
     cccap_county_name = county_name.replace(" County", "")
     non_decimal = re.compile(r'[^\d.]+')
@@ -125,3 +122,20 @@ def num_cccap_children(screen):
             children += 1
 
     return children
+
+
+class CCCAPCache(Cache):
+    expire_time = 60 * 60 * 24
+    default = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
+
+    def update(self):
+        spreadsheet_id = '1WzobLnLoxGbN_JfTuw3jUCZV5N7IA_0uvwEkIoMt3Wk'
+        range_name = 'Sheet1!A14:J78'
+        sheet_values = sheets_get_data(spreadsheet_id, range_name)
+        if not sheet_values:
+            raise Exception('Sheet unavailable')
+
+        return sheet_values
+
+
+cache = CCCAPCache()

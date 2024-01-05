@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'screener.apps.ScreenerConfig',
     'programs.apps.ProgramsConfig',
+    'configuration.apps.ConfigurationConfig',
     'integrations.apps.IntegrationsConfig',
     'translations.apps.TranslationsConfig',
     'rest_framework',

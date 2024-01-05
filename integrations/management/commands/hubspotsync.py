@@ -4,6 +4,7 @@ from screener.models import Screen
 from django.db.models import Q
 from integrations.services.hubspot.integration import upsert_user_hubspot
 import time
+import uuid
 
 
 class Command(BaseCommand):
@@ -68,8 +69,9 @@ class Command(BaseCommand):
 
     # stores an external id from hubspot and then clears all of the PII
     def replace_pii_with_hubspot_id(self, hubspot_id, user):
+        random_id = str(uuid.uuid4()).replace('-', '')
         user.external_id = hubspot_id
-        user.email_or_cell = hubspot_id + "@myfriendben.org"
+        user.email_or_cell = f'{hubspot_id}+{random_id}@myfriendben.org'
         user.first_name = None
         user.last_name = None
         user.cell = None
