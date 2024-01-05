@@ -1,4 +1,3 @@
-from django.utils.translation import gettext as _
 from decouple import config
 from twilio.rest import Client
 from translations.models import Translation

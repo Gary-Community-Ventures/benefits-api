@@ -15,9 +15,9 @@ def calculate_ssdi(screen, data, program):
 
 
 class Ssdi():
-    amount = 1_364
-    income_limit = 1_470
-    income_limit_blind = 2_460
+    amount = 1_537
+    income_limit = 1_550
+    income_limit_blind = 2_590
 
     def __init__(self, screen):
         self.screen = screen

@@ -1,4 +1,3 @@
-from django.utils.translation import gettext as _
 from decouple import config
 import sendgrid
 from sendgrid.helpers.mail import Mail, Email, To, Content
