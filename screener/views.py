@@ -22,6 +22,7 @@ from screener.serializers import (
     ResultsSerializer,
 )
 from programs.programs.policyengine.policyengine import eligibility_policy_engine
+from programs.programs.policyengine.new_pe import calc_pe_eligibility
 import programs.programs.urgent_needs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program, Referrer
 from django.core.exceptions import ObjectDoesNotExist
@@ -173,7 +174,8 @@ def eligibility_results(screen, batch=False):
         previous_snapshot = None
     snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
 
-    pe_eligibility = eligibility_policy_engine(screen)
+    # pe_eligibility = eligibility_policy_engine(screen)
+    pe_eligibility = calc_pe_eligibility(screen)
     pe_programs = (
         'snap',
         'wic',

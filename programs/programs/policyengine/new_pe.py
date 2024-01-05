@@ -4,10 +4,10 @@ from programs.programs.calc import Eligibility
 from .calculators.dependencies.base import DependencyError
 from typing import List
 import requests
-from .calculators import YEAR
+from .calculators.constants import YEAR
 
 
-def eligibility(screen: Screen):
+def calc_pe_eligibility(screen: Screen):
     missing_dependencies = screen.missing_fields()
     valid_programs: dict[str, type[PolicyEnigineCalulator]] = []
 
