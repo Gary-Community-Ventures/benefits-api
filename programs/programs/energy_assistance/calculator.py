@@ -1,5 +1,6 @@
 import programs.programs.messages as messages
 from programs.sheets import sheets_get_data
+from integrations.util import Cache
 
 
 def calculate_energy_assistance(screen, data, program):
@@ -45,15 +46,30 @@ def eligibility_energy_assistance(screen):
 
 def value_energy_assistance(screen):
     value = 362
-    spreadsheet_id = '1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg'
-    range_name = "'FFY 2023'!A2:F129"
-    sheet_values = sheets_get_data(spreadsheet_id, range_name)
-    if not sheet_values:
-        return value
-    data = [[row[0], row[5]] for row in sheet_values if row != []]
+    data = cache.fetch()
     for row in data:
         county = row[0].replace('Application County: ', '') + 'County'
         if county == screen.county:
             value = int(float(row[1].replace('$', '')))
 
     return value
+
+
+class LeapValueCache(Cache):
+    expire_time = 60 * 60 * 24
+    default = []
+
+    def update(self):
+        spreadsheet_id = '1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg'
+        range_name = "'FFY 2023'!A2:F129"
+        sheet_values = sheets_get_data(spreadsheet_id, range_name)
+
+        if not sheet_values:
+            raise Exception('Sheet unavailable')
+
+        data = [[row[0], row[5]] for row in sheet_values if row != []]
+
+        return data
+
+
+cache = LeapValueCache()
