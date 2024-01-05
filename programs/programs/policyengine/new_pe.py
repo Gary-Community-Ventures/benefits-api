@@ -5,11 +5,16 @@ from .calculators.dependencies.base import DependencyError
 from typing import List
 import requests
 from .calculators.constants import YEAR
+from .calculators.dependencies.member import (
+    TaxUnitDependentDependency,
+    TaxUnitHeadDependency,
+    TaxUnitSpouseDependency,
+)
 
 
 def calc_pe_eligibility(screen: Screen):
     missing_dependencies = screen.missing_fields()
-    valid_programs: dict[str, type[PolicyEnigineCalulator]] = []
+    valid_programs: dict[str, type[PolicyEnigineCalulator]] = {}
 
     for name_abbr, Calculator in all_calculators.items():
         if missing_dependencies.has(Calculator.dependencies):
@@ -17,7 +22,7 @@ def calc_pe_eligibility(screen: Screen):
 
         valid_programs[name_abbr] = Calculator
 
-    data = policy_engine_calculate(pe_input(screen, valid_programs.values()))
+    data = policy_engine_calculate(pe_input(screen, valid_programs.values()))['result']
 
     all_eligibility: dict[str, Eligibility] = {}
     for name_abbr, Calculator in valid_programs.items():
@@ -49,6 +54,7 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
             "people": {},
             "tax_units": {
                 "tax_unit": {
+                    "members": [],
                 }
             },
             "families": {
@@ -70,9 +76,24 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
             "marital_units": {}
         }
     }
-
-    members = screen.members.all()
+    members = screen.household_members.all()
     relationship_map = screen.relationship_map()
+
+    for member in members:
+        member_id = str(member.id)
+        household = raw_input['household']
+
+        household['families']['family']['members'].append(member_id)
+        household['households']['household']['members'].append(member_id)
+        household['spm_units']['spm_unit']['members'].append(member_id)
+        household['people'][member_id] = {}
+
+        is_tax_unit_head = TaxUnitHeadDependency(screen, member, relationship_map).value()
+        is_tax_unit_spouse = TaxUnitSpouseDependency(screen, member, relationship_map).value()
+        is_tax_unit_dependent = TaxUnitDependentDependency(screen, member, relationship_map).value()
+
+        if is_tax_unit_head or is_tax_unit_spouse or is_tax_unit_dependent:
+            household['tax_units']['tax_unit']['members'].append(member_id)
 
     already_added = set()
     for member_1, member_2 in relationship_map.items():
@@ -87,20 +108,20 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
     for Program in programs:
         for Data in Program.pe_inputs + Program.pe_outputs:
             if not Data.member:
-                data = Data(screen, members)
-                value = Data.value()
+                data = Data(screen, members, relationship_map)
+                value = data.value()
                 unit = raw_input["household"][data.unit][data.sub_unit]
 
                 if data.field in unit:
                     if value != unit[data.field][Program.pe_period]:
                         raise DependencyError(data.field, value, unit[data.field][Program.pe_period])
 
-                unit[data.field][Program.pe_period] = value
+                unit[data.field] = {Program.pe_period: value}
                 continue
 
             for member in members:
                 member_id = str(member.id)
-                data = Data(screen, member)
+                data = Data(screen, member, relationship_map)
                 value = data.value()
 
                 unit = raw_input["household"][data.unit][member_id]
@@ -109,6 +130,6 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
                     if value != unit[data.field][Program.pe_period]:
                         raise DependencyError(data.field, value, unit[data.field][Program.pe_period])
 
-                unit[data.field][Program.pe_period] = value
+                unit[data.field] = {Program.pe_period: value}
 
     return raw_input

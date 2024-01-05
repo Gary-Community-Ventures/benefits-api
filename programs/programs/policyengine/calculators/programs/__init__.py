@@ -23,7 +23,7 @@ spm_unit_calculators = {
 
 tax_unit_calculators = {
     'eitc': tax.Eitc,
-    'co_eitc': tax.Coeitc,
+    'coeitc': tax.Coeitc,
     'ctc': tax.Ctc,
-    'co_ctc': tax.Eitc,
+    'coctc': tax.Eitc,
 }
