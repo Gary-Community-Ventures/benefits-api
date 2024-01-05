@@ -42,6 +42,14 @@ class Eligibility:
             self.eligible = False
 
         return self.member_eligibility(eligible_members, conditions)
+   
+    def to_dict(self):
+        return {
+            "eligible": self.eligible,
+            "passed": self.pass_messages,
+            "failed": self.fail_messages,
+            "estimated_value": self.value,
+        },
 
 
 class ProgramCalculator:

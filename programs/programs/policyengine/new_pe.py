@@ -19,14 +19,14 @@ def eligibility(screen: Screen):
 
     data = policy_engine_calculate(pe_input(screen, valid_programs.values()))
 
-    all_eligibility = dict[str, Eligibility]
-    for Calculator in valid_programs:
+    all_eligibility: dict[str, Eligibility] = {}
+    for name_abbr, Calculator in valid_programs.items():
         calc = Calculator(screen, data)
 
         e = calc.eligible()
         e.value = calc.value()
 
-        all_eligibility.append(e)
+        all_eligibility[name_abbr] = e.to_dict()
 
     return all_eligibility
 
