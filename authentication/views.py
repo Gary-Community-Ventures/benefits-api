@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from authentication.serializers import UserSerializer, UserOffersSerializer
 from sentry_sdk import capture_message
 from integrations.services.hubspot.integration import update_send_offers_hubspot, upsert_user_hubspot
+import uuid
 
 
 class UserViewSet(mixins.UpdateModelMixin,
@@ -34,7 +35,7 @@ class UserViewSet(mixins.UpdateModelMixin,
                 update_send_offers_hubspot(user.external_id, user.send_offers, user.send_updates)
             else:
                 try:
-                    upsert_user_to_hubspot(screen, user)
+                    upsert_user_to_hubspot(screen, screen.user)
                 except Exception:
                     capture_message(
                         'HubSpot upsert failed',
@@ -57,8 +58,9 @@ def upsert_user_to_hubspot(screen, user):
 
     hubspot_id = upsert_user_hubspot(user, screen=screen)
     if hubspot_id:
+        random_id = str(uuid.uuid4()).replace('-', '')
         user.external_id = hubspot_id
-        user.email_or_cell = hubspot_id + "@myfriendben.org"
+        user.email_or_cell = f'{hubspot_id}+{random_id}@myfriendben.org'
         user.first_name = None
         user.last_name = None
         user.cell = None
