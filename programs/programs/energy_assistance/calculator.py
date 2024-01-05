@@ -6,21 +6,13 @@ def calculate_energy_assistance(screen, data, program):
     eligibility = eligibility_energy_assistance(screen)
     value = value_energy_assistance(screen)
 
-    calculation = {
-        'eligibility': eligibility,
-        'value': value
-    }
+    calculation = {'eligibility': eligibility, 'value': value}
 
     return calculation
 
 
 def eligibility_energy_assistance(screen):
-
-    eligibility = {
-        "eligible": True,
-        "passed": [],
-        "failed": []
-    }
+    eligibility = {"eligible": True, "passed": [], "failed": []}
 
     # Variables that may change over time
     # household size : income limit
