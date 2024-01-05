@@ -21,8 +21,7 @@ from screener.serializers import (
     MessageSerializer,
     ResultsSerializer,
 )
-from programs.programs.policyengine.policyengine import eligibility_policy_engine
-from programs.programs.policyengine.new_pe import calc_pe_eligibility
+from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 import programs.programs.urgent_needs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program, Referrer
 from django.core.exceptions import ObjectDoesNotExist
