@@ -61,7 +61,7 @@ class LeapValueCache(Cache):
 
     def update(self):
         spreadsheet_id = '1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg'
-        range_name = "'FFY 2023'!A2:F129"
+        range_name = "'FFY 2024'!A2:F129"
         sheet_values = sheets_get_data(spreadsheet_id, range_name)
 
         if not sheet_values:
