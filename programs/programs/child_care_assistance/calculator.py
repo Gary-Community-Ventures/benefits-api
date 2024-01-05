@@ -126,6 +126,7 @@ def num_cccap_children(screen):
 
 class CCCAPCache(Cache):
     expire_time = 60 * 60 * 24
+    default = ['0', '0', '0', '0', '0', '0', '0', '0', '0', '0']
 
     def update(self):
         spreadsheet_id = '1WzobLnLoxGbN_JfTuw3jUCZV5N7IA_0uvwEkIoMt3Wk'

@@ -4,10 +4,16 @@ import datetime
 
 class Cache():
     expire_time = 0
+    default = 0
 
     def __init__(self):
-        self.data = self.update()
-        self.last_update = datetime.datetime.now()
+        try:
+            self.data = self.update()
+            self.last_update = datetime.datetime.now()
+        except Exception:
+            self.data = self.default
+            self.last_update = datetime.datetime.now() - datetime.timedelta(seconds=self.expire_time)
+            capture_message(f'Failed to update {self.__class__.__name__}', level='warning')
 
     def update(self):
         raise NotImplementedError()
@@ -17,7 +23,6 @@ class Cache():
             self.data = self.update()
             self.last_update = datetime.datetime.now()
         except Exception:
-            print(f'Failed to update {self.__class__.__name__}')
             capture_message(f'Failed to update {self.__class__.__name__}', level='warning')
 
     def should_update(self):

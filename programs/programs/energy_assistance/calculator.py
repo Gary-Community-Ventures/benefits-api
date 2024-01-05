@@ -65,6 +65,7 @@ def value_energy_assistance(screen):
 
 class LeapValueCache(Cache):
     expire_time = 60 * 60 * 24
+    default = []
 
     def update(self):
         spreadsheet_id = '1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg'
