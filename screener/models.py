@@ -1,12 +1,10 @@
 from django.db import models
 from decimal import Decimal
-import json
 import uuid
 from authentication.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
-from screener.views import eligibility_results
 
 
 # The screen is the top most container for all information collected in the
@@ -564,24 +562,6 @@ class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name='eligibility_snapshots', on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
     is_batch = models.BooleanField(default=False)
-
-    def generate_program_snapshots(self):
-        eligibility = eligibility_results(self.screen)
-        for item in eligibility:
-            program_snapshot = ProgramEligibilitySnapshot(
-                eligibility_snapshot=self,
-                name=item['name'],
-                name_abbreviated=item['name_abbreviated'],
-                value_type=item['value_type'],
-                estimated_value=item['estimated_value'],
-                estimated_delivery_time=item['estimated_delivery_time'],
-                estimated_application_time=item['estimated_application_time'],
-                legal_status_required=item['legal_status_required'],
-                eligible=item['eligible'],
-                failed_tests=json.dumps(item['failed_tests']),
-                passed_tests=json.dumps(item['passed_tests'])
-            )
-            program_snapshot.save()
 
 
 # Eligibility results for each specific program per screen. These are
