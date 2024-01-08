@@ -15,7 +15,7 @@ class EnergyAssistance(ProgramCalculator):
         7: 8_001,
         8: 8_179,
     }
-    dependencies = ['income_frequency', 'income_amount', 'county']
+    dependencies = ['income_frequency', 'income_amount', 'county', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()

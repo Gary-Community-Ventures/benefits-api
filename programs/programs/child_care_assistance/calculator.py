@@ -12,7 +12,7 @@ class ChildCareAssistance(ProgramCalculator):
     max_age_preschool = 4
     max_age_afterschool = 13
     max_age_afterschool_disabled = 19
-    dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode']
+    dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()

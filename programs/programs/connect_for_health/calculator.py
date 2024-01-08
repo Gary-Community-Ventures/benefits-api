@@ -5,7 +5,7 @@ import programs.programs.messages as messages
 
 class ConnectForHealth(ProgramCalculator):
     percent_of_fpl = 4
-    dependencies = ['insurance', 'income_amount', 'income_frequency', 'county']
+    dependencies = ['insurance', 'income_amount', 'income_frequency', 'county', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()

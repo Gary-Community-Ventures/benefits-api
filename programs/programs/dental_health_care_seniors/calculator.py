@@ -6,7 +6,7 @@ class DentalHealthCareSeniors(ProgramCalculator):
     amount = 80
     min_age = 60
     percent_of_fpl = 2.5
-    dependencies = ['age', 'income_amount', 'income_frequency', 'insurance']
+    dependencies = ['age', 'income_amount', 'income_frequency', 'insurance', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
