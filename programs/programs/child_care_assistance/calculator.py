@@ -37,7 +37,7 @@ class ChildCareAssistance(ProgramCalculator):
 
         return e
 
-    def value(self):
+    def value(self, eligible_members: int):
         value = 0
 
         household_members = self.screen.household_members.all()

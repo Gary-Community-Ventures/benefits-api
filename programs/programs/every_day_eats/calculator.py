@@ -24,5 +24,5 @@ class EveryDayEats(ProgramCalculator):
 
         return e
 
-    def value(self):
+    def value(self, eligible_members: int):
         return EveryDayEats.amount

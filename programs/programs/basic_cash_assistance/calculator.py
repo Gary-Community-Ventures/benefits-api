@@ -19,5 +19,5 @@ class BasicCashAssistance(ProgramCalculator):
 
         return e
 
-    def value(self):
+    def value(self, eligible_members: int):
         return self.amount

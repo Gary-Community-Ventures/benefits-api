@@ -14,7 +14,7 @@ class CashBack(ProgramCalculator):
 
         return e
 
-    def value(self):
+    def value(self, eligible_members: int):
         adults = self.screen.num_adults(age_max=18)
         value = adults * 750
         return value

@@ -25,5 +25,5 @@ class DenverPreschoolProgram(ProgramCalculator):
 
         return e
 
-    def value(self):
+    def value(self, eligible_members: int):
         self.value = DenverPreschoolProgram.amount

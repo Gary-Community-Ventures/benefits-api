@@ -33,5 +33,5 @@ class DentalHealthCareSeniors(ProgramCalculator):
 
         return e
 
-    def value(self):
+    def value(self, eligible_members: int):
         return DentalHealthCareSeniors.amount * self.screen.num_adults(age_max=DentalHealthCareSeniors.min_age) * 12

@@ -30,7 +30,7 @@ class EnergyAssistance(ProgramCalculator):
 
         return e
 
-    def value(self):
+    def value(self, eligible_members: int):
         value = 362
         data = cache.fetch()
         for row in data:

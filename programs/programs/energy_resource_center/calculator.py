@@ -27,5 +27,5 @@ class EnergyResourceCenter(ProgramCalculator):
 
         return e
 
-    def value(self):
+    def value(self, eligible_members: int):
         return EnergyResourceCenter.average_amount

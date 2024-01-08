@@ -29,5 +29,5 @@ class HeadStart(ProgramCalculator):
 
         return e
 
-    def value(self):
+    def value(self, eligible_members: int):
         return HeadStart.amount
