@@ -1,20 +1,8 @@
+from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 
 
-def calculate_energy_resource_center(screen, data, program):
-    erc = EnergyResourceCenter(screen)
-    eligibility = erc.eligibility
-    value = erc.value
-
-    calculation = {
-        'eligibility': eligibility,
-        'value': value
-    }
-
-    return calculation
-
-
-class EnergyResourceCenter():
+class EnergyResourceCenter(ProgramCalculator):
     average_amount = 4000
     income_bands = {
         1: 2880,
@@ -26,39 +14,18 @@ class EnergyResourceCenter():
         7: 7477,
         8: 7644
     }
+    dependencies = ['household_size', 'income_amount', 'income_frequency']
 
-    def __init__(self, screen):
-        self.screen = screen
+    def eligible(self) -> Eligibility:
+        e = Eligibility()
 
-        self.eligibility = {
-            "eligible": True,
-            "passed": [],
-            "failed": []
-        }
-
-        self.calc_eligibility()
-
-        self.calc_value()
-
-    def calc_eligibility(self):
-        # Income test
+        # income
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
         income_band = EnergyResourceCenter.income_bands[self.screen.household_size]
-        self._condition(gross_income <= income_band,
-                        messages.income(gross_income, income_band))
+        e.condition(gross_income <= income_band,
+                    messages.income(gross_income, income_band))
 
-    def calc_value(self):
-        self.value = EnergyResourceCenter.average_amount
+        return e
 
-    def _failed(self, msg):
-        self.eligibility["eligible"] = False
-        self.eligibility["failed"].append(msg)
-
-    def _passed(self, msg):
-        self.eligibility["passed"].append(msg)
-
-    def _condition(self, condition, msg):
-        if condition is True:
-            self._passed(msg)
-        else:
-            self._failed(msg)
+    def value(self):
+        return EnergyResourceCenter.average_amount
