@@ -4,6 +4,7 @@ from programs.programs.calc import Eligibility, ProgramCalculator
 
 class BasicCashAssistance(ProgramCalculator):
     amount = 1_000
+    dependencies = ['county', 'age']
 
     def eligible(self) -> Eligibility:
         e = Eligibility
@@ -17,6 +18,6 @@ class BasicCashAssistance(ProgramCalculator):
         e.condition(num_children >= 1, messages.child())
 
         return e
-   
+
     def value(self):
         return self.amount
