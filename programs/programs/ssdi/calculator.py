@@ -1,74 +1,41 @@
+from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
+import math
 
 
-def calculate_ssdi(screen, data, program):
-    rhc = Ssdi(screen)
-    eligibility = rhc.eligibility
-    value = rhc.value
-
-    calculation = {
-        'eligibility': eligibility,
-        'value': value
-    }
-
-    return calculation
-
-
-class Ssdi():
-    amount = 1_537
+class Ssdi(ProgramCalculator):
     income_limit = 1_550
     income_limit_blind = 2_590
+    amount = 1_537
+    dependencies = ['income_amount', 'income_frequency']
 
-    def __init__(self, screen):
-        self.screen = screen
+    def eligible(self) -> Eligibility:
+        e = Eligibility()
 
-        self.eligibility = {
-            "eligible": True,
-            "passed": [],
-            "failed": []
-        }
+        lowest_income = math.inf
 
-        self.calc_eligibility()
-
-        self.calc_value()
-
-    def calc_eligibility(self):
-        someone_is_disabled = False
-        someone_meets_income_test = False
-        lowest_income = float('inf')
-        self.members_eligible = 0
-        for member in self.screen.household_members.all():
-            member_is_disabled = member.has_disability()
-            someone_is_disabled = someone_is_disabled or member_is_disabled
+        def income_condition(member):
+            nonlocal lowest_income
 
             income_limit = Ssdi.income_limit_blind if member.visually_impaired else Ssdi.income_limit
             member_income = member.calc_gross_income('monthly', ('all',))
-            member_meets_income_test = (member_income < income_limit) and member_is_disabled
-            someone_meets_income_test = someone_meets_income_test or member_meets_income_test
-            if member_meets_income_test and member_is_disabled:
-                self.members_eligible += 1
-            if member_income < lowest_income and member_is_disabled:
+
+            if member_income < lowest_income:
                 lowest_income = member_income
 
-        # Has a disability
-        self._condition(someone_is_disabled, messages.has_disability())
+            return member_income < income_limit
 
-        # Income test
-        if someone_is_disabled:
-            self._condition(someone_meets_income_test, messages.income(lowest_income, income_limit))
+        e.member_eligibility(
+            self.screen.household_members.all(),
+            [
+                (lambda m: m.has_disability(), messages.has_disability()),
+                (income_condition, None)
+            ]
+        )
 
-    def calc_value(self):
-        self.value = Ssdi.amount * 12 * self.members_eligible
+        e.passed(messages.income(lowest_income, Ssdi.income_limit))
 
-    def _failed(self, msg):
-        self.eligibility["eligible"] = False
-        self.eligibility["failed"].append(msg)
+        return e
 
-    def _passed(self, msg):
-        self.eligibility["passed"].append(msg)
-
-    def _condition(self, condition, msg):
-        if condition is True:
-            self._passed(msg)
-        else:
-            self._failed(msg)
+    def value(self, eligible_members: int):
+        return Ssdi.amount * eligible_members * 12
