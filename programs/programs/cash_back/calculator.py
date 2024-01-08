@@ -1,39 +1,20 @@
 import programs.programs.messages as messages
+from programs.programs.calc import ProgramCalculator, Eligibility
 
 
-def calculate_cash_back(screen, data, program):
-    eligibility = eligibility_cash_back(screen)
-    value = value_cash_back(screen)
+class CashBack(ProgramCalculator):
+    amount = 750
+    dependencies = ['age']
 
-    calculation = {
-        'eligibility': eligibility,
-        'value': value
-    }
+    def eligible(self) -> Eligibility:
+        e = Eligibility()
 
-    return calculation
+        adults = self.screen.num_adults(age_max=18)
+        e.condition(adults > 0, messages.older_than(18))
 
+        return e
 
-def eligibility_cash_back(screen):
-
-    eligibility = {
-        "eligible": True,
-        "passed": [],
-        "failed": []
-    }
-
-    adults = screen.num_adults(age_max=18)
-    if adults < 1:
-        eligibility["eligible"] = False
-        eligibility["failed"].append((
-            messages.older_than(18)))
-    else:
-        eligibility["passed"].append((
-            messages.older_than(18)))
-
-    return eligibility
-
-
-def value_cash_back(screen):
-    adults = screen.num_adults(age_max=18)
-    value = adults * 750
-    return value
+    def value(self):
+        adults = self.screen.num_adults(age_max=18)
+        value = adults * 750
+        return value
