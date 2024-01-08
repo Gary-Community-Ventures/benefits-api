@@ -9,6 +9,7 @@ class Eligibility:
         self.pass_messages = []
         self.fail_messages = []
         self.value = 0
+        self.eligible_member_count = 0
 
     def set_value(self, value):
         self.value = value
@@ -31,6 +32,7 @@ class Eligibility:
         Filter out members that do not meet the condition and make eligibility messages
         '''
         if len(conditions) <= 0:
+            self.eligible_member_count = len(members)
             return members
 
         [condition, message] = conditions.pop()
@@ -63,7 +65,7 @@ class ProgramCalculator:
     def eligible(self) -> Eligibility:
         return Eligibility()
 
-    def value(self):
+    def value(self, eligible_members: int):
         return 0
 
     def can_calc(self, missing_dependencies: Dependencies):
