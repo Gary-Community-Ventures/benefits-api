@@ -1,6 +1,8 @@
 from screener.models import Screen
-from programs.models import Program
 from programs.util import Dependencies
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from programs.models import Program
 
 
 class Eligibility:
@@ -57,7 +59,7 @@ class Eligibility:
 class ProgramCalculator:
     dependencies = tuple()
 
-    def __init__(self, screen: Screen, program: Program, data):
+    def __init__(self, screen: Screen, program: "Program", data):
         self.screen = screen
         self.program = program
         self.data = data
