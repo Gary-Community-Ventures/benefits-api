@@ -1,22 +1,10 @@
+from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 from programs.sheets import sheets_get_data
 from integrations.util import Cache
 
 
-def calculate_energy_assistance(screen, data, program):
-    eligibility = eligibility_energy_assistance(screen)
-    value = value_energy_assistance(screen)
-
-    calculation = {'eligibility': eligibility, 'value': value}
-
-    return calculation
-
-
-def eligibility_energy_assistance(screen):
-    eligibility = {"eligible": True, "passed": [], "failed": []}
-
-    # Variables that may change over time
-    # household size : income limit
+class EnergyAssistance(ProgramCalculator):
     income_bands = {
         1: 3_081,
         2: 4_030,
@@ -27,32 +15,30 @@ def eligibility_energy_assistance(screen):
         7: 8_001,
         8: 8_179,
     }
-    frequency = "monthly"
+    dependencies = ['income_frequency', 'income_amount', 'county']
 
-    income_limit = income_bands[screen.household_size]
+    def eligible(self) -> Eligibility:
+        e = Eligibility()
 
-    # INCOME TEST
-    income_types = ['all']
-    leap_income = screen.calc_gross_income(frequency, income_types)
+        # income
+        frequency = "monthly"
+        income_types = ['all']
+        income_limit = EnergyAssistance.income_bands[self.screen.household_size]
+        leap_income = self.screen.calc_gross_income(frequency, income_types)
 
-    if leap_income > income_limit:
-        eligibility["eligible"] = False
-        eligibility["failed"].append(messages.income(leap_income, income_limit))
-    else:
-        eligibility["passed"].append(messages.income(leap_income, income_limit))
+        e.condition(leap_income < income_limit, messages.income(leap_income, income_limit))
 
-    return eligibility
+        return e
 
+    def value(self):
+        value = 362
+        data = cache.fetch()
+        for row in data:
+            county = row[0].replace('Application County: ', '') + 'County'
+            if county == self.screen.county:
+                value = int(float(row[1].replace('$', '')))
 
-def value_energy_assistance(screen):
-    value = 362
-    data = cache.fetch()
-    for row in data:
-        county = row[0].replace('Application County: ', '') + 'County'
-        if county == screen.county:
-            value = int(float(row[1].replace('$', '')))
-
-    return value
+        return value
 
 
 class LeapValueCache(Cache):
