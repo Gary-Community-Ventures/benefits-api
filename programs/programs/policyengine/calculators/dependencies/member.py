@@ -55,8 +55,8 @@ class TaxUnitDependentDependency(Member):
     )
 
     def value(self):
-        is_tax_unit_spouse = TaxUnitSpouseDependency(self.screen, self.member, self.relationship_map)
-        is_tax_unit_head = TaxUnitHeadDependency(self.screen, self.member, self.relationship_map)
+        is_tax_unit_spouse = TaxUnitSpouseDependency(self.screen, self.member, self.relationship_map).value()
+        is_tax_unit_head = TaxUnitHeadDependency(self.screen, self.member, self.relationship_map).value()
         is_tax_unit_dependent = (
             self.member.age <= 18 or
             (self.member.student and self.member.age <= 23) or

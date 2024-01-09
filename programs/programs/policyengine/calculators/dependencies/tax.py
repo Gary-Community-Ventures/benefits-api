@@ -1,4 +1,5 @@
 from .base import TaxUnit
+from .member import TaxUnitHeadDependency, TaxUnitSpouseDependency
 
 
 class Eitc(TaxUnit):
@@ -24,7 +25,14 @@ class PellGrantPrimaryIncomeDependency(TaxUnit):
     field = 'pell_grant_primary_income'
 
     def value(self):
-        return 0
+        total = 0
+        for member in self.screen.household_members.all():
+            is_head = TaxUnitHeadDependency(self.screen, member, self.relationship_map).value()
+            is_spouse = TaxUnitSpouseDependency(self.screen, member, self.relationship_map).value()
+            if is_head or is_spouse:
+                total += int(member.calc_gross_income('yearly', ['all']))
+
+        return total
 
 
 class PellGrantDependentsInCollegeDependency(TaxUnit):

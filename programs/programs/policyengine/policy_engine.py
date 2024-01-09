@@ -37,7 +37,6 @@ def calc_pe_eligibility(screen: Screen):
 
 
 def policy_engine_calculate(data):
-    print(data)
     response = requests.post(
         "https://api.policyengine.org/us/calculate",
         json=data
