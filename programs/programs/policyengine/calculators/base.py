@@ -22,8 +22,7 @@ class PolicyEnigineCalulator(ProgramCalculator):
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
-        if self.value() > 0:
-            e.eligible = True
+        e.eligible = self.value() > 0
 
         return e
 
