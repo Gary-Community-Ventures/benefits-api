@@ -13,15 +13,18 @@ class Ssdi(ProgramCalculator):
         e = Eligibility()
 
         lowest_income = math.inf
+        cat_eligibile = 0
 
         def income_condition(member):
             nonlocal lowest_income
+            nonlocal cat_eligibile
 
             income_limit = Ssdi.income_limit_blind if member.visually_impaired else Ssdi.income_limit
             member_income = member.calc_gross_income('monthly', ('all',))
 
             if member_income < lowest_income:
                 lowest_income = member_income
+                cat_eligibile += 1
 
             return member_income < income_limit
 
@@ -33,7 +36,8 @@ class Ssdi(ProgramCalculator):
             ]
         )
 
-        e.passed(messages.income(lowest_income, Ssdi.income_limit))
+        if cat_eligibile > 0:
+            e.passed(messages.income(lowest_income, Ssdi.income_limit))
 
         return e
 

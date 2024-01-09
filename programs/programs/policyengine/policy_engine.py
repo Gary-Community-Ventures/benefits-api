@@ -17,12 +17,12 @@ def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[st
     valid_programs: dict[str, type[PolicyEnigineCalulator]] = {}
 
     for name_abbr, Calculator in all_calculators.items():
-        if Calculator.can_calc(missing_fields):
+        if not Calculator.can_calc(missing_fields):
             continue
 
         valid_programs[name_abbr] = Calculator
 
-    if len(valid_programs.values()) == 0:
+    if len(valid_programs.values()) == 0 or len(screen.household_members.all()) == 0:
         return {}
 
     data = policy_engine_calculate(pe_input(screen, valid_programs.values()))['result']
@@ -45,7 +45,6 @@ def policy_engine_calculate(data):
         json=data
     )
     data = response.json()
-    print(data)
     return data
 
 
