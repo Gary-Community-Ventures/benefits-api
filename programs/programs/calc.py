@@ -46,10 +46,10 @@ class Eligibility:
 
     def to_dict(self):
         return {
-            "eligible": self.eligible and self.value > 0,
+            "eligible": self.eligible,
             "passed": self.pass_messages,
             "failed": self.fail_messages,
-            "estimated_value": self.value,
+            "estimated_value": self.value if self.eligible else 0,
         }
 
 
