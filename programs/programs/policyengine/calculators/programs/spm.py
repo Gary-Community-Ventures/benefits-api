@@ -16,12 +16,18 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.SnapAssetsDependency,
         dependency.spm.MeetsSnapCategoricalEligibilityDependency,
         dependency.spm.SnapEmergencyAllotmentDependency,
+        dependency.spm.HousingCostDependency,
+        dependency.spm.MeetsSnapGrossIncomeTestDependency,
+        dependency.spm.HasPhoneExpenseDependency,
+        dependency.spm.HasHeatingCoolingExpenseDependency,
+        dependency.spm.SnapEarnedIncomeDependency,
+        dependency.spm.UtilityExpenseDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
     pe_output_period = YEAR_MONTH
 
     def value(self):
-        return self.get_data()[self.pe_name][self.pe_output_period]
+        return int(self.get_data()[self.pe_name][self.pe_output_period])
 
 
 class SchoolLunch(PolicyEngineSpmCalulator):
