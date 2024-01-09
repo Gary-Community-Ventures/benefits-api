@@ -18,7 +18,6 @@ class PolicyEngineMembersCalculator(PolicyEnigineCalulator):
 
             total += pe_value
 
-        print(self.pe_name, total > 0)
         return total
 
     def in_tax_unit(self, member_id) -> bool:
