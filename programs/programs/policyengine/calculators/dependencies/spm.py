@@ -184,10 +184,6 @@ class Tanf(SpmUnit):
     field = 'co_tanf'
 
 
-class TanfGrantStandard(SpmUnit):
-    field = 'co_tanf_grant_standard'
-
-
 class BroadbandCostDependency(SpmUnit):
     field = 'broadband_cost'
 

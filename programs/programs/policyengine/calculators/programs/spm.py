@@ -1,5 +1,5 @@
 from ..base import PolicyEnigineCalulator
-from ..constants import YEAR_MONTH
+from ..constants import SNAP_PERIOD, PREVIOUS_YEAR
 import programs.programs.policyengine.calculators.dependencies as dependency
 
 
@@ -26,7 +26,8 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.SnapDependentCareDeductionDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
-    pe_output_period = YEAR_MONTH
+    pe_period = PREVIOUS_YEAR
+    pe_output_period = SNAP_PERIOD
 
     def value(self):
         return int(self.get_data()[self.pe_name][self.pe_output_period])
@@ -53,7 +54,9 @@ class Tanf(PolicyEngineSpmCalulator):
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
-        dependency.member.EmploymentIncomeDependency
+        dependency.member.EmploymentIncomeDependency,
+        dependency.spm.TanfCountableGrossIncomeDependency,
+        dependency.spm.TanfCountableGrossUnearnedIncomeDependency,
     ]
     pe_outputs = [dependency.spm.Tanf]
 

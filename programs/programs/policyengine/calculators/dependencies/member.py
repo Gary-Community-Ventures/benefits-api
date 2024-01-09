@@ -157,7 +157,7 @@ class PellGrantDependentAvailableIncomeDependency(Member):
     )
 
     def value(self):
-        return int(self.member.calc_gross_income('yearly', ['all'])),
+        return int(self.member.calc_gross_income('yearly', ['all']))
 
 
 class PellGrantCountableAssetsDependency(Member):
