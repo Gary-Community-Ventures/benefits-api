@@ -25,5 +25,5 @@ tax_unit_calculators = {
     'eitc': tax.Eitc,
     'coeitc': tax.Coeitc,
     'ctc': tax.Ctc,
-    'coctc': tax.Eitc,
+    'coctc': tax.Coctc,
 }

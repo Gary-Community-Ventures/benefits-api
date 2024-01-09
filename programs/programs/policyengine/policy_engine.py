@@ -30,6 +30,7 @@ def calc_pe_eligibility(screen: Screen):
 
         e = calc.eligible()
         e.value = calc.value()
+        print(name_abbr, e.value)
 
         all_eligibility[name_abbr] = e.to_dict()
 
