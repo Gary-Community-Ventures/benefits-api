@@ -7,7 +7,7 @@ class BasicCashAssistance(ProgramCalculator):
     dependencies = ['county', 'age']
 
     def eligible(self) -> Eligibility:
-        e = Eligibility
+        e = Eligibility()
 
         # Lives in Denver
         in_denver = self.screen.county == 'Denver County'

@@ -36,4 +36,4 @@ class ConnectForHealth(ProgramCalculator):
 
     def value(self, eligible_members: int):
         # https://stackoverflow.com/questions/6266727/python-cut-off-the-last-word-of-a-sentence
-        self.value = tax_credit_by_county[self.screen.county.rsplit(' ', 1)[0]] * 12
+        return tax_credit_by_county[self.screen.county.rsplit(' ', 1)[0]] * 12

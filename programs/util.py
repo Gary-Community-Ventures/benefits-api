@@ -5,3 +5,8 @@ class Dependencies(set):
                 return True
 
         return False
+
+
+class DependencyError(Exception):
+    def __init__(self):
+        super().__init__("Missing at least dependency")

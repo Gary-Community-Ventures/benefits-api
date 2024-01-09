@@ -22,8 +22,9 @@ from .medicaid.adult_with_disability.calculator import MedicaidAdultWithDisabili
 from .medicaid.emergency.calculator import EmergencyMedicaid
 from .medicare_savings.calculator import MedicareSavings
 from .basic_cash_assistance.calculator import BasicCashAssistance
+from .calc import ProgramCalculator
 
-calculators = {
+calculators: dict[str, type[ProgramCalculator]] = {
     'rtdlive': RtdLive,
     'cccap': ChildCareAssistance,
     'mydenver': MyDenver,

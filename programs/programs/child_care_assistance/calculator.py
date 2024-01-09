@@ -33,7 +33,7 @@ class ChildCareAssistance(ProgramCalculator):
         income_types = ['all']
         gross_income = self.screen.calc_gross_income(frequency, income_types)
         income_limit = cccap_county_data[self.screen.household_size] * 12
-        self.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
+        e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
         return e
 
@@ -67,7 +67,7 @@ class ChildCareAssistance(ProgramCalculator):
 
         return children
 
-    def _cccap_county_values(county_name):
+    def _cccap_county_values(self, county_name):
         match = False
         sheet_values = cache.fetch()
 

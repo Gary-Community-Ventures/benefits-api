@@ -13,9 +13,6 @@ class Eligibility:
         self.value = 0
         self.eligible_member_count = 0
 
-    def set_value(self, value):
-        self.value = value
-
     def condition(self, passed: bool, message):
         if passed:
             self.passed(message)
@@ -70,5 +67,6 @@ class ProgramCalculator:
     def value(self, eligible_members: int):
         return 0
 
+    @classmethod
     def can_calc(self, missing_dependencies: Dependencies):
-        return not missing_dependencies.has(self.dependencies)
+        return not missing_dependencies.has(*self.dependencies)

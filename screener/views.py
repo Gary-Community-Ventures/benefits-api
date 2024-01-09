@@ -202,13 +202,15 @@ def eligibility_results(screen, batch=False):
         else:
             return 1
 
+    missing_dependencies = screen.missing_fields()
+
     # make certain benifits calculate first so that they can be used in other benefits
     all_programs = sorted(all_programs, key=sort_first)
 
     for program in all_programs:
         skip = False
         if program.name_abbreviated not in pe_programs and program.active:
-            eligibility = program.eligibility(screen, data)
+            eligibility = program.eligibility(screen, data, missing_dependencies)
         elif program.active:
             eligibility = pe_eligibility[program.name_abbreviated]
 

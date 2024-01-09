@@ -28,4 +28,4 @@ class OmniSalud(ProgramCalculator):
         senior_value = OmniSalud.amount['senior'] * num_seniors
         adult_value = OmniSalud.amount['adult'] * (self.screen.num_adults() - num_seniors)
 
-        self.value = (child_value + adult_value + senior_value) * 12
+        return (child_value + adult_value + senior_value) * 12

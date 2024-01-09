@@ -2,6 +2,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from translations.models import Translation
 from programs.programs import calculators
+from programs.util import Dependencies, DependencyError
 
 
 class FederalPoveryLimit(models.Model):
@@ -144,16 +145,20 @@ class Program(models.Model):
     # eligibility for others, data is passed to eligibility functions which
     # contains the eligibility information and values for all currently
     # calculated benefits in the chain.
-    def eligibility(self, screen, data):
-        calculation = calculators[self.name_abbreviated.lower()](screen, data, self)
+    def eligibility(self, screen, data, missing_dependencies: Dependencies):
+        Calculator = calculators[self.name_abbreviated.lower()]
 
-        eligibility = calculation['eligibility']
-        if eligibility['eligible']:
-            eligibility['estimated_value'] = calculation['value']
-        else:
-            eligibility['estimated_value'] = 0
+        if not Calculator.can_calc(missing_dependencies):
+            raise DependencyError()
 
-        return eligibility
+        calculator = Calculator(screen, self, data)
+
+        eligibility = calculator.eligible()
+
+        eligibility.value = calculator.value(eligibility.eligible_member_count)
+        print(eligibility.value, self.name)
+
+        return eligibility.to_dict()
 
     def __str__(self):
         return self.name.text
