@@ -23,6 +23,7 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.SnapEarnedIncomeDependency,
         dependency.spm.UtilityExpenseDependency,
         dependency.spm.MeetsSnapAssetTestDependency,
+        dependency.spm.SnapDependentCareDeductionDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
     pe_output_period = YEAR_MONTH
