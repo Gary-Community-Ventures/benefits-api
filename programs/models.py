@@ -156,7 +156,6 @@ class Program(models.Model):
         eligibility = calculator.eligible()
 
         eligibility.value = calculator.value(eligibility.eligible_member_count)
-        print(eligibility.value, self.name)
 
         return eligibility.to_dict()
 
