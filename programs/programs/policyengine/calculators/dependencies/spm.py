@@ -158,7 +158,7 @@ class TanfCountableGrossIncomeDependency(SpmUnit):
     )
 
     def value(self):
-        return int(self.screen.calc_gross_income('yearly'['earned']))
+        return int(self.screen.calc_gross_income('yearly', ['earned']))
 
 
 class TanfCountableGrossUnearnedIncomeDependency(SpmUnit):
@@ -170,7 +170,7 @@ class TanfCountableGrossUnearnedIncomeDependency(SpmUnit):
     )
 
     def value(self):
-        return int(self.screen.calc_gross_income('yearly'['unearned']))
+        return int(self.screen.calc_gross_income('yearly', ['unearned']))
 
 
 class Tanf(SpmUnit):

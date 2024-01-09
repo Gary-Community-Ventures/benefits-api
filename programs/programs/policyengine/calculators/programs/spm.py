@@ -1,4 +1,5 @@
 from ..base import PolicyEnigineCalulator
+from ..constants import YEAR_MONTH
 import programs.programs.policyengine.calculators.dependencies as dependency
 
 
@@ -17,9 +18,10 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.SnapEmergencyAllotmentDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
+    pe_output_period = YEAR_MONTH
 
     def value(self):
-        return self.get_data()[self.pe_name][self.pe_period]
+        return self.get_data()[self.pe_name][self.pe_output_period]
 
 
 class SchoolLunch(PolicyEngineSpmCalulator):

@@ -4,7 +4,7 @@ from programs.programs.calc import Eligibility
 from .calculators.dependencies.base import DependencyError
 from typing import List
 import requests
-from .calculators.constants import YEAR
+from .calculators.constants import YEAR, PREVIOUS_YEAR
 from .calculators.dependencies.member import (
     TaxUnitDependentDependency,
     TaxUnitHeadDependency,
@@ -37,11 +37,13 @@ def calc_pe_eligibility(screen: Screen):
 
 
 def policy_engine_calculate(data):
+    print(data)
     response = requests.post(
         "https://api.policyengine.org/us/calculate",
         json=data
     )
     data = response.json()
+    print(data)
     return data
 
 
@@ -64,7 +66,7 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
             },
             "households": {
                 "household": {
-                    "state_code_str": {YEAR: "CO"},
+                    "state_code_str": {YEAR: "CO", PREVIOUS_YEAR: "CO"},
                     "members": []
                 }
             },
@@ -107,16 +109,23 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
 
     for Program in programs:
         for Data in Program.pe_inputs + Program.pe_outputs:
+            period = Program.pe_period
+            if hasattr(Program, 'pe_output_period') and Data in Program.pe_outputs:
+                period = Program.pe_output_period
+
             if not Data.member:
                 data = Data(screen, members, relationship_map)
                 value = data.value()
                 unit = raw_input["household"][data.unit][data.sub_unit]
 
-                if data.field in unit:
-                    if value != unit[data.field][Program.pe_period]:
-                        raise DependencyError(data.field, value, unit[data.field][Program.pe_period])
+                if data.field in unit and period in unit[data.field]:
+                    if value != unit[data.field][period]:
+                        raise DependencyError(data.field, value, unit[data.field][period])
 
-                unit[data.field] = {Program.pe_period: value}
+                if data.field not in unit:
+                    unit[data.field] = {}
+
+                unit[data.field][period] = value
                 continue
 
             for member in members:
@@ -126,10 +135,13 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
 
                 unit = raw_input["household"][data.unit][member_id]
 
-                if data.field in unit:
-                    if value != unit[data.field][Program.pe_period]:
-                        raise DependencyError(data.field, value, unit[data.field][Program.pe_period])
+                if data.field in unit and period in unit[data.field]:
+                    if value != unit[data.field][period]:
+                        raise DependencyError(data.field, value, unit[data.field][period])
 
-                unit[data.field] = {Program.pe_period: value}
+                if data.field not in unit:
+                    unit[data.field] = {}
+
+                unit[data.field][period] = value
 
     return raw_input

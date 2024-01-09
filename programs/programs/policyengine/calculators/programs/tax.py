@@ -1,10 +1,12 @@
 from ..base import PolicyEnigineCalulator
+from ..constants import PREVIOUS_YEAR
 import programs.programs.policyengine.calculators.dependencies as dependency
 
 
 class PolicyEngineTaxUnitCalulator(PolicyEnigineCalulator):
     pe_category = 'tax_units'
     pe_sub_category = 'tax_unit'
+    pe_period = PREVIOUS_YEAR
 
 
 class Eitc(PolicyEngineTaxUnitCalulator):
