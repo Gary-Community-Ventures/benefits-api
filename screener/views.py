@@ -325,14 +325,16 @@ def urgent_need_results(screen):
         'legal services': screen.needs_legal_services,
     }
 
+    missing_dependencies = screen.missing_fields()
+
     need_functions = {
-        'denver': urgent_need_functions.lives_in_denver(screen),
-        'helpkitchen_zipcode': urgent_need_functions.helpkitchen_zipcode(screen),
-        'child': urgent_need_functions.child(screen),
-        'bia_food_delivery': urgent_need_functions.bia_food_delivery(screen),
-        'trua': urgent_need_functions.trua(screen),
-        'eoc': urgent_need_functions.eoc(screen),
-        'co_legal_services': urgent_need_functions.co_legal_services(screen)
+        'denver': urgent_need_functions.LivesInDenver.calc(screen, missing_dependencies),
+        'helpkitchen_zipcode': urgent_need_functions.HelpkitchenZipcode.calc(screen, missing_dependencies),
+        'child': urgent_need_functions.Child.calc(screen, missing_dependencies),
+        'bia_food_delivery': urgent_need_functions.BiaFoodDelivery.calc(screen, missing_dependencies),
+        'trua': urgent_need_functions.Trua.calc(screen, missing_dependencies),
+        'eoc': urgent_need_functions.Eoc.calc(screen, missing_dependencies),
+        'co_legal_services': urgent_need_functions.CoLegalServices.calc(screen, missing_dependencies)
     }
 
     list_of_needs = []
