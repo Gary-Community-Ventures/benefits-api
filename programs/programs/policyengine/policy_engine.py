@@ -42,7 +42,6 @@ def policy_engine_calculate(data):
         json=data
     )
     data = response.json()
-    print(data)
     return data
 
 
