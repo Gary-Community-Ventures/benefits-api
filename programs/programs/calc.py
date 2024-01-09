@@ -68,5 +68,5 @@ class ProgramCalculator:
         return 0
 
     @classmethod
-    def can_calc(self, missing_dependencies: Dependencies):
-        return not missing_dependencies.has(*self.dependencies)
+    def can_calc(cls, missing_dependencies: Dependencies):
+        return not missing_dependencies.has(*cls.dependencies)

@@ -68,6 +68,7 @@ class MeetsSnapGrossIncomeTestDependency(SpmUnit):
     dependencies = (
         'income_amount',
         'income_frequency',
+        'household_size',
     )
 
     def value(self):

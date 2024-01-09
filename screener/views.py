@@ -22,6 +22,7 @@ from screener.serializers import (
     ResultsSerializer,
 )
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
+from programs.util import DependencyError
 import programs.programs.urgent_needs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program, Referrer
 from django.core.exceptions import ObjectDoesNotExist
@@ -111,14 +112,15 @@ class EligibilityTranslationView(views.APIView):
     @swagger_auto_schema(responses={200: ResultsSerializer()})
     def get(self, request, id):
         screen = Screen.objects.get(uuid=id)
-        eligibility = eligibility_results(screen)
+        eligibility, missing_programs = eligibility_results(screen)
         urgent_needs = urgent_need_results(screen)
 
         results = {
             "programs": eligibility,
             "urgent_needs": urgent_needs,
             "screen_id": screen.id,
-            "default_language": screen.request_language_code
+            "default_language": screen.request_language_code,
+            "missing_programs": missing_programs,
         }
         hooks = eligibility_hooks()
         if screen.referrer_code in hooks:
@@ -173,8 +175,10 @@ def eligibility_results(screen, batch=False):
         previous_snapshot = None
     snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
 
+    missing_dependencies = screen.missing_fields()
+
     # pe_eligibility = eligibility_policy_engine(screen)
-    pe_eligibility = calc_pe_eligibility(screen)
+    pe_eligibility = calc_pe_eligibility(screen, missing_dependencies)
     pe_programs = (
         'snap',
         'wic',
@@ -202,7 +206,7 @@ def eligibility_results(screen, batch=False):
         else:
             return 1
 
-    missing_dependencies = screen.missing_fields()
+    missing_programs = False
 
     # make certain benifits calculate first so that they can be used in other benefits
     all_programs = sorted(all_programs, key=sort_first)
@@ -210,8 +214,16 @@ def eligibility_results(screen, batch=False):
     for program in all_programs:
         skip = False
         if program.name_abbreviated not in pe_programs and program.active:
-            eligibility = program.eligibility(screen, data, missing_dependencies)
+            try:
+                eligibility = program.eligibility(screen, data, missing_dependencies)
+            except DependencyError:
+                missing_programs = True
+                continue
         elif program.active:
+            if program.name_abbreviated not in pe_eligibility:
+                missing_programs = True
+                continue
+
             eligibility = pe_eligibility[program.name_abbreviated]
 
         all_navigators = program.navigator.all()
@@ -276,7 +288,7 @@ def eligibility_results(screen, batch=False):
         clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
         eligible_programs.append(clean_program)
 
-    return eligible_programs
+    return eligible_programs, missing_programs
 
 
 def default_message(translation):

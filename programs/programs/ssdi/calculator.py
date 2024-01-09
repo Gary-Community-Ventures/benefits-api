@@ -7,7 +7,7 @@ class Ssdi(ProgramCalculator):
     income_limit = 1_550
     income_limit_blind = 2_590
     amount = 1_537
-    dependencies = ['income_amount', 'income_frequency']
+    dependencies = ['income_amount', 'income_frequency', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()

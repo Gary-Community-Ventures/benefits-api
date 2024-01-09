@@ -32,8 +32,9 @@ class PolicyEnigineCalulator(ProgramCalculator):
     def get_data(self):
         return self.pe_data[self.pe_category][self.pe_sub_category]
 
-    def can_calc(self, missing_dependencies: Dependencies):
-        for input in self.pe_inputs:
+    @classmethod
+    def can_calc(cls, missing_dependencies: Dependencies):
+        for input in cls.pe_inputs:
             if missing_dependencies.has(input.dependencies):
                 return False
 

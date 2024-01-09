@@ -248,3 +248,4 @@ class ResultsSerializer(serializers.Serializer):
     urgent_needs = UrgentNeedSerializer(many=True)
     screen_id = serializers.CharField()
     default_language = serializers.CharField()
+    missing_programs = serializers.BooleanField()

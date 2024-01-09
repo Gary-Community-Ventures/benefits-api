@@ -17,7 +17,7 @@ class RtdLive(ProgramCalculator):
     max_age = 64
     percent_of_fpl = 1.85
     amount = 750
-    dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode']
+    dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
