@@ -38,13 +38,15 @@ class SchoolLunch(PolicyEngineSpmCalulator):
     pe_inputs = [dependency.member.EmploymentIncomeDependency]
     pe_outputs = [dependency.spm.SchoolMealDailySubsidy, dependency.spm.SchoolMealTier]
 
+    amount = 120
+
     def value(self):
         total = 0
         num_children = self.screen.num_children(3, 18)
 
         if self.get_data()[self.pe_name][self.pe_period] > 0 and num_children > 0:
             if self.get_data()['school_meal_tier'][self.pe_period] != 'PAID':
-                total = 680 * num_children
+                total = SchoolLunch.amount * num_children
 
         return total
 
