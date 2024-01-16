@@ -32,8 +32,11 @@ class ChildCareAssistance(ProgramCalculator):
         frequency = 'yearly'
         income_types = ['all']
         gross_income = self.screen.calc_gross_income(frequency, income_types)
-        income_limit = cccap_county_data[self.screen.household_size] * 12
-        e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
+        if cccap_county_data:
+            income_limit = cccap_county_data[self.screen.household_size] * 12
+            e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
+        else:
+            e.eligible = False
 
         return e
 
