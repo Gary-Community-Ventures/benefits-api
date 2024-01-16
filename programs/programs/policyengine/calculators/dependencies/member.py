@@ -23,10 +23,9 @@ class AgeDependency(Member):
 
 class PregnancyDependency(Member):
     field = "is_pregnant"
-    dependencies = ('pregnant',)
 
     def value(self):
-        return self.member.pregnant
+        return self.member.pregnant or False
 
 
 class TaxUnitHeadDependency(Member):

@@ -1,13 +1,14 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 from programs.programs.head_start.eligible_zipcodes import eligible_zipcode
+from programs.co_county_zips import counties_from_zip
 
 
 class HeadStart(ProgramCalculator):
     amount = 10655
     max_age = 5
     min_age = 3
-    dependencies = ['age', 'household_size', 'income_frequency', 'income_amount', 'county']
+    dependencies = ['age', 'household_size', 'income_frequency', 'income_amount', 'zipcode']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -25,7 +26,18 @@ class HeadStart(ProgramCalculator):
         e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
         # location
-        e.condition(self.screen.county in eligible_zipcode, messages.location())
+        if self.screen.county is not None:
+            counties = [self.screen.county]
+        else:
+            counties = counties_from_zip(self.screen.zipcode)
+
+        in_eligible_county = False
+        for county in counties:
+            if county in eligible_zipcode:
+                in_eligible_county = True
+                break
+
+        e.condition(in_eligible_county, messages.location())
 
         return e
 
