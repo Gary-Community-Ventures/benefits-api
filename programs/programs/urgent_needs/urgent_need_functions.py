@@ -5,10 +5,16 @@ from .eoc_income_limits import eoc_income_limits
 
 
 class UrgentNeedFunction():
+    '''
+    Base class for all urgent need conditions
+    '''
     dependencies = []
 
     @classmethod
     def calc(cls, screen: Screen, missing_dependencies: Dependencies):
+        '''
+        Calculate if the urgent need can be calculated and if the condition is met
+        '''
         if not cls.can_calc(missing_dependencies):
             return False
 
@@ -16,10 +22,16 @@ class UrgentNeedFunction():
 
     @classmethod
     def eligible(cls, screen: Screen):
+        '''
+        Returns if the condition is met
+        '''
         return True
 
     @classmethod
     def can_calc(cls, missing_dependencies: Dependencies):
+        '''
+        Returns if the condition can be calculated
+        '''
         if missing_dependencies.has(*cls.dependencies):
             return False
 

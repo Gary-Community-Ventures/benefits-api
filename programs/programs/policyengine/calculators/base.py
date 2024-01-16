@@ -7,6 +7,10 @@ from .constants import YEAR
 
 
 class PolicyEnigineCalulator(ProgramCalculator):
+    '''
+    Base class for all Policy Engine programs
+    '''
+
     pe_inputs: List[type[PolicyEngineScreenInput]] = []
     pe_outputs: List[type[PolicyEngineScreenInput]] = []
 
@@ -30,6 +34,9 @@ class PolicyEnigineCalulator(ProgramCalculator):
         return self.get_data()[self.pe_name][self.pe_period]
 
     def get_data(self):
+        '''
+        Return Policy Engine dictionary of the program category and subcategory
+        '''
         return self.pe_data[self.pe_category][self.pe_sub_category]
 
     @classmethod

@@ -14,16 +14,25 @@ class Eligibility:
         self.eligible_member_count = 0
 
     def condition(self, passed: bool, message):
+        '''
+        Uses a condition to update the pass fail messages and eligibility.
+        '''
         if passed:
             self.passed(message)
         else:
             self.failed(message)
 
     def failed(self, msg):
+        '''
+        Mark eligibility as failed and add a message to `fail_messages`
+        '''
         self.eligible = False
         self.fail_messages.append(msg)
 
     def passed(self, msg):
+        '''
+        Add a message to `pass_messages`
+        '''
         self.pass_messages.append(msg)
 
     def member_eligibility(self, members, conditions):
@@ -45,6 +54,9 @@ class Eligibility:
         return self.member_eligibility(eligible_members, conditions)
 
     def to_dict(self):
+        '''
+        Return the eligibility as a dictionary
+        '''
         return {
             "eligible": self.eligible,
             "passed": self.pass_messages,
@@ -54,6 +66,9 @@ class Eligibility:
 
 
 class ProgramCalculator:
+    '''
+    Base class for all Programs
+    '''
     dependencies = tuple()
 
     def __init__(self, screen: Screen, program: "Program", data):
@@ -62,11 +77,20 @@ class ProgramCalculator:
         self.data = data
 
     def eligible(self) -> Eligibility:
+        '''
+        Returns the `Eligibility` object with whether or not the program is eligible
+        '''
         return Eligibility()
 
     def value(self, eligible_members: int):
+        '''
+        Return the value of the program
+        '''
         return 0
 
     @classmethod
     def can_calc(cls, missing_dependencies: Dependencies):
+        '''
+        Returns whether or not the program can be calculated with the missing dependencies
+        '''
         return not missing_dependencies.has(*cls.dependencies)
