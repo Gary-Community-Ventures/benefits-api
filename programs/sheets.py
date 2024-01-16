@@ -6,14 +6,15 @@ import json
 
 
 def sheets_get_data(spreadsheet_id, range_name):
-    info = json.loads(config('GOOGLE_APPLICATION_CREDENTIALS'))
+    info = json.loads(config('GOOGLE_APPLICATION_CREDENTIALS').encode('unicode_escape'))
     creds = service_account.Credentials.from_service_account_info(info)
 
     try:
         service = build('sheets', 'v4', credentials=creds)
         sheet = service.spreadsheets()
-        result = sheet.values().get(spreadsheetId=spreadsheet_id,
-                                    range=range_name).execute()
+        result = (
+            sheet.values().get(spreadsheetId=spreadsheet_id, range=range_name).execute()
+        )
         values = result.get('values', [])
     except HttpError:
         values = False
