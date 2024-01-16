@@ -1,16 +1,23 @@
 import programs.programs.messages as messages
 from programs.programs.calc import Eligibility, ProgramCalculator
+from programs.co_county_zips import counties_from_zip
 
 
 class BasicCashAssistance(ProgramCalculator):
     amount = 1_000
-    dependencies = ['county', 'age']
+    county = 'Denver County'
+    dependencies = ['zipcode', 'age']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
         # Lives in Denver
-        in_denver = self.screen.county == 'Denver County'
+        if self.screen.county is not None:
+            counties = [self.screen.county]
+        else:
+            counties = counties_from_zip(self.screen.zipcode)
+
+        in_denver = BasicCashAssistance.county in counties
         e.condition(in_denver, messages.location())
 
         # Has a child
