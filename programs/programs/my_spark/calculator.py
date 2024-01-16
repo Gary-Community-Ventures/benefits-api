@@ -8,7 +8,7 @@ class MySpark(ProgramCalculator):
     max_age = 14
     min_age = 11
     county = 'Denver County'
-    dependencies = ['age', 'county']
+    dependencies = ['age', 'zipcode']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -22,7 +22,7 @@ class MySpark(ProgramCalculator):
         e.condition(is_frl_eligible, messages.must_have_benefit('Free or Reduced Lunch'))
 
         if self.screen.county is not None:
-            counties = self.screen.county
+            counties = [self.screen.county]
         else:
             counties = counties_from_zip(self.screen.county)
 
