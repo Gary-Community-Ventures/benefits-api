@@ -1,5 +1,6 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
+from programs.co_county_zips import counties_from_zip
 
 
 class MySpark(ProgramCalculator):
@@ -20,8 +21,13 @@ class MySpark(ProgramCalculator):
                 break
         e.condition(is_frl_eligible, messages.must_have_benefit('Free or Reduced Lunch'))
 
+        if self.screen.county is not None:
+            counties = self.screen.county
+        else:
+            counties = counties_from_zip(self.screen.county)
+
         # Denever County
-        e.condition(self.screen.county == MySpark.county, messages.location())
+        e.condition(MySpark.county in counties, messages.location())
 
         # Kid 11 - 14
         e.member_eligibility(
