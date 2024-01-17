@@ -1,44 +1,20 @@
+from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 
 
-def calculate_family_planning_services(screen, data, program):
-    fps = FamilyPlanningServices(screen, data, program)
-    eligibility = fps.eligibility
-    value = fps.value
-
-    calculation = {
-        'eligibility': eligibility,
-        'value': value
-    }
-
-    return calculation
-
-
-class FamilyPlanningServices():
+class FamilyPlanningServices(ProgramCalculator):
     amount = 404
     fpl_percent = 2.6
+    dependencies = ['insurance', 'income_frequency', 'income_amount', 'household_size']
 
-    def __init__(self, screen, data, program):
-        self.screen = screen
-        self.data = data
-        self.fpl = program.fpl.as_dict()
+    def eligible(self) -> Eligibility:
+        e = Eligibility()
 
-        self.eligibility = {
-            "eligible": True,
-            "passed": [],
-            "failed": []
-        }
-
-        self.calc_eligibility()
-
-        self.calc_value()
-
-    def calc_eligibility(self):
         # Does not have insurance
         has_no_insurance = False
         for member in self.screen.household_members.all():
-            has_no_insurance = member.insurance.has_insurance_types(('none', 'dont_know')) or has_no_insurance
-        self._condition(has_no_insurance, messages.has_no_insurance())
+            has_no_insurance = member.insurance.has_insurance_types(('none',)) or has_no_insurance
+        e.condition(has_no_insurance, messages.has_no_insurance())
 
         # Not Medicaid eligible
         is_medicaid_eligible = self.screen.has_benefit('medicaid')
@@ -47,32 +23,16 @@ class FamilyPlanningServices():
                 is_medicaid_eligible = benefit["eligible"] or is_medicaid_eligible
                 break
 
-        self._condition(
-            not is_medicaid_eligible,
-            messages.must_not_have_benefit('Medicaid')
-        )
+        e.condition(not is_medicaid_eligible, messages.must_not_have_benefit('Medicaid'))
 
         # Income
-        income_limit = int(FamilyPlanningServices.fpl_percent * self.fpl[self.screen.household_size])
+        fpl = self.program.fpl.as_dict()
+        income_limit = int(FamilyPlanningServices.fpl_percent * fpl[self.screen.household_size])
         gross_income = int(self.screen.calc_gross_income('yearly', ['all']))
 
-        self._condition(
-            gross_income < income_limit,
-            messages.income(gross_income, income_limit)
-        )
+        e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
-    def calc_value(self):
-        self.value = FamilyPlanningServices.amount
+        return e
 
-    def _failed(self, msg):
-        self.eligibility["eligible"] = False
-        self.eligibility["failed"].append(msg)
-
-    def _passed(self, msg):
-        self.eligibility["passed"].append(msg)
-
-    def _condition(self, condition, msg):
-        if condition is True:
-            self._passed(msg)
-        else:
-            self._failed(msg)
+    def value(self, eligible_members: int):
+        return FamilyPlanningServices.amount

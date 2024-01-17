@@ -1,13 +1,10 @@
 from django.db import models
 from decimal import Decimal
-import json
-import math
 import uuid
 from authentication.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
-from programs.models import Program
-from programs.programs.policyengine.policyengine import eligibility_policy_engine
+from programs.util import Dependencies
 
 
 # The screen is the top most container for all information collected in the
@@ -27,7 +24,7 @@ class Screen(models.Model):
     county = models.CharField(max_length=120, default=None, blank=True, null=True)
     household_size = models.IntegerField(blank=True, null=True)
     last_tax_filing_year = models.CharField(max_length=120, default=None, blank=True, null=True)
-    household_assets = models.DecimalField(decimal_places=2, max_digits=10, default=0, blank=True, null=True)
+    household_assets = models.DecimalField(decimal_places=2, max_digits=10, default=None, blank=True, null=True)
     housing_situation = models.CharField(max_length=30, blank=True, null=True, default=None)
     last_email_request_date = models.DateTimeField(blank=True, null=True)
     is_test = models.BooleanField(default=False, blank=True)
@@ -284,67 +281,22 @@ class Screen(models.Model):
 
         raise Exception('No head of household')
 
-    def eligibility_results(self):
-        all_programs = Program.objects.all()
-        screen = self
-        data = []
+    def missing_fields(self):
+        screen_fields = ('zipcode', 'county', 'household_size', 'household_assets')
 
-        pe_eligibility = eligibility_policy_engine(screen)
-        pe_programs = ['snap', 'wic', 'nslp', 'eitc', 'coeitc', 'ctc', 'medicaid', 'ssi']
+        missing_fields = Dependencies()
 
-        def sort_first(program):
-            calc_first = ('tanf', 'ssi', 'medicaid')
+        for field in screen_fields:
+            if getattr(self, field) is None:
+                missing_fields.add(field)
 
-            if program.name_abbreviated in calc_first:
-                return 0
-            else:
-                return 1
+        for member in self.household_members.all():
+            missing_fields.update(member.missing_fields())
 
-        # make certain benifits calculate first so that they can be used in other benefits
-        all_programs = sorted(all_programs, key=sort_first)
+        for expence in self.expenses.all():
+            missing_fields.update(expence.missing_fields())
 
-        for program in all_programs:
-            skip = False
-            # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
-            if program.name_abbreviated not in pe_programs and program.active:
-                eligibility = program.eligibility(screen, data)
-            elif program.active:
-                # skip = True
-                eligibility = pe_eligibility[program.name_abbreviated]
-
-            navigators = program.navigator.all()
-
-            if not skip and program.active:
-                data.append(
-                    {
-                        "program_id": program.id,
-                        "name": program.name,
-                        "name_abbreviated": program.name_abbreviated,
-                        "estimated_value": eligibility["estimated_value"],
-                        "estimated_delivery_time": program.estimated_delivery_time,
-                        "estimated_application_time": program.estimated_application_time,
-                        "description_short": program.description_short,
-                        "short_name": program.name_abbreviated,
-                        "description": program.description,
-                        "value_type": program.value_type,
-                        "learn_more_link": program.learn_more_link,
-                        "apply_button_link": program.apply_button_link,
-                        "legal_status_required": program.legal_status_required,
-                        "eligible": eligibility["eligible"],
-                        "failed_tests": eligibility["failed"],
-                        "passed_tests": eligibility["passed"],
-                        "navigators": navigators
-                    }
-                )
-
-        eligible_programs = []
-        for program in data:
-            clean_program = program
-            clean_program['estimated_value'] = math.trunc(
-                clean_program['estimated_value'])
-            eligible_programs.append(clean_program)
-
-        return eligible_programs
+        return missing_fields
 
 
 # Log table for any messages sent by the application via text or email
@@ -430,6 +382,29 @@ class HouseholdMember(models.Model):
     def has_disability(self):
         return self.disabled or self.visually_impaired or self.long_term_disability
 
+    def missing_fields(self):
+        member_fields = (
+            'relationship',
+            'age',
+            'student',
+            'pregnant',
+            'visually_impaired',
+            'disabled',
+            'long_term_disability',
+            'insurance'
+        )
+
+        missing_fields = Dependencies()
+
+        for field in member_fields:
+            if getattr(self, field) is None:
+                missing_fields.add(field)
+
+        for income in self.income_streams.all():
+            missing_fields.update(income.missing_fields())
+
+        return missing_fields
+
 
 # HouseholdMember income streams
 class IncomeStream(models.Model):
@@ -475,6 +450,16 @@ class IncomeStream(models.Model):
     def _hour_to_month(self):
         return self.amount * self.hours_worked * Decimal(4.35)
 
+    def missing_fields(self):
+        income_fields = ('type', 'amount', 'frequency',)
+
+        missing_fields = Dependencies()
+        for field in income_fields:
+            if getattr(self, field) is None:
+                missing_fields.add('income_' + field)
+
+        return missing_fields
+
 
 # HouseholdMember expenses
 class Expense(models.Model):
@@ -510,6 +495,17 @@ class Expense(models.Model):
             yearly = self.amount
 
         return yearly
+
+    def missing_fields(self):
+        expense_fields = ('type', 'amount')
+
+        missing_fields = Dependencies()
+
+        for field in expense_fields:
+            if getattr(self, field) is None:
+                missing_fields.add('expense_' + field)
+
+        return missing_fields
 
 
 class Insurance(models.Model):
@@ -566,24 +562,6 @@ class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name='eligibility_snapshots', on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
     is_batch = models.BooleanField(default=False)
-
-    def generate_program_snapshots(self):
-        eligibility = self.screen.eligibility_results()
-        for item in eligibility:
-            program_snapshot = ProgramEligibilitySnapshot(
-                eligibility_snapshot=self,
-                name=item['name'],
-                name_abbreviated=item['name_abbreviated'],
-                value_type=item['value_type'],
-                estimated_value=item['estimated_value'],
-                estimated_delivery_time=item['estimated_delivery_time'],
-                estimated_application_time=item['estimated_application_time'],
-                legal_status_required=item['legal_status_required'],
-                eligible=item['eligible'],
-                failed_tests=json.dumps(item['failed_tests']),
-                passed_tests=json.dumps(item['passed_tests'])
-            )
-            program_snapshot.save()
 
 
 # Eligibility results for each specific program per screen. These are

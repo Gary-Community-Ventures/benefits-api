@@ -1,73 +1,39 @@
+from programs.programs.calc import ProgramCalculator, Eligibility
 from programs.programs.connect_for_health.tax_credit_value import tax_credit_by_county
 import programs.programs.messages as messages
 
 
-def calculate_connect_for_health(screen, data, program):
-    cfhc = ConnectForHealth(screen, data, program)
-    eligibility = cfhc.eligibility
-    value = cfhc.value
+class ConnectForHealth(ProgramCalculator):
+    percent_of_fpl = 4
+    dependencies = ['insurance', 'income_amount', 'income_frequency', 'county', 'household_size']
 
-    calculation = {
-        'eligibility': eligibility,
-        'value': value
-    }
+    def eligible(self) -> Eligibility:
+        e = Eligibility()
 
-    return calculation
-
-
-class ConnectForHealth():
-    health_credit_value = 313
-
-    def __init__(self, screen, data, program):
-        self.screen = screen
-        self.data = data
-        self.fpl = program.fpl.as_dict()
-
-        self.eligibility = {
-            "eligible": True,
-            "passed": [],
-            "failed": []
-        }
-
-        self.calc_eligibility()
-
-        self.calc_value()
-
-    def calc_eligibility(self):
         # Medicade eligibility
         is_medicaid_eligible = False
         for benefit in self.data:
-            if benefit["name_abbreviated"] == 'medicaid':
-                is_medicaid_eligible = benefit["eligible"]
+            if benefit['name_abbreviated'] == 'medicaid':
+                is_medicaid_eligible = benefit['eligible']
                 break
 
-        self._condition(not is_medicaid_eligible,
-                        messages.must_not_have_benefit("Medicaid"))
+        e.condition(not is_medicaid_eligible,
+                    messages.must_not_have_benefit('Medicaid'))
 
         # Someone has no health insurance
         has_no_hi = self.screen.has_insurance_types(('none', 'private'))
-        self._condition(has_no_hi,
-                        messages.has_no_insurance())
+        e.condition(has_no_hi,
+                    messages.has_no_insurance())
 
         # Income
-        income_band = int(self.fpl[self.screen.household_size]/12 * 4)
-        gross_income = int(self.screen.calc_gross_income('yearly', ("all",))/12)
-        self._condition(gross_income < income_band,
-                        messages.income(gross_income, income_band))
+        fpl = self.program.fpl.as_dict()
+        income_band = int(fpl[self.screen.household_size] / 12 * ConnectForHealth.percent_of_fpl)
+        gross_income = int(self.screen.calc_gross_income('yearly', ('all',)) / 12)
+        e.condition(gross_income < income_band,
+                    messages.income(gross_income, income_band))
 
-    def calc_value(self):
+        return e
+
+    def value(self, eligible_members: int):
         # https://stackoverflow.com/questions/6266727/python-cut-off-the-last-word-of-a-sentence
-        self.value = tax_credit_by_county[self.screen.county.rsplit(' ', 1)[0]] * 12
-
-    def _failed(self, msg):
-        self.eligibility["eligible"] = False
-        self.eligibility["failed"].append(msg)
-
-    def _passed(self, msg):
-        self.eligibility["passed"].append(msg)
-
-    def _condition(self, condition, msg):
-        if condition is True:
-            self._passed(msg)
-        else:
-            self._failed(msg)
+        return tax_credit_by_county[self.screen.county.rsplit(' ', 1)[0]] * 12
