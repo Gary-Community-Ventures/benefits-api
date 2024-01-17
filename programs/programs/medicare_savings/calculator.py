@@ -1,20 +1,8 @@
+from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 
 
-def calculate_medicare_savings(screen, data, program):
-    medicare_savings = MedicareSavings(screen)
-    eligibility = medicare_savings.eligibility
-    value = medicare_savings.value
-
-    calculation = {
-        'eligibility': eligibility,
-        'value': value
-    }
-
-    return calculation
-
-
-class MedicareSavings():
+class MedicareSavings(ProgramCalculator):
     valid_insurance = ('none', 'employer', 'private', 'medicare')
     asset_limit = {
         'single': 10_590,
@@ -24,22 +12,13 @@ class MedicareSavings():
         'single': 1_660,
         'married': 2239,
     }
+    min_age = 65
     amount = 175
+    dependencies = ['household_assets', 'relationship', 'income_frequency', 'income_amount', 'age']
 
-    def __init__(self, screen):
-        self.screen = screen
+    def eligible(self) -> Eligibility:
+        e = Eligibility()
 
-        self.eligibility = {
-            "eligible": True,
-            "passed": [],
-            "failed": []
-        }
-
-        self.calc_eligibility()
-
-        self.calc_value()
-
-    def calc_eligibility(self):
         members = self.screen.household_members.all()
 
         def asset_limit(member):
@@ -58,10 +37,10 @@ class MedicareSavings():
             income = member.calc_gross_income('monthly', ('all',)) + spouse_income
             return income < max_income
 
-        self.eligible_members = self._member_eligibility(
+        e.member_eligibility(
             members,
             [
-                (lambda m: m.age >= 65, messages.older_than(65)),
+                (lambda m: m.age >= MedicareSavings.min_age, messages.older_than(MedicareSavings.min_age)),
                 (
                     lambda m: m.insurance.has_insurance_types(MedicareSavings.valid_insurance),
                     messages.has_no_insurance()
@@ -71,34 +50,7 @@ class MedicareSavings():
             ]
         )
 
-    def calc_value(self):
-        self.value = MedicareSavings.amount * len(self.eligible_members) * 12
+        return e
 
-    def _failed(self, msg):
-        self.eligibility["eligible"] = False
-        self.eligibility["failed"].append(msg)
-
-    def _passed(self, msg):
-        self.eligibility["passed"].append(msg)
-
-    def _condition(self, condition, msg):
-        if condition is True:
-            self._passed(msg)
-        else:
-            self._failed(msg)
-
-    def _member_eligibility(self, members, conditions):
-        '''
-        Filter out members that do not meet the condition and make eligibility messages
-        '''
-        if len(conditions) <= 0:
-            return members
-
-        [condition, message] = conditions.pop()
-        eligible_members = list(filter(condition, members))
-        if message:
-            self._condition(len(eligible_members) >= 1, message)
-        elif len(eligible_members) <= 0:
-            self.eligibility['eligible'] = False
-
-        return self._member_eligibility(eligible_members, conditions)
+    def value(self, eligible_members: int):
+        return MedicareSavings.amount * eligible_members * 12

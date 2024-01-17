@@ -1,85 +1,60 @@
+from programs.programs.calc import ProgramCalculator, Eligibility
 from programs.co_county_zips import counties_from_zip
 import programs.programs.messages as messages
 
 
-def calculate_rtdlive(screen, data, program):
-    eligibility = eligibility_rtdlive(screen, program)
-    value = value_rtdlive(screen)
+class RtdLive(ProgramCalculator):
+    eligible_counties = [
+        'Adams County',
+        'Arapahoe County',
+        'Boulder County',
+        'Broomfield County',
+        'Denver County',
+        'Douglas County',
+        'Jefferson County'
+    ]
+    min_age = 20
+    max_age = 64
+    percent_of_fpl = 1.85
+    amount = 750
+    dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode', 'household_size']
 
-    calculation = {
-        'eligibility': eligibility,
-        'value': value
-    }
+    def eligible(self) -> Eligibility:
+        e = Eligibility()
 
-    return calculation
+        # income
+        frequency = "yearly"
+        income_types = ['all']
+        fpl = self.program.fpl.as_dict()
+        income_limit = RtdLive.percent_of_fpl * fpl[self.screen.household_size]
+        gross_income = self.screen.calc_gross_income(frequency, income_types)
+        e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
+        # age
+        e.member_eligibility(
+            self.screen.household_members.all(),
+            [
+                (
+                    lambda m: m.age >= RtdLive.min_age and m.age <= RtdLive.max_age,
+                    messages.adult(RtdLive.min_age, RtdLive.max_age),
+                ),
+            ]
+        )
 
-def eligibility_rtdlive(screen, program):
+        # geography
+        county_eligible = False
+        if not self.screen.county:
+            counties = counties_from_zip(self.screen.zipcode)
+        else:
+            counties = [self.screen.county]
 
-    eligibility = {
-        "eligible": True,
-        "passed": [],
-        "failed": []
-    }
+        for county in counties:
+            if county in RtdLive.eligible_counties:
+                county_eligible = True
 
-    eligible_counties = ['Adams County', 'Arapahoe County', 'Boulder County',
-                         'Broomfield County', 'Denver County',
-                         'Douglas County', 'Jefferson County']
-    frequency = "yearly"
+        e.condition(county_eligible, messages.location())
 
-    # INCOME TEST
-    fpl = program.fpl.as_dict()
-    income_limit = 1.85 * fpl[screen.household_size]
-    income_types = ['all']
-    gross_income = screen.calc_gross_income(frequency, income_types)
+        return e
 
-    # adults in household test
-    qualifying_adults = 0
-    household_members = screen.household_members.all()
-    for household_member in household_members:
-        if household_member.age >= 20 and household_member.age <= 64:
-            qualifying_adults += 1
-
-    # geography test
-    county_eligible = False
-    if not screen.county:
-        counties = counties_from_zip(screen.zipcode)
-    else:
-        counties = [screen.county]
-
-    for county in counties:
-        if county in eligible_counties:
-            county_eligible = True
-
-    if qualifying_adults < 1:
-        eligibility["eligible"] = False
-        eligibility["failed"].append(messages.adult(20, 64))
-    else:
-        eligibility["passed"].append(messages.adult(20, 64))
-
-    if not county_eligible:
-        eligibility["eligible"] = False
-        eligibility["failed"].append(messages.location())
-    else:
-        eligibility["passed"].append(messages.location())
-
-    # income test
-    if gross_income > income_limit:
-        eligibility["eligible"] = False
-        eligibility["failed"].append(messages.income(gross_income, income_limit))
-    else:
-        eligibility["passed"].append(messages.income(gross_income, income_limit))
-
-    return eligibility
-
-
-def value_rtdlive(screen):
-    qualifying_adults = 0
-    household_members = screen.household_members.all()
-    for household_member in household_members:
-        if household_member.age >= 20 and household_member.age <= 64:
-            qualifying_adults += 1
-
-    value = 750 * qualifying_adults
-
-    return value
+    def value(self, eligible_members: int):
+        return RtdLive.amount * eligible_members

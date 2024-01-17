@@ -1,21 +1,10 @@
+from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
+from programs.co_county_zips import counties_from_zip
 import math
 
 
-def calculate_low_wage_covid_relief(screen, data, program):
-    lwcr = LowWageCovidRelief(screen, data)
-    eligibility = lwcr.eligibility
-    value = lwcr.value
-
-    calculation = {
-        'eligibility': eligibility,
-        'value': value
-    }
-
-    return calculation
-
-
-class LowWageCovidRelief():
+class LowWageCovidRelief(ProgramCalculator):
     amount = 1_500
     auto_eligible_benefits = ('medicaid', 'tanf', 'snap', 'wic', 'leap')
     income_limits = {
@@ -28,25 +17,20 @@ class LowWageCovidRelief():
         7: 7_522.50,
         8: 8_373.75,
     }
+    county = 'Adams County'
+    dependencies = ['zipode', 'household_size', 'income_amount', 'income_frequency']
 
-    def __init__(self, screen, data):
-        self.screen = screen
-        self.data = data
+    def eligible(self) -> Eligibility:
+        e = Eligibility()
 
-        self.eligibility = {
-            "eligible": True,
-            "passed": [],
-            "failed": []
-        }
-
-        self.calc_eligibility()
-
-        self.calc_value()
-
-    def calc_eligibility(self):
         # lives in Adams County
-        in_adams_county = self.screen.county == 'Adams County'
-        self._condition(in_adams_county, messages.location())
+        if self.screen.county is not None:
+            counties = [self.screen.county]
+        else:
+            counties = counties_from_zip(self.screen.zipcode)
+
+        in_adams_county = LowWageCovidRelief.county in counties
+        e.condition(in_adams_county, messages.location())
 
         # other benefits
         for benefit in LowWageCovidRelief.auto_eligible_benefits:
@@ -63,20 +47,9 @@ class LowWageCovidRelief():
         meets_income_limit = income <= income_limit
 
         if not (meets_income_limit or has_benefit):
-            self.eligibility['eligible'] = False
+            e.eligible = False
 
-    def calc_value(self):
-        self.value = LowWageCovidRelief.amount
+        return e
 
-    def _failed(self, msg):
-        self.eligibility["eligible"] = False
-        self.eligibility["failed"].append(msg)
-
-    def _passed(self, msg):
-        self.eligibility["passed"].append(msg)
-
-    def _condition(self, condition, msg):
-        if condition is True:
-            self._passed(msg)
-        else:
-            self._failed(msg)
+    def value(self, eligible_members: int):
+        return LowWageCovidRelief.amount

@@ -21,7 +21,8 @@ from screener.serializers import (
     MessageSerializer,
     ResultsSerializer,
 )
-from programs.programs.policyengine.policyengine import eligibility_policy_engine
+from programs.programs.policyengine.policy_engine import calc_pe_eligibility
+from programs.util import DependencyError
 import programs.programs.urgent_needs.urgent_need_functions as urgent_need_functions
 from programs.models import UrgentNeed, Program, Referrer
 from django.core.exceptions import ObjectDoesNotExist
@@ -111,14 +112,15 @@ class EligibilityTranslationView(views.APIView):
     @swagger_auto_schema(responses={200: ResultsSerializer()})
     def get(self, request, id):
         screen = Screen.objects.get(uuid=id)
-        eligibility = eligibility_results(screen)
+        eligibility, missing_programs = eligibility_results(screen)
         urgent_needs = urgent_need_results(screen)
 
         results = {
             "programs": eligibility,
             "urgent_needs": urgent_needs,
             "screen_id": screen.id,
-            "default_language": screen.request_language_code
+            "default_language": screen.request_language_code,
+            "missing_programs": missing_programs,
         }
         hooks = eligibility_hooks()
         if screen.referrer_code in hooks:
@@ -173,7 +175,10 @@ def eligibility_results(screen, batch=False):
         previous_snapshot = None
     snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
 
-    pe_eligibility = eligibility_policy_engine(screen)
+    missing_dependencies = screen.missing_fields()
+
+    # pe_eligibility = eligibility_policy_engine(screen)
+    pe_eligibility = calc_pe_eligibility(screen, missing_dependencies)
     pe_programs = (
         'snap',
         'wic',
@@ -201,16 +206,24 @@ def eligibility_results(screen, batch=False):
         else:
             return 1
 
+    missing_programs = False
+
     # make certain benifits calculate first so that they can be used in other benefits
     all_programs = sorted(all_programs, key=sort_first)
 
     for program in all_programs:
         skip = False
-        # TODO: this is a bit of a growse hack to pull in multiple benefits via policyengine
         if program.name_abbreviated not in pe_programs and program.active:
-            eligibility = program.eligibility(screen, data)
+            try:
+                eligibility = program.eligibility(screen, data, missing_dependencies)
+            except DependencyError:
+                missing_programs = True
+                continue
         elif program.active:
-            # skip = True
+            if program.name_abbreviated not in pe_eligibility:
+                missing_programs = True
+                continue
+
             eligibility = pe_eligibility[program.name_abbreviated]
 
         all_navigators = program.navigator.all()
@@ -275,7 +288,7 @@ def eligibility_results(screen, batch=False):
         clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
         eligible_programs.append(clean_program)
 
-    return eligible_programs
+    return eligible_programs, missing_programs
 
 
 def default_message(translation):
@@ -312,14 +325,16 @@ def urgent_need_results(screen):
         'legal services': screen.needs_legal_services,
     }
 
+    missing_dependencies = screen.missing_fields()
+
     need_functions = {
-        'denver': urgent_need_functions.lives_in_denver(screen),
-        'helpkitchen_zipcode': urgent_need_functions.helpkitchen_zipcode(screen),
-        'child': urgent_need_functions.child(screen),
-        'bia_food_delivery': urgent_need_functions.bia_food_delivery(screen),
-        'trua': urgent_need_functions.trua(screen),
-        'eoc': urgent_need_functions.eoc(screen),
-        'co_legal_services': urgent_need_functions.co_legal_services(screen)
+        'denver': urgent_need_functions.LivesInDenver.calc(screen, missing_dependencies),
+        'helpkitchen_zipcode': urgent_need_functions.HelpkitchenZipcode.calc(screen, missing_dependencies),
+        'child': urgent_need_functions.Child.calc(screen, missing_dependencies),
+        'bia_food_delivery': urgent_need_functions.BiaFoodDelivery.calc(screen, missing_dependencies),
+        'trua': urgent_need_functions.Trua.calc(screen, missing_dependencies),
+        'eoc': urgent_need_functions.Eoc.calc(screen, missing_dependencies),
+        'co_legal_services': urgent_need_functions.CoLegalServices.calc(screen, missing_dependencies)
     }
 
     list_of_needs = []

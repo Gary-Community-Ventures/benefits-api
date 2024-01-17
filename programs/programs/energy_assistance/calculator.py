@@ -1,22 +1,12 @@
+from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 from programs.sheets import sheets_get_data
 from integrations.util import Cache
+from programs.co_county_zips import counties_from_zip
+import math
 
 
-def calculate_energy_assistance(screen, data, program):
-    eligibility = eligibility_energy_assistance(screen)
-    value = value_energy_assistance(screen)
-
-    calculation = {'eligibility': eligibility, 'value': value}
-
-    return calculation
-
-
-def eligibility_energy_assistance(screen):
-    eligibility = {"eligible": True, "passed": [], "failed": []}
-
-    # Variables that may change over time
-    # household size : income limit
+class EnergyAssistance(ProgramCalculator):
     income_bands = {
         1: 3_081,
         2: 4_030,
@@ -27,32 +17,48 @@ def eligibility_energy_assistance(screen):
         7: 8_001,
         8: 8_179,
     }
-    frequency = "monthly"
+    dependencies = ['income_frequency', 'income_amount', 'zipcode', 'household_size']
 
-    income_limit = income_bands[screen.household_size]
+    def eligible(self) -> Eligibility:
+        e = Eligibility()
 
-    # INCOME TEST
-    income_types = ['all']
-    leap_income = screen.calc_gross_income(frequency, income_types)
+        # income
+        frequency = "monthly"
+        income_types = ['all']
+        income_limit = EnergyAssistance.income_bands[self.screen.household_size]
+        leap_income = self.screen.calc_gross_income(frequency, income_types)
 
-    if leap_income > income_limit:
-        eligibility["eligible"] = False
-        eligibility["failed"].append(messages.income(leap_income, income_limit))
-    else:
-        eligibility["passed"].append(messages.income(leap_income, income_limit))
+        e.condition(
+            leap_income < income_limit, messages.income(leap_income, income_limit)
+        )
 
-    return eligibility
+        return e
 
+    def value(self, eligible_members: int):
+        data = cache.fetch()
 
-def value_energy_assistance(screen):
-    value = 362
-    data = cache.fetch()
-    for row in data:
-        county = row[0].replace('Application County: ', '') + 'County'
-        if county == screen.county:
-            value = int(float(row[1].replace('$', '')))
+        # if there is no county, then we want to estimate based off of zipcode
+        if self.screen.county is not None:
+            counties = [self.screen.county]
+        else:
+            counties = counties_from_zip(self.screen.zipcode)
 
-    return value
+        values = []
+        for row in data:
+            county = row[0].strip().replace('Application County: ', '') + ' County'
+            if county in counties:
+                values.append(int(float(row[1].replace('$', ''))))
+
+        value = 362
+        lowest = math.inf
+
+        # get lowest value from zipcodes
+        for possible_value in values:
+            if possible_value < lowest:
+                value = possible_value
+                lowest = possible_value
+
+        return value
 
 
 class LeapValueCache(Cache):
@@ -61,7 +67,7 @@ class LeapValueCache(Cache):
 
     def update(self):
         spreadsheet_id = '1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg'
-        range_name = "'FFY 2024'!A2:F129"
+        range_name = "'FFY 2024'!A2:F65"
         sheet_values = sheets_get_data(spreadsheet_id, range_name)
 
         if not sheet_values:
