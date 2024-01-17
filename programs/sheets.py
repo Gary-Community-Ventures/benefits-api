@@ -6,7 +6,7 @@ import json
 
 
 def sheets_get_data(spreadsheet_id, range_name):
-    info = json.loads(config('GOOGLE_APPLICATION_CREDENTIALS').encode('unicode_escape'))
+    info = json.loads(config('GOOGLE_APPLICATION_CREDENTIALS'))
     creds = service_account.Credentials.from_service_account_info(info)
 
     try:
