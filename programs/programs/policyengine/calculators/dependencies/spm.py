@@ -14,11 +14,14 @@ class SnapChildSupportDeductionDependency(SpmUnit):
 
 
 class SnapDependentCareDeductionDependency(SpmUnit):
-    field = 'snap_dependent_care_deduction'
+    field = 'childcare_expenses'
     dependencies = (
         'expense_type',
         'expense_amount',
     )
+
+    def value(self):
+        return self.screen.calc_expenses('yearly', ['childCare'])
 
 
 class SnapEarnedIncomeDependency(SpmUnit):
@@ -128,6 +131,39 @@ class UtilityExpenseDependency(SpmUnit):
                 'yearly', ['otherUtilities', 'heating', 'cooling']
             )
         )
+
+
+class HeatingCoolingExpenseDependency(SpmUnit):
+    field = 'heating_cooling_expense'
+    dependencies = (
+        'expense_type',
+        'expense_amount',
+    )
+
+    def value(self):
+        return self.screen.calc_expenses('yearly', ['heating', 'cooling'])
+
+
+class PhoneExpenseDependency(SpmUnit):
+    field = 'phone_expense'
+    dependencies = (
+        'expense_type',
+        'expense_amount',
+    )
+
+    def value(self):
+        return self.screen.calc_expenses('yearly', ['telephone'])
+
+
+class ElectricityExpenseDependency(SpmUnit):
+    field = 'electricity_expense'
+    dependencies = (
+        'expense_type',
+        'expense_amount',
+    )
+
+    def value(self):
+        return self.screen.calc_expenses('yearly', ['otherUtilities'])
 
 
 class SnapEmergencyAllotmentDependency(SpmUnit):
