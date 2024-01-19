@@ -62,6 +62,7 @@ class Screen(models.Model):
     has_coctc = models.BooleanField(default=False, blank=True, null=True)
     has_upk = models.BooleanField(default=False, blank=True, null=True)
     has_ssdi = models.BooleanField(default=False, blank=True, null=True)
+    has_cowap = models.BooleanField(default=False, blank=True, null=True)
     has_pell_grant = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -105,12 +106,10 @@ class Screen(models.Model):
         """
         Returns True if one household member has one of the expenses in expense_types
         """
-        household_members = self.household_members.all()
         for expense_type in expense_types:
-            for household_member in household_members:
-                household_expense_types = household_member.expenses.values_list("type", flat=True)
-                if expense_type in household_expense_types:
-                    return True
+            household_expense_types = self.expenses.values_list("type", flat=True)
+            if expense_type in household_expense_types:
+                return True
         return False
 
     def num_children(self, age_min=0, age_max=18, include_pregnant=False, child_relationship=['all']):
@@ -252,6 +251,7 @@ class Screen(models.Model):
             'upk': self.has_upk,
             'ssdi': self.has_ssdi or self.calc_gross_income('yearly', ('sSDisability',)) > 0,
             'pell_grant': self.has_pell_grant,
+            'cowap': self.has_cowap,
             'medicaid': self.has_medicaid or self.has_medicaid_hi,
             'medicare': self.has_medicare_hi,
             'chp': self.has_chp or self.has_chp_hi,
