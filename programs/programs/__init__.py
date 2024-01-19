@@ -50,5 +50,5 @@ calculators: dict[str, type[ProgramCalculator]] = {
     'emergency_medicaid': EmergencyMedicaid,
     'medicare_savings': MedicareSavings,
     'bca': BasicCashAssistance,
-    'wap': WeatherizationAssistance,
+    'cowap': WeatherizationAssistance,
 }
