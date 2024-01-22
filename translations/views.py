@@ -457,7 +457,7 @@ def document_view(request, id=0):
             'document': document
         }
 
-        return render(request, 'documanets/document.html', context)
+        return render(request, 'documents/document.html', context)
 
 
 @login_required(login_url='/admin/login')
