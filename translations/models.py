@@ -96,7 +96,7 @@ class Translation(TranslatableModel):
         return self.translations.filter(language_code=lang).first()
 
     def in_program(self):
-        # determine if a translation is refrenced by either a program, navigator, or urgent_need
+        # determine if a translation is refrenced by either a program, navigator, urgent_need, or document
         # https://stackoverflow.com/questions/54711671/django-how-to-determine-if-an-object-is-referenced-by-any-other-object
         has_relationship = False
         for reverse in (f for f in self._meta.get_fields() if f.auto_created and not f.concrete):

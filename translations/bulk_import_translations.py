@@ -39,19 +39,19 @@ def bulk_add(translations):
                 try:
                     obj = Program.objects.get(external_name=ref[1])
                 except ObjectDoesNotExist:
-                    raise Exception(f'Program with expternal name of {ref[1]} does not exist. Please add it.')
+                    raise Exception(f'Program with external name of {ref[1]} does not exist. Please add it.')
                 obj.active = True
                 obj.save()
             if ref[0] == 'programs_navigator':
                 try:
                     obj = Navigator.objects.get(external_name=ref[1])
                 except ObjectDoesNotExist:
-                    raise Exception(f'Navigator with expternal name of {ref[1]} does not exist. Please add it.')
+                    raise Exception(f'Navigator with external name of {ref[1]} does not exist. Please add it.')
             if ref[0] == 'programs_urgentneed':
                 try:
                     obj = UrgentNeed.objects.get(external_name=ref[1])
                 except ObjectDoesNotExist:
-                    raise Exception(f'Urgent Need with expternal name of {ref[1]} does not exist. Please add it.')
+                    raise Exception(f'Urgent Need with external name of {ref[1]} does not exist. Please add it.')
                 obj.active = True
                 obj.save()
             getattr(translation, ref[2]).set([obj])

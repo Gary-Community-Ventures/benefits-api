@@ -40,9 +40,28 @@ class LegalStatus(models.Model):
         return self.status
 
 
+class DocumentManager(models.Manager):
+    def add_document(self, external_name):
+        translation = Translation.objects.add_translation(
+            f'document.{external_name}_temporary_key', ''
+        )
+
+        document = self.create(
+            external_name=external_name,
+            text=translation
+        )
+
+        translation.label = f'document.{external_name}_{document.id}'
+        translation.save()
+
+        return document
+
+
 class Document(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     text = models.ForeignKey(Translation, related_name='documents', blank=False, null=False, on_delete=models.PROTECT)
+
+    objects = DocumentManager()
 
     def __str__(self) -> str:
         return self.external_name
