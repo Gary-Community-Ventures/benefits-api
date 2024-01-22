@@ -13,10 +13,16 @@ class Eligibility:
         self.value = 0
         self.eligible_member_count = 0
 
-    def condition(self, passed: bool, message):
+    def condition(self, passed: bool, message=None):
         '''
         Uses a condition to update the pass fail messages and eligibility.
         '''
+
+        if message is None:
+            if not passed:
+                self.eligible = False
+            return
+
         if passed:
             self.passed(message)
         else:
@@ -70,6 +76,7 @@ class ProgramCalculator:
     Base class for all Programs
     '''
     dependencies = tuple()
+    amount = 0
 
     def __init__(self, screen: Screen, program: "Program", data):
         self.screen = screen
@@ -86,7 +93,7 @@ class ProgramCalculator:
         '''
         Return the value of the program
         '''
-        return 0
+        return self.amount
 
     @classmethod
     def can_calc(cls, missing_dependencies: Dependencies):
