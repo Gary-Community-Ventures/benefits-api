@@ -334,7 +334,8 @@ def urgent_need_results(screen):
         'bia_food_delivery': urgent_need_functions.BiaFoodDelivery.calc(screen, missing_dependencies),
         'trua': urgent_need_functions.Trua.calc(screen, missing_dependencies),
         'eoc': urgent_need_functions.Eoc.calc(screen, missing_dependencies),
-        'co_legal_services': urgent_need_functions.CoLegalServices.calc(screen, missing_dependencies)
+        'co_legal_services': urgent_need_functions.CoLegalServices.calc(screen, missing_dependencies),
+        'co_emergency_morgage': urgent_need_functions.CoEmergencyMorgageAssistance.calc(screen, missing_dependencies),
     }
 
     list_of_needs = []

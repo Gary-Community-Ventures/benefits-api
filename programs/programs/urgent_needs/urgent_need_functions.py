@@ -2,6 +2,7 @@ from screener.models import Screen
 from programs.models import FederalPoveryLimit
 from programs.util import Dependencies
 from .eoc_income_limits import eoc_income_limits
+from .co_emergency_morgage_income_limits import co_emergency_morgage_income_limits
 
 
 class UrgentNeedFunction():
@@ -161,3 +162,14 @@ class CoLegalServices(UrgentNeedFunction):
         is_income_eligible = screen.calc_gross_income('yearly', ['all']) < fpl[screen.household_size]
         is_age_eligible = screen.num_adults(age_max=60)
         return is_income_eligible or is_age_eligible
+
+
+class CoEmergencyMorgageAssistance(UrgentNeedFunction):
+    dependencies = ['income_amount', 'income_frequency', 'household_size', 'county']
+
+    @classmethod
+    def eligible(cls, screen: Screen):
+        income = int(screen.calc_gross_income('yearly', ['all']))
+        income_limit = co_emergency_morgage_income_limits[screen.county][screen.household_size - 1]
+
+        return income < income_limit
