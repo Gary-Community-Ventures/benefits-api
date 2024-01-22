@@ -1,5 +1,5 @@
 from .models import Translation
-from programs.models import Program, Navigator, UrgentNeed
+from programs.models import Program, Navigator, UrgentNeed, Document
 from django.db import transaction
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -16,6 +16,7 @@ def bulk_add(translations):
     protected_translation_ids += translation_ids(Program)
     protected_translation_ids += translation_ids(Navigator)
     protected_translation_ids += translation_ids(UrgentNeed)
+    protected_translation_ids += translation_ids(Document)
 
     Program.objects.select_for_update().all()
     UrgentNeed.objects.select_for_update().all()
@@ -38,22 +39,32 @@ def bulk_add(translations):
             if ref[0] == 'programs_program':
                 try:
                     obj = Program.objects.get(external_name=ref[1])
+                    obj.active = True
                 except ObjectDoesNotExist:
-                    raise Exception(f'Program with external name of {ref[1]} does not exist. Please add it.')
-                obj.active = True
+                    obj = Program.objects.new_program(ref[1])
+                    obj.external_name = ref[1]
                 obj.save()
-            if ref[0] == 'programs_navigator':
+            elif ref[0] == 'programs_navigator':
                 try:
                     obj = Navigator.objects.get(external_name=ref[1])
                 except ObjectDoesNotExist:
-                    raise Exception(f'Navigator with external name of {ref[1]} does not exist. Please add it.')
-            if ref[0] == 'programs_urgentneed':
+                    obj = Navigator.objects.new_navigator(ref[1], None)
+                    obj.external_name = ref[1]
+                    obj.save()
+            elif ref[0] == 'programs_urgentneed':
                 try:
                     obj = UrgentNeed.objects.get(external_name=ref[1])
+                    obj.active = True
                 except ObjectDoesNotExist:
-                    raise Exception(f'Urgent Need with external name of {ref[1]} does not exist. Please add it.')
-                obj.active = True
+                    obj = UrgentNeed.objects.new_urgent_need(ref[1], None)
+                    obj.external_name = ref[1]
                 obj.save()
+            elif ref[0] == 'programs_document':
+                try:
+                    obj = Document.objects.get(external_name=ref[1])
+                except ObjectDoesNotExist:
+                    obj = Document.objects.new_document(ref[1])
+
             getattr(translation, ref[2]).set([obj])
 
         for lang, message in details['langs'].items():

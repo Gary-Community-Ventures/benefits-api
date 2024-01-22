@@ -41,6 +41,8 @@ class LegalStatus(models.Model):
 
 
 class DocumentManager(models.Manager):
+    translated_fields = ('text',)
+
     def new_document(self, external_name):
         translation = Translation.objects.add_translation(
             f'document.{external_name}_temporary_key', ''
