@@ -464,9 +464,8 @@ def document_view(request, id=0):
 @staff_member_required
 def document_filter_view(request):
     if request.method == 'GET':
-        documents = Document.objects.all()
         query = request.GET.get('name', '')
-        documents = filter(lambda p: query in p.name.text, documents)
+        documents = Document.objects.filter(external_name__contains=query)
 
         context = {
             'documents': documents
