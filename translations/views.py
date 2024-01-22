@@ -6,7 +6,7 @@ from rest_framework import views
 from django import forms
 from django.http import HttpResponse
 from django.db.models import ProtectedError
-from programs.models import Program, Navigator, UrgentNeed
+from programs.models import Program, Navigator, UrgentNeed, Document
 from phonenumber_field.formfields import PhoneNumberField
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -410,3 +410,66 @@ def urgent_need_filter_view(request):
         }
 
         return render(request, 'urgent_needs/list.html', context)
+
+
+class NewDocumentForm(forms.Form):
+    external_name = forms.CharField(max_length=120)
+
+
+@login_required(login_url='/admin/login')
+@staff_member_required
+def documents_view(request):
+    if request.method == 'GET':
+        documents = Document.objects.all()
+
+        context = {
+            'documents': documents
+        }
+
+        return render(request, 'documents/main.html', context)
+    if request.method == 'POST':
+        form = NewDocumentForm(request.POST)
+        if form.is_valid():
+            document = Document.objects.new_document(form['external_name'].value())
+            response = HttpResponse()
+            response.headers["HX-Redirect"] = f"/api/translations/admin/documents/{document.id}"
+            return response
+
+
+@login_required(login_url='/admin/login')
+@staff_member_required
+def create_document_view(request):
+    if request.method == 'GET':
+        context = {
+            'form': NewDocumentForm(),
+            'route': '/api/translations/admin/documents'
+        }
+
+        return render(request, 'util/create_form.html', context)
+
+
+@login_required(login_url='/admin/login')
+@staff_member_required
+def document_view(request, id=0):
+    if request.method == 'GET':
+        document = Document.objects.get(pk=id)
+        context = {
+            'document': document
+        }
+
+        return render(request, 'documanets/document.html', context)
+
+
+@login_required(login_url='/admin/login')
+@staff_member_required
+def document_filter_view(request):
+    if request.method == 'GET':
+        documents = Document.objects.all()
+        query = request.GET.get('name', '')
+        documents = filter(lambda p: query in p.name.text, documents)
+
+        context = {
+            'documents': documents
+        }
+
+        return render(request, 'documents/list.html', context)
