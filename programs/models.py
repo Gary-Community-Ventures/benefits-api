@@ -41,11 +41,11 @@ class LegalStatus(models.Model):
 
 
 class Document(models.Model):
-    name = models.CharField(max_length=265)
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     text = models.ForeignKey(Translation, related_name='documents', blank=False, null=False, on_delete=models.PROTECT)
 
     def __str__(self) -> str:
-        return self.name
+        return self.external_name
 
 
 class ProgramManager(models.Manager):
