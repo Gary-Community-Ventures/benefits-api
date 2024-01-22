@@ -1,4 +1,4 @@
-co_emergency_morgage_income_limits = {
+co_emergency_mortgage_income_limits = {
     'Adams County': [
         96_200,
         99_300,
