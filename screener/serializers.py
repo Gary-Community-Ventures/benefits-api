@@ -244,6 +244,10 @@ class UrgentNeedSerializer(serializers.Serializer):
     phone_number = serializers.CharField()
 
 
+class DocumentSerializer(serializers.Serializer):
+    text = TranslationSerializer()
+
+
 class ResultsSerializer(serializers.Serializer):
     programs = EligibilitySerializer(many=True)
     urgent_needs = UrgentNeedSerializer(many=True)
