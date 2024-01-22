@@ -10,7 +10,6 @@ from .models import (
     WebHookFunction,
     UrgentNeedCategory
 )
-from parler.admin import TranslatableAdmin
 
 
 class ProgramAdmin(admin.ModelAdmin):
