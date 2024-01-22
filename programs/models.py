@@ -40,6 +40,14 @@ class LegalStatus(models.Model):
         return self.status
 
 
+class Document(models.Model):
+    name = models.CharField(max_length=265)
+    text = models.ForeignKey(Translation, related_name='documents', blank=False, null=False, on_delete=models.PROTECT)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class ProgramManager(models.Manager):
     translated_fields = (
         'description_short',
@@ -81,7 +89,7 @@ class Program(models.Model):
     name_abbreviated = models.CharField(max_length=120)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     legal_status_required = models.ManyToManyField(LegalStatus, related_name='programs', blank=True)
-    documents = models.ManyToManyField(Translation, related_name='program_documents', blank=True)
+    documents = models.ManyToManyField(Document, related_name='program_documents', blank=True)
     active = models.BooleanField(blank=True, default=True)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name='fpl', blank=True, null=True, on_delete=models.SET_NULL)
 
