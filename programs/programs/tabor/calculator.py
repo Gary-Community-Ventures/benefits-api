@@ -5,6 +5,7 @@ import programs.programs.messages as messages
 class Tabor(ProgramCalculator):
     min_age = 18
     amount = 800
+    dependencies = ['age']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
