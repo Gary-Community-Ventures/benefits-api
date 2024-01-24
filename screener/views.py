@@ -32,7 +32,6 @@ import math
 import json
 from datetime import datetime, timezone
 from django.conf import settings
-from django.db.models import Q
 
 
 def index(request):
