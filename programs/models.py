@@ -247,6 +247,13 @@ class UrgentNeed(models.Model):
         return self.name.text
 
 
+class NavigatorCounty(models.Model):
+    name = models.CharField(max_length=64)
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class NavigatorManager(models.Manager):
     translated_fields = (
         'name',
@@ -276,6 +283,7 @@ class Navigator(models.Model):
     program = models.ManyToManyField(Program, related_name='navigator', blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
+    counties = models.ManyToManyField(NavigatorCounty, related_name='navigator', blank=True)
 
     name = models.ForeignKey(
         Translation,

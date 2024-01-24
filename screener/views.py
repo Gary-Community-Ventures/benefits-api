@@ -32,6 +32,7 @@ import math
 import json
 from datetime import datetime, timezone
 from django.conf import settings
+from django.db.models import Q
 
 
 def index(request):
@@ -226,13 +227,20 @@ def eligibility_results(screen, batch=False):
 
             eligibility = pe_eligibility[program.name_abbreviated]
 
-        all_navigators = program.navigator.all()
+        all_navigators = program.navigator.all().prefetch_related('counties')
+
+        county_navigators = []
+        for nav in all_navigators:
+            counties = nav.counties.all()
+            if len(counties) == 0 or any(screen.county in county.name for county in counties):
+                county_navigators.append(nav)
+
         if referrer is None:
-            navigators = all_navigators
+            navigators = county_navigators
         else:
-            referrer_navigators = referrer.primary_navigators.all() & all_navigators
+            referrer_navigators = referrer.primary_navigators.all() & county_navigators
             if len(referrer_navigators) == 0:
-                navigators = all_navigators
+                navigators = county_navigators
             else:
                 navigators = referrer_navigators
 
