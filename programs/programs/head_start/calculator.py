@@ -40,6 +40,3 @@ class HeadStart(ProgramCalculator):
         e.condition(in_eligible_county, messages.location())
 
         return e
-
-    def value(self, eligible_members: int):
-        return HeadStart.amount

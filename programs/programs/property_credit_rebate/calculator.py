@@ -39,6 +39,3 @@ class PropertyCreditRebate(ProgramCalculator):
                     messages.income(gross_income, PropertyCreditRebate.income_limit[relationship_status]))
 
         return e
-
-    def value(self, eligible_members: int):
-        return PropertyCreditRebate.amount

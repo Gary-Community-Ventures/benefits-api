@@ -128,6 +128,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'has_upk',
             'has_ssdi',
             'has_cowap',
+            'has_ubp',
             'has_pell_grant',
             'has_employer_hi',
             'has_private_hi',
@@ -205,6 +206,10 @@ class NavigatorSerializer(serializers.Serializer):
     description = TranslationSerializer()
 
 
+class DocumentSerializer(serializers.Serializer):
+    text = TranslationSerializer()
+
+
 class EligibilitySerializer(serializers.Serializer):
     description_short = TranslationSerializer()
     name = TranslationSerializer()
@@ -224,6 +229,7 @@ class EligibilitySerializer(serializers.Serializer):
     navigators = NavigatorSerializer(many=True)
     already_has = serializers.BooleanField()
     new = serializers.BooleanField()
+    documents = DocumentSerializer(many=True)
 
     class Meta:
         fields = '__all__'

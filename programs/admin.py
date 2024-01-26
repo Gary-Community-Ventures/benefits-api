@@ -10,6 +10,7 @@ from .models import (
     WebHookFunction,
     UrgentNeedCategory,
     NavigatorCounty,
+    Document,
 )
 
 
@@ -47,6 +48,10 @@ class FederalPovertyLimitAdmin(admin.ModelAdmin):
     search_fields = ('year',)
 
 
+class DocumentAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
+
+
 class ReferrerAdmin(admin.ModelAdmin):
     search_fields = ('referrer_code',)
 
@@ -63,5 +68,6 @@ admin.site.register(UrgentNeed, UrgentNeedAdmin)
 admin.site.register(UrgentNeedCategory, UrgentNeedCategoryAdmin)
 admin.site.register(UrgentNeedFunction, UrgentNeedFunctionAdmin)
 admin.site.register(FederalPoveryLimit, FederalPovertyLimitAdmin)
+admin.site.register(Document, DocumentAdmin)
 admin.site.register(Referrer, ReferrerAdmin)
 admin.site.register(WebHookFunction, WebHookFunctionsAdmin)

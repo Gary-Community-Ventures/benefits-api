@@ -31,6 +31,3 @@ class DenverPreschoolProgram(ProgramCalculator):
                     messages.location())
 
         return e
-
-    def value(self, eligible_members: int):
-        return DenverPreschoolProgram.amount

@@ -165,7 +165,8 @@ def eligibility_results(screen, batch=False):
     if referrer is not None:
         excluded_programs = referrer.remove_programs.values('id')
 
-    all_programs = Program.objects.exclude(id__in=excluded_programs).prefetch_related('legal_status_required')
+    all_programs = Program.objects.exclude(id__in=excluded_programs)\
+        .prefetch_related('legal_status_required', 'documents')
     data = []
 
     try:
@@ -285,7 +286,8 @@ def eligibility_results(screen, batch=False):
                     "passed_tests": eligibility["passed"],
                     "navigators": [serialized_navigator(navigator) for navigator in navigators],
                     "already_has": screen.has_benefit(program.name_abbreviated),
-                    "new": new
+                    "new": new,
+                    "documents": [default_message(d.text) for d in program.documents.all()]
                 }
             )
 
