@@ -1,7 +1,13 @@
 {% extends "base.html" %}{% block content %}
 <h2>{{ program.name.text }}</h2>
 <div>
-	<a href="/admin/programs/program/{{ program.id }}/change/"> Django Admin </a>
+	<a
+		href="/admin/programs/program/{{ program.id }}/change/"
+		target="_blank"
+		rel="noopener noreferrer"
+	>
+		Django Admin
+	</a>
 </div>
 <div>
 	<a href="/api/translations/admin/{{ program.description_short.id }}">

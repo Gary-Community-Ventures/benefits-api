@@ -205,6 +205,10 @@ class NavigatorSerializer(serializers.Serializer):
     description = TranslationSerializer()
 
 
+class DocumentSerializer(serializers.Serializer):
+    text = TranslationSerializer()
+
+
 class EligibilitySerializer(serializers.Serializer):
     description_short = TranslationSerializer()
     name = TranslationSerializer()
@@ -224,6 +228,7 @@ class EligibilitySerializer(serializers.Serializer):
     navigators = NavigatorSerializer(many=True)
     already_has = serializers.BooleanField()
     new = serializers.BooleanField()
+    documents = DocumentSerializer(many=True)
 
     class Meta:
         fields = '__all__'
