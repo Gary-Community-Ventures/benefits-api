@@ -9,6 +9,7 @@ from .models import (
     Referrer,
     WebHookFunction,
     UrgentNeedCategory,
+    NavigatorCounty,
     Document,
 )
 
@@ -19,6 +20,10 @@ class ProgramAdmin(admin.ModelAdmin):
 
 class LegalStatusAdmin(admin.ModelAdmin):
     search_fields = ('status',)
+
+
+class NavigatorCountiesAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
 
 
 class NavigatorAdmin(admin.ModelAdmin):
@@ -57,6 +62,7 @@ class WebHookFunctionsAdmin(admin.ModelAdmin):
 
 admin.site.register(LegalStatus, LegalStatusAdmin)
 admin.site.register(Program, ProgramAdmin)
+admin.site.register(NavigatorCounty, NavigatorCountiesAdmin)
 admin.site.register(Navigator, NavigatorAdmin)
 admin.site.register(UrgentNeed, UrgentNeedAdmin)
 admin.site.register(UrgentNeedCategory, UrgentNeedCategoryAdmin)
