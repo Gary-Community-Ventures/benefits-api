@@ -35,6 +35,3 @@ class WeatherizationAssistance(ProgramCalculator):
         e.condition(income_eligible or categorical_eligible, messages.income(income, income_limit))
 
         return e
-
-    def value(self, eligible_members: int):
-        return WeatherizationAssistance.amount

@@ -8,9 +8,10 @@ from .models import (
     FederalPoveryLimit,
     Referrer,
     WebHookFunction,
-    UrgentNeedCategory
+    UrgentNeedCategory,
+    NavigatorCounty,
+    Document,
 )
-from parler.admin import TranslatableAdmin
 
 
 class ProgramAdmin(admin.ModelAdmin):
@@ -19,6 +20,10 @@ class ProgramAdmin(admin.ModelAdmin):
 
 class LegalStatusAdmin(admin.ModelAdmin):
     search_fields = ('status',)
+
+
+class NavigatorCountiesAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
 
 
 class NavigatorAdmin(admin.ModelAdmin):
@@ -43,6 +48,10 @@ class FederalPovertyLimitAdmin(admin.ModelAdmin):
     search_fields = ('year',)
 
 
+class DocumentAdmin(admin.ModelAdmin):
+    search_fields = ('name',)
+
+
 class ReferrerAdmin(admin.ModelAdmin):
     search_fields = ('referrer_code',)
 
@@ -53,10 +62,12 @@ class WebHookFunctionsAdmin(admin.ModelAdmin):
 
 admin.site.register(LegalStatus, LegalStatusAdmin)
 admin.site.register(Program, ProgramAdmin)
+admin.site.register(NavigatorCounty, NavigatorCountiesAdmin)
 admin.site.register(Navigator, NavigatorAdmin)
 admin.site.register(UrgentNeed, UrgentNeedAdmin)
 admin.site.register(UrgentNeedCategory, UrgentNeedCategoryAdmin)
 admin.site.register(UrgentNeedFunction, UrgentNeedFunctionAdmin)
 admin.site.register(FederalPoveryLimit, FederalPovertyLimitAdmin)
+admin.site.register(Document, DocumentAdmin)
 admin.site.register(Referrer, ReferrerAdmin)
 admin.site.register(WebHookFunction, WebHookFunctionsAdmin)

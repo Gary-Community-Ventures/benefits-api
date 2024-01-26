@@ -109,11 +109,26 @@ class SsiUnearnedIncomeDependency(Member):
         return int(self.member.calc_gross_income('yearly', ['unearned']))
 
 
-class SsiDisabledDependency(Member):
-    field = "is_ssi_disabled"
+class IsDisabledDependency(Member):
+    field = "is_disabled"
 
     def value(self):
-        return self.member.has_disability()
+        return self.member.disabled or self.member.long_term_disability
+
+
+class IsBlindDependency(Member):
+    field = 'is_blind'
+
+    def value(self):
+        return self.member.visually_impaired
+
+
+class SsiReportedDependency(Member):
+    field = 'ssi_reported'
+
+    def value(self):
+        # Policy Eninge uses this value for is_ssi_disabled, but it does not apply to MFB
+        return 0
 
 
 class SsiCountableResourcesDependency(Member):

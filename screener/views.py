@@ -165,7 +165,8 @@ def eligibility_results(screen, batch=False):
     if referrer is not None:
         excluded_programs = referrer.remove_programs.values('id')
 
-    all_programs = Program.objects.exclude(id__in=excluded_programs).prefetch_related('legal_status_required')
+    all_programs = Program.objects.exclude(id__in=excluded_programs)\
+        .prefetch_related('legal_status_required', 'documents')
     data = []
 
     try:
@@ -226,13 +227,20 @@ def eligibility_results(screen, batch=False):
 
             eligibility = pe_eligibility[program.name_abbreviated]
 
-        all_navigators = program.navigator.all()
+        all_navigators = program.navigator.all().prefetch_related('counties')
+
+        county_navigators = []
+        for nav in all_navigators:
+            counties = nav.counties.all()
+            if len(counties) == 0 or any(screen.county in county.name for county in counties):
+                county_navigators.append(nav)
+
         if referrer is None:
-            navigators = all_navigators
+            navigators = county_navigators
         else:
-            referrer_navigators = referrer.primary_navigators.all() & all_navigators
+            referrer_navigators = referrer.primary_navigators.all() & county_navigators
             if len(referrer_navigators) == 0:
-                navigators = all_navigators
+                navigators = county_navigators
             else:
                 navigators = referrer_navigators
 
@@ -278,7 +286,8 @@ def eligibility_results(screen, batch=False):
                     "passed_tests": eligibility["passed"],
                     "navigators": [serialized_navigator(navigator) for navigator in navigators],
                     "already_has": screen.has_benefit(program.name_abbreviated),
-                    "new": new
+                    "new": new,
+                    "documents": [default_message(d.text) for d in program.documents.all()]
                 }
             )
 
@@ -334,7 +343,8 @@ def urgent_need_results(screen):
         'bia_food_delivery': urgent_need_functions.BiaFoodDelivery.calc(screen, missing_dependencies),
         'trua': urgent_need_functions.Trua.calc(screen, missing_dependencies),
         'eoc': urgent_need_functions.Eoc.calc(screen, missing_dependencies),
-        'co_legal_services': urgent_need_functions.CoLegalServices.calc(screen, missing_dependencies)
+        'co_legal_services': urgent_need_functions.CoLegalServices.calc(screen, missing_dependencies),
+        'co_emergency_mortgage': urgent_need_functions.CoEmergencyMortgageAssistance.calc(screen, missing_dependencies),
     }
 
     list_of_needs = []

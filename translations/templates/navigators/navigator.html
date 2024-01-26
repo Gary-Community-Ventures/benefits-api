@@ -1,7 +1,11 @@
 {% extends "base.html" %}{% block content %}
 <h2>{{ navigator.name.text }}</h2>
 <div>
-	<a href="/admin/programs/navigator/{{ navigator.id }}/change/">
+	<a
+		href="/admin/programs/navigator/{{ navigator.id }}/change/"
+		target="_blank"
+		rel="noopener noreferrer"
+	>
 		Django Admin
 	</a>
 </div>

@@ -3,7 +3,7 @@ import programs.programs.messages as messages
 
 
 class EnergyResourceCenter(ProgramCalculator):
-    average_amount = 4000
+    amount = 4000
     income_bands = {
         1: 2880,
         2: 3766,
@@ -26,6 +26,3 @@ class EnergyResourceCenter(ProgramCalculator):
                     messages.income(gross_income, income_band))
 
         return e
-
-    def value(self, eligible_members: int):
-        return EnergyResourceCenter.average_amount

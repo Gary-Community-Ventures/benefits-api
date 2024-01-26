@@ -50,6 +50,3 @@ class LowWageCovidRelief(ProgramCalculator):
             e.eligible = False
 
         return e
-
-    def value(self, eligible_members: int):
-        return LowWageCovidRelief.amount
