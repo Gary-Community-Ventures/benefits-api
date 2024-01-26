@@ -119,7 +119,9 @@ class Ssi(PolicyEngineMembersCalculator):
     pe_name = 'ssi'
     pe_inputs = [
         dependency.member.SsiCountableResourcesDependency,
-        dependency.member.SsiDisabledDependency,
+        dependency.member.SsiReportedDependency,
+        dependency.member.IsBlindDependency,
+        dependency.member.IsDisabledDependency,
         dependency.member.SsiEarnedIncomeDependency,
         dependency.member.SsiUnearnedIncomeDependency,
         dependency.member.AgeDependency,
@@ -135,7 +137,9 @@ class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
     pe_name = 'co_state_supplement'
     pe_inputs = [
         dependency.member.SsiCountableResourcesDependency,
-        dependency.member.SsiDisabledDependency,
+        dependency.member.SsiReportedDependency,
+        dependency.member.IsBlindDependency,
+        dependency.member.IsDisabledDependency,
         dependency.member.SsiEarnedIncomeDependency,
         dependency.member.SsiUnearnedIncomeDependency,
         dependency.member.AgeDependency,
