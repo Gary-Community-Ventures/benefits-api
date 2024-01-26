@@ -238,7 +238,8 @@ def eligibility_results(screen, batch=False):
         if referrer is None:
             navigators = county_navigators
         else:
-            referrer_navigators = referrer.primary_navigators.all() & county_navigators
+            primary_navigators = referrer.primary_navigators.all()
+            referrer_navigators = [nav for nav in primary_navigators if nav in county_navigators]
             if len(referrer_navigators) == 0:
                 navigators = county_navigators
             else:
