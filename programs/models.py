@@ -40,6 +40,35 @@ class LegalStatus(models.Model):
         return self.status
 
 
+class DocumentManager(models.Manager):
+    translated_fields = ('text',)
+
+    def new_document(self, external_name):
+        translation = Translation.objects.add_translation(
+            f'document.{external_name}_temporary_key', ''
+        )
+
+        document = self.create(
+            external_name=external_name,
+            text=translation
+        )
+
+        translation.label = f'document.{external_name}_{document.id}'
+        translation.save()
+
+        return document
+
+
+class Document(models.Model):
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
+    text = models.ForeignKey(Translation, related_name='documents', blank=False, null=False, on_delete=models.PROTECT)
+
+    objects = DocumentManager()
+
+    def __str__(self) -> str:
+        return self.external_name
+
+
 class ProgramManager(models.Manager):
     translated_fields = (
         'description_short',
@@ -81,6 +110,7 @@ class Program(models.Model):
     name_abbreviated = models.CharField(max_length=120)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     legal_status_required = models.ManyToManyField(LegalStatus, related_name='programs', blank=True)
+    documents = models.ManyToManyField(Document, related_name='program_documents', blank=True)
     active = models.BooleanField(blank=True, default=True)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name='fpl', blank=True, null=True, on_delete=models.SET_NULL)
 

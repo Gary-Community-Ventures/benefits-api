@@ -23,6 +23,3 @@ class ReproductiveHealthCare(ProgramCalculator):
         e.condition(is_medicaid_eligible, messages.must_have_benefit("Medicaid"))
 
         return e
-
-    def value(self, eligible_members: int):
-        return ReproductiveHealthCare.amount

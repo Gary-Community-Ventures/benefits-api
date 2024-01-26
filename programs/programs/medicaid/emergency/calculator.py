@@ -32,6 +32,3 @@ class EmergencyMedicaid(ProgramCalculator):
         )
 
         return e
-
-    def value(self, eligible_members: int):
-        return EmergencyMedicaid.amount

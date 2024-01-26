@@ -1,0 +1,8 @@
+<ul id="document-list">
+	{% for document in documents %}
+	<li>
+		<span>{{ document.external_name }} </span>
+		<a href="documents/{{ document.id }}">Edit</a>
+	</li>
+	{% endfor %}
+</ul>

@@ -25,6 +25,3 @@ class BasicCashAssistance(ProgramCalculator):
         e.condition(num_children >= 1, messages.child())
 
         return e
-
-    def value(self, eligible_members: int):
-        return self.amount
