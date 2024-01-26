@@ -2,12 +2,15 @@ from screener.models import Screen
 from programs.models import FederalPoveryLimit
 from programs.util import Dependencies
 from .eoc_income_limits import eoc_income_limits
+from integrations.util.cache import Cache
+from programs.sheets import sheets_get_data
 
 
-class UrgentNeedFunction():
+class UrgentNeedFunction:
     '''
     Base class for all urgent need conditions
     '''
+
     dependencies = []
 
     @classmethod
@@ -126,7 +129,7 @@ class Trua(UrgentNeedFunction):
             5: 102_250,
             6: 109_800,
             7: 117_400,
-            8: 124_950
+            8: 124_950,
         }
         household_income = screen.calc_gross_income('yearly', ['all'])
         income_limit = income_limits[screen.household_size]
@@ -158,6 +161,45 @@ class CoLegalServices(UrgentNeedFunction):
         Return True if the household is has an income bellow 200% FPL or someone in the household is over 60 years old
         '''
         fpl = FederalPoveryLimit.objects.get(year='THIS YEAR').as_dict()
-        is_income_eligible = screen.calc_gross_income('yearly', ['all']) < fpl[screen.household_size]
+        is_income_eligible = (
+            screen.calc_gross_income('yearly', ['all']) < fpl[screen.household_size]
+        )
         is_age_eligible = screen.num_adults(age_max=60)
         return is_income_eligible or is_age_eligible
+
+
+class CoEmergencyMortgageIncomeLimitCache(Cache):
+    expire_time = 60 * 60 * 24
+    default = {}
+
+    def update(self):
+        spreadsheet_id = '1M_BQxs135UV4uO-CUpHtt9Xy89l1RmSufdP9c3nEh-M'
+        range_name = "'100% AMI 2023'!A2:I65"
+        sheet_values = sheets_get_data(spreadsheet_id, range_name)
+
+        if not sheet_values:
+            raise Exception('Sheet unavailable')
+
+        data = {d[0] + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in sheet_values}
+
+        return data
+
+
+class CoEmergencyMortgageAssistance(UrgentNeedFunction):
+    limits_cache = CoEmergencyMortgageIncomeLimitCache()
+    dependencies = ['income_amount', 'income_frequency', 'household_size', 'county']
+
+    @classmethod
+    def eligible(cls, screen: Screen):
+        income = int(screen.calc_gross_income('yearly', ['all']))
+
+        limits = CoEmergencyMortgageAssistance.limits_cache.fetch()
+
+        if screen.county not in limits:
+            return False
+
+        income_limit = limits[screen.county][
+            screen.household_size - 1
+        ]
+
+        return income < income_limit
