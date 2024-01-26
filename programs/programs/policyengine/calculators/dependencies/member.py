@@ -127,6 +127,7 @@ class SsiReportedDependency(Member):
     field = 'ssi_reported'
 
     def value(self):
+        # Policy Eninge uses this value for is_ssi_disabled, but it does not apply to MFB
         return 0
 
 
