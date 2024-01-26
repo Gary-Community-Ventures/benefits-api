@@ -128,6 +128,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             'has_upk',
             'has_ssdi',
             'has_cowap',
+            'has_ubp',
             'has_pell_grant',
             'has_employer_hi',
             'has_private_hi',
