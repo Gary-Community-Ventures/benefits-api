@@ -23,6 +23,7 @@ from .medicaid.emergency.calculator import EmergencyMedicaid
 from .medicare_savings.calculator import MedicareSavings
 from .basic_cash_assistance.calculator import BasicCashAssistance
 from .weatherization_assistance.calculator import WeatherizationAssistance
+from .tabor.calculator import Tabor
 from .utility_bill_pay.calculator import UtilityBillPay
 from .calc import ProgramCalculator
 
@@ -52,5 +53,6 @@ calculators: dict[str, type[ProgramCalculator]] = {
     'medicare_savings': MedicareSavings,
     'bca': BasicCashAssistance,
     'cowap': WeatherizationAssistance,
+    'tabor': Tabor,
     'ubp': UtilityBillPay,
 }
