@@ -4,10 +4,6 @@ from programs.models import FederalPoveryLimit
 
 class SnapChildSupportDeductionDependency(SpmUnit):
     field = 'snap_child_support_deduction'
-    dependencies = (
-        'expense_type',
-        'expense_amount',
-    )
 
     def value(self):
         return self.screen.calc_expenses('yearly', ['childSupport'])
@@ -15,10 +11,6 @@ class SnapChildSupportDeductionDependency(SpmUnit):
 
 class SnapDependentCareDeductionDependency(SpmUnit):
     field = 'childcare_expenses'
-    dependencies = (
-        'expense_type',
-        'expense_amount',
-    )
 
     def value(self):
         return self.screen.calc_expenses('yearly', ['childCare'])
@@ -38,10 +30,6 @@ class SnapEarnedIncomeDependency(SpmUnit):
 
 class HousingCostDependency(SpmUnit):
     field = 'housing_cost'
-    dependencies = (
-        'expense_type',
-        'expense_amount',
-    )
 
     def value(self):
         return int(self.screen.calc_expenses('yearly', ['rent', 'mortgage']))
@@ -49,10 +37,10 @@ class HousingCostDependency(SpmUnit):
 
 class SnapAssetsDependency(SpmUnit):
     field = 'snap_assets'
-    dependencies = ('household_assets',)
 
     def value(self):
-        return int(self.screen.household_assets)
+        assets = self.screen.household_assets or 0
+        return int(assets)
 
 
 class SnapGrossIncomeDependency(SpmUnit):
@@ -98,10 +86,6 @@ class MeetsSnapCategoricalEligibilityDependency(SpmUnit):
 
 class HasHeatingCoolingExpenseDependency(SpmUnit):
     field = 'has_heating_cooling_expense'
-    dependencies = (
-        'expense_type',
-        'expense_amount',
-    )
 
     def value(self):
         return self.screen.has_expense(['heating', 'cooling'])
@@ -109,10 +93,6 @@ class HasHeatingCoolingExpenseDependency(SpmUnit):
 
 class HasPhoneExpenseDependency(SpmUnit):
     field = 'has_phone_expense'
-    dependencies = (
-        'expense_type',
-        'expense_amount',
-    )
 
     def value(self):
         return self.screen.has_expense(['telephone'])
@@ -120,10 +100,6 @@ class HasPhoneExpenseDependency(SpmUnit):
 
 class UtilityExpenseDependency(SpmUnit):
     field = 'utility_expense'
-    dependencies = (
-        'expense_type',
-        'expense_amount',
-    )
 
     def value(self):
         return int(
@@ -135,10 +111,6 @@ class UtilityExpenseDependency(SpmUnit):
 
 class HeatingCoolingExpenseDependency(SpmUnit):
     field = 'heating_cooling_expense'
-    dependencies = (
-        'expense_type',
-        'expense_amount',
-    )
 
     def value(self):
         return self.screen.calc_expenses('yearly', ['heating', 'cooling'])
@@ -146,10 +118,6 @@ class HeatingCoolingExpenseDependency(SpmUnit):
 
 class PhoneExpenseDependency(SpmUnit):
     field = 'phone_expense'
-    dependencies = (
-        'expense_type',
-        'expense_amount',
-    )
 
     def value(self):
         return self.screen.calc_expenses('yearly', ['telephone'])
@@ -157,10 +125,6 @@ class PhoneExpenseDependency(SpmUnit):
 
 class ElectricityExpenseDependency(SpmUnit):
     field = 'electricity_expense'
-    dependencies = (
-        'expense_type',
-        'expense_amount',
-    )
 
     def value(self):
         return self.screen.calc_expenses('yearly', ['otherUtilities'])
