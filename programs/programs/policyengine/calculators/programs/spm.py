@@ -1,5 +1,5 @@
 from ..base import PolicyEnigineCalulator
-from ..constants import SNAP_PERIOD, PREVIOUS_YEAR
+from ..constants import SNAP_PERIOD
 import programs.programs.policyengine.calculators.dependencies as dependency
 
 
@@ -27,7 +27,6 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.SnapDependentCareDeductionDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
-    pe_period = PREVIOUS_YEAR
     pe_output_period = SNAP_PERIOD
 
     def value(self):
