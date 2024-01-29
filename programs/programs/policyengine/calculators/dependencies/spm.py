@@ -37,10 +37,10 @@ class HousingCostDependency(SpmUnit):
 
 class SnapAssetsDependency(SpmUnit):
     field = 'snap_assets'
-    dependencies = ('household_assets',)
 
     def value(self):
-        return int(self.screen.household_assets)
+        assets = self.screen.household_assets or 0
+        return int(assets)
 
 
 class SnapGrossIncomeDependency(SpmUnit):
