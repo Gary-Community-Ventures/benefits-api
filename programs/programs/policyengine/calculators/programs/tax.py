@@ -38,6 +38,11 @@ class Ctc(PolicyEngineTaxUnitCalulator):
         dependency.member.TaxUnitDependentDependency,
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.EmploymentIncomeDependency,
+        dependency.member.SelfEmploymentIncomeDependency,
+        dependency.member.InvestmentIncomeDependency,
+        dependency.member.RentalIncomeDependency,
+        dependency.member.PensionIncomeDependency,
+        dependency.member.SocialSecurityIncomeDependency,
     ]
     pe_outputs = [dependency.tax.Ctc]
 
