@@ -73,7 +73,6 @@ class Tanf(PolicyEngineSpmCalulator):
 class Acp(PolicyEngineSpmCalulator):
     pe_name = 'acp'
     pe_inputs = [
-        dependency.member.TaxUnitDependentDependency,
         dependency.spm.BroadbandCostDependency,
         *dependency.irs_gross_income,
     ]
@@ -83,7 +82,7 @@ class Acp(PolicyEngineSpmCalulator):
 class Lifeline(PolicyEngineSpmCalulator):
     pe_name = 'lifeline'
     pe_inputs = [
-        dependency.member.TaxUnitDependentDependency,
-        dependency.member.EmploymentIncomeDependency
+        dependency.spm.BroadbandCostDependency,
+        *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.spm.Lifeline]
