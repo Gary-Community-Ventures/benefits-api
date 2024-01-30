@@ -16,6 +16,11 @@ class Eitc(PolicyEngineTaxUnitCalulator):
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitDependentDependency,
         dependency.member.EmploymentIncomeDependency,
+        dependency.member.SelfEmploymentIncomeDependency,
+        dependency.member.InvestmentIncomeDependency,
+        dependency.member.RentalIncomeDependency,
+        dependency.member.PensionIncomeDependency,
+        dependency.member.SocialSecurityIncomeDependency,
     ]
     pe_outputs = [dependency.tax.Eitc]
 

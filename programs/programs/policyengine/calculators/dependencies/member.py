@@ -1,30 +1,6 @@
 from .base import Member
 
 
-class EmploymentIncomeDependency(Member):
-    field = 'employment_income'
-    dependencies = (
-        'income_type',
-        'income_amount',
-        'income_frequency',
-    )
-
-    def value(self):
-        return int(self.member.calc_gross_income('yearly', ['wages']))
-
-
-class SelfEmploymentIncomeDependency(Member):
-    field = 'self_employment_income'
-    dependencies = (
-        'income_type',
-        'income_amount',
-        'income_frequency',
-    )
-
-    def value(self):
-        return int(self.member.calc_gross_income('yearly', ['selfEmployment']))
-
-
 class AgeDependency(Member):
     field = 'age'
     dependencies = ('age',)
@@ -66,16 +42,23 @@ class TaxUnitDependentDependency(Member):
     )
 
     def value(self):
-        is_tax_unit_spouse = TaxUnitSpouseDependency(self.screen, self.member, self.relationship_map).value()
-        is_tax_unit_head = TaxUnitHeadDependency(self.screen, self.member, self.relationship_map).value()
+        is_tax_unit_spouse = TaxUnitSpouseDependency(
+            self.screen, self.member, self.relationship_map
+        ).value()
+        is_tax_unit_head = TaxUnitHeadDependency(
+            self.screen, self.member, self.relationship_map
+        ).value()
         is_tax_unit_dependent = (
-            self.member.age <= 18 or
-            (self.member.student and self.member.age <= 23) or
-            self.member.has_disability()
-        ) and (
-            self.member.calc_gross_income('yearly', ['all']) < self.screen.calc_gross_income('yearly', ['all']) / 2
-        ) and (
-            not (is_tax_unit_head or is_tax_unit_spouse)
+            (
+                self.member.age <= 18
+                or (self.member.student and self.member.age <= 23)
+                or self.member.has_disability()
+            )
+            and (
+                self.member.calc_gross_income('yearly', ['all'])
+                < self.screen.calc_gross_income('yearly', ['all']) / 2
+            )
+            and (not (is_tax_unit_head or is_tax_unit_spouse))
         )
 
         return is_tax_unit_dependent
@@ -211,3 +194,45 @@ class PellGrantMonthsInSchoolDependency(Member):
 
 class ChpEligible(Member):
     field = 'co_chp_eligible'
+
+
+class IncomeDependency(Member):
+    dependencies = (
+        'income_type',
+        'income_amount',
+        'income_frequency',
+    )
+    income_types = []
+
+    def value(self):
+        return int(self.member.calc_gross_income('yearly', self.income_types))
+
+
+class EmploymentIncomeDependency(IncomeDependency):
+    field = 'employment_income'
+    income_types = ['wages']
+
+
+class SelfEmploymentIncomeDependency(IncomeDependency):
+    field = 'self_employment_income'
+    income_types = ['selfEmployment']
+
+
+class InvestmentIncomeDependency(IncomeDependency):
+    field = 'net_investment_income'
+    income_types = ['investment']
+
+
+class RentalIncomeDependency(IncomeDependency):
+    field = 'rental_income'
+    income_types = ['rental']
+
+
+class PensionIncomeDependency(IncomeDependency):
+    field = 'taxable_pension_income'
+    income_types = ['pension', 'veteran']
+
+
+class SocialSecurityIncomeDependency(IncomeDependency):
+    field = 'taxable_pension_income'
+    income_types = ['sSDisability', 'sSSurvivor', 'sSRetirement', 'sSDependent']
