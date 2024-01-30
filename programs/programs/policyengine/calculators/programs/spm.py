@@ -73,9 +73,9 @@ class Tanf(PolicyEngineSpmCalulator):
 class Acp(PolicyEngineSpmCalulator):
     pe_name = 'acp'
     pe_inputs = [
-        dependency.member.EmploymentIncomeDependency,
         dependency.member.TaxUnitDependentDependency,
         dependency.spm.BroadbandCostDependency,
+        *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.spm.Acp]
 
