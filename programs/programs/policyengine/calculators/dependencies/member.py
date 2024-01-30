@@ -2,7 +2,7 @@ from .base import Member
 
 
 class EmploymentIncomeDependency(Member):
-    field = "employment_income"
+    field = 'employment_income'
     dependencies = (
         'income_type',
         'income_amount',
@@ -10,11 +10,23 @@ class EmploymentIncomeDependency(Member):
     )
 
     def value(self):
-        return int(self.member.calc_gross_income('yearly', ['wages', 'selfEmployment']))
+        return int(self.member.calc_gross_income('yearly', ['wages']))
+
+
+class SelfEmploymentIncomeDependency(Member):
+    field = 'self_employment_income'
+    dependencies = (
+        'income_type',
+        'income_amount',
+        'income_frequency',
+    )
+
+    def value(self):
+        return int(self.member.calc_gross_income('yearly', ['selfEmployment']))
 
 
 class AgeDependency(Member):
-    field = "age"
+    field = 'age'
     dependencies = ('age',)
 
     def value(self):
@@ -22,14 +34,14 @@ class AgeDependency(Member):
 
 
 class PregnancyDependency(Member):
-    field = "is_pregnant"
+    field = 'is_pregnant'
 
     def value(self):
         return self.member.pregnant or False
 
 
 class TaxUnitHeadDependency(Member):
-    field = "is_tax_unit_head"
+    field = 'is_tax_unit_head'
     dependencies = ('relationship',)
 
     def value(self):
@@ -37,7 +49,7 @@ class TaxUnitHeadDependency(Member):
 
 
 class TaxUnitSpouseDependency(Member):
-    field = "is_tax_unit_spouse"
+    field = 'is_tax_unit_spouse'
     dependencies = ('relationship',)
 
     def value(self):
@@ -45,7 +57,7 @@ class TaxUnitSpouseDependency(Member):
 
 
 class TaxUnitDependentDependency(Member):
-    field = "is_tax_unit_dependent"
+    field = 'is_tax_unit_dependent'
     dependencies = (
         'relationship',
         'age',
@@ -70,23 +82,23 @@ class TaxUnitDependentDependency(Member):
 
 
 class WicCategory(Member):
-    field = "wic_category"
+    field = 'wic_category'
 
 
 class Wic(Member):
-    field = "wic"
+    field = 'wic'
 
 
 class Medicaid(Member):
-    field = "medicaid"
+    field = 'medicaid'
 
 
 class Ssi(Member):
-    field = "ssi"
+    field = 'ssi'
 
 
 class SsiEarnedIncomeDependency(Member):
-    field = "ssi_earned_income"
+    field = 'ssi_earned_income'
     dependencies = (
         'income_type',
         'income_amount',
@@ -98,7 +110,7 @@ class SsiEarnedIncomeDependency(Member):
 
 
 class SsiUnearnedIncomeDependency(Member):
-    field = "ssi_unearned_income"
+    field = 'ssi_unearned_income'
     dependencies = (
         'income_type',
         'income_amount',
@@ -110,7 +122,7 @@ class SsiUnearnedIncomeDependency(Member):
 
 
 class IsDisabledDependency(Member):
-    field = "is_disabled"
+    field = 'is_disabled'
 
     def value(self):
         return self.member.disabled or self.member.long_term_disability
@@ -132,7 +144,7 @@ class SsiReportedDependency(Member):
 
 
 class SsiCountableResourcesDependency(Member):
-    field = "ssi_countable_resources"
+    field = 'ssi_countable_resources'
     dependencies = (
         'household_assets',
         'age',
@@ -147,23 +159,23 @@ class SsiCountableResourcesDependency(Member):
 
 
 class SsiAmountIfEligible(Member):
-    field = "ssi_amount_if_eligible"
+    field = 'ssi_amount_if_eligible'
 
 
 class Andcs(Member):
-    field = "co_state_supplement"
+    field = 'co_state_supplement'
 
 
 class Oap(Member):
-    field = "co_oap"
+    field = 'co_oap'
 
 
 class PellGrant(Member):
-    field = "pell_grant"
+    field = 'pell_grant'
 
 
 class PellGrantDependentAvailableIncomeDependency(Member):
-    field = "pell_grant_dependent_available_income"
+    field = 'pell_grant_dependent_available_income'
     dependencies = (
         'income_type',
         'income_amount',
@@ -175,7 +187,7 @@ class PellGrantDependentAvailableIncomeDependency(Member):
 
 
 class PellGrantCountableAssetsDependency(Member):
-    field = "pell_grant_countable_assets"
+    field = 'pell_grant_countable_assets'
     dependencies = ('household_assets',)
 
     def value(self):
@@ -183,7 +195,7 @@ class PellGrantCountableAssetsDependency(Member):
 
 
 class CostOfAttendingCollegeDependency(Member):
-    field = "cost_of_attending_college"
+    field = 'cost_of_attending_college'
     dependencies = ('age',)
 
     def value(self):
@@ -191,11 +203,11 @@ class CostOfAttendingCollegeDependency(Member):
 
 
 class PellGrantMonthsInSchoolDependency(Member):
-    field = "pell_grant_months_in_school"
+    field = 'pell_grant_months_in_school'
 
     def value(self):
         return 9
 
 
 class ChpEligible(Member):
-    field = "co_chp_eligible"
+    field = 'co_chp_eligible'
