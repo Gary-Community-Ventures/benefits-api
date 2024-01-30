@@ -80,6 +80,7 @@ class ProgramManager(models.Manager):
         'estimated_delivery_time',
         'estimated_application_time',
         'category',
+        'warning',
     )
 
     def new_program(self, name_abbreviated):
@@ -93,6 +94,7 @@ class ProgramManager(models.Manager):
             name_abbreviated=name_abbreviated,
             fpl=None,
             active=False,
+            low_confidence=False,
             **translations,
         )
 
@@ -227,6 +229,7 @@ class UrgentNeedManager(models.Manager):
         'description',
         'link',
         'type',
+        'warning',
     )
 
     def new_urgent_need(self, name, phone_number):
@@ -237,6 +240,7 @@ class UrgentNeedManager(models.Manager):
         urgent_need = self.create(
             phone_number=phone_number,
             active=False,
+            low_confidence=False,
             **translations,
         )
 
