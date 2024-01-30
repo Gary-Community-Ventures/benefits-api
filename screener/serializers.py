@@ -229,6 +229,7 @@ class EligibilitySerializer(serializers.Serializer):
     navigators = NavigatorSerializer(many=True)
     already_has = serializers.BooleanField()
     new = serializers.BooleanField()
+    low_confidence = serializers.BooleanField()
     documents = DocumentSerializer(many=True)
 
     class Meta:

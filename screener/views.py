@@ -288,6 +288,7 @@ def eligibility_results(screen, batch=False):
                     "navigators": [serialized_navigator(navigator) for navigator in navigators],
                     "already_has": screen.has_benefit(program.name_abbreviated),
                     "new": new,
+                    "low_confidence": program.low_confidence,
                     "documents": [default_message(d.text) for d in program.documents.all()]
                 }
             )
