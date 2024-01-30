@@ -25,6 +25,13 @@ class FamilyPlanningServices(ProgramCalculator):
 
         e.condition(not is_medicaid_eligible, messages.must_not_have_benefit('Medicaid'))
 
+        e.member_eligibility(
+            self.screen.household_members.all(),
+            [
+                (lambda m: not m.pregnant, None)
+            ]
+        )
+
         # Income
         fpl = self.program.fpl.as_dict()
         income_limit = int(FamilyPlanningServices.fpl_percent * fpl[self.screen.household_size])
