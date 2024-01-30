@@ -170,9 +170,9 @@ class Program(models.Model):
     warning = models.ForeignKey(
         Translation,
         related_name='program_warning',
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
 
     objects = ProgramManager()
@@ -280,9 +280,9 @@ class UrgentNeed(models.Model):
     warning = models.ForeignKey(
         Translation,
         related_name='urgent_need_warning',
-        blank=True,
-        null=True,
-        on_delete=models.SET_NULL
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT
     )
 
     objects = UrgentNeedManager()
