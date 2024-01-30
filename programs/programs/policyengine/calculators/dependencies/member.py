@@ -16,6 +16,13 @@ class PregnancyDependency(Member):
         return self.member.pregnant or False
 
 
+class FullTimeCollegeStudentDependency(Member):
+    field = 'is_full_time_college_student'
+
+    def value(self):
+        return self.member.student or False
+
+
 class TaxUnitHeadDependency(Member):
     field = 'is_tax_unit_head'
     dependencies = ('relationship',)
@@ -194,7 +201,6 @@ class PellGrantMonthsInSchoolDependency(Member):
 
 class ChpEligible(Member):
     field = 'co_chp_eligible'
-
 
 class IncomeDependency(Member):
     dependencies = (

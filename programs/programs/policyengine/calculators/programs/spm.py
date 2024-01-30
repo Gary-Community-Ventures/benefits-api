@@ -63,7 +63,7 @@ class Tanf(PolicyEngineSpmCalulator):
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
-        dependency.member.EmploymentIncomeDependency,
+        dependency.member.FullTimeCollegeStudentDependency,
         dependency.spm.TanfCountableGrossIncomeDependency,
         dependency.spm.TanfCountableGrossUnearnedIncomeDependency,
     ]
