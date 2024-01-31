@@ -6,7 +6,7 @@ class PropertyCreditRebate(ProgramCalculator):
     amount = 1044
     min_age = 65
     disabled_min_age = 18
-    income_limit = {"single": 16_925, "married": 22_858}
+    income_limit = {"single": 18_026, "married": 23_345}
     dependencies = ['age', 'income_frequency', 'income_amount', 'relationship']
 
     def eligible(self) -> Eligibility:
