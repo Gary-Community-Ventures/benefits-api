@@ -43,17 +43,16 @@ class TranslationManager(TranslatableManager):
         parent.save()
         return parent
 
-    def all_translations(self):
-        all_langs = settings.PARLER_LANGUAGES[None]
+    def all_translations(self, langs=[lang['code'] for lang in settings.PARLER_LANGUAGES[None]]):
         translations = self.prefetch_related('translations')
         translations_dict = {}
-        for lang in all_langs:
+        for lang in langs:
             lang_translations = {}
             for translation in translations:
                 if translation.active:
-                    translation.set_current_language(lang['code'])
+                    translation.set_current_language(lang)
                     lang_translations[translation.label] = translation.text
-            translations_dict[lang['code']] = lang_translations
+            translations_dict[lang] = lang_translations
         return translations_dict
 
     def export_translations(self):

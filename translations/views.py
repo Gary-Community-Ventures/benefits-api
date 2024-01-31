@@ -18,7 +18,15 @@ import json
 class TranslationView(views.APIView):
 
     def get(self, request):
-        translations = Translation.objects.all_translations()
+        language = request.query_params.get('lang')
+        all_langs = [lang['code'] for lang in settings.PARLER_LANGUAGES[None]]
+
+        if language in all_langs:
+            translations = Translation.objects.all_translations([language])
+            print(translations)
+        else:
+            translations = Translation.objects.all_translations()
+
         return Response(translations)
 
 
