@@ -212,7 +212,7 @@ class PensionIncomeDependency(IncomeDependency):
 
 
 class SocialSecurityIncomeDependency(IncomeDependency):
-    field = 'taxable_pension_income'
+    field = 'social_security'
     income_types = ['sSDisability', 'sSSurvivor', 'sSRetirement', 'sSDependent']
 
 
