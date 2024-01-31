@@ -112,6 +112,7 @@ class Program(models.Model):
     legal_status_required = models.ManyToManyField(LegalStatus, related_name='programs', blank=True)
     documents = models.ManyToManyField(Document, related_name='program_documents', blank=True)
     active = models.BooleanField(blank=True, default=True)
+    low_confidence = models.BooleanField(blank=True, null=False, default=False)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name='fpl', blank=True, null=True, on_delete=models.SET_NULL)
 
     description_short = models.ForeignKey(
@@ -244,6 +245,7 @@ class UrgentNeed(models.Model):
     phone_number = PhoneNumberField(blank=True, null=True)
     type_short = models.ManyToManyField(UrgentNeedCategory, related_name='urgent_needs')
     active = models.BooleanField(blank=True, null=False, default=True)
+    low_confidence = models.BooleanField(blank=True, null=False, default=False)
     functions = models.ManyToManyField(UrgentNeedFunction, related_name='function', blank=True)
 
     name = models.ForeignKey(
