@@ -87,30 +87,6 @@ class Ssi(Member):
     field = 'ssi'
 
 
-class SsiEarnedIncomeDependency(Member):
-    field = 'ssi_earned_income'
-    dependencies = (
-        'income_type',
-        'income_amount',
-        'income_frequency',
-    )
-
-    def value(self):
-        return int(self.member.calc_gross_income('yearly', ['earned']))
-
-
-class SsiUnearnedIncomeDependency(Member):
-    field = 'ssi_unearned_income'
-    dependencies = (
-        'income_type',
-        'income_amount',
-        'income_frequency',
-    )
-
-    def value(self):
-        return int(self.member.calc_gross_income('yearly', ['unearned']))
-
-
 class IsDisabledDependency(Member):
     field = 'is_disabled'
 
@@ -202,6 +178,7 @@ class PellGrantMonthsInSchoolDependency(Member):
 class ChpEligible(Member):
     field = 'co_chp_eligible'
 
+
 class IncomeDependency(Member):
     dependencies = (
         'income_type',
@@ -224,11 +201,6 @@ class SelfEmploymentIncomeDependency(IncomeDependency):
     income_types = ['selfEmployment']
 
 
-class InvestmentIncomeDependency(IncomeDependency):
-    field = 'net_investment_income'
-    income_types = ['investment']
-
-
 class RentalIncomeDependency(IncomeDependency):
     field = 'rental_income'
     income_types = ['rental']
@@ -242,3 +214,13 @@ class PensionIncomeDependency(IncomeDependency):
 class SocialSecurityIncomeDependency(IncomeDependency):
     field = 'taxable_pension_income'
     income_types = ['sSDisability', 'sSSurvivor', 'sSRetirement', 'sSDependent']
+
+
+class SsiEarnedIncomeDependency(IncomeDependency):
+    field = 'ssi_earned_income'
+    income_types = ['earned']
+
+
+class SsiUnearnedIncomeDependency(IncomeDependency):
+    field = 'ssi_unearned_income'
+    income_types = ['unearned']

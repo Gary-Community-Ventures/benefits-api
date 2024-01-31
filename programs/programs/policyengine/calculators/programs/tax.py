@@ -32,7 +32,7 @@ class Ctc(PolicyEngineTaxUnitCalulator):
         dependency.member.AgeDependency,
         dependency.member.TaxUnitDependentDependency,
         dependency.member.TaxUnitSpouseDependency,
-        dependency.irs_gross_income,
+        *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.tax.Ctc]
 
