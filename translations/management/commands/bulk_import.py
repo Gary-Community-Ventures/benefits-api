@@ -11,9 +11,11 @@ class Command(BaseCommand):
     '''
 
     def add_arguments(self, parser):
-        parser.add_argument('data', nargs='?', type=argparse.FileType('r'), default=stdin)
+        parser.add_argument(
+            'data', nargs='?', type=argparse.FileType('r'), default=stdin
+        )
 
     def handle(self, *args, **options):
-        data = json.load(options['data'])
+        data = json.loads(options['data'].read())
 
         bulk_add(data)
