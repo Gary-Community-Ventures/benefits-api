@@ -166,6 +166,7 @@ LANGUAGES = (
     ('ne', _('Nepali')),
     ('my', _('Burmese')),
     ('zh', _('Chinese')),
+    ('ar', _('Arabic')),
 )
 
 TIME_ZONE = 'UTC'
@@ -188,6 +189,7 @@ PARLER_LANGUAGES = {
         {'code': 'ne'},
         {'code': 'my'},
         {'code': 'zh'},
+        {'code': 'ar'},
     ),
     'default': {
         'fallbacks': ['en-us'],  # defaults to PARLER_DEFAULT_LANGUAGE_CODE
