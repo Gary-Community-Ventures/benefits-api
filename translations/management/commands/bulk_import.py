@@ -6,6 +6,11 @@ import json
 
 
 class Command(BaseCommand):
+    '''
+    Run on heroku:
+    `heroku run --no-tty -a [HEROKU APP NAME] manage.py bulk_import < [PATH TO FILE]`
+    '''
+
     help = '''
     Get translation export
     '''
