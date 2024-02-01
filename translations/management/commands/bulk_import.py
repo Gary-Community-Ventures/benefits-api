@@ -16,7 +16,6 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        print(options['data'].read())
-        data = json.loads(options['data'].read())
+        data = json.load(options['data'])
 
         bulk_add(data)
