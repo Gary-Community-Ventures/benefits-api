@@ -108,6 +108,7 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
         already_added.add(member_1)
         already_added.add(member_2)
 
+    # programs = sorted(programs, key=lambda P: P.pe_period)
     for Program in programs:
         for Data in Program.pe_inputs + Program.pe_outputs:
             period = Program.pe_period
