@@ -80,6 +80,7 @@ class ProgramManager(models.Manager):
         'estimated_delivery_time',
         'estimated_application_time',
         'category',
+        'warning',
     )
 
     def new_program(self, name_abbreviated):
@@ -93,6 +94,7 @@ class ProgramManager(models.Manager):
             name_abbreviated=name_abbreviated,
             fpl=None,
             active=False,
+            low_confidence=False,
             **translations,
         )
 
@@ -112,6 +114,7 @@ class Program(models.Model):
     legal_status_required = models.ManyToManyField(LegalStatus, related_name='programs', blank=True)
     documents = models.ManyToManyField(Document, related_name='program_documents', blank=True)
     active = models.BooleanField(blank=True, default=True)
+    low_confidence = models.BooleanField(blank=True, null=False, default=False)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name='fpl', blank=True, null=True, on_delete=models.SET_NULL)
 
     description_short = models.ForeignKey(
@@ -167,6 +170,13 @@ class Program(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT)
+    warning = models.ForeignKey(
+        Translation,
+        related_name='program_warning',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
+    )
 
     objects = ProgramManager()
 
@@ -219,6 +229,7 @@ class UrgentNeedManager(models.Manager):
         'description',
         'link',
         'type',
+        'warning',
     )
 
     def new_urgent_need(self, name, phone_number):
@@ -229,6 +240,7 @@ class UrgentNeedManager(models.Manager):
         urgent_need = self.create(
             phone_number=phone_number,
             active=False,
+            low_confidence=False,
             **translations,
         )
 
@@ -244,6 +256,7 @@ class UrgentNeed(models.Model):
     phone_number = PhoneNumberField(blank=True, null=True)
     type_short = models.ManyToManyField(UrgentNeedCategory, related_name='urgent_needs')
     active = models.BooleanField(blank=True, null=False, default=True)
+    low_confidence = models.BooleanField(blank=True, null=False, default=False)
     functions = models.ManyToManyField(UrgentNeedFunction, related_name='function', blank=True)
 
     name = models.ForeignKey(
@@ -270,6 +283,13 @@ class UrgentNeed(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT)
+    warning = models.ForeignKey(
+        Translation,
+        related_name='urgent_need_warning',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT
+    )
 
     objects = UrgentNeedManager()
 

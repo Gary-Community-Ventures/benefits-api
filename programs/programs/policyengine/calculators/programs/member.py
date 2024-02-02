@@ -40,6 +40,7 @@ class Wic(PolicyEngineMembersCalculator):
     pe_inputs = [
         dependency.member.PregnancyDependency,
         dependency.member.AgeDependency,
+        *dependency.school_lunch_income,
     ]
     pe_outputs = [dependency.member.Wic, dependency.member.WicCategory]
 
@@ -55,8 +56,15 @@ class Wic(PolicyEngineMembersCalculator):
 
 class Medicaid(PolicyEngineMembersCalculator):
     pe_name = 'medicaid'
-    pe_inputs = [dependency.member.AgeDependency, dependency.member.EmploymentIncomeDependency]
-    pe_outputs = [dependency.member.AgeDependency, dependency.member.Medicaid]
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.PregnancyDependency,
+        *dependency.irs_gross_income,
+    ]
+    pe_outputs = [
+        dependency.member.AgeDependency,
+        dependency.member.Medicaid,
+    ]
 
     co_child_medicaid_average = 200 * 12
     co_adult_medicaid_average = 310 * 12
@@ -128,7 +136,6 @@ class Ssi(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitHeadDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.member.EmploymentIncomeDependency,
     ]
     pe_outputs = [dependency.member.Ssi]
 
@@ -146,7 +153,6 @@ class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitHeadDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.member.EmploymentIncomeDependency,
     ]
     pe_outputs = [dependency.member.Andcs]
 
@@ -167,7 +173,11 @@ class OldAgePension(PolicyEngineMembersCalculator):
 
 class Chp(PolicyEngineMembersCalculator):
     pe_name = 'co_chp'
-    pe_inputs = [dependency.member.AgeDependency, dependency.member.EmploymentIncomeDependency]
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.PregnancyDependency,
+        *dependency.irs_gross_income,
+    ]
     pe_outputs = [dependency.member.ChpEligible]
 
     amount = 200 * 12

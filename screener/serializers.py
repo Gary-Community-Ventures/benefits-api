@@ -223,12 +223,14 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_application_time = TranslationSerializer()
     legal_status_required = serializers.ListField()
     category = TranslationSerializer()
+    warning = TranslationSerializer()
     eligible = serializers.BooleanField()
     failed_tests = serializers.ListField()
     passed_tests = serializers.ListField()
     navigators = NavigatorSerializer(many=True)
     already_has = serializers.BooleanField()
     new = serializers.BooleanField()
+    low_confidence = serializers.BooleanField()
     documents = DocumentSerializer(many=True)
 
     class Meta:
