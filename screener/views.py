@@ -282,12 +282,14 @@ def eligibility_results(screen, batch=False):
                     "apply_button_link": default_message(program.apply_button_link),
                     "legal_status_required": legal_status,
                     "category": default_message(program.category),
+                    "warning": default_message(program.warning),
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],
                     "navigators": [serialized_navigator(navigator) for navigator in navigators],
                     "already_has": screen.has_benefit(program.name_abbreviated),
                     "new": new,
+                    "low_confidence": program.low_confidence,
                     "documents": [default_message(d.text) for d in program.documents.all()]
                 }
             )
@@ -368,6 +370,7 @@ def urgent_need_results(screen):
                 "description": default_message(need.description),
                 "link": default_message(need.link),
                 "type": default_message(need.type),
+                "warning": default_message(need.warning),
                 "phone_number": phone_number
             }
             eligible_urgent_needs.append(need_data)

@@ -1,5 +1,5 @@
 from ..base import PolicyEnigineCalulator
-from ..constants import SNAP_PERIOD, PREVIOUS_YEAR
+from ..constants import SNAP_PERIOD
 import programs.programs.policyengine.calculators.dependencies as dependency
 
 
@@ -27,7 +27,6 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.SnapDependentCareDeductionDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
-    pe_period = PREVIOUS_YEAR
     pe_output_period = SNAP_PERIOD
 
     def value(self):
@@ -36,7 +35,7 @@ class Snap(PolicyEngineSpmCalulator):
 
 class SchoolLunch(PolicyEngineSpmCalulator):
     pe_name = 'school_meal_daily_subsidy'
-    pe_inputs = [dependency.member.EmploymentIncomeDependency]
+    pe_inputs = dependency.school_lunch_income
     pe_outputs = [dependency.spm.SchoolMealDailySubsidy, dependency.spm.SchoolMealTier]
 
     amount = 120
@@ -57,7 +56,7 @@ class Tanf(PolicyEngineSpmCalulator):
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
-        dependency.member.EmploymentIncomeDependency,
+        dependency.member.FullTimeCollegeStudentDependency,
         dependency.spm.TanfCountableGrossIncomeDependency,
         dependency.spm.TanfCountableGrossUnearnedIncomeDependency,
     ]
@@ -67,9 +66,8 @@ class Tanf(PolicyEngineSpmCalulator):
 class Acp(PolicyEngineSpmCalulator):
     pe_name = 'acp'
     pe_inputs = [
-        dependency.member.EmploymentIncomeDependency,
-        dependency.member.TaxUnitDependentDependency,
         dependency.spm.BroadbandCostDependency,
+        *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.spm.Acp]
 
@@ -77,7 +75,7 @@ class Acp(PolicyEngineSpmCalulator):
 class Lifeline(PolicyEngineSpmCalulator):
     pe_name = 'lifeline'
     pe_inputs = [
-        dependency.member.TaxUnitDependentDependency,
-        dependency.member.EmploymentIncomeDependency
+        dependency.spm.BroadbandCostDependency,
+        *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.spm.Lifeline]

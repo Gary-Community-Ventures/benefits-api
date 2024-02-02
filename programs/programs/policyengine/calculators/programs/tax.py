@@ -15,7 +15,7 @@ class Eitc(PolicyEngineTaxUnitCalulator):
         dependency.member.AgeDependency,
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.member.EmploymentIncomeDependency,
+        *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.tax.Eitc]
 
@@ -32,7 +32,7 @@ class Ctc(PolicyEngineTaxUnitCalulator):
         dependency.member.AgeDependency,
         dependency.member.TaxUnitDependentDependency,
         dependency.member.TaxUnitSpouseDependency,
-        dependency.member.EmploymentIncomeDependency,
+        *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.tax.Ctc]
 
@@ -43,7 +43,7 @@ class Coctc(PolicyEngineTaxUnitCalulator):
         dependency.member.AgeDependency,
         dependency.member.TaxUnitDependentDependency,
         dependency.member.TaxUnitSpouseDependency,
-        dependency.member.EmploymentIncomeDependency,
+        *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.tax.Ctc]
 

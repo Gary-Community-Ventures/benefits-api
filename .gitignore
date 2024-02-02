@@ -13,6 +13,7 @@ media/
 
 # Database
 db.sqlite3
+.DS_Store
 
 # Editor directories and files
 .idea
