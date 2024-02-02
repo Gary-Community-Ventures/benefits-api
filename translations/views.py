@@ -10,9 +10,7 @@ from programs.models import Program, Navigator, UrgentNeed, Document
 from phonenumber_field.formfields import PhoneNumberField
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
-from .bulk_import_translations import bulk_add
 from integrations.services.google_translate.integration import Translate
-import json
 
 
 class TranslationView(views.APIView):
@@ -35,10 +33,6 @@ class NewTranslationForm(forms.Form):
     default_message = forms.CharField(widget=forms.Textarea(attrs={'name': 'text', 'rows': 3, 'cols': 50}))
 
 
-class ImportForm(forms.Form):
-    file = forms.FileField()
-
-
 @login_required(login_url='/admin/login')
 @staff_member_required
 def admin_view(request):
@@ -47,7 +41,6 @@ def admin_view(request):
 
         context = {
             'translations': translations,
-            'import_form': ImportForm()
         }
 
         return render(request, "main.html", context)
@@ -76,26 +69,6 @@ def create_translation_view(request):
     }
 
     return render(request, "util/create_form.html", context)
-
-
-@login_required(login_url='/admin/login')
-@staff_member_required
-def bulk_import(request):
-    if request.method == 'POST':
-        form = ImportForm(request.POST, request.FILES)
-        error_message = ''
-
-        if form.is_valid():
-            try:
-                bulk_add(json.loads(request.FILES['file'].read()))
-            except Exception as e:
-                error_message = str(e)
-
-        context = {
-            'import_form': ImportForm(),
-            'error': error_message,
-        }
-        return render(request, "import_form.html", context)
 
 
 @login_required(login_url='/admin/login')

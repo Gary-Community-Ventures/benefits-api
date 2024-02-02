@@ -3,6 +3,7 @@ from programs.models import Program, Navigator, UrgentNeed, Document
 from django.db import transaction
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
+from tqdm import trange
 from decouple import config
 
 
@@ -25,7 +26,10 @@ def bulk_add(translations):
     UrgentNeed.objects.all().update(active=False)
 
     Translation.objects.exclude(id__in=protected_translation_ids).delete()
-    for label, details in translations.items():
+
+    translations_data = list(translations.items())
+    for i in trange(len(translations_data), desc='Translations'):
+        label, details = translations_data[i]
         translation = Translation.objects.add_translation(
             label,
             details['langs'][settings.LANGUAGE_CODE][0],
