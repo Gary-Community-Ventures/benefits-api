@@ -50,7 +50,6 @@ class LocalSim(Sim):
         data = self.sim.calculate(variable, period)
 
         index = self.entity_map[unit][sub_unit]
-        print(data[index])
 
         return data[index]
 
