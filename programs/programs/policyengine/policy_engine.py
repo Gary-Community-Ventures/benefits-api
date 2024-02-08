@@ -4,8 +4,7 @@ from programs.programs.calc import Eligibility
 from programs.util import Dependencies
 from .calculators.dependencies.base import DependencyError
 from typing import List
-import requests
-from .calculators.constants import YEAR, PREVIOUS_YEAR, SNAP_PERIOD
+from .calculators.constants import YEAR, PREVIOUS_YEAR
 from .calculators.dependencies.member import (
     TaxUnitDependentDependency,
     TaxUnitHeadDependency,
