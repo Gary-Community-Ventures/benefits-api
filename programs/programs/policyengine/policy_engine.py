@@ -5,12 +5,13 @@ from programs.util import Dependencies
 from .calculators.dependencies.base import DependencyError
 from typing import List
 import requests
-from .calculators.constants import YEAR, PREVIOUS_YEAR
+from .calculators.constants import YEAR, PREVIOUS_YEAR, SNAP_PERIOD
 from .calculators.dependencies.member import (
     TaxUnitDependentDependency,
     TaxUnitHeadDependency,
     TaxUnitSpouseDependency,
 )
+from .engines import LocalSim, ApiSim
 
 
 def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[str, Eligibility]:
@@ -25,11 +26,11 @@ def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[st
     if len(valid_programs.values()) == 0 or len(screen.household_members.all()) == 0:
         return {}
 
-    data = policy_engine_calculate(pe_input(screen, valid_programs.values()))['result']
+    sim = LocalSim(pe_input(screen, valid_programs.values()))
 
     all_eligibility: dict[str, Eligibility] = {}
     for name_abbr, Calculator in valid_programs.items():
-        calc = Calculator(screen, data)
+        calc = Calculator(screen, sim)
 
         e = calc.eligible()
         e.value = calc.value()
@@ -37,15 +38,6 @@ def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[st
         all_eligibility[name_abbr] = e.to_dict()
 
     return all_eligibility
-
-
-def policy_engine_calculate(data):
-    response = requests.post(
-        "https://api.policyengine.org/us/calculate",
-        json=data
-    )
-    data = response.json()
-    return data
 
 
 def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):

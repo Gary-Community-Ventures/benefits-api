@@ -2,6 +2,7 @@ from programs.util import Dependencies
 from screener.models import Screen
 from programs.programs.calc import Eligibility, ProgramCalculator
 from .dependencies.base import PolicyEngineScreenInput
+from ..engines import Sim
 from typing import List
 from .constants import YEAR
 
@@ -19,9 +20,9 @@ class PolicyEnigineCalulator(ProgramCalculator):
     pe_sub_category = ''
     pe_period = YEAR
 
-    def __init__(self, screen: Screen, pe_data):
+    def __init__(self, screen: Screen, sim: Sim):
         self.screen = screen
-        self.pe_data = pe_data
+        self.sim = sim
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -31,13 +32,13 @@ class PolicyEnigineCalulator(ProgramCalculator):
         return e
 
     def value(self):
-        return self.get_data()[self.pe_name][self.pe_period]
+        return int(self.get_variable())
 
-    def get_data(self):
+    def get_variable(self):
         '''
-        Return Policy Engine dictionary of the program category and subcategory
+        Return value of the default variable
         '''
-        return self.pe_data[self.pe_category][self.pe_sub_category]
+        return self.sim.value(self.pe_category, self.pe_sub_category, self.pe_name, self.pe_period)
 
     @classmethod
     def can_calc(cls, missing_dependencies: Dependencies):
