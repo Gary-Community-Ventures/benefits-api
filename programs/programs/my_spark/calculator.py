@@ -24,7 +24,7 @@ class MySpark(ProgramCalculator):
         if self.screen.county is not None:
             counties = [self.screen.county]
         else:
-            counties = counties_from_zip(self.screen.county)
+            counties = counties_from_zip(self.screen.zipcode)
 
         # Denever County
         e.condition(MySpark.county in counties, messages.location())
