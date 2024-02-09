@@ -31,9 +31,8 @@ def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[st
     for Method in pe_engines:
         try:
             return all_eligibility(Method(input_data), valid_programs, screen)
-        except Exception as e:
+        except Exception:
             capture_message(f'Failed to calculate eligibility with the {Method.method_name} method', level='warning')
-            print(e)
 
     error_message = 'Failed to calculate Policy Engine eligibility'
     capture_message(error_message)
