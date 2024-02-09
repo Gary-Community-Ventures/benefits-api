@@ -21,7 +21,6 @@ class TranslationView(views.APIView):
 
         if language in all_langs:
             translations = Translation.objects.all_translations([language])
-            print(translations)
         else:
             translations = Translation.objects.all_translations()
 
