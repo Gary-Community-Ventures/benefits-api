@@ -17,7 +17,7 @@ spm_unit_calculators = {
     'acp': spm.Acp,
     'lifeline': spm.Lifeline,
     'nslp': spm.SchoolLunch,
-    'snap': spm.Snap,
+    # 'snap': spm.Snap,
     'tanf': spm.Tanf,
 }
 
