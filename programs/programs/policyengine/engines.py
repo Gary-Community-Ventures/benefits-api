@@ -3,6 +3,8 @@ import requests
 
 
 class Sim:
+    method = ''
+
     def __init__(self, data) -> None:
         self.data = data
 
@@ -20,6 +22,8 @@ class Sim:
 
 
 class ApiSim(Sim):
+    method_name = 'Policy Engine api'
+
     def __init__(self, data) -> None:
         response = requests.post("https://api.policyengine.org/us/calculate", json=data)
         self.data = response.json()['result']
@@ -32,6 +36,8 @@ class ApiSim(Sim):
 
 
 class LocalSim(Sim):
+    method_name = 'local package'
+
     def __init__(self, data) -> None:
         self.household = data['household']
 
@@ -55,3 +61,6 @@ class LocalSim(Sim):
 
     def members(self, unit, sub_unit):
         return self.household[unit][sub_unit]['members']
+
+
+pe_engines = [ApiSim, LocalSim]

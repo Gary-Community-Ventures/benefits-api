@@ -10,7 +10,8 @@ from .calculators.dependencies.member import (
     TaxUnitHeadDependency,
     TaxUnitSpouseDependency,
 )
-from .engines import LocalSim, ApiSim
+from sentry_sdk import capture_message
+from .engines import Sim, pe_engines
 
 
 def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[str, Eligibility]:
@@ -25,11 +26,24 @@ def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[st
     if len(valid_programs.values()) == 0 or len(screen.household_members.all()) == 0:
         return {}
 
-    sim = LocalSim(pe_input(screen, valid_programs.values()))
+    input_data = pe_input(screen, valid_programs.values())
 
+    for Method in pe_engines:
+        try:
+            return all_eligibility(Method(input_data), valid_programs, screen)
+        except Exception as e:
+            capture_message(f'Failed to calculate eligibility with the {Method.method_name} method', level='warning')
+            print(e)
+
+    error_message = 'Failed to calculate Policy Engine eligibility'
+    capture_message(error_message)
+    raise Exception(error_message)
+
+
+def all_eligibility(method: Sim, valid_programs: dict[str, type[PolicyEnigineCalulator]], screen: Screen):
     all_eligibility: dict[str, Eligibility] = {}
     for name_abbr, Calculator in valid_programs.items():
-        calc = Calculator(screen, sim)
+        calc = Calculator(screen, method)
 
         e = calc.eligible()
         e.value = calc.value()
