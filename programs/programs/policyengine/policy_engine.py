@@ -94,7 +94,7 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
         if member_1 in already_added or member_2 in already_added or member_1 is None or member_2 is None:
             continue
 
-        marital_unit = (str(member_1), str(member_2))
+        marital_unit = [str(member_1), str(member_2)]
         raw_input['household']['marital_units']['-'.join(marital_unit)] = {'members': marital_unit}
         already_added.add(member_1)
         already_added.add(member_2)
