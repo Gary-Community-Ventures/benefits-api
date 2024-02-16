@@ -8,23 +8,23 @@ class PolicyEngineMembersCalculator(PolicyEnigineCalulator):
 
     def value(self):
         total = 0
-        for pkey, pvalue in self.get_data().items():
+        for member in self.screen.household_members.all():
             # The following programs use income from the tax unit,
             # so we want to skip any members that are not in the tax unit.
-            if not self.in_tax_unit(pkey) and self.tax_dependent:
+            if not self.in_tax_unit(member.id) and self.tax_dependent:
                 continue
 
-            pe_value = pvalue[self.pe_name][self.pe_period]
+            pe_value = self.get_variable(member.id)
 
             total += pe_value
 
         return total
 
-    def in_tax_unit(self, member_id) -> bool:
-        return str(member_id) in self.pe_data['tax_units']['tax_unit']['members']
+    def in_tax_unit(self, member_id: int) -> bool:
+        return str(member_id) in self.sim.members('tax_units', 'tax_unit')
 
-    def get_data(self):
-        return self.pe_data[self.pe_category]
+    def get_variable(self, member_id: int):
+        return self.sim.value(self.pe_category, str(member_id), self.pe_name, self.pe_period)
 
 
 class Wic(PolicyEngineMembersCalculator):
@@ -47,9 +47,10 @@ class Wic(PolicyEngineMembersCalculator):
     def value(self):
         total = 0
 
-        for _, pvalue in self.get_data().items():
-            if pvalue[self.pe_name][self.pe_period] > 0:
-                total += self.wic_categories[pvalue['wic_category'][self.pe_period]] * 12
+        for member in self.screen.household_members.all():
+            if self.get_variable(member.id) > 0:
+                wic_category = self.sim.value('people', str(member.id), 'wic_category', self.pe_period)
+                total += self.wic_categories[wic_category] * 12
 
         return total
 
@@ -75,19 +76,21 @@ class Medicaid(PolicyEngineMembersCalculator):
     def value(self):
         total = 0
 
-        for _, pvalue in self.get_data().items():
-            if pvalue[self.pe_name][self.pe_period] <= 0:
+        members = self.screen.household_members.all()
+
+        for member in members:
+            if self.get_variable(member.id) <= 0:
                 continue
 
             # here we need to adjust for children as policy engine
             # just uses the average which skews very high for adults and
             # aged adults
 
-            if pvalue['age'][self.pe_period] <= 18:
+            if self._get_age(member.id) <= 18:
                 medicaid_estimated_value = self.co_child_medicaid_average
-            elif pvalue['age'][self.pe_period] > 18 and pvalue['age'][self.pe_period] < 65:
+            elif self._get_age(member.id) > 18 and self._get_age(member.id) < 65:
                 medicaid_estimated_value = self.co_adult_medicaid_average
-            elif pvalue['age'][self.pe_period] >= 65:
+            elif self._get_age(member.id) >= 65:
                 medicaid_estimated_value = self.co_aged_medicaid_average
             else:
                 medicaid_estimated_value = 0
@@ -95,7 +98,7 @@ class Medicaid(PolicyEngineMembersCalculator):
             total += medicaid_estimated_value
 
         in_wic_demographic = False
-        for member in self.screen.household_members.all():
+        for member in members:
             if member.pregnant is True or member.age <= 5:
                 in_wic_demographic = True
         if total == 0 and in_wic_demographic:
@@ -105,6 +108,9 @@ class Medicaid(PolicyEngineMembersCalculator):
                 total = self.presumptive_amount
 
         return total
+
+    def _get_age(self, member_id: int) -> int:
+        return self.sim.value(self.pe_category, str(member_id), 'age', self.pe_period)
 
 
 class PellGrant(PolicyEngineMembersCalculator):
@@ -185,8 +191,9 @@ class Chp(PolicyEngineMembersCalculator):
     def value(self):
         total = 0
 
-        for _, pvalue in self.get_data().items():
-            if pvalue['co_chp_eligible'][self.pe_period] > 0 and self.screen.has_insurance_types(('none',)):
+        for member in self.screen.household_members.all():
+            chp_eligible = self.sim.value(self.pe_category, str(member.id), 'co_chp_eligible', self.pe_period)
+            if chp_eligible > 0 and self.screen.has_insurance_types(('none',)):
                 total += self.amount
 
         return total
