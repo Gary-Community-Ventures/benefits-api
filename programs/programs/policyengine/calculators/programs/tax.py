@@ -62,4 +62,4 @@ class Coctc(PolicyEngineTaxUnitCalulator):
                 multiplier = band['percent']
                 break
 
-        return self.get_variable() * multiplier
+        return self.get_data()[self.pe_name][self.pe_period] * multiplier
