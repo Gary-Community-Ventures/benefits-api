@@ -4,14 +4,13 @@ from programs.programs.calc import Eligibility
 from programs.util import Dependencies
 from .calculators.dependencies.base import DependencyError
 from typing import List
+import requests
 from .calculators.constants import YEAR, PREVIOUS_YEAR
 from .calculators.dependencies.member import (
     TaxUnitDependentDependency,
     TaxUnitHeadDependency,
     TaxUnitSpouseDependency,
 )
-from sentry_sdk import capture_message
-from .engines import Sim, pe_engines
 
 
 def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[str, Eligibility]:
@@ -26,23 +25,11 @@ def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[st
     if len(valid_programs.values()) == 0 or len(screen.household_members.all()) == 0:
         return {}
 
-    input_data = pe_input(screen, valid_programs.values())
+    data = policy_engine_calculate(pe_input(screen, valid_programs.values()))['result']
 
-    for Method in pe_engines:
-        try:
-            return all_eligibility(Method(input_data), valid_programs, screen)
-        except Exception:
-            capture_message(f'Failed to calculate eligibility with the {Method.method_name} method', level='warning')
-
-    error_message = 'Failed to calculate Policy Engine eligibility'
-    capture_message(error_message)
-    raise Exception(error_message)
-
-
-def all_eligibility(method: Sim, valid_programs: dict[str, type[PolicyEnigineCalulator]], screen: Screen):
     all_eligibility: dict[str, Eligibility] = {}
     for name_abbr, Calculator in valid_programs.items():
-        calc = Calculator(screen, method)
+        calc = Calculator(screen, data)
 
         e = calc.eligible()
         e.value = calc.value()
@@ -50,6 +37,15 @@ def all_eligibility(method: Sim, valid_programs: dict[str, type[PolicyEnigineCal
         all_eligibility[name_abbr] = e.to_dict()
 
     return all_eligibility
+
+
+def policy_engine_calculate(data):
+    response = requests.post(
+        "https://api.policyengine.org/us/calculate",
+        json=data
+    )
+    data = response.json()
+    return data
 
 
 def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
@@ -107,7 +103,7 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
         if member_1 in already_added or member_2 in already_added or member_1 is None or member_2 is None:
             continue
 
-        marital_unit = [str(member_1), str(member_2)]
+        marital_unit = (str(member_1), str(member_2))
         raw_input['household']['marital_units']['-'.join(marital_unit)] = {'members': marital_unit}
         already_added.add(member_1)
         already_added.add(member_2)
