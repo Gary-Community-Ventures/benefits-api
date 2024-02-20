@@ -38,13 +38,16 @@ def index(request):
     return HttpResponse("Colorado Benefits Screener API")
 
 
-class ScreenViewSet(mixins.CreateModelMixin,
-                    mixins.RetrieveModelMixin,
-                    mixins.UpdateModelMixin,
-                    viewsets.GenericViewSet):
+class ScreenViewSet(
+    mixins.CreateModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
     """
     API endpoint that allows screens to be viewed or edited.
     """
+
     queryset = Screen.objects.all().order_by('-submission_date')
     serializer_class = ScreenSerializer
     permission_classes = [permissions.DjangoModelPermissions]
@@ -73,6 +76,7 @@ class HouseholdMemberViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows screens to be viewed or edited.
     """
+
     queryset = HouseholdMember.objects.all()
     serializer_class = HouseholdMemberSerializer
     permission_classes = [permissions.DjangoModelPermissions]
@@ -83,6 +87,7 @@ class IncomeStreamViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows income streams to be viewed or edited.
     """
+
     queryset = IncomeStream.objects.all()
     serializer_class = IncomeStreamSerializer
     permission_classes = [permissions.DjangoModelPermissions]
@@ -93,6 +98,7 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows expenses to be viewed or edited.
     """
+
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
     permission_classes = [permissions.DjangoModelPermissions]
@@ -133,11 +139,11 @@ class EligibilityTranslationView(views.APIView):
         return Response(results)
 
 
-class MessageViewSet(mixins.CreateModelMixin,
-                     viewsets.GenericViewSet):
+class MessageViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
     API endpoint that logs messages sent.
     """
+
     queryset = Message.objects.all().order_by('-sent')
     serializer_class = MessageSerializer
     permission_classes = [permissions.DjangoModelPermissions]
@@ -165,13 +171,20 @@ def eligibility_results(screen, batch=False):
     if referrer is not None:
         excluded_programs = referrer.remove_programs.values('id')
 
-    all_programs = Program.objects.exclude(id__in=excluded_programs)\
-        .prefetch_related('legal_status_required', 'documents')
+    all_programs = Program.objects.exclude(id__in=excluded_programs).prefetch_related(
+        'legal_status_required', 'documents'
+    )
     data = []
 
     try:
-        previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen).latest('submission_date')
-        previous_results = None if previous_snapshot is None else previous_snapshot.program_snapshots.all()
+        previous_snapshot = EligibilitySnapshot.objects.filter(
+            is_batch=False, screen=screen
+        ).latest('submission_date')
+        previous_results = (
+            None
+            if previous_snapshot is None
+            else previous_snapshot.program_snapshots.all()
+        )
     except ObjectDoesNotExist:
         previous_snapshot = None
     snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
@@ -232,27 +245,38 @@ def eligibility_results(screen, batch=False):
         county_navigators = []
         for nav in all_navigators:
             counties = nav.counties.all()
-            if len(counties) == 0 or any(screen.county in county.name for county in counties):
+            if len(counties) == 0 or any(
+                screen.county in county.name for county in counties
+            ):
                 county_navigators.append(nav)
 
         if referrer is None:
             navigators = county_navigators
         else:
             primary_navigators = referrer.primary_navigators.all()
-            referrer_navigators = [nav for nav in primary_navigators if nav in county_navigators]
+            referrer_navigators = [
+                nav for nav in primary_navigators if nav in county_navigators
+            ]
             if len(referrer_navigators) == 0:
                 navigators = county_navigators
             else:
                 navigators = referrer_navigators
 
-        new = True
         if previous_snapshot is not None:
+            new = True
             for previous_snapshot in previous_results:
-                if previous_snapshot.name_abbreviated == program.name_abbreviated:
+                if (
+                    previous_snapshot.name_abbreviated == program.name_abbreviated
+                    and eligibility['eligible'] == previous_snapshot.eligible
+                ):
                     new = False
+        else:
+            new = False
 
         if not skip and program.active:
-            legal_status = [status.status for status in program.legal_status_required.all()]
+            legal_status = [
+                status.status for status in program.legal_status_required.all()
+            ]
             ProgramEligibilitySnapshot.objects.create(
                 eligibility_snapshot=snapshot,
                 name=program.name.text,
@@ -264,7 +288,7 @@ def eligibility_results(screen, batch=False):
                 eligible=eligibility["eligible"],
                 failed_tests=json.dumps(eligibility["failed"]),
                 passed_tests=json.dumps(eligibility["passed"]),
-                new=new
+                new=new,
             )
             data.append(
                 {
@@ -272,8 +296,12 @@ def eligibility_results(screen, batch=False):
                     "name": default_message(program.name),
                     "name_abbreviated": program.name_abbreviated,
                     "estimated_value": eligibility["estimated_value"],
-                    "estimated_delivery_time": default_message(program.estimated_delivery_time),
-                    "estimated_application_time": default_message(program.estimated_application_time),
+                    "estimated_delivery_time": default_message(
+                        program.estimated_delivery_time
+                    ),
+                    "estimated_application_time": default_message(
+                        program.estimated_application_time
+                    ),
                     "description_short": default_message(program.description_short),
                     "short_name": program.name_abbreviated,
                     "description": default_message(program.description),
@@ -286,11 +314,15 @@ def eligibility_results(screen, batch=False):
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],
-                    "navigators": [serialized_navigator(navigator) for navigator in navigators],
+                    "navigators": [
+                        serialized_navigator(navigator) for navigator in navigators
+                    ],
                     "already_has": screen.has_benefit(program.name_abbreviated),
                     "new": new,
                     "low_confidence": program.low_confidence,
-                    "documents": [default_message(d.text) for d in program.documents.all()]
+                    "documents": [
+                        default_message(d.text) for d in program.documents.all()
+                    ],
                 }
             )
 
@@ -305,10 +337,7 @@ def eligibility_results(screen, batch=False):
 
 def default_message(translation):
     translation.set_current_language(settings.LANGUAGE_CODE)
-    return {
-        'default_message': translation.text,
-        'label': translation.label
-    }
+    return {'default_message': translation.text, 'label': translation.label}
 
 
 def serialized_navigator(navigator):
@@ -340,14 +369,24 @@ def urgent_need_results(screen):
     missing_dependencies = screen.missing_fields()
 
     need_functions = {
-        'denver': urgent_need_functions.LivesInDenver.calc(screen, missing_dependencies),
-        'helpkitchen_zipcode': urgent_need_functions.HelpkitchenZipcode.calc(screen, missing_dependencies),
+        'denver': urgent_need_functions.LivesInDenver.calc(
+            screen, missing_dependencies
+        ),
+        'helpkitchen_zipcode': urgent_need_functions.HelpkitchenZipcode.calc(
+            screen, missing_dependencies
+        ),
         'child': urgent_need_functions.Child.calc(screen, missing_dependencies),
-        'bia_food_delivery': urgent_need_functions.BiaFoodDelivery.calc(screen, missing_dependencies),
+        'bia_food_delivery': urgent_need_functions.BiaFoodDelivery.calc(
+            screen, missing_dependencies
+        ),
         'trua': urgent_need_functions.Trua.calc(screen, missing_dependencies),
         'eoc': urgent_need_functions.Eoc.calc(screen, missing_dependencies),
-        'co_legal_services': urgent_need_functions.CoLegalServices.calc(screen, missing_dependencies),
-        'co_emergency_mortgage': urgent_need_functions.CoEmergencyMortgageAssistance.calc(screen, missing_dependencies),
+        'co_legal_services': urgent_need_functions.CoLegalServices.calc(
+            screen, missing_dependencies
+        ),
+        'co_emergency_mortgage': urgent_need_functions.CoEmergencyMortgageAssistance.calc(
+            screen, missing_dependencies
+        ),
     }
 
     list_of_needs = []
@@ -355,7 +394,9 @@ def urgent_need_results(screen):
         if has_need:
             list_of_needs.append(need)
 
-    urgent_need_resources = UrgentNeed.objects.filter(type_short__name__in=list_of_needs, active=True).distinct()
+    urgent_need_resources = UrgentNeed.objects.filter(
+        type_short__name__in=list_of_needs, active=True
+    ).distinct()
 
     eligible_urgent_needs = []
     for need in urgent_need_resources:
@@ -371,7 +412,7 @@ def urgent_need_results(screen):
                 "link": default_message(need.link),
                 "type": default_message(need.type),
                 "warning": default_message(need.warning),
-                "phone_number": phone_number
+                "phone_number": phone_number,
             }
             eligible_urgent_needs.append(need_data)
 
