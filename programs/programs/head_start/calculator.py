@@ -8,8 +8,8 @@ class HeadStart(ProgramCalculator):
     amount = 10655
     max_age = 5
     min_age = 3
-    percent_of_fpl = 1.3 # Adams County uses 130% FPL instead of 100% FPL
-    county = 'Adams County'
+    adams_percent_of_fpl = 1.3 # Adams County uses 130% FPL instead of 100% FPL
+    adams_county = 'Adams County'
     dependencies = ['age', 'household_size', 'income_frequency', 'income_amount', 'zipcode']
 
     def eligible(self) -> Eligibility:
@@ -34,12 +34,12 @@ class HeadStart(ProgramCalculator):
 
         e.condition(in_eligible_county, messages.location())
         
-        in_adams = HeadStart.county in counties
+        in_adams = HeadStart.adams_county in counties
 
         # income
         fpl = self.program.fpl.as_dict()
         income_limit = int(fpl[self.screen.household_size] / 12)
-        income_limit_adams_county = int(fpl[self.screen.household_size] / 12 * HeadStart.percent_of_fpl)
+        income_limit_adams_county = int(fpl[self.screen.household_size] / 12 * HeadStart.adams_percent_of_fpl)
         gross_income = int(self.screen.calc_gross_income('monthly', ['all']))
 
         if in_adams:
