@@ -136,20 +136,41 @@ class Trua(UrgentNeedFunction):
         return household_income <= income_limit
 
 
+class EocIncomeLimitCache(Cache):
+    expire_time = 60 * 60 * 24
+    default = {}
+
+    def update(self):
+        spreadsheet_id = "1T4RSc9jXRV5kzdhbK5uCQXqgtLDWt-wdh2R4JVsK33o"
+        range_name = "'2023'!A2:I65"
+        sheet_values = sheets_get_data(spreadsheet_id, range_name)
+
+        if not sheet_values:
+            raise Exception('Sheet unavailable')
+
+        data = {d[0].strip() + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in sheet_values}
+
+        return data
+
+
 class Eoc(UrgentNeedFunction):
+    limits_cache = EocIncomeLimitCache()
     dependencies = ['income_amount', 'income_frequency', 'household_size', 'county']
 
     @classmethod
     def eligible(cls, screen: Screen):
-        '''
-        Return True if the household is below the income limit for their county and household size
-        '''
-        household_income = screen.calc_gross_income('yearly', ['all'])
-        if screen.county in eoc_income_limits:
-            income_limit = eoc_income_limits[screen.county][screen.household_size]
-        else:
+        income = int(screen.calc_gross_income('yearly', ['all']))
+
+        limits = Eoc.limits_cache.fetch()
+
+        if screen.county not in limits:
             return False
-        return household_income <= income_limit
+
+        income_limit = limits[screen.county][
+            screen.household_size - 1
+        ]
+
+        return income < income_limit
 
 
 class CoLegalServices(UrgentNeedFunction):
