@@ -1,6 +1,6 @@
 from programs.programs.calc import Eligibility, ProgramCalculator
 import programs.programs.messages as messages
-
+from programs.co_county_zips import counties_from_zip
 
 class Trua(ProgramCalculator):
     income_limits = {
@@ -14,24 +14,33 @@ class Trua(ProgramCalculator):
         8: 124_950,
     }
 
+    county = 'Denver County'
+    amount = 5568 + 382.83 + 235.68
+    dependencies = ['income_amount', 'income_frequency', 'household_size', 'zipcode']
+
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
         # Income test
         gross_income = int(self.screen.calc_gross_income("monthly", ["all"]))
-        income_band = int(Trua.income_bands[self.screen.household_size]/12)
+        income_limit = int(Trua.income_limit[self.screen.household_size]/12)
         
         # Location test
+        zipcode = self.screen.zipcode
         location = self.screen.county
 
-        e.condition(location == "Denver County",
-                        messages.location())
+        if location is not None:
+            counties = [location]
+        else:
+            counties = counties_from_zip(zipcode)
+
+        # Denever County
+        e.condition(Trua.county in counties, messages.location())
         
-        e.condition(gross_income <= income_band,
-                        messages.income(gross_income, income_band))
+        e.condition(gross_income <= income_limit,
+                        messages.income(gross_income, income_limit))
         
         return e
     
     def value(self):
-        value = 5568 + 382.83 + 235.68
-        return value
+        return Trua.amount
