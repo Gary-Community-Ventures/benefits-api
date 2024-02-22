@@ -4,8 +4,9 @@ import programs.programs.messages as messages
 
 class FamilyPlanningServices(ProgramCalculator):
     amount = 404
+    min_age = 12
     fpl_percent = 2.6
-    dependencies = ['insurance', 'income_frequency', 'income_amount', 'household_size']
+    dependencies = ['age', 'insurance', 'income_frequency', 'income_amount', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -28,7 +29,8 @@ class FamilyPlanningServices(ProgramCalculator):
         e.member_eligibility(
             self.screen.household_members.all(),
             [
-                (lambda m: not m.pregnant, None)
+                (lambda m: not m.pregnant, None),
+                (lambda m: m.age >= FamilyPlanningServices.min_age, None)
             ]
         )
 
