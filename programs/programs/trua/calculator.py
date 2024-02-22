@@ -3,7 +3,7 @@ import programs.programs.messages as messages
 from programs.co_county_zips import counties_from_zip
 
 class Trua(ProgramCalculator):
-    income_limits = {
+    income_limit = {
         1: 66_300,
         2: 75_750,
         3: 85_200,
@@ -42,5 +42,5 @@ class Trua(ProgramCalculator):
         
         return e
     
-    def value(self):
+    def value(self, eligible_members: int):
         return Trua.amount
