@@ -1,7 +1,6 @@
 from screener.models import Screen
 from programs.models import FederalPoveryLimit
 from programs.util import Dependencies
-from .eoc_income_limits import eoc_income_limits
 from integrations.util.cache import Cache
 from programs.sheets import sheets_get_data
 
