@@ -26,6 +26,7 @@ from .weatherization_assistance.calculator import WeatherizationAssistance
 from .tabor.calculator import Tabor
 from .utility_bill_pay.calculator import UtilityBillPay
 from .calc import ProgramCalculator
+from .rental_assistance_grant.calculator import RentalAssistanceGrant
 
 calculators: dict[str, type[ProgramCalculator]] = {
     'rtdlive': RtdLive,
@@ -55,4 +56,5 @@ calculators: dict[str, type[ProgramCalculator]] = {
     'cowap': WeatherizationAssistance,
     'tabor': Tabor,
     'ubp': UtilityBillPay,
+    'rag': RentalAssistanceGrant,
 }
