@@ -23,10 +23,6 @@ class EmergencyMedicaid(ProgramCalculator):
                 (
                     lambda m: m.insurance.has_insurance_types(('none',)),
                     messages.has_no_insurance()
-                ),
-                (
-                    lambda m: m.pregnant,
-                    messages.is_pregnant()
                 )
             ]
         )
