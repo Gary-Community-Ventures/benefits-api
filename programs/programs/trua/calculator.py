@@ -41,6 +41,3 @@ class Trua(ProgramCalculator):
                         messages.income(gross_income, income_limit))
         
         return e
-    
-    def value(self, eligible_members: int):
-        return Trua.amount
