@@ -158,6 +158,10 @@ class Eoc(UrgentNeedFunction):
 
     @classmethod
     def eligible(cls, screen: Screen):
+        '''
+        Return True if the household is below the income limit for their county and household size
+        '''
+
         income = int(screen.calc_gross_income('yearly', ['all']))
 
         limits = Eoc.limits_cache.fetch()
