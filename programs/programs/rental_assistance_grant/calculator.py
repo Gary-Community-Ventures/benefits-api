@@ -6,13 +6,14 @@ from integrations.util import Cache
 
 class RentalAssistanceGrant(ProgramCalculator):
     amount = 10_000
+    dependencies = ['income_amount', 'income_frequency', 'household_size', 'zipcode']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
         # location
         counties = counties_from_zip(self.screen.zipcode)
-        county_name = counties[0] if len(counties) > 0 else self.screen.county
+        county_name = self.screen.county if self.screen.county is not None else counties[0]
 
         # income
         gross_income = int(self.screen.calc_gross_income('yearly', ['all']))
