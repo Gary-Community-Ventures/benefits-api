@@ -526,6 +526,7 @@ class Insurance(models.Model):
     medicare = models.BooleanField(default=False)  # elderly health insurance
     emergency_medicaid = models.BooleanField(default=False)
     family_planning = models.BooleanField(default=False)
+    va = models.BooleanField(default=False)
 
     def has_insurance_types(self, types, strict=True):
         if 'none' in types:
@@ -554,6 +555,7 @@ class Insurance(models.Model):
             'medicare': self.medicare,
             'emergency_medicaid': self.emergency_medicaid,
             'family_planning': self.family_planning,
+            'va': self.va,
         }
 
 
