@@ -65,6 +65,7 @@ class Screen(models.Model):
     has_cowap = models.BooleanField(default=False, blank=True, null=True)
     has_ubp = models.BooleanField(default=False, blank=True, null=True)
     has_pell_grant = models.BooleanField(default=False, blank=True, null=True)
+    has_rag = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -252,6 +253,7 @@ class Screen(models.Model):
             'upk': self.has_upk,
             'ssdi': self.has_ssdi or self.calc_gross_income('yearly', ('sSDisability',)) > 0,
             'pell_grant': self.has_pell_grant,
+            'rag': self.has_rag,
             'cowap': self.has_cowap,
             'ubp': self.has_ubp,
             'medicaid': self.has_medicaid or self.has_medicaid_hi,
