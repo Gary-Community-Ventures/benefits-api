@@ -24,6 +24,17 @@ class ConnectForHealth(ProgramCalculator):
         has_no_hi = self.screen.has_insurance_types(('none', 'private'))
         e.condition(has_no_hi,
                     messages.has_no_insurance())
+        
+        # HH member has no va insurance
+        e.member_eligibility(
+            self.screen.household_members.all(),
+            [
+                (
+                    lambda m: not m.insurance.has_insurance_types(('va', 'private')),
+                    messages.must_not_have_benefit('VA')
+                )
+            ]
+        )
 
         # Income
         fpl = self.program.fpl.as_dict()
@@ -35,10 +46,5 @@ class ConnectForHealth(ProgramCalculator):
         return e
 
     def value(self, eligible_members: int):
-        value = 0
-        if not self.screen.has_insurance_types(('va', 'private')):
-            # https://stackoverflow.com/questions/6266727/python-cut-off-the-last-word-of-a-sentence
-            value = tax_credit_by_county[self.screen.county.rsplit(' ', 1)[0]] * 12
-    
-        return value
-
+        # https://stackoverflow.com/questions/6266727/python-cut-off-the-last-word-of-a-sentence
+        return tax_credit_by_county[self.screen.county.rsplit(' ', 1)[0]] * 12
