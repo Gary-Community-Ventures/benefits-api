@@ -7,7 +7,7 @@ class MedicaidChildWithDisability(ProgramCalculator):
     max_income_percent = 3
     earned_deduction = 90
     income_percent = 1 - .33
-    insurance_types = ('employer', 'private', 'none', 'dont_know')
+    insurance_types = ('employer', 'private', 'none')
     amount = 200
     dependencies = ['insurance', 'age', 'household_size', 'income_type', 'income_amount', 'income_frequency']
 

@@ -24,6 +24,17 @@ class ConnectForHealth(ProgramCalculator):
         has_no_hi = self.screen.has_insurance_types(('none', 'private'))
         e.condition(has_no_hi,
                     messages.has_no_insurance())
+        
+        # HH member has no va insurance
+        e.member_eligibility(
+            self.screen.household_members.all(),
+            [
+                (
+                    lambda m: not m.insurance.has_insurance_types(('va', 'private')),
+                    messages.must_not_have_benefit('VA')
+                )
+            ]
+        )
 
         # Income
         fpl = self.program.fpl.as_dict()

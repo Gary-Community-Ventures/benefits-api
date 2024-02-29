@@ -10,7 +10,7 @@ class MedicaidAdultWithDisability(ProgramCalculator):
     amount = 310
     unearned_deduction = 20
     min_age = 16
-    insurance_types = ('employer', 'private', 'none', 'dont_know')
+    insurance_types = ('employer', 'private', 'none')
     dependencies = ['insurance', 'age', 'household_size', 'income_type', 'income_amount', 'income_frequency']
 
     def eligible(self) -> Eligibility:
