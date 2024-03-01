@@ -65,12 +65,14 @@ class Screen(models.Model):
     has_cowap = models.BooleanField(default=False, blank=True, null=True)
     has_ubp = models.BooleanField(default=False, blank=True, null=True)
     has_pell_grant = models.BooleanField(default=False, blank=True, null=True)
+    has_rag = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicare_hi = models.BooleanField(default=None, blank=True, null=True)
     has_chp_hi = models.BooleanField(default=None, blank=True, null=True)
     has_no_hi = models.BooleanField(default=None, blank=True, null=True)
+    has_va = models.BooleanField(default=None, blank=True, null=True)
     needs_food = models.BooleanField(default=False, blank=True, null=True)
     needs_baby_supplies = models.BooleanField(default=False, blank=True, null=True)
     needs_housing_help = models.BooleanField(default=False, blank=True, null=True)
@@ -252,11 +254,13 @@ class Screen(models.Model):
             'upk': self.has_upk,
             'ssdi': self.has_ssdi or self.calc_gross_income('yearly', ('sSDisability',)) > 0,
             'pell_grant': self.has_pell_grant,
+            'rag': self.has_rag,
             'cowap': self.has_cowap,
             'ubp': self.has_ubp,
             'medicaid': self.has_medicaid or self.has_medicaid_hi,
             'medicare': self.has_medicare_hi,
             'chp': self.has_chp or self.has_chp_hi,
+            'va': self.has_va,
         }
 
         has_insurance = self.has_insurance_types((name_abbreviated,), strict=False)
@@ -517,8 +521,8 @@ class Insurance(models.Model):
         null=False,
         on_delete=models.CASCADE
     )
-    dont_know = models.BooleanField(default=True)
-    none = models.BooleanField(default=False)
+    dont_know = models.BooleanField(default=False)
+    none = models.BooleanField(default=True)
     employer = models.BooleanField(default=False)
     private = models.BooleanField(default=False)
     chp = models.BooleanField(default=False)
@@ -526,6 +530,7 @@ class Insurance(models.Model):
     medicare = models.BooleanField(default=False)  # elderly health insurance
     emergency_medicaid = models.BooleanField(default=False)
     family_planning = models.BooleanField(default=False)
+    va = models.BooleanField(default=False)
 
     def has_insurance_types(self, types, strict=True):
         if 'none' in types:
@@ -554,6 +559,7 @@ class Insurance(models.Model):
             'medicare': self.medicare,
             'emergency_medicaid': self.emergency_medicaid,
             'family_planning': self.family_planning,
+            'va': self.va,
         }
 
 

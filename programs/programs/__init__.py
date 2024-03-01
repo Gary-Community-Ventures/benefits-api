@@ -27,6 +27,7 @@ from .tabor.calculator import Tabor
 from .trua.calculator import Trua
 from .utility_bill_pay.calculator import UtilityBillPay
 from .calc import ProgramCalculator
+from .rental_assistance_grant.calculator import RentalAssistanceGrant
 
 calculators: dict[str, type[ProgramCalculator]] = {
     'rtdlive': RtdLive,
@@ -57,4 +58,5 @@ calculators: dict[str, type[ProgramCalculator]] = {
     'tabor': Tabor,
     'trua' : Trua,
     'ubp': UtilityBillPay,
+    'rag': RentalAssistanceGrant,
 }
