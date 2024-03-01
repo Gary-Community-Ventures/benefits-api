@@ -4,6 +4,7 @@ from programs.co_county_zips import counties_from_zip
 from programs.sheets import sheets_get_data
 from integrations.util import Cache
 
+
 class RentalAssistanceGrant(ProgramCalculator):
     amount = 10_000
     dependencies = ['income_amount', 'income_frequency', 'household_size', 'zipcode']
@@ -21,13 +22,14 @@ class RentalAssistanceGrant(ProgramCalculator):
         limits = cache.fetch()
 
         if county_name not in limits:
-            return False
+            return e
 
         income_limit = limits[county_name][self.screen.household_size - 1]
 
         e.condition(gross_income <= income_limit, messages.income(gross_income, income_limit))
 
         return e
+
 
 class RAGCache(Cache):
     expire_time = 60 * 60 * 24
@@ -40,7 +42,7 @@ class RAGCache(Cache):
 
         if not sheet_values:
             raise Exception('Sheet unavailable')
-        
+
         data = {d[0].strip() + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in sheet_values}
 
         return data
