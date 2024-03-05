@@ -73,7 +73,7 @@ class LeapValueCache(Cache):
         if not sheet_values:
             raise Exception('Sheet unavailable')
 
-        data = [[row[0], row[5]] for row in sheet_values if row != []]
+        data = [[row[0], row[6]] for row in sheet_values if row != []]
 
         return data
 
