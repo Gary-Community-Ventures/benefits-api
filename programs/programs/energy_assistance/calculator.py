@@ -67,13 +67,13 @@ class LeapValueCache(Cache):
 
     def update(self):
         spreadsheet_id = '1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg'
-        range_name = "'FFY 2024'!A2:F65"
+        range_name = "'FFY 2024'!A2:G65"
         sheet_values = sheets_get_data(spreadsheet_id, range_name)
 
         if not sheet_values:
             raise Exception('Sheet unavailable')
 
-        data = [[row[0], row[5]] for row in sheet_values if row != []]
+        data = [[row[0], row[6]] for row in sheet_values if row != []]
 
         return data
 
