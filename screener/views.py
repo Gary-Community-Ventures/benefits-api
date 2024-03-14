@@ -245,9 +245,9 @@ def eligibility_results(screen, batch=False):
         county_navigators = []
         for nav in all_navigators:
             counties = nav.counties.all()
-            if len(counties) == 0 or any(
+            if len(counties) == 0 or (screen.county is not None and any(
                 screen.county in county.name for county in counties
-            ):
+            )):
                 county_navigators.append(nav)
 
         if referrer is None:
