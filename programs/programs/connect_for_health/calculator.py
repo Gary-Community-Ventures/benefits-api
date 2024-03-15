@@ -1,6 +1,7 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
-from programs.programs.connect_for_health.tax_credit_value import tax_credit_by_county
 import programs.programs.messages as messages
+from programs.sheets import sheets_get_data
+from integrations.util import Cache
 
 
 class ConnectForHealth(ProgramCalculator):
@@ -45,6 +46,26 @@ class ConnectForHealth(ProgramCalculator):
 
         return e
 
-    def value(self, eligible_members: int):
-        # https://stackoverflow.com/questions/6266727/python-cut-off-the-last-word-of-a-sentence
-        return tax_credit_by_county[self.screen.county.rsplit(' ', 1)[0]] * 12
+    def value(self, eligible_members: int):    
+        limits = cache.fetch()
+        return limits[self.screen.county] * 12
+
+
+class CFHCache(Cache):
+    expire_time = 60 * 60 * 24
+    default = {}
+
+    def update(self):
+        spreadsheet_id = '1SuOhwX5psXsipMS_G5DE_f9jLS2qWxf6temxY445EQg'
+        range_name = "'2023 report'!A2:B65"
+        sheet_values = sheets_get_data(spreadsheet_id, range_name)
+
+        if not sheet_values:
+            raise Exception('Sheet unavailable')
+        
+        data = {d[0].strip() + ' County': float(d[1].replace(',', '')) for d in sheet_values}
+
+        return data
+
+
+cache = CFHCache()
