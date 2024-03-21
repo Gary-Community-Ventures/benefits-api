@@ -1,4 +1,5 @@
 from ..base import PolicyEnigineCalulator
+from configuration.models import StateSpecificModifier
 import programs.programs.policyengine.calculators.dependencies as dependency
 
 
@@ -49,7 +50,8 @@ class Wic(PolicyEngineMembersCalculator):
 
         for _, pvalue in self.get_data().items():
             if pvalue[self.pe_name][self.pe_period] > 0:
-                total += self.wic_categories[pvalue['wic_category'][self.pe_period]] * 12
+                total += self.wic_categories[pvalue['wic_category']
+                                             [self.pe_period]] * 12
 
         return total
 
@@ -66,15 +68,18 @@ class Medicaid(PolicyEngineMembersCalculator):
         dependency.member.Medicaid,
     ]
 
-    co_child_medicaid_average = 200 * 12
-    co_adult_medicaid_average = 310 * 12
-    co_aged_medicaid_average = 170 * 12
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.modifier = StateSpecificModifier.objects.get(
+            name='medicaid_memeber_averages').data
+        self.child_medicaid_average = self.modifier['child_medicaid_average']
+        self.adult_medicaid_average = self.modifier['adult_medicaid_average']
+        self.aged_medicaid_average = self.modifier['aged_medicaid_average']
 
     presumptive_amount = 74 * 12
 
     def value(self):
         total = 0
-
         for _, pvalue in self.get_data().items():
             if pvalue[self.pe_name][self.pe_period] <= 0:
                 continue
@@ -84,11 +89,11 @@ class Medicaid(PolicyEngineMembersCalculator):
             # aged adults
 
             if pvalue['age'][self.pe_period] <= 18:
-                medicaid_estimated_value = self.co_child_medicaid_average
+                medicaid_estimated_value = self.child_medicaid_average
             elif pvalue['age'][self.pe_period] > 18 and pvalue['age'][self.pe_period] < 65:
-                medicaid_estimated_value = self.co_adult_medicaid_average
+                medicaid_estimated_value = self.adult_medicaid_average
             elif pvalue['age'][self.pe_period] >= 65:
-                medicaid_estimated_value = self.co_aged_medicaid_average
+                medicaid_estimated_value = self.aged_medicaid_average
             else:
                 medicaid_estimated_value = 0
 

@@ -1,5 +1,5 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
-from programs.co_county_zips import counties_from_zip
+from programs.county_zips import ZipcodeLookup
 import programs.programs.messages as messages
 
 
@@ -7,17 +7,20 @@ class MyDenver(ProgramCalculator):
     eligible_counties = ['Denver County']
     child_age_min = 5
     child_age_max = 18
-    child_relationship = ['child', 'fosterChild', 'stepChild', 'grandChild', 'relatedOther', 'headOfHousehold']
+    child_relationship = ['child', 'fosterChild', 'stepChild',
+                          'grandChild', 'relatedOther', 'headOfHousehold']
     dependencies = ['age', 'zipcode', 'relationship']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
+        zipcode_lookup = ZipcodeLookup()
+
         # geography test
         county_eligible = False
 
         if not self.screen.county:
-            counties = counties_from_zip(self.screen.zipcode)
+            counties = zipcode_lookup.counties_from_zip(self.screen.zipcode)
             for county in counties:
                 if county in MyDenver.eligible_counties:
                     county_eligible = True

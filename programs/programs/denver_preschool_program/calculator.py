@@ -1,6 +1,6 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
-from programs.co_county_zips import counties_from_zip
+from programs.county_zips import ZipcodeLookup
 
 
 class DenverPreschoolProgram(ProgramCalculator):
@@ -13,6 +13,8 @@ class DenverPreschoolProgram(ProgramCalculator):
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
+        zipcode_lookup = ZipcodeLookup()
+
         # Has a preschool child
         num_children = self.screen.num_children(
             age_min=DenverPreschoolProgram.min_age, age_max=DenverPreschoolProgram.max_age
@@ -24,7 +26,7 @@ class DenverPreschoolProgram(ProgramCalculator):
         if self.screen.county is not None:
             counties = [self.screen.county]
         else:
-            counties = counties_from_zip(self.screen.zipcode)
+            counties = zipcode_lookup.counties_from_zip(self.screen.zipcode)
 
         # Lives in Denver
         e.condition(DenverPreschoolProgram.county in counties,

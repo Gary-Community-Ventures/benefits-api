@@ -2,7 +2,7 @@ from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 from programs.sheets import sheets_get_data
 from integrations.util import Cache
-from programs.co_county_zips import counties_from_zip
+from programs.county_zips import ZipcodeLookup
 import math
 
 
@@ -17,7 +17,8 @@ class EnergyAssistance(ProgramCalculator):
         7: 8_001,
         8: 8_179,
     }
-    dependencies = ['income_frequency', 'income_amount', 'zipcode', 'household_size']
+    dependencies = ['income_frequency',
+                    'income_amount', 'zipcode', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -29,7 +30,8 @@ class EnergyAssistance(ProgramCalculator):
         leap_income = self.screen.calc_gross_income(frequency, income_types)
 
         e.condition(
-            leap_income < income_limit, messages.income(leap_income, income_limit)
+            leap_income < income_limit, messages.income(
+                leap_income, income_limit)
         )
 
         return e
@@ -37,15 +39,18 @@ class EnergyAssistance(ProgramCalculator):
     def value(self, eligible_members: int):
         data = cache.fetch()
 
+        zipcode_lookup = ZipcodeLookup()
+
         # if there is no county, then we want to estimate based off of zipcode
         if self.screen.county is not None:
             counties = [self.screen.county]
         else:
-            counties = counties_from_zip(self.screen.zipcode)
+            counties = zipcode_lookup.counties_from_zip(self.screen.zipcode)
 
         values = []
         for row in data:
-            county = row[0].strip().replace('Application County: ', '') + ' County'
+            county = row[0].strip().replace(
+                'Application County: ', '') + ' County'
             if county in counties:
                 values.append(int(float(row[1].replace('$', ''))))
 

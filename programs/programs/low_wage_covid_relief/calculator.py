@@ -1,6 +1,6 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
-from programs.co_county_zips import counties_from_zip
+from programs.county_zips import ZipcodeLookup
 import math
 
 
@@ -18,16 +18,19 @@ class LowWageCovidRelief(ProgramCalculator):
         8: 8_373.75,
     }
     county = 'Adams County'
-    dependencies = ['zipode', 'household_size', 'income_amount', 'income_frequency']
+    dependencies = ['zipode', 'household_size',
+                    'income_amount', 'income_frequency']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
+
+        zipcode_lookup = ZipcodeLookup()
 
         # lives in Adams County
         if self.screen.county is not None:
             counties = [self.screen.county]
         else:
-            counties = counties_from_zip(self.screen.zipcode)
+            counties = zipcode_lookup.counties_from_zip(self.screen.zipcode)
 
         in_adams_county = LowWageCovidRelief.county in counties
         e.condition(in_adams_county, messages.location())

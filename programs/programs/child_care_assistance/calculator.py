@@ -1,6 +1,6 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
 from programs.sheets import sheets_get_data
-from programs.co_county_zips import counties_from_zip
+from programs.county_zips import ZipcodeLookup
 import re
 import programs.programs.messages as messages
 from integrations.util import Cache
@@ -12,18 +12,22 @@ class ChildCareAssistance(ProgramCalculator):
     max_age_preschool = 4
     max_age_afterschool = 13
     max_age_afterschool_disabled = 19
-    dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode', 'household_size']
+    dependencies = ['age', 'income_amount',
+                    'income_frequency', 'zipcode', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
+        zipcode_lookup = ZipcodeLookup()
+
         # age
         cccap_children = self._num_cccap_children()
 
-        e.condition(cccap_children > 0, messages.child(max_age=ChildCareAssistance.max_age_afterschool))
+        e.condition(cccap_children > 0, messages.child(
+            max_age=ChildCareAssistance.max_age_afterschool))
 
         # location
-        counties = counties_from_zip(self.screen.zipcode)
+        counties = zipcode_lookup.counties_from_zip(self.screen.zipcode)
         county_name = counties[0] if len(counties) > 0 else self.screen.county
         cccap_county_data = self._cccap_county_values(county_name)
         e.condition(bool(cccap_county_data), messages.location())
@@ -34,7 +38,8 @@ class ChildCareAssistance(ProgramCalculator):
         gross_income = self.screen.calc_gross_income(frequency, income_types)
         if cccap_county_data:
             income_limit = cccap_county_data[self.screen.household_size] * 12
-            e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
+            e.condition(gross_income < income_limit,
+                        messages.income(gross_income, income_limit))
         else:
             e.eligible = False
 

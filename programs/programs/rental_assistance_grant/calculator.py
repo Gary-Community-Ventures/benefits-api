@@ -1,19 +1,22 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
-from programs.co_county_zips import counties_from_zip
+from programs.county_zips import ZipcodeLookup
 from programs.sheets import sheets_get_data
 from integrations.util import Cache
 
 
 class RentalAssistanceGrant(ProgramCalculator):
     amount = 10_000
-    dependencies = ['income_amount', 'income_frequency', 'household_size', 'zipcode']
+    dependencies = ['income_amount',
+                    'income_frequency', 'household_size', 'zipcode']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
+        zipcode_lookup = ZipcodeLookup()
+
         # location
-        counties = counties_from_zip(self.screen.zipcode)
+        counties = zipcode_lookup.counties_from_zip(self.screen.zipcode)
         county_name = self.screen.county if self.screen.county is not None else counties[0]
 
         # income
@@ -26,7 +29,8 @@ class RentalAssistanceGrant(ProgramCalculator):
 
         income_limit = limits[county_name][self.screen.household_size - 1]
 
-        e.condition(gross_income <= income_limit, messages.income(gross_income, income_limit))
+        e.condition(gross_income <= income_limit,
+                    messages.income(gross_income, income_limit))
 
         return e
 
@@ -43,7 +47,8 @@ class RAGCache(Cache):
         if not sheet_values:
             raise Exception('Sheet unavailable')
 
-        data = {d[0].strip() + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in sheet_values}
+        data = {d[0].strip() + ' County': [int(v.replace(',', ''))
+                                           for v in d[1:]] for d in sheet_values}
 
         return data
 

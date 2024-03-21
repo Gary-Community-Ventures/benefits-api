@@ -1,6 +1,6 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
-from programs.co_county_zips import counties_from_zip
+from programs.county_zips import ZipcodeLookup
 
 
 class MySpark(ProgramCalculator):
@@ -13,18 +13,21 @@ class MySpark(ProgramCalculator):
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
+        zipcode_lookup = ZipcodeLookup()
+
         # Qualify for FRL
         is_frl_eligible = False
         for benefit in self.data:
             if benefit["name_abbreviated"] == 'nslp':
                 is_frl_eligible = benefit["eligible"]
                 break
-        e.condition(is_frl_eligible, messages.must_have_benefit('Free or Reduced Lunch'))
+        e.condition(is_frl_eligible, messages.must_have_benefit(
+            'Free or Reduced Lunch'))
 
         if self.screen.county is not None:
             counties = [self.screen.county]
         else:
-            counties = counties_from_zip(self.screen.zipcode)
+            counties = zipcode_lookup.counties_from_zip(self.screen.zipcode)
 
         # Denever County
         e.condition(MySpark.county in counties, messages.location())

@@ -1,5 +1,5 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
-from programs.co_county_zips import counties_from_zip
+from programs.county_zips import ZipcodeLookup
 import programs.programs.messages as messages
 
 
@@ -17,10 +17,13 @@ class RtdLive(ProgramCalculator):
     max_age = 64
     percent_of_fpl = 1.85
     amount = 732
-    dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode', 'household_size']
+    dependencies = ['age', 'income_amount',
+                    'income_frequency', 'zipcode', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
+
+        zipcode_lookup = ZipcodeLookup()
 
         # income
         frequency = "yearly"
@@ -28,7 +31,8 @@ class RtdLive(ProgramCalculator):
         fpl = self.program.fpl.as_dict()
         income_limit = RtdLive.percent_of_fpl * fpl[self.screen.household_size]
         gross_income = self.screen.calc_gross_income(frequency, income_types)
-        e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
+        e.condition(gross_income < income_limit,
+                    messages.income(gross_income, income_limit))
 
         # age
         e.member_eligibility(
@@ -44,7 +48,7 @@ class RtdLive(ProgramCalculator):
         # geography
         county_eligible = False
         if not self.screen.county:
-            counties = counties_from_zip(self.screen.zipcode)
+            counties = zipcode_lookup.counties_from_zip(self.screen.zipcode)
         else:
             counties = [self.screen.county]
 
