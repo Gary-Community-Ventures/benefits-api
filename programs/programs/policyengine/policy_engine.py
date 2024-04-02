@@ -73,6 +73,7 @@ def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
             },
             "households": {
                 "household": {
+                    # "state_code_str": {YEAR: "CO", PREVIOUS_YEAR: "CO"},
                     "state_code_str": {YEAR: modifier["state_code_str"], PREVIOUS_YEAR: modifier["state_code_str"]},
                     "members": []
                 }

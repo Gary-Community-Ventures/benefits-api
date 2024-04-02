@@ -68,6 +68,17 @@ class Medicaid(PolicyEngineMembersCalculator):
         dependency.member.Medicaid,
     ]
 
+    '''
+    The hardcoded Colorado average Medicaid amount for child, adults and aged.
+    '''
+    # co_child_medicaid_average = 200 * 12
+    # co_adult_medicaid_average = 310 * 12
+    # co_aged_medicaid_average = 170 * 12
+
+    '''
+    New Solution: Modifiers coming from the StateSpecificModifier model
+    '''
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.modifier = StateSpecificModifier.objects.get(
