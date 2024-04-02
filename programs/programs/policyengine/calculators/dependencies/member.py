@@ -28,7 +28,7 @@ class TaxUnitHeadDependency(Member):
     dependencies = ('relationship',)
 
     def value(self):
-        return self.screen.get_head().id == self.member.id
+        return self.member.is_head()
 
 
 class TaxUnitSpouseDependency(Member):
@@ -36,7 +36,7 @@ class TaxUnitSpouseDependency(Member):
     dependencies = ('relationship',)
 
     def value(self):
-        return self.relationship_map[self.screen.get_head().id] == self.member.id
+        return self.member.is_spouse()
 
 
 class TaxUnitDependentDependency(Member):
@@ -49,26 +49,7 @@ class TaxUnitDependentDependency(Member):
     )
 
     def value(self):
-        is_tax_unit_spouse = TaxUnitSpouseDependency(
-            self.screen, self.member, self.relationship_map
-        ).value()
-        is_tax_unit_head = TaxUnitHeadDependency(
-            self.screen, self.member, self.relationship_map
-        ).value()
-        is_tax_unit_dependent = (
-            (
-                self.member.age <= 18
-                or (self.member.student and self.member.age <= 23)
-                or self.member.has_disability()
-            )
-            and (
-                self.member.calc_gross_income('yearly', ['all'])
-                < self.screen.calc_gross_income('yearly', ['all']) / 2
-            )
-            and (not (is_tax_unit_head or is_tax_unit_spouse))
-        )
-
-        return is_tax_unit_dependent
+        return self.member.is_dependent()
 
 
 class WicCategory(Member):
