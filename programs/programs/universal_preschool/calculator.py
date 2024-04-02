@@ -3,9 +3,8 @@ import programs.programs.messages as messages
 
 
 class UniversalPreschool(ProgramCalculator):
-    qualifying_min_age = 3
-    min_age = 4
-    max_age = 5
+    qualifying_age = 3
+    age = 4
     percent_of_fpl = 2.7
     amount = {
         '10_hours': 4_837,
@@ -18,8 +17,8 @@ class UniversalPreschool(ProgramCalculator):
         e = Eligibility()
 
         foster_children = self.screen.num_children(
-            age_min=UniversalPreschool.qualifying_min_age,
-            age_max=UniversalPreschool.max_age,
+            age_min=UniversalPreschool.qualifying_age,
+            age_max=UniversalPreschool.age,
             child_relationship=['fosterChild']
         )
 
@@ -27,17 +26,17 @@ class UniversalPreschool(ProgramCalculator):
         other_factors = income_requirement or foster_children >= 1
 
         # Has child
-        children = self.screen.num_children(age_min=UniversalPreschool.min_age, age_max=UniversalPreschool.max_age)
+        children = self.screen.num_children(age_min=UniversalPreschool.age, age_max=UniversalPreschool.age)
         qualifying_children = self.screen.num_children(
-            age_min=UniversalPreschool.qualifying_min_age,
-            age_max=UniversalPreschool.max_age
+            age_min=UniversalPreschool.qualifying_age,
+            age_max=UniversalPreschool.age
         )
 
-        min_age = UniversalPreschool.qualifying_min_age if other_factors else UniversalPreschool.min_age
+        min_age = UniversalPreschool.qualifying_age if other_factors else UniversalPreschool.age
 
         e.condition(
             children >= 1 or (qualifying_children >= 1 and other_factors),
-            messages.child(min_age, UniversalPreschool.max_age)
+            messages.child(min_age, UniversalPreschool.age)
         )
 
         return e
@@ -47,7 +46,7 @@ class UniversalPreschool(ProgramCalculator):
         income_requirement = self._meets_income_requirement()
 
         for child in self.screen.household_members.filter(
-            age__range=(UniversalPreschool.qualifying_min_age, UniversalPreschool.max_age)
+            age__range=(UniversalPreschool.qualifying_age, UniversalPreschool.age)
         ):
             if child.relationship == 'fosterChild' or income_requirement:
                 if child.age == 3:
