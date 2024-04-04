@@ -56,7 +56,7 @@ calculators: dict[str, type[ProgramCalculator]] = {
     'bca': BasicCashAssistance,
     'cowap': WeatherizationAssistance,
     'tabor': Tabor,
-    'trua' : Trua,
+    'trua': Trua,
     'ubp': UtilityBillPay,
     'rag': RentalAssistanceGrant,
 }

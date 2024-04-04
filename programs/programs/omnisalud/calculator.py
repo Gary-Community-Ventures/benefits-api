@@ -5,7 +5,7 @@ import programs.programs.messages as messages
 class OmniSalud(ProgramCalculator):
     individual_limit = 1699
     family_4_limit = 3469
-    amount = {'adult': 310, 'child': 200, 'senior': 170}
+    amount = 610
     dependencies = ['income_amount', 'income_frequency', 'household_size', 'age', 'insurance']
 
     def eligible(self) -> Eligibility:
@@ -23,9 +23,4 @@ class OmniSalud(ProgramCalculator):
         return e
 
     def value(self, eligible_members: int):
-        child_value = OmniSalud.amount['child'] * self.screen.num_children()
-        num_seniors = self.screen.num_adults(age_max=65)
-        senior_value = OmniSalud.amount['senior'] * num_seniors
-        adult_value = OmniSalud.amount['adult'] * (self.screen.num_adults() - num_seniors)
-
-        return (child_value + adult_value + senior_value) * 12
+        return OmniSalud.amount * self.screen.household_size * 12
