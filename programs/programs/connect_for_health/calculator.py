@@ -18,14 +18,12 @@ class ConnectForHealth(ProgramCalculator):
                 is_medicaid_eligible = benefit['eligible']
                 break
 
-        e.condition(not is_medicaid_eligible,
-                    messages.must_not_have_benefit('Medicaid'))
+        e.condition(not is_medicaid_eligible, messages.must_not_have_benefit('Medicaid'))
 
         # Someone has no health insurance
         has_no_hi = self.screen.has_insurance_types(('none', 'private'))
-        e.condition(has_no_hi,
-                    messages.has_no_insurance())
-        
+        e.condition(has_no_hi, messages.has_no_insurance())
+
         # HH member has no va insurance
         e.member_eligibility(
             self.screen.household_members.all(),
@@ -46,7 +44,7 @@ class ConnectForHealth(ProgramCalculator):
 
         return e
 
-    def value(self, eligible_members: int):    
+    def value(self, eligible_members: int):
         limits = cache.fetch()
         return limits[self.screen.county] * 12
 
@@ -62,7 +60,7 @@ class CFHCache(Cache):
 
         if not sheet_values:
             raise Exception('Sheet unavailable')
-        
+
         data = {d[0].strip() + ' County': float(d[1].replace(',', '')) for d in sheet_values}
 
         return data
