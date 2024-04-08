@@ -388,6 +388,33 @@ class HouseholdMember(models.Model):
     def has_disability(self):
         return self.disabled or self.visually_impaired or self.long_term_disability
 
+    def is_head(self):
+        return self.relationship == 'headOfHousehold'
+
+    def is_spouse(self):
+        return self.screen.relationship_map()[self.screen.get_head().id] == self.id
+
+    def is_dependent(self):
+        is_tax_unit_spouse = self.is_spouse()
+        is_tax_unit_head = self.is_head()
+        is_tax_unit_dependent = (
+            (
+                self.age <= 18
+                or (self.student and self.age <= 23)
+                or self.has_disability()
+            )
+            and (
+                self.calc_gross_income('yearly', ['all'])
+                <= self.screen.calc_gross_income('yearly', ['all']) / 2
+            )
+            and (not (is_tax_unit_head or is_tax_unit_spouse))
+        )
+
+        return is_tax_unit_dependent
+
+    def is_in_household(self):
+        return self.is_head() or self.is_spouse() or self.is_dependent()
+
     def missing_fields(self):
         member_fields = (
             'relationship',

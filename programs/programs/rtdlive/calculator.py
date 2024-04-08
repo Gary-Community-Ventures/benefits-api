@@ -1,6 +1,7 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
 from programs.co_county_zips import counties_from_zip
 import programs.programs.messages as messages
+from screener.models import HouseholdMember
 
 
 class RtdLive(ProgramCalculator):
@@ -15,24 +16,32 @@ class RtdLive(ProgramCalculator):
     ]
     min_age = 20
     max_age = 64
-    percent_of_fpl = 1.85
+    percent_of_fpl = 2.5
     amount = 732
     dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
+        members: list[HouseholdMember] = []
+        for member in self.screen.household_members.all():
+            if member.is_in_household():
+                members.append(member)
 
         # income
         frequency = "yearly"
         income_types = ['all']
         fpl = self.program.fpl.as_dict()
-        income_limit = RtdLive.percent_of_fpl * fpl[self.screen.household_size]
-        gross_income = self.screen.calc_gross_income(frequency, income_types)
-        e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
+        income_limit = RtdLive.percent_of_fpl * fpl[len(members)]
+
+        gross_income = 0
+        for member in members:
+            gross_income += member.calc_gross_income(frequency, income_types)
+
+        e.condition(gross_income <= income_limit, messages.income(gross_income, income_limit))
 
         # age
         e.member_eligibility(
-            self.screen.household_members.all(),
+            members,
             [
                 (
                     lambda m: m.age >= RtdLive.min_age and m.age <= RtdLive.max_age,
