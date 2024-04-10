@@ -41,9 +41,9 @@ class Medicaid(PolicyEngineMembersCalculator):
         dependency.member.Medicaid,
     ]
 
-    child_medicaid_average = 200 * 12
-    adult_medicaid_average = 310 * 12
-    aged_medicaid_average = 170 * 12
+    child_medicaid_average = 0
+    adult_medicaid_average = 0
+    aged_medicaid_average = 0
 
     presumptive_amount = 74 * 12
 
