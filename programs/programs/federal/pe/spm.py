@@ -25,7 +25,7 @@ class Snap(PolicyEngineSpmCalulator):
     pe_output_period = SNAP_PERIOD
 
     def value(self):
-        return int(self.get_data()[self.pe_name][self.pe_output_period])
+        return int(self.get_data()[self.pe_name][self.pe_output_period]) * 12
 
 
 class SchoolLunch(PolicyEngineSpmCalulator):
