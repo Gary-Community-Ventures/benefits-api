@@ -12,7 +12,7 @@ jobs:
         run: echo "Your pull request is for dev into main." && exit 0
       - name: feature branch into dev
         if: ${{ github.base_ref == 'dev' }}
-        run: echo "Your pull request is for a feature branch into dev." && exit 0
+        run: echo "TESTING Your pull request is for a feature branch into dev." && exit 0
       - name: non dev branch into main
         if: ${{ github.base_ref == 'main' && github.head_ref != 'dev' }}
         run: |
