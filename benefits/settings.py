@@ -126,7 +126,7 @@ DATABASES = {
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASS'),
-        'HOST': 'localhost',
+        'HOST': config('DB_HOST', 'localhost'),
     }
 }
 
