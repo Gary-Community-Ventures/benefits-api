@@ -36,6 +36,7 @@ class EmergencyRentalAssistance(ProgramCalculator):
 
         income = self.screen.calc_gross_income('yearly', ['all'])
         income_limits = EmergencyRentalAssistance.income_cache.fetch() 
+        # NOTE: 80% to income is already applied in the sheet.
         income_limit = income_limits[county_name][self.screen.household_size - 1]
         e.condition(income < income_limit, messages.income(income, income_limit))
 
