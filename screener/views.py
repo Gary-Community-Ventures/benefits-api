@@ -372,6 +372,9 @@ def urgent_need_results(screen):
         'denver': urgent_need_functions.LivesInDenver.calc(
             screen, missing_dependencies
         ),
+        'meal': urgent_need_functions.MealInCounties.calc(
+            screen, missing_dependencies
+        ),
         'helpkitchen_zipcode': urgent_need_functions.HelpkitchenZipcode.calc(
             screen, missing_dependencies
         ),
