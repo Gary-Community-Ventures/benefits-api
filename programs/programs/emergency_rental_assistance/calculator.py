@@ -26,7 +26,6 @@ class EmergencyRentalAssistance(ProgramCalculator):
     amount = 13_848
     dependencies = ['income_amount', 'income_frequency', 'household_size', 'zipcode']
     income_cache = EmergencyRentalAssistanceIncomeLimitsCache()
-    income_limit_percent = .8
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -37,7 +36,7 @@ class EmergencyRentalAssistance(ProgramCalculator):
 
         income = self.screen.calc_gross_income('yearly', ['all'])
         income_limits = EmergencyRentalAssistance.income_cache.fetch() 
-        income_limit = income_limits[county_name][self.screen.household_size - 1] * EmergencyRentalAssistance.income_limit_percent
+        income_limit = income_limits[county_name][self.screen.household_size - 1]
         e.condition(income < income_limit, messages.income(income, income_limit))
 
         return e
