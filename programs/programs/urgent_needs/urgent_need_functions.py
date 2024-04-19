@@ -49,6 +49,8 @@ class LivesInDenver(UrgentNeedFunction):
         Household lives in the Denver County
         '''
         return screen.county == 'Denver County'
+
+
 class MealInCounties(UrgentNeedFunction):
     dependencies = ['county']
 
@@ -59,6 +61,7 @@ class MealInCounties(UrgentNeedFunction):
         '''
         eligible_counties = ['Denver County', 'Jefferson County']
         return screen.county in eligible_counties
+
 
 class HelpkitchenZipcode(UrgentNeedFunction):
     dependencies = ['zipcode']
