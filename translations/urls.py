@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/urgent_needs/filter', views.urgent_need_filter_view),
     path('admin/urgent_needs/create', views.create_urgent_need_view),
     path('admin/urgent_needs/<int:id>', views.urgent_need_view),
-    path('admin/<int:id>', views.translation_view),
+    path('admin/<int:id>', views.translation_view, name='translation_admin_url'),
     path('admin/<int:id>/<str:lang>', views.edit_translation),
     path('admin/<int:id>/<str:lang>/auto', views.auto_translate),
 ]
