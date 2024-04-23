@@ -1,3 +1,5 @@
+import re
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.conf import settings
 from .models import Translation
@@ -29,7 +31,8 @@ class TranslationView(views.APIView):
 
 class NewTranslationForm(forms.Form):
     label = forms.CharField(max_length=128)
-    default_message = forms.CharField(widget=forms.Textarea(attrs={'name': 'text', 'rows': 3, 'cols': 50}))
+    default_message = forms.CharField(widget=forms.Textarea(
+        attrs={'name': 'text', 'rows': 3, 'cols': 50}))
 
 
 @login_required(login_url='/admin/login')
@@ -38,8 +41,28 @@ def admin_view(request):
     if request.method == 'GET':
         translations = Translation.objects.all()
 
+        # Parse label to get object's model name, field name, entry id and abbreviation name
+        for translation in translations:
+            if re.search(r'^\w+\..+\_\d+\-\w+$', translation.label):
+                translation.model_name = translation.label.split('.')[0]
+                translation.field_name = translation.label.split('-')[-1]
+                translation.entry_id = int(
+                    re.search(r'_(\d+)-', translation.label).group(1))
+                translation.abbr_name = re.search(
+                    r'\.(.+?)_\d+', translation.label).group(1)
+            else:
+                # Unexpected format
+                translation.model_name = None
+                translation.field_name = None
+                translation.abbr_name = None
+                translation.entry_id = translation.id
+
+        paginator = Paginator(translations, 100)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
-            'translations': translations,
+            'page_obj': page_obj
         }
 
         return render(request, "main.html", context)
@@ -47,12 +70,15 @@ def admin_view(request):
         form = NewTranslationForm(request.POST)
         if form.is_valid():
             text = form['default_message'].value()
-            translation = Translation.objects.add_translation(form['label'].value(), text)
+            translation = Translation.objects.add_translation(
+                form['label'].value(), text)
 
-            auto_translations = Translate().bulk_translate(['__all__'], [text])[text]
+            auto_translations = Translate().bulk_translate(
+                ['__all__'], [text])[text]
 
             for [language, auto_text] in auto_translations.items():
-                Translation.objects.edit_translation_by_id(translation.id, language, auto_text, False)
+                Translation.objects.edit_translation_by_id(
+                    translation.id, language, auto_text, False)
 
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/{translation.id}"
@@ -77,15 +103,31 @@ def filter_view(request):
         .filter(label__contains=request.GET.get('label', '')) \
         .translated(text__contains=request.GET.get('text', ''))
 
+    for translation in translations:
+        if re.search(r'^\w+\..+\_\d+\-\w+$', translation.label):
+            translation.model_name = translation.label.split('.')[0]
+            translation.field_name = translation.label.split('-')[-1]
+            translation.entry_id = int(
+                re.search(r'_(\d+)-', translation.label).group(1))
+            translation.abbr_name = re.search(
+                r'\.(.+?)_\d+', translation.label).group(1)
+        else:
+            # Unexpected format
+            translation.model_name = None
+            translation.field_name = None
+            translation.abbr_name = None
+            translation.entry_id = translation.id
+
     context = {
-        'translations': translations
+        'page_obj': translations
     }
 
     return render(request, "translations.html", context)
 
 
 class TranslationForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea(attrs={'name': 'text', 'rows': 3, 'cols': 50}), required=False)
+    text = forms.CharField(widget=forms.Textarea(
+        attrs={'name': 'text', 'rows': 3, 'cols': 50}), required=False)
 
 
 class LabelForm(forms.Form):
@@ -98,10 +140,12 @@ class LabelForm(forms.Form):
 @staff_member_required
 def translation_view(request, id=0):
     if request.method == 'GET':
-        translation = Translation.objects.prefetch_related('translations').get(pk=id)
+        translation = Translation.objects.prefetch_related(
+            'translations').get(pk=id)
         langs = [lang['code'] for lang in settings.PARLER_LANGUAGES[None]]
 
-        translations = {t.language_code: TranslationForm({'text': t.text}) for t in translation.translations.all()}
+        translations = {t.language_code: TranslationForm(
+            {'text': t.text}) for t in translation.translations.all()}
 
         for lang in langs:
             if lang not in translations:
@@ -156,16 +200,20 @@ def edit_translation(request, id=0, lang='en-us'):
         form = TranslationForm(request.POST)
         if form.is_valid():
             text = form['text'].value()
-            translation = Translation.objects.edit_translation_by_id(id, lang, text)
+            translation = Translation.objects.edit_translation_by_id(
+                id, lang, text)
 
             if lang == settings.LANGUAGE_CODE:
-                translations = Translate().bulk_translate(['__all__'], [text])[text]
+                translations = Translate().bulk_translate(
+                    ['__all__'], [text])[text]
 
                 for [language, translation] in translations.items():
-                    Translation.objects.edit_translation_by_id(id, language, translation, False)
+                    Translation.objects.edit_translation_by_id(
+                        id, language, translation, False)
 
             parent = Translation.objects.get(pk=id)
-            forms = {t.language_code: TranslationForm({'text': t.text}) for t in parent.translations.all()}
+            forms = {t.language_code: TranslationForm(
+                {'text': t.text}) for t in parent.translations.all()}
             context = {
                 'translation': parent,
                 'langs': forms,
@@ -177,12 +225,14 @@ def edit_translation(request, id=0, lang='en-us'):
 @staff_member_required
 def auto_translate(request, id=0, lang='en-us'):
     if request.method == 'POST':
-        translation = Translation.objects.language(settings.LANGUAGE_CODE).get(pk=id)
+        translation = Translation.objects.language(
+            settings.LANGUAGE_CODE).get(pk=id)
 
         auto = Translate().translate(lang, translation.text)
 
         # Set text to manualy edited initially in order to update, and then set it to not edited
-        new_translation = Translation.objects.edit_translation_by_id(translation.id, lang, auto)
+        new_translation = Translation.objects.edit_translation_by_id(
+            translation.id, lang, auto)
         new_translation.edited = False
         new_translation.save()
 
@@ -203,8 +253,23 @@ class NewProgramForm(forms.Form):
 def programs_view(request):
     if request.method == 'GET':
         programs = Program.objects.all()
+
+        # Parse label to just get the object's model entry id (for now)
+        for program in programs:
+
+            if re.search(r'^\w+\..+\_\d+\-\w+$', str(program.name)):
+                program.entry_id = int(
+                    re.search(r'_(\d+)-', str(program.name)).group(1))
+            else:
+                # Unexpected format
+                program.entry_id = None
+
+        paginator = Paginator(programs, 100)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
-            'programs': programs
+            'page_obj': page_obj
         }
 
         return render(request, 'programs/main.html', context)
@@ -252,7 +317,7 @@ def programs_filter_view(request):
         programs = filter(lambda p: query in p.name.text, programs)
 
         context = {
-            'programs': programs
+            'page_obj': programs
         }
 
         return render(request, 'programs/list.html', context)
@@ -282,7 +347,8 @@ def navigators_view(request):
                 form['phone_number'].value(),
             )
             response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/navigators/{navigator.id}"
+            response.headers[
+                "HX-Redirect"] = f"/api/translations/admin/navigators/{navigator.id}"
             return response
 
 
@@ -349,7 +415,8 @@ def urgent_needs_view(request):
                 form['phone_number'].value(),
             )
             response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/urgent_needs/{urgent_need.id}"
+            response.headers[
+                "HX-Redirect"] = f"/api/translations/admin/urgent_needs/{urgent_need.id}"
             return response
 
 
@@ -410,7 +477,8 @@ def documents_view(request):
     if request.method == 'POST':
         form = NewDocumentForm(request.POST)
         if form.is_valid():
-            document = Document.objects.new_document(form['external_name'].value())
+            document = Document.objects.new_document(
+                form['external_name'].value())
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/documents/{document.id}"
             return response
