@@ -1,0 +1,112 @@
+@import url('https://fonts.google.com/materialsymbols?family=Material+Symbols:opsz,wght@48,400');
+
+/* Global styling */
+:root {
+    --bulma-table-color: #001827;
+}
+
+* {
+    font-family: Inter, sans-serif;
+}
+
+body {
+    background-color: #001827;
+}
+
+.table {
+    background-color: #001827;
+}
+
+/* Table th tooltip styling */
+th {
+    position: relative;
+    cursor: pointer;
+  }
+
+  th[data-tooltip]::after {
+    content: attr(data-tooltip);
+    visibility: hidden;
+    width: 300px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  th[data-tooltip]:hover::after {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  th[data-tooltip]:hover::after {
+    left: auto;
+    right: 0;
+    transform: translateX(10%);
+  }
+
+  th[data-tooltip]:first-child:hover::after {
+    left: 0;
+    right: auto;
+    transform: translateX(-10%);
+  }
+
+/* Sidebar styling */
+.sidebar-nav {
+    position: sticky;
+    top: 0;
+    padding: 1.5rem;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.sidebar-item:hover {
+    color: #fff;
+  }
+
+  .sidebar-item.is-active {
+    color: #fff;
+    background-color: rgba(88, 88, 141, 0.5);
+  }
+
+.menu-list a, .menu-list button {
+    background-color: #001827;
+}
+
+/* Sidebar menu icon styling */
+.text-icon {
+  display: flex;
+  align-items: center;
+}
+
+.text-icon span:first-child {
+  margin-right: 5px;
+}
+
+.sidebar-item .text-icon span:first-child {
+  margin-right: 15px;
+}
+
+/* Edit Dropdown button styling */
+.dropdown-content {
+    position: absolute;
+    right: 0;
+}
+
+/* Pagination styling */
+.pagination-link.is-current {
+    background-color: rgba(88, 88, 141, 0.5);
+}
