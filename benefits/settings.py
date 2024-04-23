@@ -15,6 +15,7 @@ import os
 from decouple import config
 
 from pathlib import Path
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
@@ -62,6 +63,13 @@ CORS_ALLOW_ALL_ORIGINS = True
 # Application definition
 
 INSTALLED_APPS = [
+    "unfold",
+    "unfold.contrib.filters",  # optional, if special filters are needed
+    "unfold.contrib.forms",  # optional, if special form elements are needed
+    "unfold.contrib.import_export",  # optional, if django-import-export package is used
+    "unfold.contrib.guardian",  # optional, if django-guardian package is used
+    # optional, if django-simple-history package is used
+    "unfold.contrib.simple_history",
     'authentication.apps.AuthConfig',
     'corsheaders',
     'screener.apps.ScreenerConfig',
@@ -193,7 +201,8 @@ PARLER_LANGUAGES = {
     ),
     'default': {
         'fallbacks': ['en-us'],  # defaults to PARLER_DEFAULT_LANGUAGE_CODE
-        'hide_untranslated': True,  # the default; let .active_translations() return fallbacks too.
+        # the default; let .active_translations() return fallbacks too.
+        'hide_untranslated': True,
     },
 }
 
@@ -221,3 +230,69 @@ if config('SENTRY_DSN', None) is not None:
     )
 
 django_heroku.settings(locals())
+
+
+# UNFOLD SETTINGS
+UNFOLD = {
+    "SITE_HEADER": _("MFB Admin"),
+    "SITE_TITLE": _("MFB Admin"),
+    'APP_NAME': 'Benefits',
+    'APP_VERSION': '1.0.0',
+    'APP_DESCRIPTION': 'Benefits is a Django application that helps people find and apply for benefits.',
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": _("Navigation"),
+                "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "dashboard",
+                        "link": reverse_lazy("admin:index"),
+                    },
+                    {
+                        "title": _("Programs"),
+                        "icon": "other_admission",
+                        "link": reverse_lazy("admin:programs_program_changelist"),
+                    },
+                    {
+                        "title": _("Configuration"),
+                        "icon": "tune",
+                        "link": reverse_lazy("admin:configuration_configuration_changelist"),
+                    },
+                    {
+                        "title": _("Translations"),
+                        "icon": "translate",
+                        "link": reverse_lazy("admin:translations_translation_changelist"),
+                    },
+                    {
+                        "title": _("Urgent Need"),
+                        "icon": "breaking_news",
+                        "link": reverse_lazy("admin:programs_urgentneed_changelist"),
+                    },
+                    {
+                        "title": _("Navigator"),
+                        "icon": "near_me",
+                        "link": reverse_lazy("admin:programs_navigator_changelist"),
+                    }
+                ]
+            },
+            {
+                "separator": True,
+                "items": [
+                    {
+                        "title": _("Users"),
+                        "icon": "person",
+                        "link": reverse_lazy("admin:authentication_user_changelist"),
+                    },
+                    {
+                        "title": _("Groups"),
+                        "icon": "group",
+                        "link": reverse_lazy("admin:auth_group_changelist"),
+                    },
+                ],
+            },
+        ],
+    }
+}
