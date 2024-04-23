@@ -1,9 +1,9 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from unfold.admin import ModelAdmin
 from .models import User
 
 
-class CustomUserAdmin(UserAdmin):
+class CustomUserAdmin(ModelAdmin):
     ordering = ('email_or_cell', 'email')
 
     list_display = ('email_or_cell', 'is_staff')
