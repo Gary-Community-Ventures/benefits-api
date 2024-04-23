@@ -1,0 +1,88 @@
+{% extends "admin/change_list.html" %} {% block extrahead %}
+<style>
+  .dropdown-btn {
+    cursor: pointer;
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #001827;
+    right: 0;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    border: #a1a1a1 solid 1px;
+  }
+
+  .dropdown-content a {
+    color: #e0e2e6;
+    padding: 5px 10px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .dropdown-content a:hover {
+    background-color: #5e5e5e;
+  }
+</style>
+<script>
+  function initializeDropdowns() {
+    var dropdownBtn = document.querySelectorAll(".dropdown-btn");
+
+    dropdownBtn.forEach(function (btn) {
+      var dropdownContent = btn.nextElementSibling;
+      dropdownContent.style.display = "none";
+      btn.textContent = "menu";
+
+      btn.addEventListener("click", function () {
+        // Close all other dropdowns
+        dropdownBtn.forEach(function (otherBtn) {
+          if (otherBtn !== btn) {
+            otherBtn.nextElementSibling.style.display = "none";
+            otherBtn.textContent = "menu";
+          }
+        });
+
+        // Toggle this dropdown
+        if (dropdownContent.style.display === "none") {
+          dropdownContent.style.display = "block";
+          this.textContent = "close";
+        } else {
+          dropdownContent.style.display = "none";
+          this.textContent = "menu";
+        }
+      });
+    });
+
+    window.addEventListener("click", function (event) {
+      var dropdownContents = document.querySelectorAll(".dropdown-content");
+      dropdownContents.forEach(function (content) {
+        if (
+          !event.target.matches(".dropdown-btn") &&
+          !content.contains(event.target)
+        ) {
+          content.style.display = "none";
+          if (content.previousElementSibling.matches(".dropdown-btn")) {
+            content.previousElementSibling.textContent = "menu";
+          }
+        }
+      });
+    });
+
+    // Close dropdowns when the page is scrolled
+    window.addEventListener("scroll", function () {
+      var dropdownContents = document.querySelectorAll(".dropdown-content");
+      dropdownContents.forEach(function (content) {
+        content.style.display = "none";
+        if (content.previousElementSibling.matches(".dropdown-btn")) {
+          content.previousElementSibling.textContent = "menu";
+        }
+      });
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", initializeDropdowns);
+</script>
+
+{% endblock %}

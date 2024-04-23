@@ -1,7 +1,19 @@
-{% extends "base.html" %} {% block content %}
-<h1>Translations</h1>
-<a href="admin/create">New</a>
-<hr />
-{% include 'filter.html' %}
+{% extends "base.html" %} {% load static %} {% block content %}
+<section class="section">
+  <h1 class="title">Translations</h1>
+  <div class="level">
+    <div class="level-left">
+      <div class="level-item">{% include "./filter.html" %}</div>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <a href="admin/create" class="text-icon">
+          <span class="material-symbols-outlined"> add_circle </span>
+          <span>Add New</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 <hr />
 {% include 'translations.html' %} {% endblock content %}

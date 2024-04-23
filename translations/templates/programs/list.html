@@ -1,8 +1,97 @@
-<ul id="program-list">
-	{% for program in programs %}
-	<li>
-		<span>{{ program.name.text }} </span>
-		<a href="programs/{{ program.id }}">Edit</a>
-	</li>
-	{% endfor %}
-</ul>
+{% load static %}
+
+<table id="program-table" class="programs-table table is-striped is-fullwidth is-bordered">
+  <thead>
+    <tr>
+      <th>Entry ID</th>
+      <th>Program</th>
+      <th>Abbreviated Name</th>
+      <th>Active</th>
+      <th>Label</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for program in page_obj %}
+    <tr>
+      <td>{{ program.entry_id }}</td>
+      <td>{{ program.name.text }}</td>
+      <td>{{ program.name_abbreviated }}</td>
+      <td>{{ program.active }}</td>
+      <td>{{ program.name }}</td>
+      <td>
+        <div class="dropdown">
+          <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu{{ forloop.counter }}">
+              <span>Go to</span>
+              <span class="material-symbols-outlined">
+                expand_more
+              </span>
+            </button>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu{{ forloop.counter }}" role="menu">
+            <div class="dropdown-content">
+              <a href="/api/translations/admin/{{ program.name.id }}" class="dropdown-item">Name</a>
+              <a href="/api/translations/admin/{{ program.description.id }}" class="dropdown-item">Description</a
+              >
+              <a href="/api/translations/admin/{{ program.description_short.id }}" class="dropdown-item"
+                >Short description</a
+              >
+              <a href="/api/translations/admin/{{ program.learn_more_link.id }}" class="dropdown-item"
+                >Learn more link</a
+              >
+              <a href="/api/translations/admin/{{ program.apply_button_link.id }}" class="dropdown-item"
+                >Apply button link</a
+              >
+              <a href="/api/translations/admin/{{ program.value_type.id }}" class="dropdown-item"
+                >Value type</a
+              >
+              <a
+                href="/api/translations/admin/{{ program.estimated_delivery_time.id }}" class="dropdown-item"
+                >Estimated delivery time</a
+              >
+              <a
+                href="/api/translations/admin/{{ program.estimated_application_time.id }}" class="dropdown-item"
+                >Estimated application time</a
+              >
+              <a href="/api/translations/admin/{{ program.category.id }}" class="dropdown-item"
+                >Category</a
+              >
+              <a href="/api/translations/admin/{{ program.warning.id }}" class="dropdown-item">Warning</a>
+              <hr class="dropdown-divider" />
+              <a href="/admin/programs/program/{{program.id}}/change/" class="dropdown-item"> Edit in Main Admin </a>
+            </div>
+          </div>
+        </div>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="7">No results</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<nav class="pagination" role="navigation" aria-label="pagination">
+  {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-previous">Previous</a>
+  {% endif %}
+
+  <ul class="pagination-list">
+    {% for page_num in page_obj.paginator.page_range %}
+      {% if page_obj.number == page_num %}
+        <li><a class="pagination-link is-current" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a></li>
+      {% else %}
+        <li><a href="?page={{ page_num }}" class="pagination-link" aria-label="Goto page {{ page_num }}">{{ page_num }}</a></li>
+      {% endif %}
+    {% endfor %}
+  </ul>
+
+  {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}" class="pagination-next">Next page</a>
+  {% endif %}
+</nav>
+
+<script src="{% static 'js/programs-table.js' %}"></script>
+

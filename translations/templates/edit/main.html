@@ -1,16 +1,57 @@
 {% extends "base.html" %} {% block content %}
-<h2>{{ translation.label }}</h2>
-<form hx-post="{{ translation.id }}" hx-swap="innerHTML">
-	{% include "./form.html" with form=label_form %}
-</form>
-{% include "./langs.html" %}
-<button
-	hx-delete="{{ translation.id }}"
-	hx-confirm="This is perminant"
-	hx-swap="innerHTML"
-	hx-target="#delete-errors"
->
-	Delete
-</button>
-<div id="delete-errors"></div>
+<section class="section">
+  <h1 class="title">{{ translation.label }}</h1>
+
+</section>
+<section class="section">
+  <div class="container">
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          {% include "./form.html" with form=label_form %}
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <button
+            class="button is-danger is-dark"
+            hx-delete="{{ translation.id }}"
+            hx-confirm="This is perminant"
+            hx-swap="innerHTML"
+            hx-target="#delete-errors"
+          >
+            Delete
+          </button>
+        </div>
+      <div id="delete-errors"></div>
+    </div>
+  </div>
+  <div class="container">
+    <div id="languages">
+      {% for lang, form in langs.items %}
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <h3>{{ lang }}</h3>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <form
+              id="{{ lang }}"
+              hx-post="{{ translation.id }}/{{ lang }}"
+              hx-target="#languages"
+              hx-swap="outerHTML"
+            >
+              {% include "./lang_form.html" with lang=lang form=form %}
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
 {% endblock content %}

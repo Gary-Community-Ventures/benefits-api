@@ -1,5 +1,6 @@
 {% include "./form.html" with form=form %}
 <button
+  class="button"
 	type="button"
 	hx-post="{{ translation.id }}/{{ lang }}/auto"
 	hx-target="#{{ lang }}"

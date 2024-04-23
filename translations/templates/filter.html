@@ -1,7 +1,21 @@
-<form hx-get="admin/filter" hx-target="#translation-list" hx-swap="outerHTML">
-	<label for="label">Label</label>
-	<input type="text" name="label" id="label" />
-	<label for="text">Text</label>
-	<input type="text" name="text" id="text" />
-	<button type="submit">Filter</button>
+{% load static %}
+<form hx-get="admin/filter" hx-target="#translation-table" hx-swap="outerHTML">
+  <div class="level">
+    <div class="level-left">
+      <label for="label"></label>
+      <input type="text" name="label" id="label" class="input" placeholder="Type to Search"/>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <input type="text" name="text" id="text" class="input" placeholder="Saved Text"/>
+      </div>
+      <div class="level-item">
+        <button type="submit" class="button">
+          <span class="material-symbols-outlined">
+            search
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
 </form>
