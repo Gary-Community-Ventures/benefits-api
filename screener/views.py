@@ -21,6 +21,7 @@ from screener.serializers import (
     MessageSerializer,
     ResultsSerializer,
 )
+from programs.programs.policyengine.calculators import all_pe_programs
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError
 import programs.programs.urgent_needs.urgent_need_functions as urgent_need_functions
@@ -193,24 +194,7 @@ def eligibility_results(screen, batch=False):
 
     # pe_eligibility = eligibility_policy_engine(screen)
     pe_eligibility = calc_pe_eligibility(screen, missing_dependencies)
-    pe_programs = (
-        'snap',
-        'wic',
-        'nslp',
-        'eitc',
-        'coeitc',
-        'ctc',
-        'coctc',
-        'medicaid',
-        'ssi',
-        'tanf',
-        'andcs',
-        'oap',
-        'acp',
-        'lifeline',
-        'pell_grant',
-        'chp',
-    )
+    pe_programs = all_pe_programs
 
     def sort_first(program):
         calc_first = ('tanf', 'ssi', 'medicaid', 'nslp', 'leap')

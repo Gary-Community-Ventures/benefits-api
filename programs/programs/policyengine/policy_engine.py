@@ -1,5 +1,5 @@
 from screener.models import Screen
-from .calculators import all_calculators, PolicyEnigineCalulator
+from .calculators import all_calculators, PolicyEngineCalulator
 from programs.programs.calc import Eligibility
 from programs.util import Dependencies
 from .calculators.dependencies.base import DependencyError
@@ -14,7 +14,7 @@ from .calculators.dependencies.member import (
 
 
 def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[str, Eligibility]:
-    valid_programs: dict[str, type[PolicyEnigineCalulator]] = {}
+    valid_programs: dict[str, type[PolicyEngineCalulator]] = {}
 
     for name_abbr, Calculator in all_calculators.items():
         if not Calculator.can_calc(missing_fields):
@@ -48,7 +48,7 @@ def policy_engine_calculate(data):
     return data
 
 
-def pe_input(screen: Screen, programs: List[type[PolicyEnigineCalulator]]):
+def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
     '''
     Generate Policy Engine API request from the list of programs.
     '''
