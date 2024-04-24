@@ -310,8 +310,6 @@ class Message(models.Model):
     sent = models.DateTimeField(auto_now=True)
     type = models.CharField(max_length=30)
     screen = models.ForeignKey(Screen, related_name='messages', on_delete=models.CASCADE)
-    cell = PhoneNumberField(blank=True, null=True)
-    email = models.EmailField(_('email address'), blank=True, null=True)
     content = models.CharField(max_length=320, blank=True, null=True)
     uid = models.IntegerField(blank=True, null=True)
 
