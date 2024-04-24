@@ -383,7 +383,7 @@ def urgent_need_results(screen):
             screen, missing_dependencies
         ),
         'trua': urgent_need_functions.Trua.calc(screen, missing_dependencies),
-        "ffap": urgent_need_functions.ForeclosureFinAssistProgram.calc(screen, missing_dependencies),
+        'ffap': urgent_need_functions.ForeclosureFinAssistProgram.calc(screen, missing_dependencies),
         'eoc': urgent_need_functions.Eoc.calc(screen, missing_dependencies),
         'co_legal_services': urgent_need_functions.CoLegalServices.calc(
             screen, missing_dependencies
