@@ -1,6 +1,11 @@
-from programs.programs.policyengine.calculators.base import PolicyEngineSpmCalulator
-from programs.programs.policyengine.calculators.constants import SNAP_PERIOD
+from ..base import PolicyEnigineCalulator
+from ..constants import SNAP_PERIOD
 import programs.programs.policyengine.calculators.dependencies as dependency
+
+
+class PolicyEngineSpmCalulator(PolicyEnigineCalulator):
+    pe_category = 'spm_units'
+    pe_sub_category = 'spm_unit'
 
 
 class Snap(PolicyEngineSpmCalulator):

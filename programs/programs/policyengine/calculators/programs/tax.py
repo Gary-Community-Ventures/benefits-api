@@ -1,12 +1,40 @@
-from programs.programs.policyengine.calculators.base import PolicyEngineTaxUnitCalulator
-from programs.programs.federal.pe.tax import Eitc
+from ..base import PolicyEnigineCalulator
+from ..constants import PREVIOUS_YEAR
 import programs.programs.policyengine.calculators.dependencies as dependency
+
+
+class PolicyEngineTaxUnitCalulator(PolicyEnigineCalulator):
+    pe_category = 'tax_units'
+    pe_sub_category = 'tax_unit'
+    pe_period = PREVIOUS_YEAR
+
+
+class Eitc(PolicyEngineTaxUnitCalulator):
+    pe_name = 'eitc'
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.TaxUnitSpouseDependency,
+        dependency.member.TaxUnitDependentDependency,
+        *dependency.irs_gross_income,
+    ]
+    pe_outputs = [dependency.tax.Eitc]
 
 
 class Coeitc(PolicyEngineTaxUnitCalulator):
     pe_name = 'co_eitc'
     pe_inputs = Eitc.pe_inputs
     pe_outputs = [dependency.tax.Coeitc]
+
+
+class Ctc(PolicyEngineTaxUnitCalulator):
+    pe_name = 'ctc'
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.member.TaxUnitSpouseDependency,
+        *dependency.irs_gross_income,
+    ]
+    pe_outputs = [dependency.tax.Ctc]
 
 
 class Coctc(PolicyEngineTaxUnitCalulator):

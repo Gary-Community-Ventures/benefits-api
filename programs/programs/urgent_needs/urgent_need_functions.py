@@ -51,18 +51,6 @@ class LivesInDenver(UrgentNeedFunction):
         return screen.county == 'Denver County'
 
 
-class MealInCounties(UrgentNeedFunction):
-    dependencies = ['county']
-
-    @classmethod
-    def eligible(cls, screen: Screen):
-        '''
-        Household lives in Denver or Jefferson County
-        '''
-        eligible_counties = ['Denver County', 'Jefferson County']
-        return screen.county in eligible_counties
-
-
 class HelpkitchenZipcode(UrgentNeedFunction):
     dependencies = ['zipcode']
 
@@ -145,29 +133,6 @@ class Trua(UrgentNeedFunction):
         household_income = screen.calc_gross_income('yearly', ['all'])
         income_limit = income_limits[screen.household_size]
         return household_income <= income_limit
-
-
-class ForeclosureFinAssistProgram(UrgentNeedFunction):
-    dependencies = ['household_size', 'income_amount', 'income_frequency', 'county']
-
-    @classmethod
-    def eligible(cls, screen: Screen):
-        '''
-        Return True if the household is at or below 80% the income limit for their household size & they live in Denver
-        '''
-        income_limits = {
-            1: 66_300,
-            2: 75_750,
-            3: 85_200,
-            4: 94_560,
-            5: 102_250,
-            6: 109_800,
-            7: 117_400,
-            8: 124_950,
-        }
-        household_income = screen.calc_gross_income('yearly', ['all'])
-        income_limit = income_limits[screen.household_size]
-        return household_income <= income_limit and screen.county == 'Denver County'
 
 
 class EocIncomeLimitCache(Cache):

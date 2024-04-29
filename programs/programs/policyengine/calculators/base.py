@@ -3,10 +3,10 @@ from screener.models import Screen
 from programs.programs.calc import Eligibility, ProgramCalculator
 from .dependencies.base import PolicyEngineScreenInput
 from typing import List
-from .constants import YEAR, PREVIOUS_YEAR
+from .constants import YEAR
 
 
-class PolicyEngineCalulator(ProgramCalculator):
+class PolicyEnigineCalulator(ProgramCalculator):
     '''
     Base class for all Policy Engine programs
     '''
@@ -46,37 +46,3 @@ class PolicyEngineCalulator(ProgramCalculator):
                 return False
 
         return True
-
-class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
-    pe_category = 'tax_units'
-    pe_sub_category = 'tax_unit'
-    pe_period = PREVIOUS_YEAR
-
-class PolicyEngineSpmCalulator(PolicyEngineCalulator):
-    pe_category = 'spm_units'
-    pe_sub_category = 'spm_unit'
-
-class PolicyEngineMembersCalculator(PolicyEngineCalulator):
-    tax_dependent = True
-    pe_category = 'people'
-
-    def value(self):
-        total = 0
-        for pkey, pvalue in self.get_data().items():
-            # The following programs use income from the tax unit,
-            # so we want to skip any members that are not in the tax unit.
-            if not self.in_tax_unit(pkey) and self.tax_dependent:
-                continue
-
-            pe_value = pvalue[self.pe_name][self.pe_period]
-
-            total += pe_value
-
-        return total
-
-    def in_tax_unit(self, member_id) -> bool:
-        return str(member_id) in self.pe_data['tax_units']['tax_unit']['members']
-
-    def get_data(self):
-        return self.pe_data[self.pe_category]
-
