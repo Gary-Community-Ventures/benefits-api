@@ -37,9 +37,9 @@ class UserViewSet(mixins.UpdateModelMixin,
             else:
                 message = MessageUser(screen, screen.get_language_code())
                 if screen.user.email is not None:
-                    message.email(screen.user.email, send_tests=True)
+                    message.email(screen.user.email)
                 if screen.user.cell is not None:
-                    message.text(str(screen.user.cell), send_tests=True)
+                    message.text(str(screen.user.cell))
 
                 try:
                     upsert_user_to_hubspot(screen, screen.user)
