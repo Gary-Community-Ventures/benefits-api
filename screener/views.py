@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from integrations.services.communications.message import MessageUser
+from integrations.services.communications import MessageUser
 from screener.models import (
     Screen,
     HouseholdMember,

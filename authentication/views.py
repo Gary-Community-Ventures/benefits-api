@@ -1,6 +1,6 @@
 from django.conf import settings
 from authentication.models import User
-from integrations.services.communications.message import MessageUser
+from integrations.services.communications import MessageUser
 from screener.models import Screen
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
