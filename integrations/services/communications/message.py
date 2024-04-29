@@ -6,6 +6,7 @@ from sendgrid.helpers.mail import Mail, Email, To, Content
 from decouple import config
 from django.conf import settings
 from twilio.rest import Client
+from django.utils import timezone
 
 
 class MessageUser:
@@ -31,8 +32,8 @@ class MessageUser:
 
         return True
 
-    def email(self, email: str):
-        if not self.should_send():
+    def email(self, email: str, send_tests=False):
+        if not self.should_send() and not send_tests:
             return
 
         sg = self._email_client()
@@ -58,15 +59,14 @@ class MessageUser:
 
         return words + f' <a href="{url}">{url}</a>'
 
-
-    def text(self, cell: str):
-        if not self.should_send():
+    def text(self, cell: str, send_tests=False):
+        if not self.should_send() and not send_tests:
             return
 
         self._cell_client().messages.create(
             from_=self.cell_from_phone_number,
-            body=self._text_body,
-            to="+1"+str(cell),
+            body=self._text_body(),
+            to=cell,
         )
 
         self.log('textScreen')
@@ -85,6 +85,9 @@ class MessageUser:
         return f"{self.front_end_domain}/{self.screen.uuid}/results"
 
     def log(self, type: Literal['emailScreen', 'textScreen']):
+        self.screen.last_email_request_date = timezone.now()
+        self.screen.save()
+
         Message.objects.create(
             type=type,
             screen=self.screen,
