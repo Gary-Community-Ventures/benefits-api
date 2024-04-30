@@ -1,25 +1,18 @@
 from programs.programs.calc import Eligibility, ProgramCalculator
 import programs.programs.messages as messages
-from integrations.util.cache import Cache
-from programs.sheets import sheets_get_data
+from integrations.services.sheets import GoogleSheetsCache
 from programs.co_county_zips import counties_from_zip
 
 
-class EmergencyRentalAssistanceIncomeLimitsCache(Cache):
-    expire_time = 60 * 60 * 24
+class EmergencyRentalAssistanceIncomeLimitsCache(GoogleSheetsCache):
     default = {}
+    sheet_id = '1QHb-ZT0Y2oWjFMoeP_wy8ClveslINWdehb-CXhB8WSE'
+    range_name = "'2022 80% AMI'!A2:I"
 
     def update(self):
-        spreadsheet_id = '1QHb-ZT0Y2oWjFMoeP_wy8ClveslINWdehb-CXhB8WSE'
-        range_name = "'2022 80% AMI'!A2:I"
-        sheet_values = sheets_get_data(spreadsheet_id, range_name)
+        data = super().update()
 
-        if not sheet_values:
-            raise Exception('Sheet unavailable')
-
-        data = {d[0].strip() + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in sheet_values}
-
-        return data
+        return {d[0].strip() + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in data}
 
 
 class EmergencyRentalAssistance(ProgramCalculator):
