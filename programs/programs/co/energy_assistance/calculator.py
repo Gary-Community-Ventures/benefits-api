@@ -1,18 +1,24 @@
+from integrations.util.cache import Cache
+from integrations.services.sheets import GoogleSheets
 from programs.programs.calc import ProgramCalculator, Eligibility
-from integrations.services.sheets import GoogleSheetsCache
 import programs.programs.messages as messages
 from programs.co_county_zips import counties_from_zip
 import math
 
 
-class LeapValueCache(GoogleSheetsCache):
+class LeapValueCache(Cache):
+    expire_time = 60 * 60 * 24
+    default = []
     sheet_id = '1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg'
-    range_name = "'FFY 2024'!A2:G65"
+    range_name = "'FFY 2024'!A1:G65"
+    county_column = '2023/2024 Season\nUpdated: \n4/30/2024'
+    average_column = 'Average Benefit'
 
     def update(self):
-        data = super().update()
+        data = GoogleSheets(self.sheet_id, self.range_name).data_by_column(self.county_column, self.average_column)
 
-        return [[row[0], row[6]] for row in data if row != []]
+        return [[row[self.county_column], row[self.average_column]] for row in data if row != []]
+
 
 class EnergyAssistance(ProgramCalculator):
     income_bands = {

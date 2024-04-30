@@ -2,6 +2,7 @@ from decouple import config
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 import json
+import warnings
 
 from integrations.util.cache import Cache
 
@@ -60,6 +61,17 @@ class GoogleSheets:
             organized_data.append(row_data)
 
         return organized_data
+
+    def print_raw_column_names(self):
+        '''
+        print the column names of the spreadsheet
+
+        WARN: this should only be used during development
+        '''
+        raw_column_names = self.data()[0]
+
+        for name in raw_column_names:
+            print(repr(name))
 
     def _raise_missing_columns(self, needed_columns: list[str], existing_columns: list[str]):
         '''
