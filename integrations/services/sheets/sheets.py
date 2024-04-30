@@ -2,8 +2,6 @@ from decouple import config
 from googleapiclient.discovery import build
 from google.oauth2 import service_account
 import json
-import warnings
-
 from integrations.util.cache import Cache
 
 
