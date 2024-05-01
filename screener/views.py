@@ -375,6 +375,7 @@ def urgent_need_results(screen):
         'co_emergency_mortgage': urgent_need_functions.CoEmergencyMortgageAssistance.calc(
             screen, missing_dependencies
         ),
+        'child_first': urgent_need_functions.ChildFirst.calc(screen, missing_dependencies),
     }
 
     list_of_needs = []
