@@ -262,3 +262,41 @@ class CoEmergencyMortgageAssistance(UrgentNeedFunction):
         ]
 
         return income < income_limit
+
+class ChildFirst(UrgentNeedFunction):
+    dependencies = ['age', 'county']
+
+    @classmethod
+    def eligible(cls, screen: Screen):
+        '''
+        Return True if the household has a child aged 0-5 and lives in an eligible county
+        '''
+        is_age_eligible = screen.num_children(age_max=5)
+        eligible_counties = [
+            'Adams County',
+            'Alamosa County',
+            'Arapahoe County',
+            'Bent County',
+            'Boulder County',
+            'Broomfield County',
+            'Chaffee County',
+            'Clear Creek County',
+            'Conejos County',
+            'Costilla County',
+            'Crowley County',
+            'Custer County',
+            'Douglas County',
+            'El Paso County',
+            'Fremont County',
+            'Gilpin County',
+            'Jefferson County',
+            'Lake County',
+            'Mineral County',
+            'Otero County',
+            'Rio Grand County',
+            'Routt County',
+            'Saguache County',
+            'Weld County',
+        ]
+
+        return is_age_eligible and screen.county in eligible_counties
