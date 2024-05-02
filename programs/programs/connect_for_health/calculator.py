@@ -45,8 +45,9 @@ class ConnectForHealth(ProgramCalculator):
         return e
 
     def value(self, eligible_members: int):
-        limits = cache.fetch()
-        return limits[self.screen.county] * 12
+        # limits = cache.fetch()
+        return 0
+        # return limits[self.screen.county] * 12
 
 
 class CFHCache(Cache):
