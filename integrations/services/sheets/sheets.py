@@ -31,7 +31,7 @@ class GoogleSheets:
 
     def data_by_column(self, *column_names: str) -> list[dict[str, any]]:
         '''
-        return an array of dictiontionaries containing the column names and their values
+        return an array of dictionaries containing the column names and their values
         '''
         data = self.data()
 
