@@ -6,7 +6,7 @@ from integrations.services.sheets import GoogleSheetsCache
 
 class RAGCache(GoogleSheetsCache):
     default = {}
-    spreadsheet_id = '1DntpIXZfUY2yTy1_rAhaGLUH4PUAfpTSAn-j2tf2tts'
+    sheet_id = '1DntpIXZfUY2yTy1_rAhaGLUH4PUAfpTSAn-j2tf2tts'
     range_name = "'2023 80% AMI'!A2:I65"
 
     def update(self):
