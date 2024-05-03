@@ -1,9 +1,13 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
-from programs.sheets import sheets_get_data
+from integrations.services.sheets import GoogleSheetsCache
 from programs.co_county_zips import counties_from_zip
 import re
 import programs.programs.messages as messages
-from integrations.util import Cache
+
+
+class CCCAPCache(GoogleSheetsCache):
+    sheet_id = '1WzobLnLoxGbN_JfTuw3jUCZV5N7IA_0uvwEkIoMt3Wk'
+    range_name = 'Sheet1!A14:J78'
 
 
 class ChildCareAssistance(ProgramCalculator):
@@ -13,6 +17,7 @@ class ChildCareAssistance(ProgramCalculator):
     max_age_afterschool = 13
     max_age_afterschool_disabled = 19
     dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode', 'household_size']
+    county_values = CCCAPCache()
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -72,7 +77,7 @@ class ChildCareAssistance(ProgramCalculator):
 
     def _cccap_county_values(self, county_name):
         match = False
-        sheet_values = cache.fetch()
+        sheet_values = self.county_values.fetch()
 
         cccap_county_name = county_name.replace(" County", "")
         non_decimal = re.compile(r'[^\d.]+')
@@ -93,19 +98,3 @@ class ChildCareAssistance(ProgramCalculator):
 
         return match
 
-
-class CCCAPCache(Cache):
-    expire_time = 60 * 60 * 24
-    default = [['0', '0', '0', '0', '0', '0', '0', '0', '0', '0']]
-
-    def update(self):
-        spreadsheet_id = '1WzobLnLoxGbN_JfTuw3jUCZV5N7IA_0uvwEkIoMt3Wk'
-        range_name = 'Sheet1!A14:J78'
-        sheet_values = sheets_get_data(spreadsheet_id, range_name)
-        if not sheet_values:
-            raise Exception('Sheet unavailable')
-
-        return sheet_values
-
-
-cache = CCCAPCache()

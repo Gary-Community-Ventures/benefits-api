@@ -1,8 +1,7 @@
 from screener.models import Screen
 from programs.models import FederalPoveryLimit
 from programs.util import Dependencies
-from integrations.util.cache import Cache
-from programs.sheets import sheets_get_data
+from integrations.services.sheets import GoogleSheetsCache
 
 
 class UrgentNeedFunction:
@@ -170,21 +169,15 @@ class ForeclosureFinAssistProgram(UrgentNeedFunction):
         return household_income <= income_limit and screen.county == 'Denver County'
 
 
-class EocIncomeLimitCache(Cache):
-    expire_time = 60 * 60 * 24
+class EocIncomeLimitCache(GoogleSheetsCache):
     default = {}
+    sheet_id = "1T4RSc9jXRV5kzdhbK5uCQXqgtLDWt-wdh2R4JVsK33o"
+    range_name = "'2023'!A2:I65"
 
     def update(self):
-        spreadsheet_id = "1T4RSc9jXRV5kzdhbK5uCQXqgtLDWt-wdh2R4JVsK33o"
-        range_name = "'2023'!A2:I65"
-        sheet_values = sheets_get_data(spreadsheet_id, range_name)
+        data = super().update()
 
-        if not sheet_values:
-            raise Exception('Sheet unavailable')
-
-        data = {d[0].strip() + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in sheet_values}
-
-        return data
+        return {d[0].strip() + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in data}
 
 
 class Eoc(UrgentNeedFunction):
@@ -227,21 +220,15 @@ class CoLegalServices(UrgentNeedFunction):
         return is_income_eligible or is_age_eligible
 
 
-class CoEmergencyMortgageIncomeLimitCache(Cache):
-    expire_time = 60 * 60 * 24
+class CoEmergencyMortgageIncomeLimitCache(GoogleSheetsCache):
     default = {}
+    sheet_id = '1M_BQxs135UV4uO-CUpHtt9Xy89l1RmSufdP9c3nEh-M'
+    range_name = "'100% AMI 2023'!A2:I65"
 
     def update(self):
-        spreadsheet_id = '1M_BQxs135UV4uO-CUpHtt9Xy89l1RmSufdP9c3nEh-M'
-        range_name = "'100% AMI 2023'!A2:I65"
-        sheet_values = sheets_get_data(spreadsheet_id, range_name)
+        data = super().update()
 
-        if not sheet_values:
-            raise Exception('Sheet unavailable')
-
-        data = {d[0] + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in sheet_values}
-
-        return data
+        return {d[0] + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in data}
 
 
 class CoEmergencyMortgageAssistance(UrgentNeedFunction):
