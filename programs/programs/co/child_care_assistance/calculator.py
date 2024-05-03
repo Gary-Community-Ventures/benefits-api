@@ -61,7 +61,7 @@ class ChildCareAssistance(ProgramCalculator):
 
         household_members = self.screen.household_members.all()
         for household_member in household_members:
-            if household_member.age <= ChildCareAssistance.max_age_afterschool:
+            if household_member.age < ChildCareAssistance.max_age_afterschool:
                 children += 1
             elif household_member.age >= ChildCareAssistance.max_age_afterschool and \
                     household_member.age <= ChildCareAssistance.max_age_afterschool_disabled and \
