@@ -1,8 +1,7 @@
 from screener.models import Screen
 from programs.models import FederalPoveryLimit
 from programs.util import Dependencies
-from integrations.util.cache import Cache
-from programs.sheets import sheets_get_data
+from integrations.services.sheets import GoogleSheetsCache
 
 
 class UrgentNeedFunction:
@@ -147,21 +146,38 @@ class Trua(UrgentNeedFunction):
         return household_income <= income_limit
 
 
-class EocIncomeLimitCache(Cache):
-    expire_time = 60 * 60 * 24
+class ForeclosureFinAssistProgram(UrgentNeedFunction):
+    dependencies = ['household_size', 'income_amount', 'income_frequency', 'county']
+
+    @classmethod
+    def eligible(cls, screen: Screen):
+        '''
+        Return True if the household is at or below 80% the income limit for their household size & they live in Denver
+        '''
+        income_limits = {
+            1: 66_300,
+            2: 75_750,
+            3: 85_200,
+            4: 94_560,
+            5: 102_250,
+            6: 109_800,
+            7: 117_400,
+            8: 124_950,
+        }
+        household_income = screen.calc_gross_income('yearly', ['all'])
+        income_limit = income_limits[screen.household_size]
+        return household_income <= income_limit and screen.county == 'Denver County'
+
+
+class EocIncomeLimitCache(GoogleSheetsCache):
     default = {}
+    sheet_id = "1T4RSc9jXRV5kzdhbK5uCQXqgtLDWt-wdh2R4JVsK33o"
+    range_name = "'2023'!A2:I65"
 
     def update(self):
-        spreadsheet_id = "1T4RSc9jXRV5kzdhbK5uCQXqgtLDWt-wdh2R4JVsK33o"
-        range_name = "'2023'!A2:I65"
-        sheet_values = sheets_get_data(spreadsheet_id, range_name)
+        data = super().update()
 
-        if not sheet_values:
-            raise Exception('Sheet unavailable')
-
-        data = {d[0].strip() + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in sheet_values}
-
-        return data
+        return {d[0].strip() + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in data}
 
 
 class Eoc(UrgentNeedFunction):
@@ -204,21 +220,15 @@ class CoLegalServices(UrgentNeedFunction):
         return is_income_eligible or is_age_eligible
 
 
-class CoEmergencyMortgageIncomeLimitCache(Cache):
-    expire_time = 60 * 60 * 24
+class CoEmergencyMortgageIncomeLimitCache(GoogleSheetsCache):
     default = {}
+    sheet_id = '1M_BQxs135UV4uO-CUpHtt9Xy89l1RmSufdP9c3nEh-M'
+    range_name = "'100% AMI 2023'!A2:I65"
 
     def update(self):
-        spreadsheet_id = '1M_BQxs135UV4uO-CUpHtt9Xy89l1RmSufdP9c3nEh-M'
-        range_name = "'100% AMI 2023'!A2:I65"
-        sheet_values = sheets_get_data(spreadsheet_id, range_name)
+        data = super().update()
 
-        if not sheet_values:
-            raise Exception('Sheet unavailable')
-
-        data = {d[0] + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in sheet_values}
-
-        return data
+        return {d[0] + ' County': [int(v.replace(',', '')) for v in d[1:]] for d in data}
 
 
 class CoEmergencyMortgageAssistance(UrgentNeedFunction):
@@ -239,3 +249,41 @@ class CoEmergencyMortgageAssistance(UrgentNeedFunction):
         ]
 
         return income < income_limit
+
+class ChildFirst(UrgentNeedFunction):
+    dependencies = ['age', 'county']
+
+    @classmethod
+    def eligible(cls, screen: Screen):
+        '''
+        Return True if the household has a child aged 0-5 and lives in an eligible county
+        '''
+        is_age_eligible = screen.num_children(age_max=5)
+        eligible_counties = [
+            'Adams County',
+            'Alamosa County',
+            'Arapahoe County',
+            'Bent County',
+            'Boulder County',
+            'Broomfield County',
+            'Chaffee County',
+            'Clear Creek County',
+            'Conejos County',
+            'Costilla County',
+            'Crowley County',
+            'Custer County',
+            'Douglas County',
+            'El Paso County',
+            'Fremont County',
+            'Gilpin County',
+            'Jefferson County',
+            'Lake County',
+            'Mineral County',
+            'Otero County',
+            'Rio Grand County',
+            'Routt County',
+            'Saguache County',
+            'Weld County',
+        ]
+
+        return is_age_eligible and screen.county in eligible_counties

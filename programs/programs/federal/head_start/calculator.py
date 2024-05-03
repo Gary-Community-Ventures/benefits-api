@@ -1,6 +1,6 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
-from programs.programs.head_start.eligible_zipcodes import eligible_zipcode
+from programs.programs.federal.head_start.eligible_zipcodes import eligible_zipcode
 from programs.co_county_zips import counties_from_zip
 
 

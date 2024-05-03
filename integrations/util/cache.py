@@ -7,13 +7,8 @@ class Cache():
     default = 0
 
     def __init__(self):
-        try:
-            self.data = self.update()
-            self.last_update = datetime.datetime.now()
-        except Exception:
-            self.data = self.default
-            self.last_update = datetime.datetime.now() - datetime.timedelta(seconds=self.expire_time)
-            capture_message(f'Failed to update {self.__class__.__name__}', level='warning')
+        self.data = self.default
+        self.last_update = datetime.datetime.now() - datetime.timedelta(seconds=self.expire_time)
 
     def update(self):
         raise NotImplementedError()

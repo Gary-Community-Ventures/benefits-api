@@ -2,9 +2,9 @@ from django.db import models
 from decimal import Decimal
 import uuid
 from authentication.models import User
-from phonenumber_field.modelfields import PhoneNumberField
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
+from django.conf import settings
 
 
 # The screen is the top most container for all information collected in the
@@ -287,6 +287,14 @@ class Screen(models.Model):
 
         raise Exception('No head of household')
 
+    def get_language_code(self):
+        language_code = settings.LANGUAGE_CODE
+
+        if self.request_language_code:
+            language_code = str(self.request_language_code).lower()
+
+        return language_code
+
     def missing_fields(self):
         screen_fields = ('zipcode', 'county', 'household_size', 'household_assets')
 
@@ -310,8 +318,6 @@ class Message(models.Model):
     sent = models.DateTimeField(auto_now=True)
     type = models.CharField(max_length=30)
     screen = models.ForeignKey(Screen, related_name='messages', on_delete=models.CASCADE)
-    cell = PhoneNumberField(blank=True, null=True)
-    email = models.EmailField(_('email address'), blank=True, null=True)
     content = models.CharField(max_length=320, blank=True, null=True)
     uid = models.IntegerField(blank=True, null=True)
 

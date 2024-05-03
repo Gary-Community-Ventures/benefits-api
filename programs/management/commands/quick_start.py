@@ -68,7 +68,6 @@ class Command(BaseCommand):
         {'abbr': 'ssi', 'external': 'ssi'},
         {'abbr': 'trua', 'external': 'trua'},
         {'abbr': 'rhc', 'external': 'rhc'},
-        {'abbr': 'emergency_medicaid', 'external': 'emergency_medicaid'},
         {'abbr': 'wic', 'external': 'wic'},
         {'abbr': 'omnisalud', 'external': 'omnisalud'},
         {'abbr': 'dpp', 'external': 'dpp'},

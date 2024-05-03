@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from integrations.services.communications import MessageUser
 from screener.models import (
     Screen,
     HouseholdMember,
@@ -21,6 +22,7 @@ from screener.serializers import (
     MessageSerializer,
     ResultsSerializer,
 )
+from programs.programs.policyengine.calculators import all_pe_programs
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError
 import programs.programs.urgent_needs.urgent_need_functions as urgent_need_functions
@@ -151,13 +153,13 @@ class MessageViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     def create(self, request):
         body = json.loads(request.body.decode())
         screen = Screen.objects.get(uuid=body['screen'])
-        Message.objects.create(
-            type=body['type'],
-            screen=screen,
-            email=body['email'] if 'email' in body else None,
-            cell=body['phone'] if 'phone' in body else None,
-            uid=body['uuid'] if 'uuid' in body else None,
-        )
+
+        message = MessageUser(screen, screen.get_language_code())
+        if 'email' in body:
+            message.email(body['email'], send_tests=True)
+        if 'phone' in body:
+            message.text('+1' + body['phone'], send_tests=True)
+
         return Response({}, status=status.HTTP_201_CREATED)
 
 
@@ -193,24 +195,7 @@ def eligibility_results(screen, batch=False):
 
     # pe_eligibility = eligibility_policy_engine(screen)
     pe_eligibility = calc_pe_eligibility(screen, missing_dependencies)
-    pe_programs = (
-        'snap',
-        'wic',
-        'nslp',
-        'eitc',
-        'coeitc',
-        'ctc',
-        'coctc',
-        'medicaid',
-        'ssi',
-        'tanf',
-        'andcs',
-        'oap',
-        'acp',
-        'lifeline',
-        'pell_grant',
-        'chp',
-    )
+    pe_programs = all_pe_programs
 
     def sort_first(program):
         calc_first = ('tanf', 'ssi', 'medicaid', 'nslp', 'leap')
@@ -383,6 +368,7 @@ def urgent_need_results(screen):
             screen, missing_dependencies
         ),
         'trua': urgent_need_functions.Trua.calc(screen, missing_dependencies),
+        'ffap': urgent_need_functions.ForeclosureFinAssistProgram.calc(screen, missing_dependencies),
         'eoc': urgent_need_functions.Eoc.calc(screen, missing_dependencies),
         'co_legal_services': urgent_need_functions.CoLegalServices.calc(
             screen, missing_dependencies
@@ -390,6 +376,7 @@ def urgent_need_results(screen):
         'co_emergency_mortgage': urgent_need_functions.CoEmergencyMortgageAssistance.calc(
             screen, missing_dependencies
         ),
+        'child_first': urgent_need_functions.ChildFirst.calc(screen, missing_dependencies),
     }
 
     list_of_needs = []
