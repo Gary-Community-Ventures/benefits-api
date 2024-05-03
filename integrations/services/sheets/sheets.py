@@ -73,7 +73,7 @@ class GoogleSheets:
 
     def _raise_missing_columns(self, needed_columns: list[str], existing_columns: list[str]):
         '''
-        raise an exception with the column names from needed_colomns that are not in existing_columns
+        raise an exception with the column names from needed_columns that are not in existing_columns
         '''
         missing_columns = []
 
