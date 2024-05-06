@@ -177,6 +177,13 @@ class Program(models.Model):
         null=False,
         on_delete=models.PROTECT,
     )
+    estimated_value = models.ForeignKey(
+        Translation,
+        related_name='program_estimated_value',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
+    )
 
     objects = ProgramManager()
 
