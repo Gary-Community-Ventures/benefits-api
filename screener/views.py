@@ -296,6 +296,7 @@ def eligibility_results(screen, batch=False):
                     "legal_status_required": legal_status,
                     "category": default_message(program.category),
                     "warning": default_message(program.warning),
+                    "estimated_value_override": default_message(program.estimated_value),
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],

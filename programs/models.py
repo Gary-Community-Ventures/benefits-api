@@ -81,6 +81,7 @@ class ProgramManager(models.Manager):
         'estimated_application_time',
         'category',
         'warning',
+        'estimated_value',
     )
 
     def new_program(self, name_abbreviated):
