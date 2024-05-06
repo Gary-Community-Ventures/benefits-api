@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from integrations.services.communications import MessageUser
+from programs.programs.policyengine.calculators import all_calculators
 from screener.models import (
     Screen,
     HouseholdMember,
@@ -173,7 +174,7 @@ def eligibility_results(screen, batch=False):
     if referrer is not None:
         excluded_programs = referrer.remove_programs.values('id')
 
-    all_programs = Program.objects.exclude(id__in=excluded_programs).prefetch_related(
+    all_programs = Program.objects.filter(active=True).exclude(id__in=excluded_programs).prefetch_related(
         'legal_status_required', 'documents'
     )
     data = []
@@ -194,8 +195,14 @@ def eligibility_results(screen, batch=False):
     missing_dependencies = screen.missing_fields()
 
     # pe_eligibility = eligibility_policy_engine(screen)
-    pe_eligibility = calc_pe_eligibility(screen, missing_dependencies)
-    pe_programs = all_pe_programs
+    all_program_names = [p.name_abbreviated for p in all_programs]
+    pe_calculators = {}
+    for calculator_name, Calculator in all_calculators.items():
+        if calculator_name in all_program_names:
+            pe_calculators[calculator_name] = Calculator
+
+    pe_eligibility = calc_pe_eligibility(screen, missing_dependencies, pe_calculators)
+    pe_programs = pe_calculators.keys()
 
     def sort_first(program):
         calc_first = ('tanf', 'ssi', 'medicaid', 'nslp', 'leap')
