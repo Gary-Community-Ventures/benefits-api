@@ -1,3 +1,4 @@
+from programs.programs.co.nurse_family_partnership.calculator import NurseFamilyPartnership
 from .rtdlive.calculator import RtdLive
 from .child_care_assistance.calculator import ChildCareAssistance
 from .mydenver.calculator import MyDenver
@@ -56,5 +57,6 @@ co_calculators: dict[str, type[ProgramCalculator]] = {
     'ubp': UtilityBillPay,
     'rag': RentalAssistanceGrant,
     'erap': EmergencyRentalAssistance,
+    'nfp': NurseFamilyPartnership,
 }
 
