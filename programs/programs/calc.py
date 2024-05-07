@@ -12,6 +12,7 @@ class Eligibility:
         self.fail_messages = []
         self.value = 0
         self.eligible_member_count = 0
+        self.multiple_tax_units = False
 
     def condition(self, passed: bool, message=None):
         '''
@@ -68,6 +69,7 @@ class Eligibility:
             "passed": self.pass_messages,
             "failed": self.fail_messages,
             "estimated_value": self.value if self.eligible else 0,
+            "multiple_tax_units": self.multiple_tax_units,
         }
 
 
@@ -77,6 +79,7 @@ class ProgramCalculator:
     '''
     dependencies = tuple()
     amount = 0
+    tax_unit_dependent = False
 
     def __init__(self, screen: Screen, program: "Program", data):
         self.screen = screen

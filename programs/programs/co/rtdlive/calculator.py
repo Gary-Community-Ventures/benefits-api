@@ -17,6 +17,7 @@ class RtdLive(ProgramCalculator):
     min_age = 20
     max_age = 64
     percent_of_fpl = 2.5
+    tax_unit_dependent = True
     amount = 732
     dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode', 'household_size']
 
@@ -24,7 +25,7 @@ class RtdLive(ProgramCalculator):
         e = Eligibility()
         members: list[HouseholdMember] = []
         for member in self.screen.household_members.all():
-            if member.is_in_household():
+            if member.is_in_tax_unit():
                 members.append(member)
 
         # income

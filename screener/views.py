@@ -193,7 +193,6 @@ def eligibility_results(screen, batch=False):
 
     missing_dependencies = screen.missing_fields()
 
-    # pe_eligibility = eligibility_policy_engine(screen)
     pe_eligibility = calc_pe_eligibility(screen, missing_dependencies)
     pe_programs = all_pe_programs
 

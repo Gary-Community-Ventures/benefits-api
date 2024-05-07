@@ -18,6 +18,7 @@ class Wic(PolicyEngineMembersCalculator):
         *dependency.school_lunch_income,
     ]
     pe_outputs = [dependency.member.Wic, dependency.member.WicCategory]
+    tax_unit_dependent = False
 
     def value(self):
         total = 0
@@ -66,7 +67,11 @@ class Medicaid(PolicyEngineMembersCalculator):
     def value(self):
         total = 0
 
-        for _, pvalue in self.get_data().items():
+        for pkey, pvalue in self.get_data().items():
+            # Skip any members that are not in the tax unit.
+            if not self.in_tax_unit(pkey) and self.tax_unit_dependent:
+                continue
+
             if pvalue[self.pe_name][self.pe_period] <= 0:
                 continue
 
