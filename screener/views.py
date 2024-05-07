@@ -50,12 +50,12 @@ class ScreenViewSet(
     API endpoint that allows screens to be viewed or edited.
     """
 
-    queryset = Screen.objects.all().order_by('-submission_date')
+    queryset = Screen.objects.all().order_by("-submission_date")
     serializer_class = ScreenSerializer
     permission_classes = [permissions.DjangoModelPermissions]
-    filterset_fields = ['agree_to_tos', 'is_test']
+    filterset_fields = ["agree_to_tos", "is_test"]
     paginate_by = 10
-    paginate_by_param = 'page_size'
+    paginate_by_param = "page_size"
     max_paginate_by = 100
 
     def retrieve(self, request, pk=None):
@@ -82,7 +82,7 @@ class HouseholdMemberViewSet(viewsets.ModelViewSet):
     queryset = HouseholdMember.objects.all()
     serializer_class = HouseholdMemberSerializer
     permission_classes = [permissions.DjangoModelPermissions]
-    filterset_fields = ['has_income']
+    filterset_fields = ["has_income"]
 
 
 class IncomeStreamViewSet(viewsets.ModelViewSet):
@@ -93,7 +93,7 @@ class IncomeStreamViewSet(viewsets.ModelViewSet):
     queryset = IncomeStream.objects.all()
     serializer_class = IncomeStreamSerializer
     permission_classes = [permissions.DjangoModelPermissions]
-    filterset_fields = ['screen']
+    filterset_fields = ["screen"]
 
 
 class ExpenseViewSet(viewsets.ModelViewSet):
@@ -104,11 +104,10 @@ class ExpenseViewSet(viewsets.ModelViewSet):
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
     permission_classes = [permissions.DjangoModelPermissions]
-    filterset_fields = ['screen']
+    filterset_fields = ["screen"]
 
 
 class EligibilityView(views.APIView):
-
     def get(self, request, id):
         data = eligibility_results(id)
         results = EligibilitySerializer(data, many=True).data
@@ -116,7 +115,6 @@ class EligibilityView(views.APIView):
 
 
 class EligibilityTranslationView(views.APIView):
-
     @swagger_auto_schema(responses={200: ResultsSerializer()})
     def get(self, request, id):
         screen = Screen.objects.get(uuid=id)
@@ -146,19 +144,19 @@ class MessageViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     API endpoint that logs messages sent.
     """
 
-    queryset = Message.objects.all().order_by('-sent')
+    queryset = Message.objects.all().order_by("-sent")
     serializer_class = MessageSerializer
     permission_classes = [permissions.DjangoModelPermissions]
 
     def create(self, request):
         body = json.loads(request.body.decode())
-        screen = Screen.objects.get(uuid=body['screen'])
+        screen = Screen.objects.get(uuid=body["screen"])
 
         message = MessageUser(screen, screen.get_language_code())
-        if 'email' in body:
-            message.email(body['email'], send_tests=True)
-        if 'phone' in body:
-            message.text('+1' + body['phone'], send_tests=True)
+        if "email" in body:
+            message.email(body["email"], send_tests=True)
+        if "phone" in body:
+            message.text("+1" + body["phone"], send_tests=True)
 
         return Response({}, status=status.HTTP_201_CREATED)
 
@@ -171,22 +169,16 @@ def eligibility_results(screen, batch=False):
 
     excluded_programs = []
     if referrer is not None:
-        excluded_programs = referrer.remove_programs.values('id')
+        excluded_programs = referrer.remove_programs.values("id")
 
     all_programs = Program.objects.exclude(id__in=excluded_programs).prefetch_related(
-        'legal_status_required', 'documents'
+        "legal_status_required", "documents"
     )
     data = []
 
     try:
-        previous_snapshot = EligibilitySnapshot.objects.filter(
-            is_batch=False, screen=screen
-        ).latest('submission_date')
-        previous_results = (
-            None
-            if previous_snapshot is None
-            else previous_snapshot.program_snapshots.all()
-        )
+        previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen).latest("submission_date")
+        previous_results = None if previous_snapshot is None else previous_snapshot.program_snapshots.all()
     except ObjectDoesNotExist:
         previous_snapshot = None
     snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
@@ -198,7 +190,7 @@ def eligibility_results(screen, batch=False):
     pe_programs = all_pe_programs
 
     def sort_first(program):
-        calc_first = ('tanf', 'ssi', 'medicaid', 'nslp', 'leap')
+        calc_first = ("tanf", "ssi", "medicaid", "nslp", "leap")
 
         if program.name_abbreviated in calc_first:
             return 0
@@ -225,23 +217,21 @@ def eligibility_results(screen, batch=False):
 
             eligibility = pe_eligibility[program.name_abbreviated]
 
-        all_navigators = program.navigator.all().prefetch_related('counties')
+        all_navigators = program.navigator.all().prefetch_related("counties")
 
         county_navigators = []
         for nav in all_navigators:
             counties = nav.counties.all()
-            if len(counties) == 0 or (screen.county is not None and any(
-                screen.county in county.name for county in counties
-            )):
+            if len(counties) == 0 or (
+                screen.county is not None and any(screen.county in county.name for county in counties)
+            ):
                 county_navigators.append(nav)
 
         if referrer is None:
             navigators = county_navigators
         else:
             primary_navigators = referrer.primary_navigators.all()
-            referrer_navigators = [
-                nav for nav in primary_navigators if nav in county_navigators
-            ]
+            referrer_navigators = [nav for nav in primary_navigators if nav in county_navigators]
             if len(referrer_navigators) == 0:
                 navigators = county_navigators
             else:
@@ -252,16 +242,14 @@ def eligibility_results(screen, batch=False):
             for previous_snapshot in previous_results:
                 if (
                     previous_snapshot.name_abbreviated == program.name_abbreviated
-                    and eligibility['eligible'] == previous_snapshot.eligible
+                    and eligibility["eligible"] == previous_snapshot.eligible
                 ):
                     new = False
         else:
             new = False
 
         if not skip and program.active:
-            legal_status = [
-                status.status for status in program.legal_status_required.all()
-            ]
+            legal_status = [status.status for status in program.legal_status_required.all()]
             ProgramEligibilitySnapshot.objects.create(
                 eligibility_snapshot=snapshot,
                 name=program.name.text,
@@ -281,12 +269,8 @@ def eligibility_results(screen, batch=False):
                     "name": default_message(program.name),
                     "name_abbreviated": program.name_abbreviated,
                     "estimated_value": eligibility["estimated_value"],
-                    "estimated_delivery_time": default_message(
-                        program.estimated_delivery_time
-                    ),
-                    "estimated_application_time": default_message(
-                        program.estimated_application_time
-                    ),
+                    "estimated_delivery_time": default_message(program.estimated_delivery_time),
+                    "estimated_application_time": default_message(program.estimated_application_time),
                     "description_short": default_message(program.description_short),
                     "short_name": program.name_abbreviated,
                     "description": default_message(program.description),
@@ -299,22 +283,18 @@ def eligibility_results(screen, batch=False):
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
                     "passed_tests": eligibility["passed"],
-                    "navigators": [
-                        serialized_navigator(navigator) for navigator in navigators
-                    ],
+                    "navigators": [serialized_navigator(navigator) for navigator in navigators],
                     "already_has": screen.has_benefit(program.name_abbreviated),
                     "new": new,
                     "low_confidence": program.low_confidence,
-                    "documents": [
-                        default_message(d.text) for d in program.documents.all()
-                    ],
+                    "documents": [default_message(d.text) for d in program.documents.all()],
                 }
             )
 
     eligible_programs = []
     for program in data:
         clean_program = program
-        clean_program['estimated_value'] = math.trunc(clean_program['estimated_value'])
+        clean_program["estimated_value"] = math.trunc(clean_program["estimated_value"])
         eligible_programs.append(clean_program)
 
     return eligible_programs, missing_programs
@@ -322,7 +302,7 @@ def eligibility_results(screen, batch=False):
 
 def default_message(translation):
     translation.set_current_language(settings.LANGUAGE_CODE)
-    return {'default_message': translation.text, 'label': translation.label}
+    return {"default_message": translation.text, "label": translation.label}
 
 
 def serialized_navigator(navigator):
@@ -339,44 +319,32 @@ def serialized_navigator(navigator):
 
 def urgent_need_results(screen):
     possible_needs = {
-        'food': screen.needs_food,
-        'baby supplies': screen.needs_baby_supplies,
-        'housing': screen.needs_housing_help,
-        'mental health': screen.needs_mental_health_help,
-        'child dev': screen.needs_child_dev_help,
-        'funeral': screen.needs_funeral_help,
-        'family planning': screen.needs_family_planning_help,
-        'job resources': screen.needs_job_resources,
-        'dental care': screen.needs_dental_care,
-        'legal services': screen.needs_legal_services,
+        "food": screen.needs_food,
+        "baby supplies": screen.needs_baby_supplies,
+        "housing": screen.needs_housing_help,
+        "mental health": screen.needs_mental_health_help,
+        "child dev": screen.needs_child_dev_help,
+        "funeral": screen.needs_funeral_help,
+        "family planning": screen.needs_family_planning_help,
+        "job resources": screen.needs_job_resources,
+        "dental care": screen.needs_dental_care,
+        "legal services": screen.needs_legal_services,
     }
 
     missing_dependencies = screen.missing_fields()
 
     need_functions = {
-        'denver': urgent_need_functions.LivesInDenver.calc(
-            screen, missing_dependencies
-        ),
-        'meal': urgent_need_functions.MealInCounties.calc(
-            screen, missing_dependencies
-        ),
-        'helpkitchen_zipcode': urgent_need_functions.HelpkitchenZipcode.calc(
-            screen, missing_dependencies
-        ),
-        'child': urgent_need_functions.Child.calc(screen, missing_dependencies),
-        'bia_food_delivery': urgent_need_functions.BiaFoodDelivery.calc(
-            screen, missing_dependencies
-        ),
-        'trua': urgent_need_functions.Trua.calc(screen, missing_dependencies),
-        'ffap': urgent_need_functions.ForeclosureFinAssistProgram.calc(screen, missing_dependencies),
-        'eoc': urgent_need_functions.Eoc.calc(screen, missing_dependencies),
-        'co_legal_services': urgent_need_functions.CoLegalServices.calc(
-            screen, missing_dependencies
-        ),
-        'co_emergency_mortgage': urgent_need_functions.CoEmergencyMortgageAssistance.calc(
-            screen, missing_dependencies
-        ),
-        'child_first': urgent_need_functions.ChildFirst.calc(screen, missing_dependencies),
+        "denver": urgent_need_functions.LivesInDenver.calc(screen, missing_dependencies),
+        "meal": urgent_need_functions.MealInCounties.calc(screen, missing_dependencies),
+        "helpkitchen_zipcode": urgent_need_functions.HelpkitchenZipcode.calc(screen, missing_dependencies),
+        "child": urgent_need_functions.Child.calc(screen, missing_dependencies),
+        "bia_food_delivery": urgent_need_functions.BiaFoodDelivery.calc(screen, missing_dependencies),
+        "trua": urgent_need_functions.Trua.calc(screen, missing_dependencies),
+        "ffap": urgent_need_functions.ForeclosureFinAssistProgram.calc(screen, missing_dependencies),
+        "eoc": urgent_need_functions.Eoc.calc(screen, missing_dependencies),
+        "co_legal_services": urgent_need_functions.CoLegalServices.calc(screen, missing_dependencies),
+        "co_emergency_mortgage": urgent_need_functions.CoEmergencyMortgageAssistance.calc(screen, missing_dependencies),
+        "child_first": urgent_need_functions.ChildFirst.calc(screen, missing_dependencies),
     }
 
     list_of_needs = []
@@ -384,9 +352,7 @@ def urgent_need_results(screen):
         if has_need:
             list_of_needs.append(need)
 
-    urgent_need_resources = UrgentNeed.objects.filter(
-        type_short__name__in=list_of_needs, active=True
-    ).distinct()
+    urgent_need_resources = UrgentNeed.objects.filter(type_short__name__in=list_of_needs, active=True).distinct()
 
     eligible_urgent_needs = []
     for need in urgent_need_resources:

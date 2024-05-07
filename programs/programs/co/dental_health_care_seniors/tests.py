@@ -7,15 +7,15 @@ class TestDentalHealthCareSeniorsPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
-            zipcode='80205',
-            county='Denver County',
+            zipcode="80205",
+            county="Denver County",
             household_size=1,
             household_assets=0,
-            has_no_hi=True
+            has_no_hi=True,
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
-            relationship='headOfHousehold',
+            relationship="headOfHousehold",
             age=60,
             student=False,
             student_full_time=False,
@@ -41,11 +41,7 @@ class TestDentalHealthCareSeniorsPension(TestCase):
         self.screen1.has_medicaid = True
         self.screen1.save()
         IncomeStream.objects.create(
-            screen=self.screen1,
-            household_member=self.person1,
-            type='wages',
-            amount=3000,
-            frequency='monthly'
+            screen=self.screen1, household_member=self.person1, type="wages", amount=3000, frequency="monthly"
         )
 
         cdhcs = DentalHealthCareSeniors(self.screen1)

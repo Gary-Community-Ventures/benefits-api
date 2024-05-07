@@ -10,11 +10,11 @@ class ConfigurationView(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows configurations to be viewed.
     """
+
     queryset = Configuration.objects.filter(active=True)
     serializer_class = ConfigurationSerializer
 
     permission_classes = [permissions.DjangoModelPermissions]
-
 
     def retrieve(self, request, pk=None):
         configuration = get_object_or_404(self.queryset, name=pk)

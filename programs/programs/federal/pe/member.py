@@ -4,14 +4,14 @@ import programs.programs.policyengine.calculators.dependencies as dependency
 
 class Wic(PolicyEngineMembersCalculator):
     wic_categories = {
-        'NONE': 0,
-        'INFANT': 130,
-        'CHILD': 74,
+        "NONE": 0,
+        "INFANT": 130,
+        "CHILD": 74,
         "PREGNANT": 100,
         "POSTPARTUM": 100,
         "BREASTFEEDING": 100,
     }
-    pe_name = 'wic'
+    pe_name = "wic"
     pe_inputs = [
         dependency.member.PregnancyDependency,
         dependency.member.AgeDependency,
@@ -24,13 +24,13 @@ class Wic(PolicyEngineMembersCalculator):
 
         for _, pvalue in self.get_data().items():
             if pvalue[self.pe_name][self.pe_period] > 0:
-                total += self.wic_categories[pvalue['wic_category'][self.pe_period]] * 12
+                total += self.wic_categories[pvalue["wic_category"][self.pe_period]] * 12
 
         return total
 
 
 class Medicaid(PolicyEngineMembersCalculator):
-    pe_name = 'medicaid'
+    pe_name = "medicaid"
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
@@ -70,23 +70,25 @@ class Medicaid(PolicyEngineMembersCalculator):
             if pvalue[self.pe_name][self.pe_period] <= 0:
                 continue
 
-            total += self._value_by_age(pvalue['age'][self.pe_period])
+            total += self._value_by_age(pvalue["age"][self.pe_period])
 
         in_wic_demographic = False
         for member in self.screen.household_members.all():
             if member.pregnant is True or member.age <= 5:
                 in_wic_demographic = True
         if total == 0 and in_wic_demographic:
-            if self.screen.has_benefit('medicaid') is True \
-                    or self.screen.has_benefit('tanf') is True \
-                    or self.screen.has_benefit('snap') is True:
+            if (
+                self.screen.has_benefit("medicaid") is True
+                or self.screen.has_benefit("tanf") is True
+                or self.screen.has_benefit("snap") is True
+            ):
                 total = self.presumptive_amount
 
         return total
 
 
 class PellGrant(PolicyEngineMembersCalculator):
-    pe_name = 'pell_grant'
+    pe_name = "pell_grant"
     pe_inputs = [
         dependency.member.PellGrantDependentAvailableIncomeDependency,
         dependency.member.PellGrantCountableAssetsDependency,
@@ -102,7 +104,7 @@ class PellGrant(PolicyEngineMembersCalculator):
 
 
 class Ssi(PolicyEngineMembersCalculator):
-    pe_name = 'ssi'
+    pe_name = "ssi"
     pe_inputs = [
         dependency.member.SsiCountableResourcesDependency,
         dependency.member.SsiReportedDependency,
@@ -116,4 +118,3 @@ class Ssi(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitDependentDependency,
     ]
     pe_outputs = [dependency.member.Ssi]
-

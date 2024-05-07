@@ -4,19 +4,17 @@ from django.db import migrations
 
 
 def add_warning(apps, schema_editor):
-    Program = apps.get_model('programs', 'Program')
-    UrgentNeed = apps.get_model('programs', 'UrgentNeed')
-    Translation = apps.get_model('translations', 'Translation')
+    Program = apps.get_model("programs", "Program")
+    UrgentNeed = apps.get_model("programs", "UrgentNeed")
+    Translation = apps.get_model("translations", "Translation")
 
     for need in UrgentNeed.objects.all():
-        translation = Translation.objects.add_translation(
-            f'urgent_need.{need.name.text}-{need.id}_warning', ''
-        )
+        translation = Translation.objects.add_translation(f"urgent_need.{need.name.text}-{need.id}_warning", "")
         UrgentNeed.objects.filter(pk=need.id).update(warning=translation.id)
 
     for program in Program.objects.all():
         translation = Translation.objects.add_translation(
-            f'programs.{program.name_abbreviated}-{program.id}_warning', ''
+            f"programs.{program.name_abbreviated}-{program.id}_warning", ""
         )
         Program.objects.filter(pk=program.id).update(warning=translation.id)
 

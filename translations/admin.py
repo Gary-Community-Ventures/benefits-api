@@ -4,7 +4,7 @@ from .models import Translation
 
 
 class TranslationAdmin(TranslatableAdmin):
-    search_fields = ('label',)
+    search_fields = ("label",)
 
 
 admin.site.register(Translation, TranslatableAdmin)

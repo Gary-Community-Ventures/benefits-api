@@ -5,17 +5,22 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0016_remove_screen_email'),
-        ('authentication', '0002_remove_user_username_user_cell_user_email_or_cell_and_more'),
+        ("screener", "0016_remove_screen_email"),
+        ("authentication", "0002_remove_user_username_user_cell_user_email_or_cell_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='screen',
-            field=models.ForeignKey(blank=True, default=1, on_delete=django.db.models.deletion.CASCADE, related_name='screen', to='screener.screen'),
+            model_name="user",
+            name="screen",
+            field=models.ForeignKey(
+                blank=True,
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="screen",
+                to="screener.screen",
+            ),
             preserve_default=False,
         ),
     ]

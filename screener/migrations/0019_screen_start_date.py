@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0018_screen_user'),
+        ("screener", "0018_screen_user"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='screen',
-            name='start_date',
+            model_name="screen",
+            name="start_date",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]
