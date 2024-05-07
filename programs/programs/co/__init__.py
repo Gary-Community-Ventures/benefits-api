@@ -1,4 +1,4 @@
-from programs.programs.co.nurse_family_partnership.calculator import NurseFamilyPartnership
+from .nurse_family_partnership.calculator import NurseFamilyPartnership
 from .rtdlive.calculator import RtdLive
 from .child_care_assistance.calculator import ChildCareAssistance
 from .mydenver.calculator import MyDenver
