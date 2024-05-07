@@ -15,49 +15,49 @@ from .models import (
 
 
 class ProgramAdmin(admin.ModelAdmin):
-    search_fields = ('name_abbreviated',)
+    search_fields = ("name_abbreviated",)
 
 
 class LegalStatusAdmin(admin.ModelAdmin):
-    search_fields = ('status',)
+    search_fields = ("status",)
 
 
 class NavigatorCountiesAdmin(admin.ModelAdmin):
-    search_fields = ('name',)
+    search_fields = ("name",)
 
 
 class NavigatorAdmin(admin.ModelAdmin):
-    search_fields = ('translations__name',)
+    search_fields = ("translations__name",)
 
 
 class UrgentNeedAdmin(admin.ModelAdmin):
-    search_fields = ('translations__name',)
+    search_fields = ("translations__name",)
 
 
 class UrgentNeedCategoryAdmin(admin.ModelAdmin):
-    search_fields = ('name',)
-    fields = ('name',)
+    search_fields = ("name",)
+    fields = ("name",)
 
 
 class UrgentNeedFunctionAdmin(admin.ModelAdmin):
-    search_fields = ('name',)
-    fields = ('name',)
+    search_fields = ("name",)
+    fields = ("name",)
 
 
 class FederalPovertyLimitAdmin(admin.ModelAdmin):
-    search_fields = ('year',)
+    search_fields = ("year",)
 
 
 class DocumentAdmin(admin.ModelAdmin):
-    search_fields = ('name',)
+    search_fields = ("name",)
 
 
 class ReferrerAdmin(admin.ModelAdmin):
-    search_fields = ('referrer_code',)
+    search_fields = ("referrer_code",)
 
 
 class WebHookFunctionsAdmin(admin.ModelAdmin):
-    search_fields = ('name',)
+    search_fields = ("name",)
 
 
 admin.site.register(LegalStatus, LegalStatusAdmin)

@@ -4,15 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0049_eligibilitysnapshot_batch'),
+        ("screener", "0049_eligibilitysnapshot_batch"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='eligibilitysnapshot',
-            old_name='batch',
-            new_name='is_batch',
+            model_name="eligibilitysnapshot",
+            old_name="batch",
+            new_name="is_batch",
         ),
     ]

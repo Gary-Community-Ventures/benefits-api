@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0020_remove_navigatortranslation_program'),
+        ("programs", "0020_remove_navigatortranslation_program"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='navigatortranslation',
-            name='program',
-            field=models.ManyToManyField(related_name='navigator', to='programs.program'),
+            model_name="navigatortranslation",
+            name="program",
+            field=models.ManyToManyField(
+                related_name="navigator", to="programs.program"
+            ),
         ),
     ]

@@ -7,36 +7,60 @@ import parler.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0010_rename_apply_button_link_program__apply_button_link_and_more'),
+        (
+            "programs",
+            "0010_rename_apply_button_link_program__apply_button_link_and_more",
+        ),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ProgramTranslation',
+            name="ProgramTranslation",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('language_code', models.CharField(db_index=True, max_length=15, verbose_name='Language')),
-                ('description_short', models.TextField()),
-                ('name', models.CharField(max_length=120)),
-                ('name_abbreviated', models.CharField(max_length=120)),
-                ('description', models.TextField()),
-                ('learn_more_link', models.CharField(max_length=320)),
-                ('apply_button_link', models.CharField(max_length=320)),
-                ('dollar_value', models.IntegerField()),
-                ('value_type', models.CharField(max_length=120)),
-                ('estimated_delivery_time', models.CharField(max_length=320)),
-                ('legal_status_required', models.CharField(max_length=120)),
-                ('master', parler.fields.TranslationsForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='translations', to='programs.program')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "language_code",
+                    models.CharField(
+                        db_index=True, max_length=15, verbose_name="Language"
+                    ),
+                ),
+                ("description_short", models.TextField()),
+                ("name", models.CharField(max_length=120)),
+                ("name_abbreviated", models.CharField(max_length=120)),
+                ("description", models.TextField()),
+                ("learn_more_link", models.CharField(max_length=320)),
+                ("apply_button_link", models.CharField(max_length=320)),
+                ("dollar_value", models.IntegerField()),
+                ("value_type", models.CharField(max_length=120)),
+                ("estimated_delivery_time", models.CharField(max_length=320)),
+                ("legal_status_required", models.CharField(max_length=120)),
+                (
+                    "master",
+                    parler.fields.TranslationsForeignKey(
+                        editable=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="translations",
+                        to="programs.program",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'program Translation',
-                'db_table': 'programs_program_translation',
-                'db_tablespace': '',
-                'managed': True,
-                'default_permissions': (),
-                'unique_together': {('language_code', 'master')},
+                "verbose_name": "program Translation",
+                "db_table": "programs_program_translation",
+                "db_tablespace": "",
+                "managed": True,
+                "default_permissions": (),
+                "unique_together": {("language_code", "master")},
             },
             bases=(parler.models.TranslatedFieldsModelMixin, models.Model),
         ),

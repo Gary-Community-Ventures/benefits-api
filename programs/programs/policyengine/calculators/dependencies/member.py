@@ -2,50 +2,50 @@ from .base import Member
 
 
 class AgeDependency(Member):
-    field = 'age'
-    dependencies = ('age',)
+    field = "age"
+    dependencies = ("age",)
 
     def value(self):
         return self.member.age
 
 
 class PregnancyDependency(Member):
-    field = 'is_pregnant'
+    field = "is_pregnant"
 
     def value(self):
         return self.member.pregnant or False
 
 
 class FullTimeCollegeStudentDependency(Member):
-    field = 'is_full_time_college_student'
+    field = "is_full_time_college_student"
 
     def value(self):
         return self.member.student or False
 
 
 class TaxUnitHeadDependency(Member):
-    field = 'is_tax_unit_head'
-    dependencies = ('relationship',)
+    field = "is_tax_unit_head"
+    dependencies = ("relationship",)
 
     def value(self):
         return self.member.is_head()
 
 
 class TaxUnitSpouseDependency(Member):
-    field = 'is_tax_unit_spouse'
-    dependencies = ('relationship',)
+    field = "is_tax_unit_spouse"
+    dependencies = ("relationship",)
 
     def value(self):
         return self.member.is_spouse()
 
 
 class TaxUnitDependentDependency(Member):
-    field = 'is_tax_unit_dependent'
+    field = "is_tax_unit_dependent"
     dependencies = (
-        'relationship',
-        'age',
-        'income_amount',
-        'income_frequency',
+        "relationship",
+        "age",
+        "income_amount",
+        "income_frequency",
     )
 
     def value(self):
@@ -53,37 +53,37 @@ class TaxUnitDependentDependency(Member):
 
 
 class WicCategory(Member):
-    field = 'wic_category'
+    field = "wic_category"
 
 
 class Wic(Member):
-    field = 'wic'
+    field = "wic"
 
 
 class Medicaid(Member):
-    field = 'medicaid'
+    field = "medicaid"
 
 
 class Ssi(Member):
-    field = 'ssi'
+    field = "ssi"
 
 
 class IsDisabledDependency(Member):
-    field = 'is_disabled'
+    field = "is_disabled"
 
     def value(self):
         return self.member.disabled or self.member.long_term_disability
 
 
 class IsBlindDependency(Member):
-    field = 'is_blind'
+    field = "is_blind"
 
     def value(self):
         return self.member.visually_impaired
 
 
 class SsiReportedDependency(Member):
-    field = 'ssi_reported'
+    field = "ssi_reported"
 
     def value(self):
         # Policy Eninge uses this value for is_ssi_disabled, but it does not apply to MFB
@@ -91,10 +91,10 @@ class SsiReportedDependency(Member):
 
 
 class SsiCountableResourcesDependency(Member):
-    field = 'ssi_countable_resources'
+    field = "ssi_countable_resources"
     dependencies = (
-        'household_assets',
-        'age',
+        "household_assets",
+        "age",
     )
 
     def value(self):
@@ -106,102 +106,102 @@ class SsiCountableResourcesDependency(Member):
 
 
 class SsiAmountIfEligible(Member):
-    field = 'ssi_amount_if_eligible'
+    field = "ssi_amount_if_eligible"
 
 
 class Andcs(Member):
-    field = 'co_state_supplement'
+    field = "co_state_supplement"
 
 
 class Oap(Member):
-    field = 'co_oap'
+    field = "co_oap"
 
 
 class PellGrant(Member):
-    field = 'pell_grant'
+    field = "pell_grant"
 
 
 class PellGrantDependentAvailableIncomeDependency(Member):
-    field = 'pell_grant_dependent_available_income'
+    field = "pell_grant_dependent_available_income"
     dependencies = (
-        'income_type',
-        'income_amount',
-        'income_frequency',
+        "income_type",
+        "income_amount",
+        "income_frequency",
     )
 
     def value(self):
-        return int(self.member.calc_gross_income('yearly', ['all']))
+        return int(self.member.calc_gross_income("yearly", ["all"]))
 
 
 class PellGrantCountableAssetsDependency(Member):
-    field = 'pell_grant_countable_assets'
-    dependencies = ('household_assets',)
+    field = "pell_grant_countable_assets"
+    dependencies = ("household_assets",)
 
     def value(self):
         return int(self.screen.household_assets)
 
 
 class CostOfAttendingCollegeDependency(Member):
-    field = 'cost_of_attending_college'
-    dependencies = ('age',)
+    field = "cost_of_attending_college"
+    dependencies = ("age",)
 
     def value(self):
         return 22_288 * (self.member.age >= 16 and self.member.student)
 
 
 class PellGrantMonthsInSchoolDependency(Member):
-    field = 'pell_grant_months_in_school'
+    field = "pell_grant_months_in_school"
 
     def value(self):
         return 9
 
 
 class ChpEligible(Member):
-    field = 'co_chp_eligible'
+    field = "co_chp_eligible"
 
 
 class IncomeDependency(Member):
     dependencies = (
-        'income_type',
-        'income_amount',
-        'income_frequency',
+        "income_type",
+        "income_amount",
+        "income_frequency",
     )
     income_types = []
 
     def value(self):
-        return int(self.member.calc_gross_income('yearly', self.income_types))
+        return int(self.member.calc_gross_income("yearly", self.income_types))
 
 
 class EmploymentIncomeDependency(IncomeDependency):
-    field = 'employment_income'
-    income_types = ['wages']
+    field = "employment_income"
+    income_types = ["wages"]
 
 
 class SelfEmploymentIncomeDependency(IncomeDependency):
-    field = 'self_employment_income'
-    income_types = ['selfEmployment']
+    field = "self_employment_income"
+    income_types = ["selfEmployment"]
 
 
 class RentalIncomeDependency(IncomeDependency):
-    field = 'rental_income'
-    income_types = ['rental']
+    field = "rental_income"
+    income_types = ["rental"]
 
 
 class PensionIncomeDependency(IncomeDependency):
-    field = 'taxable_pension_income'
-    income_types = ['pension', 'veteran']
+    field = "taxable_pension_income"
+    income_types = ["pension", "veteran"]
 
 
 class SocialSecurityIncomeDependency(IncomeDependency):
-    field = 'social_security'
-    income_types = ['sSDisability', 'sSSurvivor', 'sSRetirement', 'sSDependent']
+    field = "social_security"
+    income_types = ["sSDisability", "sSSurvivor", "sSRetirement", "sSDependent"]
 
 
 class SsiEarnedIncomeDependency(IncomeDependency):
-    field = 'ssi_earned_income'
-    income_types = ['earned']
+    field = "ssi_earned_income"
+    income_types = ["earned"]
 
 
 class SsiUnearnedIncomeDependency(IncomeDependency):
-    field = 'ssi_unearned_income'
-    income_types = ['unearned']
+    field = "ssi_unearned_income"
+    income_types = ["unearned"]

@@ -5,15 +5,18 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0004_remove_incomestream_label'),
+        ("screener", "0004_remove_incomestream_label"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='incomestream',
-            name='screen',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='incomestreams', to='screener.screen'),
+            model_name="incomestream",
+            name="screen",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="incomestreams",
+                to="screener.screen",
+            ),
         ),
     ]

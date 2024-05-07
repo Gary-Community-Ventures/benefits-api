@@ -4,55 +4,54 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0002_program_programnameshort'),
+        ("programs", "0002_program_programnameshort"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='program',
-            old_name='applyButtonLink',
-            new_name='apply_button_link',
+            model_name="program",
+            old_name="applyButtonLink",
+            new_name="apply_button_link",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='dollarValue',
-            new_name='dollar_value',
+            model_name="program",
+            old_name="dollarValue",
+            new_name="dollar_value",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='estimatedDeliveryTime',
-            new_name='estimated_delivery_time',
+            model_name="program",
+            old_name="estimatedDeliveryTime",
+            new_name="estimated_delivery_time",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='learnMoreLink',
-            new_name='learn_more_link',
+            model_name="program",
+            old_name="learnMoreLink",
+            new_name="learn_more_link",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='legalStatusRequired',
-            new_name='legal_status_required',
+            model_name="program",
+            old_name="legalStatusRequired",
+            new_name="legal_status_required",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='programDescription',
-            new_name='program_description',
+            model_name="program",
+            old_name="programDescription",
+            new_name="program_description",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='programName',
-            new_name='program_name',
+            model_name="program",
+            old_name="programName",
+            new_name="program_name",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='programNameShort',
-            new_name='program_name_short',
+            model_name="program",
+            old_name="programNameShort",
+            new_name="program_name_short",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='programSnapshot',
-            new_name='program_snapshot',
+            model_name="program",
+            old_name="programSnapshot",
+            new_name="program_snapshot",
         ),
     ]

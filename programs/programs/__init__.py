@@ -4,5 +4,5 @@ from .calc import ProgramCalculator
 
 calculators: dict[str, type[ProgramCalculator]] = {
     **co_calculators,
-    **federal_calculators
+    **federal_calculators,
 }

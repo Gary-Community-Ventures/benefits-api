@@ -7,7 +7,7 @@ class Ssdi(ProgramCalculator):
     income_limit = 1_550
     income_limit_blind = 2_590
     amount = 1_537
-    dependencies = ['income_amount', 'income_frequency', 'household_size']
+    dependencies = ["income_amount", "income_frequency", "household_size"]
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -19,8 +19,12 @@ class Ssdi(ProgramCalculator):
             nonlocal lowest_income
             nonlocal cat_eligibile
 
-            income_limit = Ssdi.income_limit_blind if member.visually_impaired else Ssdi.income_limit
-            member_income = member.calc_gross_income('monthly', ('all',))
+            income_limit = (
+                Ssdi.income_limit_blind
+                if member.visually_impaired
+                else Ssdi.income_limit
+            )
+            member_income = member.calc_gross_income("monthly", ("all",))
 
             if member_income < lowest_income:
                 lowest_income = member_income
@@ -32,8 +36,8 @@ class Ssdi(ProgramCalculator):
             self.screen.household_members.all(),
             [
                 (lambda m: m.has_disability(), messages.has_disability()),
-                (income_condition, None)
-            ]
+                (income_condition, None),
+            ],
         )
 
         if cat_eligibile > 0:

@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0015_remove_screen_cell'),
+        ("screener", "0015_remove_screen_cell"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='screen',
-            name='email',
+            model_name="screen",
+            name="email",
         ),
     ]

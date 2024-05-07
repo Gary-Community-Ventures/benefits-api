@@ -7,14 +7,14 @@ class TestHeadStartPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
-            zipcode='80205',
-            county='Denver County',
+            zipcode="80205",
+            county="Denver County",
             household_size=2,
             household_assets=0,
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
-            relationship='headOfHousehold',
+            relationship="headOfHousehold",
             age=30,
             student=False,
             student_full_time=False,
@@ -29,7 +29,7 @@ class TestHeadStartPension(TestCase):
         )
         self.person2 = HouseholdMember.objects.create(
             screen=self.screen1,
-            relationship='child',
+            relationship="child",
             age=4,
             student=False,
             student_full_time=False,
@@ -53,12 +53,12 @@ class TestHeadStartPension(TestCase):
         income = IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
-            type='wages',
+            type="wages",
             amount=2000,
-            frequency='monthly'
+            frequency="monthly",
         )
         self.screen1.save()
-        self.person2.age=6
+        self.person2.age = 6
         self.person2.save()
 
         chs = HeadStart(self.screen1)

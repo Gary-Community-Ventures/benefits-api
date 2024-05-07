@@ -5,22 +5,34 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0010_remove_screen_age_remove_screen_disability_medicaid_and_more'),
+        (
+            "screener",
+            "0010_remove_screen_age_remove_screen_disability_medicaid_and_more",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='expense',
-            name='household_member',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='expenses', to='screener.householdmember'),
+            model_name="expense",
+            name="household_member",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="expenses",
+                to="screener.householdmember",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='incomestream',
-            name='household_member',
-            field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.CASCADE, related_name='incomestreams', to='screener.householdmember'),
+            model_name="incomestream",
+            name="household_member",
+            field=models.ForeignKey(
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="incomestreams",
+                to="screener.householdmember",
+            ),
             preserve_default=False,
         ),
     ]

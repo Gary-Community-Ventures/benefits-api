@@ -4,60 +4,61 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0054_alter_expense_amount_alter_expense_frequency_and_more'),
+        ("screener", "0054_alter_expense_amount_alter_expense_frequency_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='screen',
-            name='has_andcs',
+            model_name="screen",
+            name="has_andcs",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='has_benefits',
-            field=models.CharField(blank=True, default='preferNotToAnswer', max_length=32, null=True),
+            model_name="screen",
+            name="has_benefits",
+            field=models.CharField(
+                blank=True, default="preferNotToAnswer", max_length=32, null=True
+            ),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='has_cdhcs',
+            model_name="screen",
+            name="has_cdhcs",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='has_chs',
+            model_name="screen",
+            name="has_chs",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='has_cpcr',
+            model_name="screen",
+            name="has_cpcr",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='has_dpp',
+            model_name="screen",
+            name="has_dpp",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='has_ede',
+            model_name="screen",
+            name="has_ede",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='has_erc',
+            model_name="screen",
+            name="has_erc",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='has_leap',
+            model_name="screen",
+            name="has_leap",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name='screen',
-            name='has_oap',
+            model_name="screen",
+            name="has_oap",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]

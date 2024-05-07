@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('authentication', '0011_alter_user_managers'),
+        ("authentication", "0011_alter_user_managers"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='external_id',
+            model_name="user",
+            name="external_id",
             field=models.CharField(blank=True, max_length=320, null=True),
         ),
     ]

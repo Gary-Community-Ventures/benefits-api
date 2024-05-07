@@ -7,14 +7,14 @@ class TestEveryDayEatsPension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
-            zipcode='80205',
-            county='Denver County',
+            zipcode="80205",
+            county="Denver County",
             household_size=1,
             household_assets=0,
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
-            relationship='headOfHousehold',
+            relationship="headOfHousehold",
             age=60,
             student=False,
             student_full_time=False,
@@ -38,9 +38,9 @@ class TestEveryDayEatsPension(TestCase):
         income = IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
-            type='wages',
+            type="wages",
             amount=3000,
-            frequency='monthly'
+            frequency="monthly",
         )
         self.person1.age = 30
         self.person1.save()

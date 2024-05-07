@@ -5,31 +5,45 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0007_rename_applicant_age_screen_age'),
+        ("screener", "0007_rename_applicant_age_screen_age"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HouseholdMember',
+            name="HouseholdMember",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('age', models.IntegerField()),
-                ('zipcode', models.CharField(max_length=5)),
-                ('student', models.BooleanField()),
-                ('student_full_time', models.BooleanField()),
-                ('pregnant', models.BooleanField()),
-                ('unemployed', models.BooleanField()),
-                ('worked_in_last_18_mos', models.BooleanField()),
-                ('visually_impaired', models.BooleanField()),
-                ('disabled', models.BooleanField()),
-                ('veteran', models.BooleanField()),
-                ('medicaid', models.BooleanField()),
-                ('disability_medicaid', models.BooleanField()),
-                ('has_income', models.BooleanField()),
-                ('has_expenses', models.BooleanField()),
-                ('screen', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='householdmembers', to='screener.screen')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("age", models.IntegerField()),
+                ("zipcode", models.CharField(max_length=5)),
+                ("student", models.BooleanField()),
+                ("student_full_time", models.BooleanField()),
+                ("pregnant", models.BooleanField()),
+                ("unemployed", models.BooleanField()),
+                ("worked_in_last_18_mos", models.BooleanField()),
+                ("visually_impaired", models.BooleanField()),
+                ("disabled", models.BooleanField()),
+                ("veteran", models.BooleanField()),
+                ("medicaid", models.BooleanField()),
+                ("disability_medicaid", models.BooleanField()),
+                ("has_income", models.BooleanField()),
+                ("has_expenses", models.BooleanField()),
+                (
+                    "screen",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="householdmembers",
+                        to="screener.screen",
+                    ),
+                ),
             ],
         ),
     ]

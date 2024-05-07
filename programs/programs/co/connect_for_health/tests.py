@@ -7,8 +7,8 @@ class TestConnectForHealth(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
-            zipcode='80205',
-            county='Denver County',
+            zipcode="80205",
+            county="Denver County",
             household_size=1,
             household_assets=0,
             has_employer_hi=True,
@@ -19,7 +19,7 @@ class TestConnectForHealth(TestCase):
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
-            relationship='headOfHousehold',
+            relationship="headOfHousehold",
             age=60,
             student=False,
             student_full_time=False,
@@ -45,9 +45,9 @@ class TestConnectForHealth(TestCase):
         income = IncomeStream.objects.create(
             screen=self.screen1,
             household_member=self.person1,
-            type='wages',
+            type="wages",
             amount=5800,
-            frequency='monthly'
+            frequency="monthly",
         )
 
         cfhc = ConnectForHealth(self.screen1)

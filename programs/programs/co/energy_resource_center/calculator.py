@@ -12,9 +12,9 @@ class EnergyResourceCenter(ProgramCalculator):
         5: 6425,
         6: 7311,
         7: 7477,
-        8: 7644
+        8: 7644,
     }
-    dependencies = ['household_size', 'income_amount', 'income_frequency']
+    dependencies = ["household_size", "income_amount", "income_frequency"]
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -22,7 +22,8 @@ class EnergyResourceCenter(ProgramCalculator):
         # income
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
         income_band = EnergyResourceCenter.income_bands[self.screen.household_size]
-        e.condition(gross_income <= income_band,
-                    messages.income(gross_income, income_band))
+        e.condition(
+            gross_income <= income_band, messages.income(gross_income, income_band)
+        )
 
         return e

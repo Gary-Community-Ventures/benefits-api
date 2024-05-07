@@ -5,20 +5,23 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0023_rename_message_message_content_message_type'),
+        ("screener", "0023_rename_message_message_content_message_type"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='message',
-            name='cell',
-            field=phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, null=True, region=None),
+            model_name="message",
+            name="cell",
+            field=phonenumber_field.modelfields.PhoneNumberField(
+                blank=True, max_length=128, null=True, region=None
+            ),
         ),
         migrations.AlterField(
-            model_name='message',
-            name='email',
-            field=models.EmailField(blank=True, max_length=254, null=True, verbose_name='email address'),
+            model_name="message",
+            name="email",
+            field=models.EmailField(
+                blank=True, max_length=254, null=True, verbose_name="email address"
+            ),
         ),
     ]

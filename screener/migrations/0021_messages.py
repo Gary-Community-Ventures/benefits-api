@@ -6,21 +6,49 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0020_screen_is_test'),
+        ("screener", "0020_screen_is_test"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Messages',
+            name="Messages",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sent', models.DateTimeField(auto_now=True)),
-                ('cell', phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, null=True, region=None, unique=True)),
-                ('email', models.EmailField(blank=True, max_length=254, null=True, unique=True, verbose_name='email address')),
-                ('message', models.CharField(blank=True, max_length=320, null=True)),
-                ('screen', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='messages', to='screener.screen')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("sent", models.DateTimeField(auto_now=True)),
+                (
+                    "cell",
+                    phonenumber_field.modelfields.PhoneNumberField(
+                        blank=True, max_length=128, null=True, region=None, unique=True
+                    ),
+                ),
+                (
+                    "email",
+                    models.EmailField(
+                        blank=True,
+                        max_length=254,
+                        null=True,
+                        unique=True,
+                        verbose_name="email address",
+                    ),
+                ),
+                ("message", models.CharField(blank=True, max_length=320, null=True)),
+                (
+                    "screen",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="messages",
+                        to="screener.screen",
+                    ),
+                ),
             ],
         ),
     ]

@@ -4,35 +4,34 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0037_eligibilitysnapshot_programeligibilitysnapshot'),
+        ("screener", "0037_eligibilitysnapshot_programeligibilitysnapshot"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='programeligibilitysnapshot',
-            name='estimated_application_time',
+            model_name="programeligibilitysnapshot",
+            name="estimated_application_time",
             field=models.CharField(blank=True, max_length=120, null=True),
         ),
         migrations.AlterField(
-            model_name='programeligibilitysnapshot',
-            name='estimated_delivery_time',
+            model_name="programeligibilitysnapshot",
+            name="estimated_delivery_time",
             field=models.CharField(blank=True, max_length=120, null=True),
         ),
         migrations.AlterField(
-            model_name='programeligibilitysnapshot',
-            name='failed_tests',
+            model_name="programeligibilitysnapshot",
+            name="failed_tests",
             field=models.JSONField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name='programeligibilitysnapshot',
-            name='legal_status_required',
+            model_name="programeligibilitysnapshot",
+            name="legal_status_required",
             field=models.CharField(blank=True, max_length=120, null=True),
         ),
         migrations.AlterField(
-            model_name='programeligibilitysnapshot',
-            name='passed_tests',
+            model_name="programeligibilitysnapshot",
+            name="passed_tests",
             field=models.JSONField(blank=True, null=True),
         ),
     ]

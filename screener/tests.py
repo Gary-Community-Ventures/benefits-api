@@ -8,7 +8,7 @@ class ScreenTestCase(TestCase):
         self.assertTrue(isinstance(screen, Screen))
 
 
-def create_default_household_member(screen, relationship='headOfHousehold', age=25):
+def create_default_household_member(screen, relationship="headOfHousehold", age=25):
     default = screen.household_members.create(
         relationship=relationship,
         age=age,
@@ -23,7 +23,7 @@ def create_default_household_member(screen, relationship='headOfHousehold', age=
         medicaid=False,
         disability_medicaid=False,
         has_income=True,
-        has_expenses=True
+        has_expenses=True,
     )
 
     return default
@@ -34,16 +34,26 @@ def create_default_household_member(screen, relationship='headOfHousehold', age=
 # 1900 in monthly expenses between childcare and rent
 # no assets
 def create_single_parent_two_children_household(annual_income):
-    screen = Screen.objects.create(household_assets=0, household_size=3,
-                                   zipcode='80204', agree_to_tos=True,
-                                   housing_situation='renting')
+    screen = Screen.objects.create(
+        household_assets=0,
+        household_size=3,
+        zipcode="80204",
+        agree_to_tos=True,
+        housing_situation="renting",
+    )
 
     parent = create_default_household_member(screen)
-    parent.expenses.create(type='rent', amount='1200', frequency='monthly', screen=screen)
-    parent.expenses.create(type='childCare', amount='700', frequency='monthly', screen=screen)
-    parent.income_streams.create(type='wages', amount=annual_income, frequency='yearly', screen=screen)
+    parent.expenses.create(
+        type="rent", amount="1200", frequency="monthly", screen=screen
+    )
+    parent.expenses.create(
+        type="childCare", amount="700", frequency="monthly", screen=screen
+    )
+    parent.income_streams.create(
+        type="wages", amount=annual_income, frequency="yearly", screen=screen
+    )
 
-    create_default_household_member(screen, relationship='child', age=4)
-    create_default_household_member(screen, relationship='child', age=6)
+    create_default_household_member(screen, relationship="child", age=4)
+    create_default_household_member(screen, relationship="child", age=6)
 
     return screen

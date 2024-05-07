@@ -13,16 +13,18 @@ class WeatherizationAssistance(ProgramCalculator):
         96_014,
         101_120,
     )
-    presumptive_eligibility = ('andcs', 'ssi', 'snap', 'leap', 'tanf')
+    presumptive_eligibility = ("andcs", "ssi", "snap", "leap", "tanf")
     amount = 350
-    dependencies = ['household_size', 'income_amount', 'income_frequency']
+    dependencies = ["household_size", "income_amount", "income_frequency"]
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
         # income condition
-        income_limit = WeatherizationAssistance.income_limits[self.screen.household_size - 1]
-        income = int(self.screen.calc_gross_income('yearly', ['all']))
+        income_limit = WeatherizationAssistance.income_limits[
+            self.screen.household_size - 1
+        ]
+        income = int(self.screen.calc_gross_income("yearly", ["all"]))
         income_eligible = income <= income_limit
 
         # categorical eligibility
@@ -32,6 +34,9 @@ class WeatherizationAssistance(ProgramCalculator):
                 categorical_eligible = True
                 break
 
-        e.condition(income_eligible or categorical_eligible, messages.income(income, income_limit))
+        e.condition(
+            income_eligible or categorical_eligible,
+            messages.income(income, income_limit),
+        )
 
         return e

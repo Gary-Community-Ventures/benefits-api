@@ -9,15 +9,21 @@ import math
 class LeapValueCache(Cache):
     expire_time = 60 * 60 * 24
     default = []
-    sheet_id = '1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg'
+    sheet_id = "1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg"
     range_name = "'FFY 2024'!A1:G65"
-    county_column = '2023/2024 Season\nUpdated: \n4/30/2024'
-    average_column = 'Average Benefit'
+    county_column = "2023/2024 Season\nUpdated: \n4/30/2024"
+    average_column = "Average Benefit"
 
     def update(self):
-        data = GoogleSheets(self.sheet_id, self.range_name).data_by_column(self.county_column, self.average_column)
+        data = GoogleSheets(self.sheet_id, self.range_name).data_by_column(
+            self.county_column, self.average_column
+        )
 
-        return [[row[self.county_column], row[self.average_column]] for row in data if row != []]
+        return [
+            [row[self.county_column], row[self.average_column]]
+            for row in data
+            if row != []
+        ]
 
 
 class EnergyAssistance(ProgramCalculator):
@@ -31,7 +37,7 @@ class EnergyAssistance(ProgramCalculator):
         7: 8_001,
         8: 8_179,
     }
-    dependencies = ['income_frequency', 'income_amount', 'zipcode', 'household_size']
+    dependencies = ["income_frequency", "income_amount", "zipcode", "household_size"]
     county_values = LeapValueCache()
 
     def eligible(self) -> Eligibility:
@@ -39,7 +45,7 @@ class EnergyAssistance(ProgramCalculator):
 
         # income
         frequency = "monthly"
-        income_types = ['all']
+        income_types = ["all"]
         income_limit = EnergyAssistance.income_bands[self.screen.household_size]
         leap_income = self.screen.calc_gross_income(frequency, income_types)
 
@@ -60,9 +66,9 @@ class EnergyAssistance(ProgramCalculator):
 
         values = []
         for row in data:
-            county = row[0].strip().replace('Application County: ', '') + ' County'
+            county = row[0].strip().replace("Application County: ", "") + " County"
             if county in counties:
-                values.append(int(float(row[1].replace('$', ''))))
+                values.append(int(float(row[1].replace("$", ""))))
 
         value = 362
         lowest = math.inf
@@ -74,4 +80,3 @@ class EnergyAssistance(ProgramCalculator):
                 lowest = possible_value
 
         return value
-
