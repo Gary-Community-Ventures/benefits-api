@@ -7,6 +7,13 @@ class NurseFamilyPartnership(ProgramCalculator):
     fpl_percent = 2
     child_relationships = ['child', 'grandChild']
     amount = 15_000
+    dependencies = [
+        'relationship',
+        'income_frequency',
+        'income_amount',
+        'age',
+        'pregnant',
+    ]
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
