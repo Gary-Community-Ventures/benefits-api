@@ -297,7 +297,7 @@ class Screen(models.Model):
 
     def has_members_ouside_of_tax_unit(self):
         for member in self.household_members.all():
-            if not member.is_in_tax_unit:
+            if not member.is_in_tax_unit():
                 return True
 
         return False
