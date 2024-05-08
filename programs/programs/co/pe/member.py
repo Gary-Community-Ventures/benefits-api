@@ -54,7 +54,10 @@ class Chp(PolicyEngineMembersCalculator):
     def value(self):
         total = 0
 
-        for _, pvalue in self.get_data().items():
+        for pkey, pvalue in self.get_data().items():
+            if not self.in_tax_unit(pkey):
+                continue
+
             if pvalue['co_chp_eligible'][self.pe_period] > 0 and self.screen.has_insurance_types(('none',)):
                 total += self.amount
 

@@ -69,7 +69,7 @@ class Medicaid(PolicyEngineMembersCalculator):
 
         for pkey, pvalue in self.get_data().items():
             # Skip any members that are not in the tax unit.
-            if not self.in_tax_unit(pkey) and self.tax_unit_dependent:
+            if not self.in_tax_unit(pkey):
                 continue
 
             if pvalue[self.pe_name][self.pe_period] <= 0:
