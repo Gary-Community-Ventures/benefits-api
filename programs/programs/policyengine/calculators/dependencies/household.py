@@ -2,7 +2,7 @@ from .base import Household
 
 
 class StateCode(Household):
-    field = 'state_code_str'
+    field = 'state_code'
 
     state = ''
 
