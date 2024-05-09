@@ -1,4 +1,5 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 from django.db.models.signals import post_save
 from django.utils.translation import override
 from integrations.services.communications import email_link, text_link
@@ -11,13 +12,18 @@ from django.dispatch import receiver
 from django.utils import timezone
 
 
-class screenAdmin(admin.ModelAdmin):
+class screenAdmin(ModelAdmin):
     search_fields = ('id',)
 
+class CustomMessageAdmin(ModelAdmin):
+    pass
+
+class CustomIncomeStreamAdmin(ModelAdmin):
+    pass
 
 admin.site.register(Screen, screenAdmin)
-admin.site.register(Message)
-admin.site.register(IncomeStream)
+admin.site.register(Message, CustomMessageAdmin)
+admin.site.register(IncomeStream, CustomIncomeStreamAdmin)
 
 
 @receiver(post_save, sender=Message)
