@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from integrations.services.communications import MessageUser
 from screener.models import (
     Screen,
     HouseholdMember,
@@ -152,13 +153,13 @@ class MessageViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     def create(self, request):
         body = json.loads(request.body.decode())
         screen = Screen.objects.get(uuid=body['screen'])
-        Message.objects.create(
-            type=body['type'],
-            screen=screen,
-            email=body['email'] if 'email' in body else None,
-            cell=body['phone'] if 'phone' in body else None,
-            uid=body['uuid'] if 'uuid' in body else None,
-        )
+
+        message = MessageUser(screen, screen.get_language_code())
+        if 'email' in body:
+            message.email(body['email'], send_tests=True)
+        if 'phone' in body:
+            message.text('+1' + body['phone'], send_tests=True)
+
         return Response({}, status=status.HTTP_201_CREATED)
 
 
@@ -375,6 +376,7 @@ def urgent_need_results(screen):
         'co_emergency_mortgage': urgent_need_functions.CoEmergencyMortgageAssistance.calc(
             screen, missing_dependencies
         ),
+        'child_first': urgent_need_functions.ChildFirst.calc(screen, missing_dependencies),
     }
 
     list_of_needs = []

@@ -5,12 +5,12 @@ import programs.programs.messages as messages
 class MedicareSavings(ProgramCalculator):
     valid_insurance = ('none', 'employer', 'private', 'medicare')
     asset_limit = {
-        'single': 10_590,
-        'married': 16_630,
+        'single': 10_930,
+        'married': 17_130,
     }
     income_limit = {
-        'single': 1_660,
-        'married': 2239,
+        'single': 1_715,
+        'married': 2_320,
     }
     min_age = 65
     amount = 175
