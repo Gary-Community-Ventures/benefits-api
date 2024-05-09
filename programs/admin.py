@@ -18,11 +18,11 @@ from .models import (
 
 
 class ProgramAdmin(ModelAdmin):
-    search_fields = ("name_abbreviated",)
-    list_display = ["get_str", "name_abbreviated", "action_buttons"]
+    search_fields = ("name__translations__text",)
+    list_display = ["get_str", "name_abbreviated", "active", "action_buttons"]
 
     def get_str(self, obj):
-        return str(obj)
+        return str(obj) if str(obj).strip() else 'unnamed'
 
     get_str.admin_order_field = "name"
     get_str.short_description = "Program"
@@ -56,7 +56,7 @@ class ProgramAdmin(ModelAdmin):
                     <a href="{}">Warning</a>
                 </div>
             </div>
-        """,
+            """,
             reverse("translation_admin_url", args=[name.id]),
             reverse("translation_admin_url", args=[description.id]),
             reverse("translation_admin_url", args=[description_short.id]),
@@ -71,7 +71,7 @@ class ProgramAdmin(ModelAdmin):
             reverse("translation_admin_url", args=[warning.id]),
         )
 
-    action_buttons.short_description = "Translate"
+    action_buttons.short_description = "Translate:"
     action_buttons.allow_tags = True
 
 
@@ -84,38 +84,82 @@ class NavigatorCountiesAdmin(ModelAdmin):
 
 
 class NavigatorAdmin(ModelAdmin):
-    search_fields = ("translations__name",)
-    list_display = ["get_str", "external_name", "get_name_link"]
-    readonly_fields = ("get_name_link",)
+    search_fields = ("name__translations__text",)
+    list_display = ["get_str", "external_name", "action_buttons"]
 
     def get_str(self, obj):
-        return str(obj)
+        return str(obj) if str(obj).strip() else 'unnamed'
 
     get_str.admin_order_field = "name"
     get_str.short_description = "Navigator"
 
-    def get_name_link(self, obj):
-        translation = obj.name
-        url = reverse("admin:translations_translation_change",
-                      args=(translation.id,))
-        return format_html('<a href="{}">{}</a>', url, translation)
+    def action_buttons(self, obj):
+        name = obj.name
+        email = obj.email
+        assistance_link = obj.assistance_link
+        description = obj.description
 
-    get_name_link.admin_order_field = "name"
-    get_name_link.short_description = "Label"
+        return format_html(
+            """
+            <div class="dropdown">
+                <span class="dropdown-btn material-symbols-outlined"> menu </span>
+                <div class="dropdown-content">
+                    <a href="{}">Name</a>
+                    <a href="{}">Email</a>
+                    <a href="{}">Assistance Link</a>
+                    <a href="{}">Description</a>
+                </div>
+            </div>
+            """,
+            reverse("translation_admin_url", args=[name.id]),
+            reverse("translation_admin_url", args=[email.id]),
+            reverse("translation_admin_url", args=[assistance_link.id]),
+            reverse("translation_admin_url", args=[description.id]),
+        )
+
+    action_buttons.short_description = "Translate:"
+    action_buttons.allow_tags = True
 
 
 class UrgentNeedAdmin(ModelAdmin):
-    search_fields = ("translations__name",)
-    list_display = ["__str__", "external_name", "active", "get_name_link"]
+    search_fields = ("name__translations__text",)
+    list_display = ["get_str", "external_name", "active", "action_buttons"]
 
-    def get_name_link(self, obj):
-        translation = obj.name
-        url = reverse("admin:translations_translation_change",
-                      args=(translation.id,))
-        return format_html('<a href="{}">{}</a>', url, translation)
+    def get_str(self, obj):
+        return str(obj) if str(obj).strip() else 'unnamed'
+    
+    get_str.admin_order_field = "name"
+    get_str.short_description = "Urgent Need"
 
-    get_name_link.admin_order_field = "name"
-    get_name_link.short_description = "Label"
+    def action_buttons(self, obj):
+        name = obj.name
+        description = obj.description
+        link = obj.link
+        type = obj.type
+        warning = obj.warning
+
+        return format_html(
+            """
+            <div class="dropdown">
+                <span class="dropdown-btn material-symbols-outlined"> menu </span>
+                <div class="dropdown-content">
+                    <a href="{}">Name</a>
+                    <a href="{}">Description</a>
+                    <a href="{}">Link</a>
+                    <a href="{}">Type</a>
+                    <a href="{}">Warning</a>
+                </div>
+            </div>
+            """,
+            reverse("translation_admin_url", args=[name.id]),
+            reverse("translation_admin_url", args=[description.id]),
+            reverse("translation_admin_url", args=[link.id]),
+            reverse("translation_admin_url", args=[type.id]),
+            reverse("translation_admin_url", args=[warning.id]),
+        )
+
+    action_buttons.short_description = "Translate:"
+    action_buttons.allow_tags = True
 
 
 class UrgentNeedCategoryAdmin(ModelAdmin):
