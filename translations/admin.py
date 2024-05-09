@@ -1,22 +1,26 @@
 from django.contrib import admin
+from django.urls import reverse_lazy
+from django.utils.html import format_html
 from parler.admin import TranslatableAdmin
 from unfold.admin import ModelAdmin
 from .models import Translation
 
 
-@admin.register(Translation)
 class TranslationAdmin(ModelAdmin, TranslatableAdmin):
     search_fields = ('label',)
-    list_display = ['label', 'category', 'no_auto',
-                    'edited', 'active',]
+    list_display = ['label', 'used_by', 'no_auto',
+                    'edited', 'active', 'go_to']
 
-    def label(self, obj):
-        return obj.label.split('.')[1] if '.' in obj.label else obj.label
+    def used_by(self, obj):
+        return obj.used_by
+    
+    used_by.short_description = 'Used by (Model)'
 
-    def category(self, obj):
-        return obj.label.split('.')[0] if '.' in obj.label else ''
+    def go_to(self, obj):
+        url = reverse_lazy('translation_admin_url', args=[obj.pk])
+        return format_html('<a href="{}">Label</a>', url)
 
-    category.admin_order_field = 'label'
+    go_to.short_description = 'Translate:'
 
 
-# admin.site.register(Translation, TranslationAdmin)
+admin.site.register(Translation, TranslationAdmin)

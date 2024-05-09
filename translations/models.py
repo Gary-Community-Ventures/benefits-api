@@ -8,13 +8,15 @@ class TranslationManager(TranslatableManager):
 
     def add_translation(self, label, default_message, active=True, no_auto=False):
         default_lang = settings.LANGUAGE_CODE
-        parent = self.get_or_create(label=label, defaults={'active': active, 'no_auto': no_auto})[0]
+        parent = self.get_or_create(label=label, defaults={
+                                    'active': active, 'no_auto': no_auto})[0]
         if parent.active != active or parent.active != no_auto:
             parent.active = active
             parent.no_auto = no_auto
             parent.save()
 
-        parent.create_translation(default_lang, text=default_message, edited=True)
+        parent.create_translation(
+            default_lang, text=default_message, edited=True)
         return parent
 
     def edit_translation(self, label, lang, translation, manual=True):
@@ -31,7 +33,8 @@ class TranslationManager(TranslatableManager):
         return parent
 
     def edit_translation_by_id(self, id, lang, translation, manual=True):
-        parent = self.prefetch_related('translations').language(lang).get(pk=id)
+        parent = self.prefetch_related(
+            'translations').language(lang).get(pk=id)
 
         lang_trans = parent.get_lang(lang)
         is_edited = lang_trans is not None and lang_trans.edited is True and lang_trans.text != ''
@@ -75,7 +78,8 @@ class TranslationManager(TranslatableManager):
 
             for lang in all_langs:
                 translation.set_current_language(lang['code'])
-                translations_export[translation.label]['langs'][lang['code']] = (translation.text, translation.edited)
+                translations_export[translation.label]['langs'][lang['code']] = (
+                    translation.text, translation.edited)
 
         return translations_export
 
@@ -87,9 +91,21 @@ class Translation(TranslatableModel):
     )
     active = models.BooleanField(default=True, null=False)
     no_auto = models.BooleanField(default=False, null=False)
-    label = models.CharField(max_length=128, null=False, blank=False, unique=True)
+    label = models.CharField(max_length=128, null=False,
+                             blank=False, unique=True)
 
     objects = TranslationManager()
+
+    @property
+    def used_by(self):
+        for reverse in (f for f in self._meta.get_fields() if f.auto_created and not f.concrete):
+            if reverse.related_name == 'translations':
+                continue
+            name = reverse.get_accessor_name()
+            has_reverse_other = getattr(self, name).count()
+            if has_reverse_other:
+                return reverse.related_model._meta.model_name
+        return 'unassigned'
 
     def get_lang(self, lang):
         return self.translations.filter(language_code=lang).first()
@@ -113,8 +129,10 @@ class Translation(TranslatableModel):
                     has_relationship = True
                     continue
 
-                external_name = getattr(self, reverse.related_name).first().external_name
-                table = getattr(self, reverse.related_name).first()._meta.db_table
+                external_name = getattr(
+                    self, reverse.related_name).first().external_name
+                table = getattr(
+                    self, reverse.related_name).first()._meta.db_table
                 if external_name:
                     return (table, external_name, reverse.related_name)
                 has_relationship = True
