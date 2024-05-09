@@ -247,14 +247,19 @@ UNFOLD = {
                 "title": _("Navigation"),
                 "items": [
                     {
-                        "title": _("Dashboard"),
-                        "icon": "dashboard",
-                        "link": reverse_lazy("admin:index"),
-                    },
-                    {
                         "title": _("Programs"),
                         "icon": "other_admission",
                         "link": reverse_lazy("admin:programs_program_changelist"),
+                    },
+                    {
+                        "title": _("Urgent Need"),
+                        "icon": "breaking_news",
+                        "link": reverse_lazy("admin:programs_urgentneed_changelist"),
+                    },
+                    {
+                        "title": _("Navigator"),
+                        "icon": "near_me",
+                        "link": reverse_lazy("admin:programs_navigator_changelist"),
                     },
                     {
                         "title": _("Configuration"),
@@ -266,21 +271,21 @@ UNFOLD = {
                         "icon": "translate",
                         "link": reverse_lazy("admin:translations_translation_changelist"),
                     },
-                    {
-                        "title": _("Urgent Need"),
-                        "icon": "breaking_news",
-                        "link": reverse_lazy("admin:programs_urgentneed_changelist"),
-                    },
-                    {
-                        "title": _("Navigator"),
-                        "icon": "near_me",
-                        "link": reverse_lazy("admin:programs_navigator_changelist"),
-                    }
                 ]
             },
             {
                 "separator": True,
                 "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "dashboard",
+                        "link": reverse_lazy("admin:index"),
+                    },
+                    {
+                        "title": _("Translations API"),
+                        "icon": "settings",
+                        "link": reverse_lazy("translations_api_url"),
+                    },
                     {
                         "title": _("Users"),
                         "icon": "person",
@@ -290,6 +295,11 @@ UNFOLD = {
                         "title": _("Groups"),
                         "icon": "group",
                         "link": reverse_lazy("admin:auth_group_changelist"),
+                    },
+                    {
+                        "title": _("Tokens"),
+                        "icon": "key",
+                        "link": reverse_lazy("admin:authtoken_tokenproxy_changelist"),
                     },
                 ],
             },
