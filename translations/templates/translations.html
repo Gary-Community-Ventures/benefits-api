@@ -1,86 +1,90 @@
 {% load static %}
-
-<table id="translation-table" class="translations-table table is-striped is-fullwidth is-bordered">
-  <thead>
-    <tr>
-      <th
-        data-tooltip="This is the unique identifier for the object's entry into its original model."
-      >
-        Entry ID
-      </th>
-      <th
-        data-tooltip="This is the name of the model to which the translation belongs."
-      >
-        Model
-      </th>
-      <th>Abbreviated Name</th>
-      <th
-        data-tooltip="This is the name of the field for which the translation is provided."
-      >
-        Field
-      </th>
-      <th>Label</th>
-      <th>Edited</th>
-      <th>Active</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for translation in page_obj %}
-    <tr>
-      <td>{{ translation.entry_id }}</td>
-      <td>{{ translation.model_name|capfirst }}</td>
-      <td>{{ translation.abbr_name }}</td>
-      <td>{{ translation.field_name }}</td>
-      <td>{{ translation.label }}</td>
-      <td>{{ translation.edited }}</td>
-      <td>{{ translation.active }}</td>
-      <td>
-        <div class="dropdown">
-          <div class="dropdown-trigger">
-            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu{{ forloop.counter }}">
-              <span>Go to</span>
-              <span class="material-symbols-outlined">
-                expand_more
-              </span>
-            </button>
-          </div>
-          <div class="dropdown-menu" id="dropdown-menu{{ forloop.counter }}" role="menu">
-            <div class="dropdown-content">
-              <a href="/api/translations/admin/{{ translation.id }}" class="dropdown-item">Edit</a>
-              <hr class="dropdown-divider" />
-              <a href="/admin/translations/translation/{{translation.id}}/change/" class="dropdown-item"> Edit in Main Admin </a>
+<div id="translation-container">
+  <table
+    id="translation-table"
+    class="translations-table table is-striped is-fullwidth is-bordered"
+  >
+    <thead>
+      <tr>
+        <th
+          data-tooltip="This is the unique identifier for the object's entry into its original model."
+        >
+          Entry ID
+        </th>
+        <th>Label</th>
+        <th data-tooltip="The model that the translation object is used by.">
+          Model
+        </th>
+        <th>Abbreviated Name</th>
+        <th
+          data-tooltip="This is the name of the field for which the translation is provided."
+        >
+          Field
+        </th>
+        <th>Edited</th>
+        <th>Active</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for translation in page_obj %}
+      <tr>
+        <td>{{ translation.entry_id }}</td>
+        <td>{{ translation.label }}</td>
+        <td>{{ translation.model_name|capfirst }}</td>
+        <td>{{ translation.abbr_name }}</td>
+        <td>{{ translation.field_name }}</td>
+        <td>{{ translation.edited }}</td>
+        <td>{{ translation.active }}</td>
+        <td>
+          <div class="dropdown">
+            <div class="dropdown-trigger">
+              <button
+                class="button"
+                aria-haspopup="true"
+                aria-controls="dropdown-menu{{ forloop.counter }}"
+              >
+                <span>Go to</span>
+                <span class="material-symbols-outlined"> expand_more </span>
+              </button>
+            </div>
+            <div
+              class="dropdown-menu"
+              id="dropdown-menu{{ forloop.counter }}"
+              role="menu"
+            >
+              <div class="dropdown-content">
+                <a
+                  href="/api/translations/admin/{{ translation.id }}"
+                  class="dropdown-item"
+                  >Edit</a
+                >
+                <hr class="dropdown-divider" />
+                <a
+                  href="/admin/translations/translation/{{translation.id}}/change/"
+                  class="dropdown-item"
+                >
+                  Edit in Main Admin
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </td>
-    </tr>
-    {% empty %}
-    <tr>
-      <td colspan="8">No results</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-<nav class="pagination" role="navigation" aria-label="pagination">
-  {% if page_obj.has_previous %}
-    <a href="?page={{ page_obj.previous_page_number }}" class="pagination-previous">Previous</a>
-  {% endif %}
-
-  <ul class="pagination-list">
-    {% for page_num in page_obj.paginator.page_range %}
-      {% if page_obj.number == page_num %}
-        <li><a class="pagination-link is-current" aria-label="Page {{ page_num }}" aria-current="page">{{ page_num }}</a></li>
-      {% else %}
-        <li><a href="?page={{ page_num }}" class="pagination-link" aria-label="Goto page {{ page_num }}">{{ page_num }}</a></li>
-      {% endif %}
-    {% endfor %}
-  </ul>
-
-  {% if page_obj.has_next %}
-    <a href="?page={{ page_obj.next_page_number }}" class="pagination-next">Next page</a>
-  {% endif %}
-</nav>
-
-<script src="{% static 'js/translations-table.js' %}"></script>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8">No results</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="8">Total: {{ page_obj.paginator.count }}</td>
+      </tr>
+    </tfoot>
+  </table>
+  <script>
+    var tableId = "translation-table";
+  </script>
+  {% include "pagination.html" %}
+</div>

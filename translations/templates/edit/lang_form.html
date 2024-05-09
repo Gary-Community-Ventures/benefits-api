@@ -1,11 +1,23 @@
-{% include "./form.html" with form=form %}
-<button
-  class="button"
-	type="button"
-	hx-post="{{ translation.id }}/{{ lang }}/auto"
-	hx-target="#{{ lang }}"
-	hx-swap="innerHTML"
-	hx-confirm="This will override the currect text"
->
-	Translate
-</button>
+<span>
+  {% for field in form %}
+  <div class="field">
+    {{ field }} {% if field.help_text %}
+    <p class="help">{{ field.help_text }}</p>
+    {% endif %} {% for error in field.errors %}
+    <p class="help is-danger">{{ error }}</p>
+    {% endfor %}
+  </div>
+  {% endfor %}
+  <button class="button" type="submit">Save</button>
+  <button
+    class="button"
+    type="button"
+    hx-post="{{ translation.id }}/{{ lang }}/auto"
+    hx-target="#{{ lang }}"
+    hx-swap="innerHTML"
+    hx-confirm="This will override the currect text"
+  >
+    Translate
+  </button>
+  {% if error_message %} {% include "error.html" %} {% endif %}
+</span>

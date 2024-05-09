@@ -1,14 +1,14 @@
 {% extends "base.html" %} {% block content %}
 <section class="section">
-  <h1 class="title">{{ translation.label }}</h1>
-
+  <h2 class="title">{{ translation.label }}</h2>
 </section>
-<section class="section">
-  <div class="container">
+<hr />
+<div class="container">
+  <div class="box">
     <div class="level">
       <div class="level-left">
         <div class="level-item">
-          {% include "./form.html" with form=label_form %}
+          {% include "./label_form.html" with form=label_form %}
         </div>
       </div>
       <div class="level-right">
@@ -26,32 +26,35 @@
       <div id="delete-errors"></div>
     </div>
   </div>
-  <div class="container">
+  <div class="box">
     <div id="languages">
-      {% for lang, form in langs.items %}
-      <div class="level">
-        <div class="level-left">
-          <div class="level-item">
-            <h3>{{ lang }}</h3>
-          </div>
+      <div class="columns">
+        <div class="column">
+          <label class="label">Language Code</label>
         </div>
-        <div class="level-right">
-          <div class="level-item">
-            <form
-              id="{{ lang }}"
-              hx-post="{{ translation.id }}/{{ lang }}"
-              hx-target="#languages"
-              hx-swap="outerHTML"
-            >
-              {% include "./lang_form.html" with lang=lang form=form %}
-            </form>
-          </div>
+        <div class="column">
+          <label class="label">Saved Text</label>
+        </div>
+      </div>
+      {% for lang, form in langs.items %}
+      <div class="columns">
+        <div class="column">
+          <label class="label">{{ lang }}</label>
+        </div>
+        <div class="column">
+          <form
+            id="{{ lang }}"
+            hx-post="{{ translation.id }}/{{ lang }}"
+            hx-target="#languages"
+            hx-swap="outerHTML"
+          >
+            {% include "./lang_form.html" with lang=lang form=form %}
+          </form>
         </div>
       </div>
       {% endfor %}
     </div>
-
   </div>
-</section>
+</div>
 
 {% endblock content %}

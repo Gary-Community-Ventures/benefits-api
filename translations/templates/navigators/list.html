@@ -1,8 +1,91 @@
-<ul id="navigator-list">
-	{% for navigator in navigators %}
-	<li>
-		<span>{{ navigator.name.text }} </span>
-		<a href="navigators/{{ navigator.id }}">Edit</a>
-	</li>
-	{% endfor %}
-</ul>
+{% load static %}
+<div id="navigator-container">
+  <table
+    id="navigator-table"
+    class="navigator-table table is-striped is-fullwidth is-bordered"
+  >
+    <thead>
+      <tr>
+        <th>Entry ID</th>
+        <th>Name</th>
+        <th>External Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for navigator in page_obj %}
+      <tr>
+        <td>{{ navigator.id }}</td>
+        <td>{{ navigator.name.text }}</td>
+        <td>{{ navigator.external_name }}</td>
+        <td>{{ navigator.email.text }}</td>
+        <td>
+          <div class="dropdown">
+            <div class="dropdown-trigger">
+              <button
+                class="button"
+                aria-haspopup="true"
+                aria-controls="dropdown-menu{{ forloop.counter }}"
+              >
+                <span>Go to</span>
+                <span class="material-symbols-outlined"> expand_more </span>
+              </button>
+            </div>
+            <div
+              class="dropdown-menu"
+              id="dropdown-menu{{ forloop.counter }}"
+              role="menu"
+            >
+              <div class="dropdown-content">
+                <a
+                  href="/api/translations/admin/{{ navigator.name.id }}"
+                  class="dropdown-item"
+                  >Name</a
+                >
+                <a
+                  href="/api/translations/admin/{{ navigator.email.id }}"
+                  class="dropdown-item"
+                  >Email</a
+                >
+                <a
+                  href="/api/translations/admin/{{ navigator.assistance_link.id }}"
+                  class="dropdown-item"
+                  >Assistance Link</a
+                >
+                <a
+                  href="/api/translations/admin/{{ navigator.description.id }}"
+                  class="dropdown-item"
+                  >Description</a
+                >
+                <hr class="dropdown-divider" />
+                <a
+                  href="/admin/programs/navigator/{{navigator.id}}/change/"
+                  class="dropdown-item"
+                >
+                  Edit in Main Admin
+                </a>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">No results</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5">Total: {{ page_obj.paginator.count }}</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  {% include "../pagination.html" %}
+
+  <script>
+    var tableId = "navigator-table";
+  </script>
+</div>

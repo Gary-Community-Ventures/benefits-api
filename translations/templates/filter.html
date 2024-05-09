@@ -1,19 +1,33 @@
 {% load static %}
-<form hx-get="admin/filter" hx-target="#translation-table" hx-swap="outerHTML">
+<form
+  hx-get="admin/filter"
+  hx-target="#translation-container"
+  hx-swap="outerHTML"
+>
   <div class="level">
     <div class="level-left">
       <label for="label"></label>
-      <input type="text" name="label" id="label" class="input" placeholder="Type to Search"/>
+      <input
+        type="text"
+        name="label"
+        id="label"
+        class="input"
+        placeholder="Search label"
+      />
     </div>
     <div class="level-right">
       <div class="level-item">
-        <input type="text" name="text" id="text" class="input" placeholder="Saved Text"/>
+        <input
+          type="text"
+          name="text"
+          id="text"
+          class="input"
+          placeholder="Search saved text"
+        />
       </div>
       <div class="level-item">
         <button type="submit" class="button">
-          <span class="material-symbols-outlined">
-            search
-          </span>
+          <span class="material-symbols-outlined"> search </span>
         </button>
       </div>
     </div>

@@ -1,15 +1,32 @@
 {% extends "base.html" %}{% block content %}
-<h2>{{ document.external_name }}</h2>
-<div>
-	<a
-		href="/admin/programs/document/{{ document.id }}/change/"
-		target="_blank"
-		rel="noopener noreferrer"
-	>
-		Django Admin
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ document.text.id }}">Text</a>
+<section class="section">
+  <h2>Document Actions</h2>
+</section>
+<div id="document-actions">
+  <table class="table is-striped is-fullwidth is-bordered">
+    <thead>
+      <tr>
+        <th>External Name</th>
+        <th>Actions (add)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ document.external_name }}</td>
+        <td>
+          <div class="new-actions">
+            <a href="/api/translations/admin/{{ document.text.id }}">Text</a>
+            <a
+              href="/admin/programs/document/{{ document.id }}/change/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Edit in Main Admin
+            </a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 {% endblock content %}

@@ -9,7 +9,7 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
     />
-
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <link rel="stylesheet" href="{% static 'css/bulma_switch.css' %}" />
     <link
       rel="stylesheet"
@@ -19,26 +19,31 @@
 
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}" }'>
     <div class="columns is-gapless">
-      <div
-        class="column is-2 sidebar-nav is-flex is-flex-direction-column"
-        style="position: fixed; height: 100%"
-      >
+      <div class="column is-2 sidebar-nav is-flex is-flex-direction-column">
         <div class="sidebar-header">
           <section class="section">
             <span class="material-symbols-outlined">
               language_korean_latin
             </span>
-            <h2 class="subtitle">Translations Admin</h2>
+            <h2 class="subtitle"><strong>Translations Admin</strong></h2>
           </section>
         </div>
         <aside class="menu" style="max-height: 100%">
           <p class="menu-label">Navigation</p>
           <ul class="menu-list">
             <li>
-              <a href="/api/translations/admin" class="sidebar-item">
+              <a href="/api/translations/admin/documents" class="sidebar-item">
                 <div class="text-icon">
-                  <span class="material-symbols-outlined"> translate </span>
-                  <span>Translations</span>
+                  <span class="material-symbols-outlined"> description </span>
+                  <span>Documents</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="/api/translations/admin/navigators" class="sidebar-item">
+                <div class="text-icon">
+                  <span class="material-symbols-outlined"> near_me </span>
+                  <span>Navigators</span>
                 </div>
               </a>
             </li>
@@ -52,12 +57,11 @@
                 </div>
               </a>
             </li>
-
             <li>
-              <a href="/api/translations/admin/navigators" class="sidebar-item">
+              <a href="/api/translations/admin" class="sidebar-item">
                 <div class="text-icon">
-                  <span class="material-symbols-outlined"> near_me </span>
-                  <span>Navigators</span>
+                  <span class="material-symbols-outlined"> translate </span>
+                  <span>Translations</span>
                 </div>
               </a>
             </li>
@@ -71,14 +75,6 @@
                     breaking_news_alt_1
                   </span>
                   <span>Urgent Needs</span>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a href="/api/translations/admin/documents" class="sidebar-item">
-                <div class="text-icon">
-                  <span class="material-symbols-outlined"> description </span>
-                  <span>Documents</span>
                 </div>
               </a>
             </li>
@@ -97,36 +93,18 @@
             </li>
           </ul>
         </aside>
-        <div class="is-flex is-justify-content-center" style="margin-top: auto; margin-bottom: 2rem;">
-          <div
-            style="
-              height: 100%;
-              width: 145px;
-              border: 1px grey solid;
-
-              border-radius: 30px;
-              background-color: var(--contrast);
-              padding: 8px;
-            "
-          >
-            <div class="level">
-              <label class="switch is-rounded">
-                <div
-                  class="level-item"
-                  style="height: 20; width: 20px; margin: 0 10px"
-                >
-                  <span class="material-symbols-outlined"> wb_sunny </span>
-                </div>
-                <input type="checkbox" role="switch" id="bd-theme" value="" />
-                <span class="check"></span>
-                <div
-                  class="level-item"
-                  style="height: 20; width: 20px; margin: 0 10px"
-                >
-                  <span class="material-symbols-outlined"> bedtime </span>
-                </div>
-              </label>
-            </div>
+        <div class="theme-switch is-flex is-justify-content-center">
+          <div class="level">
+            <label class="switch is-rounded">
+              <div class="level-item theme-switch-icon">
+                <span class="material-symbols-outlined"> wb_sunny </span>
+              </div>
+              <input type="checkbox" role="switch" id="bd-theme" value="" />
+              <span class="check"></span>
+              <div class="level-item theme-switch-icon">
+                <span class="material-symbols-outlined"> bedtime </span>
+              </div>
+            </label>
           </div>
         </div>
       </div>
