@@ -1,20 +1,26 @@
 @import url('https://fonts.google.com/materialsymbols?family=Material+Symbols:opsz,wght@48,400');
 
 /* Global styling */
-:root {
-    --bulma-table-color: #001827;
-}
-
 * {
     font-family: Inter, sans-serif;
 }
 
-body {
-    background-color: #001827;
+.box {
+  box-shadow: none;
+  border-radius: 0;
+  border: 1.5px solid rgba(230, 230, 230, 0.6);
 }
 
-.table {
-    background-color: #001827;
+html[data-theme="dark"] .box {
+  border-color: rgba(56, 56, 56, 0.5); /* Change this to the color you want */
+}
+
+.table tbody tr td:last-child {
+  text-align: center;
+}
+
+.columns:not(:last-child) {
+  margin-bottom: 0;
 }
 
 /* Table th tooltip styling */
@@ -60,7 +66,7 @@ th {
 
 /* Sidebar styling */
 .sidebar-nav {
-    position: sticky;
+    position: fixed;
     top: 0;
     padding: 1.5rem;
     height: 100vh;
@@ -73,17 +79,9 @@ th {
     margin-bottom: 1.5rem;
 }
 
-.sidebar-item:hover {
-    color: #fff;
-  }
-
-  .sidebar-item.is-active {
-    color: #fff;
-    background-color: rgba(88, 88, 141, 0.5);
-  }
-
-.menu-list a, .menu-list button {
-    background-color: #001827;
+.sidebar-item.is-active {
+  color: #fff;
+  background-color: rgba(88, 88, 141, 0.5);
 }
 
 /* Sidebar menu icon styling */
@@ -100,13 +98,42 @@ th {
   margin-right: 15px;
 }
 
+.theme-switch {
+  margin-top: auto;
+  margin-bottom: 2rem;
+}
+
+.theme-switch-icon {
+  height: 20;
+  width: 20px;
+  margin: 0 10px;
+}
+
 /* Edit Dropdown button styling */
 .dropdown-content {
-    position: absolute;
-    right: 0;
+  text-align: left;
+  position: absolute;
+  right: 95px;
+  bottom: 100%;
+  transform: translateY(-40px); /* Adjust the vertical spacing */
+  display: none;
+}
+
+.dropdown.is-active .dropdown-content {
+  display: block;
+}
+
+.dropdown.is-top .dropdown-content {
+  bottom: auto;
+  top: 100%;
+  transform: translateY(0); /* Adjust the vertical spacing */
 }
 
 /* Pagination styling */
 .pagination-link.is-current {
-    background-color: rgba(88, 88, 141, 0.5);
+  background-color: rgba(88, 88, 141, 0.5);
+}
+
+.new-actions {
+  display: flex; flex-direction: column; align-items: flex-start;
 }
