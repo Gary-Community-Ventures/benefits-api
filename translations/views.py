@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.db.models import ProtectedError
 from programs.models import Program, Navigator, UrgentNeed, Document
 from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from integrations.services.google_translate.integration import Translate
@@ -30,9 +31,10 @@ class TranslationView(views.APIView):
 
 
 class NewTranslationForm(forms.Form):
-    label = forms.CharField(max_length=128)
+    label = forms.CharField(max_length=128, widget=forms.TextInput(
+        attrs={'class': 'input'}))
     default_message = forms.CharField(widget=forms.Textarea(
-        attrs={'name': 'text', 'rows': 3, 'cols': 50}))
+        attrs={'name': 'text', 'rows': 3, 'cols': 50, 'class': 'textarea'}))
 
 
 @login_required(login_url='/admin/login')
@@ -40,11 +42,14 @@ class NewTranslationForm(forms.Form):
 def admin_view(request):
     if request.method == 'GET':
         translations = Translation.objects.all()
+        # Display 50 translations per page
+        paginator = Paginator(translations, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-        # Parse label to get object's model name, field name, entry id and abbreviation name
-        for translation in translations:
+        for translation in page_obj:
             if re.search(r'^\w+\..+\_\d+\-\w+$', translation.label):
-                translation.model_name = translation.label.split('.')[0]
+                translation.model_name = translation.used_by
                 translation.field_name = translation.label.split('-')[-1]
                 translation.entry_id = int(
                     re.search(r'_(\d+)-', translation.label).group(1))
@@ -56,10 +61,6 @@ def admin_view(request):
                 translation.field_name = None
                 translation.abbr_name = None
                 translation.entry_id = translation.id
-
-        paginator = Paginator(translations, 100)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
 
         context = {
             'page_obj': page_obj
@@ -100,12 +101,15 @@ def create_translation_view(request):
 @staff_member_required
 def filter_view(request):
     translations = Translation.objects \
-        .filter(label__contains=request.GET.get('label', '')) \
-        .translated(text__contains=request.GET.get('text', ''))
+        .filter(label__icontains=request.GET.get('label', '')) \
+        .translated(text__icontains=request.GET.get('text', ''))
+    paginator = Paginator(translations, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
-    for translation in translations:
+    for translation in page_obj:
         if re.search(r'^\w+\..+\_\d+\-\w+$', translation.label):
-            translation.model_name = translation.label.split('.')[0]
+            translation.model_name = translation.used_by
             translation.field_name = translation.label.split('-')[-1]
             translation.entry_id = int(
                 re.search(r'_(\d+)-', translation.label).group(1))
@@ -119,7 +123,7 @@ def filter_view(request):
             translation.entry_id = translation.id
 
     context = {
-        'page_obj': translations
+        'page_obj': page_obj
     }
 
     return render(request, "translations.html", context)
@@ -127,11 +131,12 @@ def filter_view(request):
 
 class TranslationForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea(
-        attrs={'name': 'text', 'rows': 3, 'cols': 50}), required=False)
+        attrs={'name': 'text', 'rows': 3, 'cols': 50, 'class': 'textarea'}), required=False)
 
 
 class LabelForm(forms.Form):
-    label = forms.CharField(max_length=128)
+    label = forms.CharField(max_length=128, widget=forms.TextInput(
+        attrs={'class': 'input'}))
     active = forms.BooleanField(required=False)
     no_auto = forms.BooleanField(required=False)
 
@@ -245,7 +250,8 @@ def auto_translate(request, id=0, lang='en-us'):
 
 
 class NewProgramForm(forms.Form):
-    name_abbreviated = forms.CharField(max_length=120)
+    name_abbreviated = forms.CharField(max_length=120, widget=forms.TextInput(
+        attrs={'class': 'input'}))
 
 
 @login_required(login_url='/admin/login')
@@ -264,7 +270,7 @@ def programs_view(request):
                 # Unexpected format
                 program.entry_id = None
 
-        paginator = Paginator(programs, 100)
+        paginator = Paginator(programs, 50)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -312,20 +318,27 @@ def program_view(request, id=0):
 @staff_member_required
 def programs_filter_view(request):
     if request.method == 'GET':
-        programs = Program.objects.all()
-        query = request.GET.get('name', '')
-        programs = filter(lambda p: query in p.name.text, programs)
+        programs = Program.objects.filter(
+            name__translations__text__icontains=request.GET.get('name', '')).distinct()
+
+        paginator = Paginator(programs, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'page_obj': programs
+            'page_obj': page_obj
         }
 
         return render(request, 'programs/list.html', context)
 
 
 class NewNavigatorForm(forms.Form):
-    label = forms.CharField(max_length=50)
-    phone_number = PhoneNumberField(required=False)
+    label = forms.CharField(max_length=50, widget=forms.TextInput(
+        attrs={'class': 'input'}))
+    phone_number = PhoneNumberField(required=False,
+                                    widget=PhoneNumberPrefixWidget(
+                                        attrs={'class': 'input'})
+                                    )
 
 
 @login_required(login_url='/admin/login')
@@ -334,8 +347,12 @@ def navigators_view(request):
     if request.method == 'GET':
         navigators = Navigator.objects.all()
 
+        paginator = Paginator(navigators, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
-            'navigators': navigators
+            'page_obj': page_obj
         }
 
         return render(request, 'navigators/main.html', context)
@@ -380,20 +397,27 @@ def navigator_view(request, id=0):
 @staff_member_required
 def navigator_filter_view(request):
     if request.method == 'GET':
-        navigators = Navigator.objects.all()
-        query = request.GET.get('name', '')
-        navigators = filter(lambda p: query in p.name.text, navigators)
+        navigators = Navigator.objects.filter(
+            name__translations__text__icontains=request.GET.get('name', '')).distinct()
+
+        paginator = Paginator(navigators, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'navigators': navigators
+            'page_obj': page_obj
         }
 
         return render(request, 'navigators/list.html', context)
 
 
 class NewUrgentNeedForm(forms.Form):
-    label = forms.CharField(max_length=50)
-    phone_number = PhoneNumberField(required=False)
+    label = forms.CharField(max_length=50, widget=forms.TextInput(
+        attrs={'class': 'input'}))
+    phone_number = PhoneNumberField(required=False,
+                                    widget=PhoneNumberPrefixWidget(
+                                        attrs={'class': 'input'})
+                                    )
 
 
 @login_required(login_url='/admin/login')
@@ -402,10 +426,13 @@ def urgent_needs_view(request):
     if request.method == 'GET':
         urgent_needs = UrgentNeed.objects.all()
 
-        context = {
-            'urgent_needs': urgent_needs
-        }
+        paginator = Paginator(urgent_needs, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
+        context = {
+            'page_obj': page_obj
+        }
         return render(request, 'urgent_needs/main.html', context)
     if request.method == 'POST':
         form = NewUrgentNeedForm(request.POST)
@@ -448,19 +475,23 @@ def urgent_need_view(request, id=0):
 @staff_member_required
 def urgent_need_filter_view(request):
     if request.method == 'GET':
-        urgent_needs = UrgentNeed.objects.all()
-        query = request.GET.get('name', '')
-        urgent_needs = filter(lambda p: query in p.name.text, urgent_needs)
+        urgent_needs = UrgentNeed.objects.filter(
+            name__translations__text__icontains=request.GET.get('name', '')).distinct()
+
+        paginator = Paginator(urgent_needs, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'urgent_needs': urgent_needs
+            'page_obj': page_obj
         }
 
         return render(request, 'urgent_needs/list.html', context)
 
 
 class NewDocumentForm(forms.Form):
-    external_name = forms.CharField(max_length=120)
+    external_name = forms.CharField(max_length=120, widget=forms.TextInput(
+        attrs={'class': 'input'}))
 
 
 @login_required(login_url='/admin/login')
@@ -469,10 +500,13 @@ def documents_view(request):
     if request.method == 'GET':
         documents = Document.objects.all()
 
-        context = {
-            'documents': documents
-        }
+        paginator = Paginator(documents, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
+        context = {
+            'page_obj': page_obj
+        }
         return render(request, 'documents/main.html', context)
     if request.method == 'POST':
         form = NewDocumentForm(request.POST)
@@ -515,8 +549,12 @@ def document_filter_view(request):
         query = request.GET.get('name', '')
         documents = Document.objects.filter(external_name__contains=query)
 
+        paginator = Paginator(documents, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
-            'documents': documents
+            'page_obj': page_obj
         }
 
         return render(request, 'documents/list.html', context)

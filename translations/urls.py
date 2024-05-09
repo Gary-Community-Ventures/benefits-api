@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.TranslationView.as_view()),
-    path('admin', views.admin_view),
+    path('admin', views.admin_view, name='translations_api_url'),
     path('admin/filter', views.filter_view),
     path('admin/create', views.create_translation_view),
     path('admin/programs', views.programs_view),
