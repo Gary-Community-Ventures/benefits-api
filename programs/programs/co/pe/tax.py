@@ -5,7 +5,10 @@ import programs.programs.policyengine.calculators.dependencies as dependency
 
 class Coeitc(PolicyEngineTaxUnitCalulator):
     pe_name = 'co_eitc'
-    pe_inputs = Eitc.pe_inputs
+    pe_inputs = [
+        *Eitc.pe_inputs, 
+        dependency.household.CoStateCode,
+    ]
     pe_outputs = [dependency.tax.Coeitc]
 
 
@@ -15,6 +18,7 @@ class Coctc(PolicyEngineTaxUnitCalulator):
         dependency.member.AgeDependency,
         dependency.member.TaxUnitDependentDependency,
         dependency.member.TaxUnitSpouseDependency,
+        dependency.household.CoStateCode,
         *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.tax.Ctc]
