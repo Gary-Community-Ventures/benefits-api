@@ -234,6 +234,7 @@ class EligibilitySerializer(serializers.Serializer):
     new = serializers.BooleanField()
     low_confidence = serializers.BooleanField()
     documents = DocumentSerializer(many=True)
+    estimated_value_override = TranslationSerializer()
 
     class Meta:
         fields = '__all__'

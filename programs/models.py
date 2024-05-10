@@ -81,6 +81,7 @@ class ProgramManager(models.Manager):
         'estimated_application_time',
         'category',
         'warning',
+        'estimated_value',
     )
 
     def new_program(self, name_abbreviated):
@@ -173,6 +174,13 @@ class Program(models.Model):
     warning = models.ForeignKey(
         Translation,
         related_name='program_warning',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
+    )
+    estimated_value = models.ForeignKey(
+        Translation,
+        related_name='program_estimated_value',
         blank=False,
         null=False,
         on_delete=models.PROTECT,
