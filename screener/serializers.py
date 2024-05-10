@@ -235,6 +235,7 @@ class EligibilitySerializer(serializers.Serializer):
     low_confidence = serializers.BooleanField()
     documents = DocumentSerializer(many=True)
     multiple_tax_units = serializers.BooleanField()
+    estimated_value_override = TranslationSerializer()
 
     class Meta:
         fields = '__all__'

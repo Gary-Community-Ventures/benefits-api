@@ -7,6 +7,10 @@ class CoMedicaid(Medicaid):
     child_medicaid_average = 200 * 12
     adult_medicaid_average = 310 * 12
     aged_medicaid_average = 170 * 12
+    pe_inputs = [
+        *Medicaid.pe_inputs, 
+        dependency.household.CoStateCode,
+    ]
 
 
 class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
@@ -22,6 +26,7 @@ class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitHeadDependency,
         dependency.member.TaxUnitDependentDependency,
+        dependency.household.CoStateCode,
     ]
     pe_outputs = [dependency.member.Andcs]
 
@@ -36,6 +41,7 @@ class OldAgePension(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitHeadDependency,
         dependency.member.TaxUnitDependentDependency,
+        dependency.household.CoStateCode,
     ]
     pe_outputs = [dependency.member.Oap]
 
@@ -45,6 +51,7 @@ class Chp(PolicyEngineMembersCalculator):
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
+        dependency.household.CoStateCode,
         *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.member.ChpEligible]

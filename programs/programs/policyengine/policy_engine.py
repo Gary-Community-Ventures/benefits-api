@@ -5,13 +5,21 @@ from programs.util import Dependencies
 from .calculators.dependencies.base import DependencyError
 from typing import List
 import requests
-from .calculators.constants import YEAR, PREVIOUS_YEAR
+from .calculators.dependencies.member import (
+    TaxUnitDependentDependency,
+    TaxUnitHeadDependency,
+    TaxUnitSpouseDependency,
+)
 
 
-def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[str, Eligibility]:
+def calc_pe_eligibility(
+        screen: Screen,
+        missing_fields: Dependencies,
+        calculators: dict[str, type[PolicyEngineCalulator]],
+) -> dict[str, Eligibility]:
     valid_programs: dict[str, type[PolicyEngineCalulator]] = {}
 
-    for name_abbr, Calculator in all_calculators.items():
+    for name_abbr, Calculator in calculators.items():
         if not Calculator.can_calc(missing_fields):
             continue
 
@@ -66,7 +74,6 @@ def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
             },
             "households": {
                 "household": {
-                    "state_code_str": {YEAR: "CO", PREVIOUS_YEAR: "CO"},
                     "members": []
                 }
             },
