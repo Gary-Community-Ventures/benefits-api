@@ -316,6 +316,7 @@ def eligibility_results(screen, batch=False):
                     "documents": [
                         default_message(d.text) for d in program.documents.all()
                     ],
+                    "multiple_tax_units": eligibility["multiple_tax_units"]
                 }
             )
 

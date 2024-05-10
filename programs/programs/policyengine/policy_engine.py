@@ -1,4 +1,4 @@
-from screener.models import Screen
+from screener.models import HouseholdMember, Screen
 from .calculators import all_calculators, PolicyEngineCalulator
 from programs.programs.calc import Eligibility
 from programs.util import Dependencies
@@ -31,11 +31,15 @@ def calc_pe_eligibility(
     data = policy_engine_calculate(pe_input(screen, valid_programs.values()))['result']
 
     all_eligibility: dict[str, Eligibility] = {}
+    has_non_tax_unit_members = screen.has_members_ouside_of_tax_unit()
     for name_abbr, Calculator in valid_programs.items():
         calc = Calculator(screen, data)
 
         e = calc.eligible()
         e.value = calc.value()
+
+        if Calculator.tax_unit_dependent and has_non_tax_unit_members:
+            e.multiple_tax_units = True
 
         all_eligibility[name_abbr] = e.to_dict()
 
@@ -81,7 +85,7 @@ def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
             "marital_units": {}
         }
     }
-    members = screen.household_members.all()
+    members: list[HouseholdMember] = screen.household_members.all()
     relationship_map = screen.relationship_map()
 
     for member in members:
@@ -93,11 +97,7 @@ def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
         household['spm_units']['spm_unit']['members'].append(member_id)
         household['people'][member_id] = {}
 
-        is_tax_unit_head = TaxUnitHeadDependency(screen, member, relationship_map).value()
-        is_tax_unit_spouse = TaxUnitSpouseDependency(screen, member, relationship_map).value()
-        is_tax_unit_dependent = TaxUnitDependentDependency(screen, member, relationship_map).value()
-
-        if is_tax_unit_head or is_tax_unit_spouse or is_tax_unit_dependent:
+        if member.is_in_tax_unit():
             household['tax_units']['tax_unit']['members'].append(member_id)
 
     already_added = set()
