@@ -295,6 +295,13 @@ class Screen(models.Model):
 
         return language_code
 
+    def has_members_ouside_of_tax_unit(self):
+        for member in self.household_members.all():
+            if not member.is_in_tax_unit():
+                return True
+
+        return False
+
     def missing_fields(self):
         screen_fields = ('zipcode', 'county', 'household_size', 'household_assets')
 
@@ -418,7 +425,7 @@ class HouseholdMember(models.Model):
 
         return is_tax_unit_dependent
 
-    def is_in_household(self):
+    def is_in_tax_unit(self):
         return self.is_head() or self.is_spouse() or self.is_dependent()
 
     def missing_fields(self):

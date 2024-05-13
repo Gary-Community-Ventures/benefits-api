@@ -25,6 +25,15 @@ class PolicyEngineScreenInput:
         return None
 
 
+class Household(PolicyEngineScreenInput):
+    '''
+    Base class for all household unit Policy Engine dependencies
+    '''
+
+    unit = 'households'
+    sub_unit = 'household'
+
+
 class TaxUnit(PolicyEngineScreenInput):
     '''
     Base class for all tax unit Policy Engine dependencies
