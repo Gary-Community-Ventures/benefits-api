@@ -1,4 +1,5 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.helpers import medicaid_eligible
 import programs.programs.messages as messages
 from integrations.services.sheets import GoogleSheetsCache
 
@@ -23,13 +24,7 @@ class ConnectForHealth(ProgramCalculator):
         e = Eligibility()
 
         # Medicade eligibility
-        is_medicaid_eligible = False
-        for benefit in self.data:
-            if benefit['name_abbreviated'] == 'medicaid':
-                is_medicaid_eligible = benefit['eligible']
-                break
-
-        e.condition(not is_medicaid_eligible, messages.must_not_have_benefit('Medicaid'))
+        e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit('Medicaid'))
 
         # Someone has no health insurance
         has_no_hi = self.screen.has_insurance_types(('none', 'private'))

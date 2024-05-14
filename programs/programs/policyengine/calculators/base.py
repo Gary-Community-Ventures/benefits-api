@@ -50,6 +50,7 @@ class PolicyEngineCalulator(ProgramCalculator):
 class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
     pe_category = 'tax_units'
     pe_sub_category = 'tax_unit'
+    tax_unit_dependent = True
     pe_period = PREVIOUS_YEAR
 
 class PolicyEngineSpmCalulator(PolicyEngineCalulator):
@@ -57,7 +58,7 @@ class PolicyEngineSpmCalulator(PolicyEngineCalulator):
     pe_sub_category = 'spm_unit'
 
 class PolicyEngineMembersCalculator(PolicyEngineCalulator):
-    tax_dependent = True
+    tax_unit_dependent = True
     pe_category = 'people'
 
     def value(self):
@@ -65,7 +66,7 @@ class PolicyEngineMembersCalculator(PolicyEngineCalulator):
         for pkey, pvalue in self.get_data().items():
             # The following programs use income from the tax unit,
             # so we want to skip any members that are not in the tax unit.
-            if not self.in_tax_unit(pkey) and self.tax_dependent:
+            if not self.in_tax_unit(pkey) and self.tax_unit_dependent:
                 continue
 
             pe_value = pvalue[self.pe_name][self.pe_period]

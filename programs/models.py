@@ -81,6 +81,7 @@ class ProgramManager(models.Manager):
         'estimated_application_time',
         'category',
         'warning',
+        'estimated_value',
     )
 
     def new_program(self, name_abbreviated):
@@ -177,6 +178,13 @@ class Program(models.Model):
         null=False,
         on_delete=models.PROTECT,
     )
+    estimated_value = models.ForeignKey(
+        Translation,
+        related_name='program_estimated_value',
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
+    )
 
     objects = ProgramManager()
 
@@ -196,6 +204,9 @@ class Program(models.Model):
         eligibility = calculator.eligible()
 
         eligibility.value = calculator.value(eligibility.eligible_member_count)
+
+        if Calculator.tax_unit_dependent and screen.has_members_ouside_of_tax_unit():
+            eligibility.multiple_tax_units = True
 
         return eligibility.to_dict()
 
