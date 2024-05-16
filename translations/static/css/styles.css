@@ -137,3 +137,8 @@ th {
 .new-actions {
   display: flex; flex-direction: column; align-items: flex-start;
 }
+
+/* Forms */
+.label-form-input {
+  width: 600px;
+}

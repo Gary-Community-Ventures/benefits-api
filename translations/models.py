@@ -96,30 +96,18 @@ class Translation(TranslatableModel):
 
     objects = TranslationManager()
 
-    @property
-    def used_by(self):
-        for reverse in (f for f in self._meta.get_fields() if f.auto_created and not f.concrete):
-            if reverse.related_name == 'translations':
-                continue
-            name = reverse.get_accessor_name()
-            has_reverse_other = getattr(self, name).count()
-            if has_reverse_other:
-                return reverse.related_model._meta.model_name
-        return 'unassigned'
-
-    def get_lang(self, lang):
-        return self.translations.filter(language_code=lang).first()
-
-    def in_program(self):
+    def find_used_model(self, label_unpack=False):
+        has_relationship = False
         # determine if a translation is refrenced by either a program, navigator, urgent_need, or document
         # https://stackoverflow.com/questions/54711671/django-how-to-determine-if-an-object-is-referenced-by-any-other-object
-        has_relationship = False
         for reverse in (f for f in self._meta.get_fields() if f.auto_created and not f.concrete):
             if reverse.related_name == 'translations':
                 continue
             name = reverse.get_accessor_name()
             has_reverse_other = getattr(self, name).count()
             if has_reverse_other:
+                if label_unpack:
+                    return reverse.related_model._meta.model_name
                 try:
                     active = getattr(self, reverse.related_name).first().active
                 except AttributeError:
@@ -137,6 +125,22 @@ class Translation(TranslatableModel):
                     return (table, external_name, reverse.related_name)
                 has_relationship = True
 
+        return has_relationship
+
+    @ property
+    def used_by(self):
+        model_name = self.find_used_model(label_unpack=True)
+
+        if not model_name:
+            return 'unassigned'
+
+        return model_name
+
+    def get_lang(self, lang):
+        return self.translations.filter(language_code=lang).first()
+
+    def in_program(self):
+        has_relationship = self.find_used_model()
         return has_relationship
 
     def __str__(self):

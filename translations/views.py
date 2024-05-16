@@ -41,7 +41,7 @@ class NewTranslationForm(forms.Form):
 @staff_member_required
 def admin_view(request):
     if request.method == 'GET':
-        translations = Translation.objects.all()
+        translations = Translation.objects.all().order_by('id')
         # Display 50 translations per page
         paginator = Paginator(translations, 50)
         page_number = request.GET.get('page')
@@ -181,9 +181,9 @@ def translation_view(request, id=0):
                     'label': translation.label,
                     'active': translation.active,
                     'no_auto': translation.no_auto
-                })
+                }),
             }
-            return render(request, "edit/form.html", context)
+            return render(request, "edit/label_form.html", context)
     elif request.method == 'DELETE':
         try:
             Translation.objects.get(pk=id).delete()
