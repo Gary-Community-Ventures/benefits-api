@@ -1,4 +1,8 @@
+import json
+from integrations.util.cache import Cache
+from decouple import config
 import requests
+import http.client
 
 
 class Sim:
@@ -34,12 +38,45 @@ class ApiSim(Sim):
         return self.data[unit][sub_unit]['members']
 
 
-class PrivateApi(ApiSim):
+class PolicyEngineBearerTokenCache(Cache):
+    expire_time = 60 * 60 * 24 * 30
+    default = ''
+    client_id: str = config('POLICY_ENGINE_CLIENT_ID', '')
+    client_secret: str = config('POLICY_ENGINE_CLIENT_SECRET', '')
+    domain = 'https://policyengine.uk.auth0.com'
+    endpoint = '/oauth/token'
+
+    def update(self):
+        # https://policyengine.org/us/api#fetch_token
+
+        if self.client_id == '' or self.client_secret == '':
+            raise Exception('client id or secret not configured')
+
+        payload = {
+                'client_id': self.client_id,
+                'client_secret': self.client_secret,
+        }
+
+
+        headers = { 'content-type': "application/json" }
+
+        res = requests.post(self.domain + self.endpoint, json=payload, headers=headers)
+
+        return res.json()
+
+
+class PrivateApiSim(ApiSim):
     method_name = 'Private Policy Engine API'
+    token = PolicyEngineBearerTokenCache()
+
+    def __init__(self, data) -> None:
+        token = self.token.fetch()
+        print(token)
 
 
 # NOTE: Code to run Policy Engine locally. This is currently too CPU expensive to run in production.
 # Requires the Policy Engine package to be installed and imported.
+#
 # class LocalSim(Sim):
 #     method_name = 'local package'
 #
@@ -68,4 +105,4 @@ class PrivateApi(ApiSim):
 #         return self.household[unit][sub_unit]['members']
 
 
-pe_engines = [ApiSim]
+pe_engines = [PrivateApiSim, ApiSim]
