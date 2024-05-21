@@ -4,7 +4,7 @@ import requests
 
 
 class Sim:
-    method = ""
+    method_name = ""
 
     def __init__(self, data) -> None:
         self.data = data
@@ -111,4 +111,4 @@ class PrivateApiSim(ApiSim):
 #         return self.household[unit][sub_unit]['members']
 
 
-pe_engines = [PrivateApiSim, ApiSim]
+pe_engines: list[Sim] = [PrivateApiSim, ApiSim]
