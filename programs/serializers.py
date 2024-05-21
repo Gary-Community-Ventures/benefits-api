@@ -21,10 +21,9 @@ class ProgramSerializer(serializers.ModelSerializer):
 
 class UrgentNeedAPISerializer(serializers.ModelSerializer):
     name = ModelTranslationSerializer()
-    # website_description = ModelTranslationSerializer()
+    website_description = ModelTranslationSerializer()
     type = ModelTranslationSerializer()
 
     class Meta:
         model = UrgentNeed
-        # fields = ("id", "name", "website_description", "type")
-        fields = ("id", "name", "type")
+        fields = ("id", "name", "website_description", "type")
