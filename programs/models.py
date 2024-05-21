@@ -222,6 +222,7 @@ class UrgentNeedManager(models.Manager):
         "link",
         "type",
         "warning",
+        "website_description",
     )
 
     def new_urgent_need(self, name, phone_number):
@@ -265,6 +266,9 @@ class UrgentNeed(models.Model):
     )
     warning = models.ForeignKey(
         Translation, related_name="urgent_need_warning", blank=False, null=False, on_delete=models.PROTECT
+    )
+    website_description = models.ForeignKey(
+        Translation, related_name="urgent_website_description", blank=False, null=False, on_delete=models.PROTECT
     )
 
     objects = UrgentNeedManager()
