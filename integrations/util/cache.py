@@ -1,8 +1,8 @@
-from sentry_sdk import capture_message
+from sentry_sdk import capture_exception, capture_message
 import datetime
 
 
-class Cache():
+class Cache:
     expire_time = 0
     default = 0
 
@@ -17,8 +17,8 @@ class Cache():
         try:
             self.data = self.update()
             self.last_update = datetime.datetime.now()
-        except Exception:
-            capture_message(f'Failed to update {self.__class__.__name__}', level='warning')
+        except Exception as e:
+            capture_exception(e, level="warning")
 
     def should_update(self):
         return datetime.datetime.now() > self.last_update + datetime.timedelta(seconds=self.expire_time)

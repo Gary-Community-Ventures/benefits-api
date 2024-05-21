@@ -4,14 +4,14 @@ from programs.programs.calc import Eligibility
 from programs.util import Dependencies
 from .calculators.dependencies.base import DependencyError
 from typing import List
-from sentry_sdk import capture_message
+from sentry_sdk import capture_exception, capture_message
 from .engines import Sim, pe_engines
 
 
 def calc_pe_eligibility(
-        screen: Screen,
-        missing_fields: Dependencies,
-        calculators: dict[str, type[PolicyEngineCalulator]],
+    screen: Screen,
+    missing_fields: Dependencies,
+    calculators: dict[str, type[PolicyEngineCalulator]],
 ) -> dict[str, Eligibility]:
     valid_programs: dict[str, type[PolicyEngineCalulator]] = {}
 
@@ -29,12 +29,11 @@ def calc_pe_eligibility(
     for Method in pe_engines:
         try:
             return all_eligibility(Method(input_data), valid_programs, screen)
-        except Exception:
-            capture_message(f'Failed to calculate eligibility with the {Method.method_name} method', level='warning')
+        except Exception as e:
+            capture_exception(e, level="warning", message="")
+            capture_message(f"Failed to calculate eligibility with the {Method.method_name} method", level="warning")
 
-    error_message = 'Failed to calculate Policy Engine eligibility'
-    capture_message(error_message)
-    raise Exception(error_message)
+    raise Exception("Failed to calculate Policy Engine eligibility")
 
 
 def all_eligibility(method: Sim, valid_programs: dict[str, type[PolicyEngineCalulator]], screen: Screen):
@@ -50,9 +49,9 @@ def all_eligibility(method: Sim, valid_programs: dict[str, type[PolicyEngineCalu
 
 
 def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
-    '''
+    """
     Generate Policy Engine API request from the list of programs.
-    '''
+    """
     raw_input = {
         "household": {
             "people": {},
@@ -61,22 +60,14 @@ def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
                     "members": [],
                 }
             },
-            "families": {
-                "family": {
-                    "members": []
-                }
-            },
-            "households": {
-                "household": {
-                    "members": []
-                }
-            },
+            "families": {"family": {"members": []}},
+            "households": {"household": {"members": []}},
             "spm_units": {
                 "spm_unit": {
                     "members": [],
                 }
             },
-            "marital_units": {}
+            "marital_units": {},
         }
     }
     members: list[HouseholdMember] = screen.household_members.all()
@@ -84,15 +75,15 @@ def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
 
     for member in members:
         member_id = str(member.id)
-        household = raw_input['household']
+        household = raw_input["household"]
 
-        household['families']['family']['members'].append(member_id)
-        household['households']['household']['members'].append(member_id)
-        household['spm_units']['spm_unit']['members'].append(member_id)
-        household['people'][member_id] = {}
+        household["families"]["family"]["members"].append(member_id)
+        household["households"]["household"]["members"].append(member_id)
+        household["spm_units"]["spm_unit"]["members"].append(member_id)
+        household["people"][member_id] = {}
 
         if member.is_in_tax_unit():
-            household['tax_units']['tax_unit']['members'].append(member_id)
+            household["tax_units"]["tax_unit"]["members"].append(member_id)
 
     already_added = set()
     for member_1, member_2 in relationship_map.items():
@@ -100,14 +91,14 @@ def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
             continue
 
         marital_unit = (str(member_1), str(member_2))
-        raw_input['household']['marital_units']['-'.join(marital_unit)] = {'members': marital_unit}
+        raw_input["household"]["marital_units"]["-".join(marital_unit)] = {"members": marital_unit}
         already_added.add(member_1)
         already_added.add(member_2)
 
     for Program in programs:
         for Data in Program.pe_inputs + Program.pe_outputs:
             period = Program.pe_period
-            if hasattr(Program, 'pe_output_period') and Data in Program.pe_outputs:
+            if hasattr(Program, "pe_output_period") and Data in Program.pe_outputs:
                 period = Program.pe_output_period
 
             if not Data.member:
