@@ -9,7 +9,7 @@ class ProgramViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.
     API endpoint that allows programs to be viewed or edited.
     """
 
-    queryset = Program.objects.all()
+    queryset = Program.objects.filter(active=True)
     serializer_class = ProgramSerializer
     permission_classes = [permissions.IsAuthenticated]
 
@@ -29,6 +29,6 @@ class UrgentNeedViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewse
     API endpoint that allows programs to be viewed or edited.
     """
 
-    queryset = UrgentNeed.objects.all()
+    queryset = UrgentNeed.objects.filter(active=True)
     serializer_class = UrgentNeedAPISerializer
     permission_classes = [permissions.IsAuthenticated]
