@@ -1,4 +1,4 @@
-from sentry_sdk import capture_exception, capture_message
+from sentry_sdk import capture_exception
 import datetime
 
 
