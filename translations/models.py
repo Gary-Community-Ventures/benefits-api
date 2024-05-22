@@ -22,9 +22,7 @@ class TranslationManager(TranslatableManager):
     def edit_translation(self, label, lang, translation, manual=True):
         parent = self.language(lang).get(label=label)
 
-        lang_trans = parent.get_lang(lang)
-        is_edited = lang_trans is not None and lang_trans.edited is True and lang_trans.text != ''
-        if manual is False and (is_edited or parent.no_auto):
+        if manual is False and parent.no_auto:
             return parent
 
         parent.text = translation
@@ -36,9 +34,7 @@ class TranslationManager(TranslatableManager):
         parent = self.prefetch_related(
             'translations').language(lang).get(pk=id)
 
-        lang_trans = parent.get_lang(lang)
-        is_edited = lang_trans is not None and lang_trans.edited is True and lang_trans.text != ''
-        if manual is False and (is_edited or parent.no_auto):
+        if manual is False and parent.no_auto:
             return parent
 
         parent.text = translation
