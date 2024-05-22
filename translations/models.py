@@ -3,10 +3,13 @@ from parler.models import TranslatableModel, TranslatedFields, TranslatableManag
 from django.conf import settings
 
 
+BLANK_TRANSLATION_PLACEHOLDER = '[PLACEHOLDER]'
+
+
 class TranslationManager(TranslatableManager):
     use_in_migrations = True
 
-    def add_translation(self, label, default_message, active=True, no_auto=False):
+    def add_translation(self, label, default_message=BLANK_TRANSLATION_PLACEHOLDER, active=True, no_auto=False):
         default_lang = settings.LANGUAGE_CODE
         parent = self.get_or_create(label=label, defaults={
                                     'active': active, 'no_auto': no_auto})[0]
