@@ -91,8 +91,12 @@ class ProgramManager(models.Manager):
                 f'program.{name_abbreviated}_temporary_key-{field}', ''
             )
 
+        # try to set the external_name to the name_abbreviated
+        external_name_exists = self.filter(external_name=name_abbreviated).count() > 0
+
         program = self.create(
             name_abbreviated=name_abbreviated,
+            external_name=name_abbreviated if not external_name_exists else None,
             fpl=None,
             active=False,
             low_confidence=False,
@@ -248,8 +252,12 @@ class UrgentNeedManager(models.Manager):
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(f'urgent_need.{name}_temporary_key-{field}', '')
 
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=name).count() > 0
+
         urgent_need = self.create(
             phone_number=phone_number,
+            external_name=name if not external_name_exists else None,
             active=False,
             low_confidence=False,
             **translations,
@@ -328,8 +336,12 @@ class NavigatorManager(models.Manager):
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(f'navigator.{name}_temporary_key-{field}', '')
 
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=name).count() > 0
+
         navigator = self.create(
             phone_number=phone_number,
+            external_name=name if not external_name_exists else None,
             **translations,
         )
 
