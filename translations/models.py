@@ -113,16 +113,12 @@ class Translation(TranslatableModel):
                 except AttributeError:
                     active = True
 
-                if not active:
-                    has_relationship = True
-                    continue
-
                 external_name = getattr(
                     self, reverse.related_name).first().external_name
                 table = getattr(
                     self, reverse.related_name).first()._meta.db_table
                 if external_name:
-                    return (table, external_name, reverse.related_name)
+                    return (table, external_name, reverse.related_name, active)
                 has_relationship = True
 
         return has_relationship
