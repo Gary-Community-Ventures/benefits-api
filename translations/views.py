@@ -336,7 +336,7 @@ class NewNavigatorForm(forms.Form):
     label = forms.CharField(max_length=50, widget=forms.TextInput(
         attrs={'class': 'input'}))
     phone_number = PhoneNumberField(required=False,
-                                    widget=PhoneNumberPrefixWidget(
+                                    widget=forms.TextInput(
                                         attrs={'class': 'input'})
                                     )
 
@@ -415,7 +415,7 @@ class NewUrgentNeedForm(forms.Form):
     label = forms.CharField(max_length=50, widget=forms.TextInput(
         attrs={'class': 'input'}))
     phone_number = PhoneNumberField(required=False,
-                                    widget=PhoneNumberPrefixWidget(
+                                    widget=forms.TextInput(
                                         attrs={'class': 'input'})
                                     )
 
