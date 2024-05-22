@@ -5,23 +5,23 @@ from screener.models import Screen
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
 from authentication.serializers import UserSerializer, UserOffersSerializer
-from sentry_sdk import capture_message
+from sentry_sdk import capture_exception
 from integrations.services.hubspot.integration import update_send_offers_hubspot, upsert_user_hubspot
 import uuid
 
 
-class UserViewSet(mixins.UpdateModelMixin,
-                  viewsets.GenericViewSet):
+class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.all().order_by('-email_or_cell')
+
+    queryset = User.objects.all().order_by("-email_or_cell")
     serializer_class = UserSerializer
     permission_classes = [permissions.DjangoModelPermissions]
 
     def update(self, request, pk=None):
         if pk is None:
-            return Response('Must have an associated screen', status=400)
+            return Response("Must have an associated screen", status=400)
         screen = Screen.objects.get(uuid=pk)
         user = screen.user
         if user:
@@ -43,11 +43,8 @@ class UserViewSet(mixins.UpdateModelMixin,
 
                 try:
                     upsert_user_to_hubspot(screen, screen.user)
-                except Exception:
-                    capture_message(
-                        'HubSpot upsert failed',
-                        level='warning',
-                    )
+                except Exception as e:
+                    capture_exception(e, level="warning")
                     return Response("Invalid Email", status=400)
 
             return Response(status=204)
@@ -65,14 +62,13 @@ def upsert_user_to_hubspot(screen, user):
 
     hubspot_id = upsert_user_hubspot(user, screen=screen)
     if hubspot_id:
-        random_id = str(uuid.uuid4()).replace('-', '')
+        random_id = str(uuid.uuid4()).replace("-", "")
         user.external_id = hubspot_id
-        user.email_or_cell = f'{hubspot_id}+{random_id}@myfriendben.org'
+        user.email_or_cell = f"{hubspot_id}+{random_id}@myfriendben.org"
         user.first_name = None
         user.last_name = None
         user.cell = None
         user.email = None
         user.save()
     else:
-        raise Exception('Failed to upsert user')
-
+        raise Exception("Failed to upsert user")
