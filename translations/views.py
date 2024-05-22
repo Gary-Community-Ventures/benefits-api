@@ -258,7 +258,7 @@ class NewProgramForm(forms.Form):
 @staff_member_required
 def programs_view(request):
     if request.method == 'GET':
-        programs = Program.objects.all()
+        programs = Program.objects.all().order_by('external_name')
 
         # Parse label to just get the object's model entry id (for now)
         for program in programs:
@@ -319,7 +319,7 @@ def program_view(request, id=0):
 def programs_filter_view(request):
     if request.method == 'GET':
         programs = Program.objects.filter(
-            name__translations__text__icontains=request.GET.get('name', '')).distinct()
+            name__translations__text__icontains=request.GET.get('name', '')).distinct().order_by('external_name')
 
         paginator = Paginator(programs, 50)
         page_number = request.GET.get('page')
@@ -345,7 +345,7 @@ class NewNavigatorForm(forms.Form):
 @staff_member_required
 def navigators_view(request):
     if request.method == 'GET':
-        navigators = Navigator.objects.all()
+        navigators = Navigator.objects.all().order_by('external_name')
 
         paginator = Paginator(navigators, 50)
         page_number = request.GET.get('page')
@@ -398,7 +398,7 @@ def navigator_view(request, id=0):
 def navigator_filter_view(request):
     if request.method == 'GET':
         navigators = Navigator.objects.filter(
-            name__translations__text__icontains=request.GET.get('name', '')).distinct()
+            name__translations__text__icontains=request.GET.get('name', '')).distinct().order_by('external_name')
 
         paginator = Paginator(navigators, 50)
         page_number = request.GET.get('page')
@@ -424,7 +424,7 @@ class NewUrgentNeedForm(forms.Form):
 @staff_member_required
 def urgent_needs_view(request):
     if request.method == 'GET':
-        urgent_needs = UrgentNeed.objects.all()
+        urgent_needs = UrgentNeed.objects.all().order_by('external_name')
 
         paginator = Paginator(urgent_needs, 50)
         page_number = request.GET.get('page')
@@ -476,7 +476,7 @@ def urgent_need_view(request, id=0):
 def urgent_need_filter_view(request):
     if request.method == 'GET':
         urgent_needs = UrgentNeed.objects.filter(
-            name__translations__text__icontains=request.GET.get('name', '')).distinct()
+            name__translations__text__icontains=request.GET.get('name', '')).distinct().order_by('external_name')
 
         paginator = Paginator(urgent_needs, 50)
         page_number = request.GET.get('page')
@@ -498,7 +498,7 @@ class NewDocumentForm(forms.Form):
 @staff_member_required
 def documents_view(request):
     if request.method == 'GET':
-        documents = Document.objects.all()
+        documents = Document.objects.all().order_by('external_name')
 
         paginator = Paginator(documents, 50)
         page_number = request.GET.get('page')
@@ -547,7 +547,7 @@ def document_view(request, id=0):
 def document_filter_view(request):
     if request.method == 'GET':
         query = request.GET.get('name', '')
-        documents = Document.objects.filter(external_name__contains=query)
+        documents = Document.objects.filter(external_name__contains=query).order_by('external_name')
 
         paginator = Paginator(documents, 50)
         page_number = request.GET.get('page')
