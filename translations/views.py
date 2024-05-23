@@ -48,19 +48,12 @@ def admin_view(request):
         page_obj = paginator.get_page(page_number)
 
         for translation in page_obj:
-            if re.search(r'^\w+\..+\_\d+\-\w+$', translation.label):
-                translation.model_name = translation.used_by
-                translation.field_name = translation.label.split('-')[-1]
-                translation.entry_id = int(
-                    re.search(r'_(\d+)-', translation.label).group(1))
-                translation.abbr_name = re.search(
-                    r'\.(.+?)_\d+', translation.label).group(1)
-            else:
-                # Unexpected format
-                translation.model_name = None
-                translation.field_name = None
-                translation.abbr_name = None
-                translation.entry_id = translation.id
+            used_by_info = translation.used_by
+
+            translation.entry_id = used_by_info['id']
+            translation.model_name = used_by_info['model_name']
+            translation.field_name = used_by_info['field_name']
+            translation.display_name = used_by_info['display_name']
 
         context = {
             'page_obj': page_obj
@@ -108,19 +101,12 @@ def filter_view(request):
     page_obj = paginator.get_page(page_number)
 
     for translation in page_obj:
-        if re.search(r'^\w+\..+\_\d+\-\w+$', translation.label):
-            translation.model_name = translation.used_by
-            translation.field_name = translation.label.split('-')[-1]
-            translation.entry_id = int(
-                re.search(r'_(\d+)-', translation.label).group(1))
-            translation.abbr_name = re.search(
-                r'\.(.+?)_\d+', translation.label).group(1)
-        else:
-            # Unexpected format
-            translation.model_name = None
-            translation.field_name = None
-            translation.abbr_name = None
-            translation.entry_id = translation.id
+        used_by_info = translation.used_by
+
+        translation.entry_id = used_by_info['id']
+        translation.model_name = used_by_info['model_name']
+        translation.field_name = used_by_info['field_name']
+        translation.display_name = used_by_info['display_name']
 
     context = {
         'page_obj': page_obj
@@ -259,16 +245,6 @@ class NewProgramForm(forms.Form):
 def programs_view(request):
     if request.method == 'GET':
         programs = Program.objects.all().order_by('external_name')
-
-        # Parse label to just get the object's model entry id (for now)
-        for program in programs:
-
-            if re.search(r'^\w+\..+\_\d+\-\w+$', str(program.name)):
-                program.entry_id = int(
-                    re.search(r'_(\d+)-', str(program.name)).group(1))
-            else:
-                # Unexpected format
-                program.entry_id = None
 
         paginator = Paginator(programs, 50)
         page_number = request.GET.get('page')
@@ -547,7 +523,8 @@ def document_view(request, id=0):
 def document_filter_view(request):
     if request.method == 'GET':
         query = request.GET.get('name', '')
-        documents = Document.objects.filter(external_name__contains=query).order_by('external_name')
+        documents = Document.objects.filter(
+            external_name__contains=query).order_by('external_name')
 
         paginator = Paginator(documents, 50)
         page_number = request.GET.get('page')

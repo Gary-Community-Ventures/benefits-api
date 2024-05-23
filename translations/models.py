@@ -95,6 +95,15 @@ class Translation(TranslatableModel):
 
     objects = TranslationManager()
 
+    """
+    This method checks if the current Translation object is referenced by any related models
+    such as Program, Navigator, UrgentNeed, or Document. It iterates through all reverse 
+    relationships of the Translation model and determines if any related object exists. 
+    If a related object is found and `label_unpack` is True, it returns the reverse relationship. 
+    Otherwise, it returns details of the related object including the table name, external name, 
+    related name, and active status. If no related object is found, it returns False.
+    """
+
     def find_used_model(self, label_unpack=False):
         has_relationship = False
         # determine if a translation is refrenced by either a program, navigator, urgent_need, or document
@@ -102,11 +111,12 @@ class Translation(TranslatableModel):
         for reverse in (f for f in self._meta.get_fields() if f.auto_created and not f.concrete):
             if reverse.related_name == 'translations':
                 continue
+
             name = reverse.get_accessor_name()
             has_reverse_other = getattr(self, name).count()
             if has_reverse_other:
                 if label_unpack:
-                    return reverse.related_model._meta.model_name
+                    return reverse
                 try:
                     active = getattr(self, reverse.related_name).first().active
                 except AttributeError:
@@ -122,14 +132,35 @@ class Translation(TranslatableModel):
 
         return has_relationship
 
-    @ property
+    """
+    This property field stores information about the first model instance that uses
+    this Translation object. It checks for related models and, if a relationship
+    is found, retrieves the instance's ID, model name, field name, and display name (either 
+    an external name or an abbreviated name). If no relationship is found, it returns 
+    default values indicating the translation is unassigned.
+    """
+    @property
     def used_by(self):
-        model_name = self.find_used_model(label_unpack=True)
-
-        if not model_name:
-            return 'unassigned'
-
-        return model_name
+        reverse = self.find_used_model(label_unpack=True)
+        if reverse:
+            instance = getattr(self, reverse.get_accessor_name()).first()
+            model_name = reverse.related_model._meta.model_name
+            field_name = reverse.field.name
+            external_name = getattr(instance, 'external_name', None)
+            abbreviated_name = getattr(instance, 'abbreviated_name', None)
+            display_name = external_name if external_name else abbreviated_name
+            return {
+                'id': instance.id,
+                'model_name': model_name,
+                'field_name': field_name,
+                'display_name': display_name
+            }
+        return {
+            'id': None,
+            'model_name': 'unassigned',
+            'field_name': None,
+            'display_name': None
+        }
 
     def get_lang(self, lang):
         return self.translations.filter(language_code=lang).first()
