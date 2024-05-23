@@ -252,17 +252,17 @@ UNFOLD = {
                         "link": reverse_lazy("admin:programs_program_changelist"),
                     },
                     {
-                        "title": _("Urgent Need"),
+                        "title": _("Urgent Needs"),
                         "icon": "breaking_news",
                         "link": reverse_lazy("admin:programs_urgentneed_changelist"),
                     },
                     {
-                        "title": _("Navigator"),
+                        "title": _("Navigators"),
                         "icon": "near_me",
                         "link": reverse_lazy("admin:programs_navigator_changelist"),
                     },
                     {
-                        "title": _("Configuration"),
+                        "title": _("Configurations"),
                         "icon": "tune",
                         "link": reverse_lazy("admin:configuration_configuration_changelist"),
                     },
