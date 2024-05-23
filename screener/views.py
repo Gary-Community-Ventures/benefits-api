@@ -386,6 +386,9 @@ def urgent_need_results(screen):
             screen, missing_dependencies
         ),
         'child_first': urgent_need_functions.ChildFirst.calc(screen, missing_dependencies),
+        'ecmh': urgent_need_functions.EarlyChildhoodMentalHealthSupport.calc(screen, missing_dependencies),
+        'popy': urgent_need_functions.ParentsOfPreschoolYoungsters.calc(screen, missing_dependencies),
+        'pat': urgent_need_functions.ParentsAsTeacher.calc(screen, missing_dependencies),
     }
 
     list_of_needs = []

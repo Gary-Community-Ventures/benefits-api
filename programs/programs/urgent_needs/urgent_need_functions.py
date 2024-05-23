@@ -287,3 +287,89 @@ class ChildFirst(UrgentNeedFunction):
         ]
 
         return is_age_eligible and screen.county in eligible_counties
+
+
+class EarlyChildhoodMentalHealthSupport(UrgentNeedFunction):
+    dependencies = ['age']
+    max_age = 5
+
+    @classmethod
+    def eligible(cls, screen: Screen):
+        '''
+        Return True if the householdhas a child aged 0-5
+        '''
+        return screen.num_children(age_max=cls.max_age) > 0
+
+
+class ParentsOfPreschoolYoungsters(UrgentNeedFunction):
+    dependencies = ['age', 'county']
+    counties = [
+        'Adams County',
+        'Alamosa County',
+        'Arapahoe County',
+        'Costilla County',
+        'Crowley County',
+        'Denver County',
+        'Dolores County',
+        'Jefferson County',
+        'Montezuma County',
+        'Otero County',
+        'Pueblo County',
+        'Saguache County',
+        'Weld County',
+    ]
+    min_age = 2
+    max_age = 5
+
+    @classmethod
+    def eligible(cls, screen: Screen):
+        age_eligible = screen.num_children(age_min=cls.min_age, age_max=cls.max_age)
+        county_eligible = screen.county in cls.counties
+
+        return age_eligible and county_eligible
+
+
+class ParentsAsTeacher(UrgentNeedFunction):
+    dependencies = ['age', 'county']
+    counties = [
+        'Adams County',
+        'Alamosa County',
+        'Arapahoe County',
+        'Bent County',
+        'Boulder County',
+        'Conejos County',
+        'Costilla County',
+        'Crowley County',
+        'Delta County',
+        'Denver County',
+        'Dolores County',
+        'El Paso County',
+        'Fremont County',
+        'Gunnison County',
+        'Huerfano County',
+        'Jefferson County',
+        'La Plata County',
+        'Larimer County',
+        'Las Animas County',
+        'Mesa County',
+        'Montezuma County',
+        'Montrose County',
+        'Morgan County',
+        'Otero County',
+        'Ouray County',
+        'Park County',
+        'Pueblo County',
+        'Routt County',
+        'Saguache County',
+        'San Miguel County',
+        'Teller County',
+    ]
+    max_age = 5
+
+    @classmethod
+    def eligible(cls, screen: Screen):
+        age_eligible = screen.num_children(age_max=cls.max_age)
+        county_eligible = screen.county in cls.counties
+
+        return age_eligible and county_eligible
+
