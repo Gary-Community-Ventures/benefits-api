@@ -20,6 +20,7 @@ from .models import (
 class ProgramAdmin(ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "name_abbreviated", "active", "action_buttons"]
+    filter_horizontal = ('legal_status_required', 'documents',)
 
     def get_str(self, obj):
         return str(obj) if str(obj).strip() else 'unnamed'
@@ -86,6 +87,7 @@ class NavigatorCountiesAdmin(ModelAdmin):
 class NavigatorAdmin(ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "action_buttons"]
+    filter_horizontal = ('program', 'counties',)
 
     def get_str(self, obj):
         return str(obj) if str(obj).strip() else 'unnamed'
@@ -124,10 +126,11 @@ class NavigatorAdmin(ModelAdmin):
 class UrgentNeedAdmin(ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "active", "action_buttons"]
+    filter_horizontal = ('type_short', 'functions',)
 
     def get_str(self, obj):
         return str(obj) if str(obj).strip() else 'unnamed'
-    
+
     get_str.admin_order_field = "name"
     get_str.short_description = "Urgent Need"
 
@@ -177,11 +180,13 @@ class FederalPovertyLimitAdmin(ModelAdmin):
 
 
 class DocumentAdmin(ModelAdmin):
-    search_fields = ("name",)
+    search_fields = ("external_name",)
 
 
 class ReferrerAdmin(ModelAdmin):
     search_fields = ("referrer_code",)
+    filter_horizontal = ('webhook_functions',
+                         'primary_navigators', 'remove_programs',)
 
 
 class WebHookFunctionsAdmin(ModelAdmin):
