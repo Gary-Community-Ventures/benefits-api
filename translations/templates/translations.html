@@ -9,13 +9,13 @@
         <th
           data-tooltip="This is the unique identifier for the object's entry into its original model."
         >
-          Entry ID
+          ID
         </th>
         <th>Label</th>
         <th data-tooltip="The model that the translation object is used by.">
           Model
         </th>
-        <th>Abbreviated Name</th>
+        <th>Abbreviated/External Name</th>
         <th
           data-tooltip="This is the name of the field for which the translation is provided."
         >
@@ -32,7 +32,7 @@
         <td>{{ translation.entry_id }}</td>
         <td>{{ translation.label }}</td>
         <td>{{ translation.model_name|capfirst }}</td>
-        <td>{{ translation.abbr_name }}</td>
+        <td>{{ translation.display_name }}</td>
         <td>{{ translation.field_name }}</td>
         <td>{{ translation.edited }}</td>
         <td>{{ translation.active }}</td>

@@ -6,8 +6,9 @@
   >
     <thead>
       <tr>
-        <th>Entry ID</th>
+        <th>ID</th>
         <th>External Name</th>
+        <th>External Name Label</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -16,6 +17,7 @@
       <tr>
         <td>{{ document.id }}</td>
         <td>{{ document.external_name }}</td>
+        <td>{{ document.name }}</td>
         <td>
           <div class="dropdown">
             <div class="dropdown-trigger">
@@ -53,13 +55,13 @@
       </tr>
       {% empty %}
       <tr>
-        <td colspan="3">No results</td>
+        <td colspan="4">No results</td>
       </tr>
       {% endfor %}
     </tbody>
     <tfoot>
       <tr>
-        <td colspan="3">Total: {{ page_obj.paginator.count }}</td>
+        <td colspan="4">Total: {{ page_obj.paginator.count }}</td>
       </tr>
     </tfoot>
   </table>

@@ -30,29 +30,17 @@
     </div>
     <div class="box">
       <div id="languages">
-        <div class="columns">
-          <div class="column">
-            <label class="label">Language Code</label>
-          </div>
-          <div class="column">
-            <label class="label">Saved Text</label>
-          </div>
-        </div>
         {% for lang, form in langs.items %}
-        <div class="columns">
-          <div class="column">
-            <label class="label">{{ lang }}</label>
-          </div>
-          <div class="column">
-            <form
-              id="{{ lang }}"
-              hx-post="{{ translation.id }}/{{ lang }}"
-              hx-target="#languages"
-              hx-swap="outerHTML"
-            >
-              {% include "./lang_form.html" with lang=lang form=form %}
-            </form>
-          </div>
+        <div class="block">
+          <label class="label">Language Code: {{ lang }}</label>
+          <form
+            id="{{ lang }}"
+            hx-post="{{ translation.id }}/{{ lang }}"
+            hx-target="#languages"
+            hx-swap="outerHTML"
+          >
+            {% include "./lang_form.html" with lang=lang form=form %}
+          </form>
         </div>
         {% endfor %}
       </div>

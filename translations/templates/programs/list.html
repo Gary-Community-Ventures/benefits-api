@@ -6,18 +6,18 @@
   >
     <thead>
       <tr>
-        <th>Entry ID</th>
+        <th>ID</th>
         <th>Name</th>
         <th>Abbreviated Name</th>
         <th>Active</th>
-        <th>Label</th>
+        <th>Name Label</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       {% for program in page_obj %}
       <tr>
-        <td>{{ program.entry_id }}</td>
+        <td>{{ program.id }}</td>
         <td>{{ program.name.text }}</td>
         <td>{{ program.name_abbreviated }}</td>
         <td>{{ program.active }}</td>

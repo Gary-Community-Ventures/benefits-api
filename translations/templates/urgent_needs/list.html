@@ -6,9 +6,10 @@
   >
     <thead>
       <tr>
-        <th>Entry ID</th>
+        <th>ID</th>
         <th>Name</th>
         <th>External Name</th>
+        <th>Name Label</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -18,6 +19,7 @@
         <td>{{ urgent_need.id }}</td>
         <td>{{ urgent_need.name.text }}</td>
         <td>{{ urgent_need.external_name }}</td>
+        <td>{{ urgent_need.name }}</td>
         <td>
           <div class="dropdown">
             <div class="dropdown-trigger">

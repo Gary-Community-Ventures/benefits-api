@@ -1,13 +1,15 @@
 <div id="languages">
   {% for lang, form in langs.items %}
-  <h3>{{ lang }}</h3>
-  <form
-    id="{{ lang }}"
-    hx-post="{{ translation.id }}/{{ lang }}"
-    hx-target="#languages"
-    hx-swap="outerHTML"
-  >
-    {% include "./lang_form.html" with lang=lang form=form %}
-  </form>
+  <div class="block">
+    <label class="label">Language Code: {{ lang }}</label>
+    <form
+      id="{{ lang }}"
+      hx-post="{{ translation.id }}/{{ lang }}"
+      hx-target="#languages"
+      hx-swap="outerHTML"
+    >
+      {% include "./lang_form.html" with lang=lang form=form %}
+    </form>
+  </div>
   {% endfor %}
 </div>
