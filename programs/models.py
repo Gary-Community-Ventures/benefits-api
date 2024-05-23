@@ -45,7 +45,7 @@ class DocumentManager(models.Manager):
 
     def new_document(self, external_name):
         translation = Translation.objects.add_translation(
-            f'document.{external_name}_temporary_key', ''
+            f'document.{external_name}_temporary_key'
         )
 
         document = self.create(
@@ -88,11 +88,15 @@ class ProgramManager(models.Manager):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
-                f'program.{name_abbreviated}_temporary_key-{field}', ''
+                f'program.{name_abbreviated}_temporary_key-{field}'
             )
+
+        # try to set the external_name to the name_abbreviated
+        external_name_exists = self.filter(external_name=name_abbreviated).count() > 0
 
         program = self.create(
             name_abbreviated=name_abbreviated,
+            external_name=name_abbreviated if not external_name_exists else None,
             fpl=None,
             active=False,
             low_confidence=False,
@@ -246,10 +250,14 @@ class UrgentNeedManager(models.Manager):
     def new_urgent_need(self, name, phone_number):
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(f'urgent_need.{name}_temporary_key-{field}', '')
+            translations[field] = Translation.objects.add_translation(f'urgent_need.{name}_temporary_key-{field}')
+
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=name).count() > 0
 
         urgent_need = self.create(
             phone_number=phone_number,
+            external_name=name if not external_name_exists else None,
             active=False,
             low_confidence=False,
             **translations,
@@ -326,10 +334,14 @@ class NavigatorManager(models.Manager):
     def new_navigator(self, name, phone_number):
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(f'navigator.{name}_temporary_key-{field}', '')
+            translations[field] = Translation.objects.add_translation(f'navigator.{name}_temporary_key-{field}')
+
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=name).count() > 0
 
         navigator = self.create(
             phone_number=phone_number,
+            external_name=name if not external_name_exists else None,
             **translations,
         )
 

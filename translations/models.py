@@ -3,10 +3,13 @@ from parler.models import TranslatableModel, TranslatedFields, TranslatableManag
 from django.conf import settings
 
 
+BLANK_TRANSLATION_PLACEHOLDER = '[PLACEHOLDER]'
+
+
 class TranslationManager(TranslatableManager):
     use_in_migrations = True
 
-    def add_translation(self, label, default_message, active=True, no_auto=False):
+    def add_translation(self, label, default_message=BLANK_TRANSLATION_PLACEHOLDER, active=True, no_auto=False):
         default_lang = settings.LANGUAGE_CODE
         parent = self.get_or_create(label=label, defaults={
                                     'active': active, 'no_auto': no_auto})[0]
@@ -22,9 +25,7 @@ class TranslationManager(TranslatableManager):
     def edit_translation(self, label, lang, translation, manual=True):
         parent = self.language(lang).get(label=label)
 
-        lang_trans = parent.get_lang(lang)
-        is_edited = lang_trans is not None and lang_trans.edited is True and lang_trans.text != ''
-        if manual is False and (is_edited or parent.no_auto):
+        if manual is False and parent.no_auto:
             return parent
 
         parent.text = translation
@@ -36,9 +37,7 @@ class TranslationManager(TranslatableManager):
         parent = self.prefetch_related(
             'translations').language(lang).get(pk=id)
 
-        lang_trans = parent.get_lang(lang)
-        is_edited = lang_trans is not None and lang_trans.edited is True and lang_trans.text != ''
-        if manual is False and (is_edited or parent.no_auto):
+        if manual is False and parent.no_auto:
             return parent
 
         parent.text = translation
@@ -113,16 +112,12 @@ class Translation(TranslatableModel):
                 except AttributeError:
                     active = True
 
-                if not active:
-                    has_relationship = True
-                    continue
-
                 external_name = getattr(
                     self, reverse.related_name).first().external_name
                 table = getattr(
                     self, reverse.related_name).first()._meta.db_table
                 if external_name:
-                    return (table, external_name, reverse.related_name)
+                    return (table, external_name, reverse.related_name, active)
                 has_relationship = True
 
         return has_relationship
