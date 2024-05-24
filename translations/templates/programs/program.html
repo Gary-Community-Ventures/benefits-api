@@ -16,11 +16,7 @@
         <td>{{ program.name_abbreviated }}</td>
         <td>
           <div class="new-actions">
-            <a
-              href="/api/translations/admin/{{ program.name.id }}"
-            >
-              Name
-            </a>
+            <a href="/api/translations/admin/{{ program.name.id }}"> Name </a>
             <a
               href="/api/translations/admin/{{ program.description_short.id }}"
             >
@@ -69,5 +65,9 @@
     </tbody>
   </table>
 </div>
-
+<div>
+  <a href="/api/translations/admin/{{ program.website_description.id }}"
+    >Website description</a
+  >
+</div>
 {% endblock content %}

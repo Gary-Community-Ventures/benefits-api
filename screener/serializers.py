@@ -1,6 +1,7 @@
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
+from translations.serializers import TranslationSerializer
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -193,11 +194,6 @@ class ScreenSerializer(serializers.ModelSerializer):
         instance.refresh_from_db()
         instance.set_screen_is_test()
         return instance
-
-
-class TranslationSerializer(serializers.Serializer):
-    default_message = serializers.CharField()
-    label = serializers.CharField()
 
 
 class NavigatorSerializer(serializers.Serializer):
