@@ -38,9 +38,8 @@ class Command(BaseCommand):
         for navigator in navigators:
             translations_to_delete = []
             for field in navigator_translated_fields:
-                translations_to_delete.extend(
-                    Translation.objects.filter(
-                        label__startswith=f'navigator.{navigator.name}_{navigator.id}-{field}')
+                translations_to_delete.append(
+                    getattr(navigator, field)
                 )
             navigator.delete()
             for translation in translations_to_delete:
@@ -49,9 +48,8 @@ class Command(BaseCommand):
         for program in programs:
             translations_to_delete = []
             for field in program_translated_fields:
-                translations_to_delete.extend(
-                    Translation.objects.filter(
-                        label__startswith=f'program.{program.name_abbreviated}_{program.id}-{field}')
+                translations_to_delete.append(
+                    getattr(program, field)
                 )
             program.delete()
             for translation in translations_to_delete:

@@ -37,7 +37,7 @@ class Command(BaseCommand):
         {'abbr': 'chs', 'external': 'chs'},
         {'abbr': 'cccap', 'external': 'cccap'},
         {'abbr': 'chp', 'external': 'chp'},
-        {'abbr': 'coexeitc', 'external': 'coexeitc'},
+        {'abbr': 'coeitc', 'external': 'coexeitc'},
         {'abbr': 'acp', 'external': 'acp'},
         {'abbr': 'rtdlive', 'external': 'rtdlive'},
         {'abbr': 'coctc', 'external': 'coctc'},
