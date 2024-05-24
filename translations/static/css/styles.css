@@ -1,0 +1,144 @@
+@import url('https://fonts.google.com/materialsymbols?family=Material+Symbols:opsz,wght@48,400');
+
+/* Global styling */
+* {
+    font-family: Inter, sans-serif;
+}
+
+.box {
+  box-shadow: none;
+  border-radius: 0;
+  border: 1.5px solid rgba(230, 230, 230, 0.6);
+}
+
+html[data-theme="dark"] .box {
+  border-color: rgba(56, 56, 56, 0.5); /* Change this to the color you want */
+}
+
+.table tbody tr td:last-child {
+  text-align: center;
+}
+
+.columns:not(:last-child) {
+  margin-bottom: 0;
+}
+
+/* Table th tooltip styling */
+th {
+    position: relative;
+    cursor: pointer;
+  }
+
+  th[data-tooltip]::after {
+    content: attr(data-tooltip);
+    visibility: hidden;
+    width: 300px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  th[data-tooltip]:hover::after {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  th[data-tooltip]:hover::after {
+    left: auto;
+    right: 0;
+    transform: translateX(10%);
+  }
+
+  th[data-tooltip]:first-child:hover::after {
+    left: 0;
+    right: auto;
+    transform: translateX(-10%);
+  }
+
+/* Sidebar styling */
+.sidebar-nav {
+    position: fixed;
+    top: 0;
+    padding: 1.5rem;
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.sidebar-item.is-active {
+  color: #fff;
+  background-color: rgba(88, 88, 141, 0.5);
+}
+
+/* Sidebar menu icon styling */
+.text-icon {
+  display: flex;
+  align-items: center;
+}
+
+.text-icon span:first-child {
+  margin-right: 5px;
+}
+
+.sidebar-item .text-icon span:first-child {
+  margin-right: 15px;
+}
+
+.theme-switch {
+  margin-top: auto;
+  margin-bottom: 2rem;
+}
+
+.theme-switch-icon {
+  height: 20;
+  width: 20px;
+  margin: 0 10px;
+}
+
+/* Edit Dropdown button styling */
+.dropdown-content {
+  text-align: left;
+  position: absolute;
+  right: 95px;
+  bottom: 100%;
+  transform: translateY(-40px); /* Adjust the vertical spacing */
+  display: none;
+}
+
+.dropdown.is-active .dropdown-content {
+  display: block;
+}
+
+.dropdown.is-top .dropdown-content {
+  bottom: auto;
+  top: 100%;
+  transform: translateY(0); /* Adjust the vertical spacing */
+}
+
+/* Pagination styling */
+.pagination-link.is-current {
+  background-color: rgba(88, 88, 141, 0.5);
+}
+
+.new-actions {
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+
+/* Forms */
+.label-form-input {
+  width: 600px;
+}

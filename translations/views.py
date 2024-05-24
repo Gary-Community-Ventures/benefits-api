@@ -1,3 +1,5 @@
+import re
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.conf import settings
 from .models import Translation
@@ -8,6 +10,7 @@ from django.http import HttpResponse
 from django.db.models import ProtectedError
 from programs.models import Program, Navigator, UrgentNeed, Document
 from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from integrations.services.google_translate.integration import Translate
@@ -28,18 +31,32 @@ class TranslationView(views.APIView):
 
 
 class NewTranslationForm(forms.Form):
-    label = forms.CharField(max_length=128)
-    default_message = forms.CharField(widget=forms.Textarea(attrs={'name': 'text', 'rows': 3, 'cols': 50}))
+    label = forms.CharField(max_length=128, widget=forms.TextInput(
+        attrs={'class': 'input'}))
+    default_message = forms.CharField(widget=forms.Textarea(
+        attrs={'name': 'text', 'rows': 3, 'cols': 50, 'class': 'textarea'}))
 
 
 @login_required(login_url='/admin/login')
 @staff_member_required
 def admin_view(request):
     if request.method == 'GET':
-        translations = Translation.objects.all()
+        translations = Translation.objects.all().order_by('id')
+        # Display 50 translations per page
+        paginator = Paginator(translations, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        for translation in page_obj:
+            used_by_info = translation.used_by
+
+            translation.entry_id = used_by_info['id']
+            translation.model_name = used_by_info['model_name']
+            translation.field_name = used_by_info['field_name']
+            translation.display_name = used_by_info['display_name']
 
         context = {
-            'translations': translations,
+            'page_obj': page_obj
         }
 
         return render(request, "main.html", context)
@@ -47,12 +64,15 @@ def admin_view(request):
         form = NewTranslationForm(request.POST)
         if form.is_valid():
             text = form['default_message'].value()
-            translation = Translation.objects.add_translation(form['label'].value(), text)
+            translation = Translation.objects.add_translation(
+                form['label'].value(), text)
 
-            auto_translations = Translate().bulk_translate(['__all__'], [text])[text]
+            auto_translations = Translate().bulk_translate(
+                ['__all__'], [text])[text]
 
             for [language, auto_text] in auto_translations.items():
-                Translation.objects.edit_translation_by_id(translation.id, language, auto_text, False)
+                Translation.objects.edit_translation_by_id(
+                    translation.id, language, auto_text, False)
 
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/{translation.id}"
@@ -74,22 +94,35 @@ def create_translation_view(request):
 @staff_member_required
 def filter_view(request):
     translations = Translation.objects \
-        .filter(label__contains=request.GET.get('label', '')) \
-        .translated(text__contains=request.GET.get('text', ''))
+        .filter(label__icontains=request.GET.get('label', '')) \
+        .translated(text__icontains=request.GET.get('text', ''))
+    paginator = Paginator(translations, 50)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    for translation in page_obj:
+        used_by_info = translation.used_by
+
+        translation.entry_id = used_by_info['id']
+        translation.model_name = used_by_info['model_name']
+        translation.field_name = used_by_info['field_name']
+        translation.display_name = used_by_info['display_name']
 
     context = {
-        'translations': translations
+        'page_obj': page_obj
     }
 
     return render(request, "translations.html", context)
 
 
 class TranslationForm(forms.Form):
-    text = forms.CharField(widget=forms.Textarea(attrs={'name': 'text', 'rows': 3, 'cols': 50}), required=False)
+    text = forms.CharField(widget=forms.Textarea(
+        attrs={'name': 'text', 'rows': 3, 'cols': 50, 'class': 'textarea'}), required=False)
 
 
 class LabelForm(forms.Form):
-    label = forms.CharField(max_length=128)
+    label = forms.CharField(max_length=128, widget=forms.TextInput(
+        attrs={'class': 'input'}))
     active = forms.BooleanField(required=False)
     no_auto = forms.BooleanField(required=False)
 
@@ -98,10 +131,12 @@ class LabelForm(forms.Form):
 @staff_member_required
 def translation_view(request, id=0):
     if request.method == 'GET':
-        translation = Translation.objects.prefetch_related('translations').get(pk=id)
+        translation = Translation.objects.prefetch_related(
+            'translations').get(pk=id)
         langs = [lang['code'] for lang in settings.PARLER_LANGUAGES[None]]
 
-        translations = {t.language_code: TranslationForm({'text': t.text}) for t in translation.translations.all()}
+        translations = {t.language_code: TranslationForm(
+            {'text': t.text}) for t in translation.translations.all()}
 
         for lang in langs:
             if lang not in translations:
@@ -132,9 +167,9 @@ def translation_view(request, id=0):
                     'label': translation.label,
                     'active': translation.active,
                     'no_auto': translation.no_auto
-                })
+                }),
             }
-            return render(request, "edit/form.html", context)
+            return render(request, "edit/label_form.html", context)
     elif request.method == 'DELETE':
         try:
             Translation.objects.get(pk=id).delete()
@@ -156,16 +191,20 @@ def edit_translation(request, id=0, lang='en-us'):
         form = TranslationForm(request.POST)
         if form.is_valid():
             text = form['text'].value()
-            translation = Translation.objects.edit_translation_by_id(id, lang, text)
+            translation = Translation.objects.edit_translation_by_id(
+                id, lang, text)
 
             if lang == settings.LANGUAGE_CODE:
-                translations = Translate().bulk_translate(['__all__'], [text])[text]
+                translations = Translate().bulk_translate(
+                    ['__all__'], [text])[text]
 
                 for [language, translation] in translations.items():
-                    Translation.objects.edit_translation_by_id(id, language, translation, False)
+                    Translation.objects.edit_translation_by_id(
+                        id, language, translation, False)
 
             parent = Translation.objects.get(pk=id)
-            forms = {t.language_code: TranslationForm({'text': t.text}) for t in parent.translations.all()}
+            forms = {t.language_code: TranslationForm(
+                {'text': t.text}) for t in parent.translations.all()}
             context = {
                 'translation': parent,
                 'langs': forms,
@@ -177,12 +216,14 @@ def edit_translation(request, id=0, lang='en-us'):
 @staff_member_required
 def auto_translate(request, id=0, lang='en-us'):
     if request.method == 'POST':
-        translation = Translation.objects.language(settings.LANGUAGE_CODE).get(pk=id)
+        translation = Translation.objects.language(
+            settings.LANGUAGE_CODE).get(pk=id)
 
         auto = Translate().translate(lang, translation.text)
 
         # Set text to manualy edited initially in order to update, and then set it to not edited
-        new_translation = Translation.objects.edit_translation_by_id(translation.id, lang, auto)
+        new_translation = Translation.objects.edit_translation_by_id(
+            translation.id, lang, auto)
         new_translation.edited = False
         new_translation.save()
 
@@ -195,16 +236,22 @@ def auto_translate(request, id=0, lang='en-us'):
 
 
 class NewProgramForm(forms.Form):
-    name_abbreviated = forms.CharField(max_length=120)
+    name_abbreviated = forms.CharField(max_length=120, widget=forms.TextInput(
+        attrs={'class': 'input'}))
 
 
 @login_required(login_url='/admin/login')
 @staff_member_required
 def programs_view(request):
     if request.method == 'GET':
-        programs = Program.objects.all()
+        programs = Program.objects.all().order_by('external_name')
+
+        paginator = Paginator(programs, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
         context = {
-            'programs': programs
+            'page_obj': page_obj
         }
 
         return render(request, 'programs/main.html', context)
@@ -247,30 +294,41 @@ def program_view(request, id=0):
 @staff_member_required
 def programs_filter_view(request):
     if request.method == 'GET':
-        programs = Program.objects.all()
-        query = request.GET.get('name', '')
-        programs = filter(lambda p: query in p.name.text, programs)
+        programs = Program.objects.filter(
+            name__translations__text__icontains=request.GET.get('name', '')).distinct().order_by('external_name')
+
+        paginator = Paginator(programs, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'programs': programs
+            'page_obj': page_obj
         }
 
         return render(request, 'programs/list.html', context)
 
 
 class NewNavigatorForm(forms.Form):
-    label = forms.CharField(max_length=50)
-    phone_number = PhoneNumberField(required=False)
+    label = forms.CharField(max_length=50, widget=forms.TextInput(
+        attrs={'class': 'input'}))
+    phone_number = PhoneNumberField(required=False,
+                                    widget=forms.TextInput(
+                                        attrs={'class': 'input'})
+                                    )
 
 
 @login_required(login_url='/admin/login')
 @staff_member_required
 def navigators_view(request):
     if request.method == 'GET':
-        navigators = Navigator.objects.all()
+        navigators = Navigator.objects.all().order_by('external_name')
+
+        paginator = Paginator(navigators, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'navigators': navigators
+            'page_obj': page_obj
         }
 
         return render(request, 'navigators/main.html', context)
@@ -282,7 +340,8 @@ def navigators_view(request):
                 form['phone_number'].value(),
             )
             response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/navigators/{navigator.id}"
+            response.headers[
+                "HX-Redirect"] = f"/api/translations/admin/navigators/{navigator.id}"
             return response
 
 
@@ -314,32 +373,42 @@ def navigator_view(request, id=0):
 @staff_member_required
 def navigator_filter_view(request):
     if request.method == 'GET':
-        navigators = Navigator.objects.all()
-        query = request.GET.get('name', '')
-        navigators = filter(lambda p: query in p.name.text, navigators)
+        navigators = Navigator.objects.filter(
+            name__translations__text__icontains=request.GET.get('name', '')).distinct().order_by('external_name')
+
+        paginator = Paginator(navigators, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'navigators': navigators
+            'page_obj': page_obj
         }
 
         return render(request, 'navigators/list.html', context)
 
 
 class NewUrgentNeedForm(forms.Form):
-    label = forms.CharField(max_length=50)
-    phone_number = PhoneNumberField(required=False)
+    label = forms.CharField(max_length=50, widget=forms.TextInput(
+        attrs={'class': 'input'}))
+    phone_number = PhoneNumberField(required=False,
+                                    widget=forms.TextInput(
+                                        attrs={'class': 'input'})
+                                    )
 
 
 @login_required(login_url='/admin/login')
 @staff_member_required
 def urgent_needs_view(request):
     if request.method == 'GET':
-        urgent_needs = UrgentNeed.objects.all()
+        urgent_needs = UrgentNeed.objects.all().order_by('external_name')
+
+        paginator = Paginator(urgent_needs, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'urgent_needs': urgent_needs
+            'page_obj': page_obj
         }
-
         return render(request, 'urgent_needs/main.html', context)
     if request.method == 'POST':
         form = NewUrgentNeedForm(request.POST)
@@ -349,7 +418,8 @@ def urgent_needs_view(request):
                 form['phone_number'].value(),
             )
             response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/urgent_needs/{urgent_need.id}"
+            response.headers[
+                "HX-Redirect"] = f"/api/translations/admin/urgent_needs/{urgent_need.id}"
             return response
 
 
@@ -381,36 +451,44 @@ def urgent_need_view(request, id=0):
 @staff_member_required
 def urgent_need_filter_view(request):
     if request.method == 'GET':
-        urgent_needs = UrgentNeed.objects.all()
-        query = request.GET.get('name', '')
-        urgent_needs = filter(lambda p: query in p.name.text, urgent_needs)
+        urgent_needs = UrgentNeed.objects.filter(
+            name__translations__text__icontains=request.GET.get('name', '')).distinct().order_by('external_name')
+
+        paginator = Paginator(urgent_needs, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'urgent_needs': urgent_needs
+            'page_obj': page_obj
         }
 
         return render(request, 'urgent_needs/list.html', context)
 
 
 class NewDocumentForm(forms.Form):
-    external_name = forms.CharField(max_length=120)
+    external_name = forms.CharField(max_length=120, widget=forms.TextInput(
+        attrs={'class': 'input'}))
 
 
 @login_required(login_url='/admin/login')
 @staff_member_required
 def documents_view(request):
     if request.method == 'GET':
-        documents = Document.objects.all()
+        documents = Document.objects.all().order_by('external_name')
+
+        paginator = Paginator(documents, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'documents': documents
+            'page_obj': page_obj
         }
-
         return render(request, 'documents/main.html', context)
     if request.method == 'POST':
         form = NewDocumentForm(request.POST)
         if form.is_valid():
-            document = Document.objects.new_document(form['external_name'].value())
+            document = Document.objects.new_document(
+                form['external_name'].value())
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/documents/{document.id}"
             return response
@@ -445,10 +523,15 @@ def document_view(request, id=0):
 def document_filter_view(request):
     if request.method == 'GET':
         query = request.GET.get('name', '')
-        documents = Document.objects.filter(external_name__contains=query)
+        documents = Document.objects.filter(
+            external_name__contains=query).order_by('external_name')
+
+        paginator = Paginator(documents, 50)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
         context = {
-            'documents': documents
+            'page_obj': page_obj
         }
 
         return render(request, 'documents/list.html', context)

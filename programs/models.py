@@ -34,7 +34,8 @@ class FederalPoveryLimit(models.Model):
 
 class LegalStatus(models.Model):
     status = models.CharField(max_length=256)
-    parent = models.ForeignKey("self", related_name="children", blank=True, null=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey(
+        "self", related_name="children", blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.status
@@ -44,7 +45,8 @@ class DocumentManager(models.Manager):
     translated_fields = ("text",)
 
     def new_document(self, external_name):
-        translation = Translation.objects.add_translation(f"document.{external_name}_temporary_key", "")
+        translation = Translation.objects.add_translation(
+            f"document.{external_name}_temporary_key", "")
 
         document = self.create(external_name=external_name, text=translation)
 
@@ -55,8 +57,10 @@ class DocumentManager(models.Manager):
 
 
 class Document(models.Model):
-    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
-    text = models.ForeignKey(Translation, related_name="documents", blank=False, null=False, on_delete=models.PROTECT)
+    external_name = models.CharField(
+        max_length=120, blank=True, null=True, unique=True)
+    text = models.ForeignKey(Translation, related_name="documents",
+                             blank=False, null=False, on_delete=models.PROTECT)
 
     objects = DocumentManager()
 
@@ -87,8 +91,13 @@ class ProgramManager(models.Manager):
                 f"program.{name_abbreviated}_temporary_key-{field}", ""
             )
 
+        # try to set the external_name to the name_abbreviated
+        external_name_exists = self.filter(
+            external_name=name_abbreviated).count() > 0
+
         program = self.create(
             name_abbreviated=name_abbreviated,
+            external_name=name_abbreviated if not external_name_exists else None,
             fpl=None,
             active=False,
             low_confidence=False,
@@ -107,12 +116,16 @@ class ProgramManager(models.Manager):
 # logic for eligibility and value is stored.
 class Program(models.Model):
     name_abbreviated = models.CharField(max_length=120)
-    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
-    legal_status_required = models.ManyToManyField(LegalStatus, related_name="programs", blank=True)
-    documents = models.ManyToManyField(Document, related_name="program_documents", blank=True)
+    external_name = models.CharField(
+        max_length=120, blank=True, null=True, unique=True)
+    legal_status_required = models.ManyToManyField(
+        LegalStatus, related_name="programs", blank=True)
+    documents = models.ManyToManyField(
+        Document, related_name="program_documents", blank=True)
     active = models.BooleanField(blank=True, default=True)
     low_confidence = models.BooleanField(blank=True, null=False, default=False)
-    fpl = models.ForeignKey(FederalPoveryLimit, related_name="fpl", blank=True, null=True, on_delete=models.SET_NULL)
+    fpl = models.ForeignKey(FederalPoveryLimit, related_name="fpl",
+                            blank=True, null=True, on_delete=models.SET_NULL)
 
     description_short = models.ForeignKey(
         Translation, related_name="program_description_short", blank=False, null=False, on_delete=models.PROTECT
@@ -228,10 +241,15 @@ class UrgentNeedManager(models.Manager):
     def new_urgent_need(self, name, phone_number):
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(f"urgent_need.{name}_temporary_key-{field}", "")
+            translations[field] = Translation.objects.add_translation(
+                f"urgent_need.{name}_temporary_key-{field}", "")
+
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=name).count() > 0
 
         urgent_need = self.create(
             phone_number=phone_number,
+            external_name=name if not external_name_exists else None,
             active=False,
             low_confidence=False,
             **translations,
@@ -245,12 +263,15 @@ class UrgentNeedManager(models.Manager):
 
 
 class UrgentNeed(models.Model):
-    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
+    external_name = models.CharField(
+        max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
-    type_short = models.ManyToManyField(UrgentNeedCategory, related_name="urgent_needs")
+    type_short = models.ManyToManyField(
+        UrgentNeedCategory, related_name="urgent_needs")
     active = models.BooleanField(blank=True, null=False, default=True)
     low_confidence = models.BooleanField(blank=True, null=False, default=False)
-    functions = models.ManyToManyField(UrgentNeedFunction, related_name="function", blank=True)
+    functions = models.ManyToManyField(
+        UrgentNeedFunction, related_name="function", blank=True)
 
     name = models.ForeignKey(
         Translation, related_name="urgent_need_name", blank=False, null=False, on_delete=models.PROTECT
@@ -295,10 +316,15 @@ class NavigatorManager(models.Manager):
     def new_navigator(self, name, phone_number):
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(f"navigator.{name}_temporary_key-{field}", "")
+            translations[field] = Translation.objects.add_translation(
+                f"navigator.{name}_temporary_key-{field}", "")
+
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=name).count() > 0
 
         navigator = self.create(
             phone_number=phone_number,
+            external_name=name if not external_name_exists else None,
             **translations,
         )
 
@@ -310,10 +336,13 @@ class NavigatorManager(models.Manager):
 
 
 class Navigator(models.Model):
-    program = models.ManyToManyField(Program, related_name="navigator", blank=True)
-    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
+    program = models.ManyToManyField(
+        Program, related_name="navigator", blank=True)
+    external_name = models.CharField(
+        max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
-    counties = models.ManyToManyField(NavigatorCounty, related_name="navigator", blank=True)
+    counties = models.ManyToManyField(
+        NavigatorCounty, related_name="navigator", blank=True)
 
     name = models.ForeignKey(
         Translation, related_name="navigator_name", blank=False, null=False, on_delete=models.PROTECT
@@ -344,9 +373,12 @@ class WebHookFunction(models.Model):
 class Referrer(models.Model):
     referrer_code = models.CharField(max_length=64, unique=True)
     webhook_url = models.CharField(max_length=320, blank=True, null=True)
-    webhook_functions = models.ManyToManyField(WebHookFunction, related_name="web_hook", blank=True)
-    primary_navigators = models.ManyToManyField(Navigator, related_name="primary_navigators", blank=True)
-    remove_programs = models.ManyToManyField(Program, related_name="removed_programs", blank=True)
+    webhook_functions = models.ManyToManyField(
+        WebHookFunction, related_name="web_hook", blank=True)
+    primary_navigators = models.ManyToManyField(
+        Navigator, related_name="primary_navigators", blank=True)
+    remove_programs = models.ManyToManyField(
+        Program, related_name="removed_programs", blank=True)
 
     def __str__(self):
         return self.referrer_code

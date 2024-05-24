@@ -1,21 +1,122 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Translations Admin</title>
-	</head>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Translations Admin</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css"
+    />
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bulma_switch.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
+  </head>
 
-	<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}" }'>
-		<nav>
-			<a href="/api/translations/admin">Translations</a>
-			<a href="/api/translations/admin/programs">Programs</a>
-			<a href="/api/translations/admin/navigators">Navigators</a>
-			<a href="/api/translations/admin/urgent_needs">Urgent Needs</a>
-			<a href="/api/translations/admin/documents">Documents</a>
-			<hr />
-		</nav>
-		{% block content %} {% endblock content %}
-		<script src="https://unpkg.com/htmx.org@1.9.5"></script>
-	</body>
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}" }'>
+    <div class="columns is-gapless">
+      <div class="column is-2 sidebar-nav is-flex is-flex-direction-column">
+        <div class="sidebar-header">
+          <section class="section">
+            <span class="material-symbols-outlined">
+              language_korean_latin
+            </span>
+            <h2 class="subtitle"><strong>Translations Admin</strong></h2>
+          </section>
+        </div>
+        <nav class="menu" style="max-height: 100%">
+          <p class="menu-label">Navigation</p>
+          <ul class="menu-list">
+            <li>
+              <a href="/api/translations/admin/documents" class="sidebar-item">
+                <div class="text-icon">
+                  <span class="material-symbols-outlined"> description </span>
+                  <span>Documents</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="/api/translations/admin/navigators" class="sidebar-item">
+                <div class="text-icon">
+                  <span class="material-symbols-outlined"> near_me </span>
+                  <span>Navigators</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="/api/translations/admin/programs" class="sidebar-item">
+                <div class="text-icon">
+                  <span class="material-symbols-outlined">
+                    other_admission
+                  </span>
+                  <span>Programs</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a href="/api/translations/admin" class="sidebar-item">
+                <div class="text-icon">
+                  <span class="material-symbols-outlined"> translate </span>
+                  <span>Translations</span>
+                </div>
+              </a>
+            </li>
+            <li>
+              <a
+                href="/api/translations/admin/urgent_needs"
+                class="sidebar-item"
+              >
+                <div class="text-icon">
+                  <span class="material-symbols-outlined">
+                    breaking_news_alt_1
+                  </span>
+                  <span>Urgent Needs</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+          <hr class="dropdown-divider" />
+          <ul class="menu-list">
+            <li>
+              <a href="/admin" class="sidebar-item">
+                <div class="text-icon">
+                  <span class="material-symbols-outlined">
+                    settings_applications
+                  </span>
+                  <span>Main Admin</span>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div class="theme-switch is-flex is-justify-content-center">
+          <div class="level">
+            <label class="switch is-rounded">
+              <div class="level-item theme-switch-icon">
+                <span class="material-symbols-outlined"> wb_sunny </span>
+              </div>
+              <input type="checkbox" role="switch" id="bd-theme" value="" />
+              <span class="check"></span>
+              <div class="level-item theme-switch-icon">
+                <span class="material-symbols-outlined"> bedtime </span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="column is-2"></div>
+      <div class="column is-10 is-offset-2">
+        <div class="container">
+          <div class="content">{% block content %} {% endblock content %}</div>
+        </div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/htmx.org@1.9.5"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+    <script src="{% static 'js/theme.js' %}"></script>
+  </body>
 </html>
