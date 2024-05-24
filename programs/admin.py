@@ -39,6 +39,7 @@ class ProgramAdmin(ModelAdmin):
         estimated_application_time = obj.estimated_application_time
         value_type = obj.value_type
         warning = obj.warning
+        website_description = obj.website_description
 
         return format_html(
             """
@@ -55,6 +56,7 @@ class ProgramAdmin(ModelAdmin):
                     <a href="{}">Estimated Application Time</a>
                     <a href="{}">Value Type</a>
                     <a href="{}">Warning</a>
+                    <a href="{}">Website Description</a>
                 </div>
             </div>
             """,
@@ -70,6 +72,7 @@ class ProgramAdmin(ModelAdmin):
                     estimated_application_time.id]),
             reverse("translation_admin_url", args=[value_type.id]),
             reverse("translation_admin_url", args=[warning.id]),
+            reverse("translation_admin_url", args=[website_description.id]),
         )
 
     action_buttons.short_description = "Translate:"
@@ -140,6 +143,7 @@ class UrgentNeedAdmin(ModelAdmin):
         link = obj.link
         type = obj.type
         warning = obj.warning
+        website_description = obj.website_description
 
         return format_html(
             """
@@ -151,6 +155,7 @@ class UrgentNeedAdmin(ModelAdmin):
                     <a href="{}">Link</a>
                     <a href="{}">Type</a>
                     <a href="{}">Warning</a>
+                    <a href="{}">Website Description</a>
                 </div>
             </div>
             """,
@@ -159,6 +164,7 @@ class UrgentNeedAdmin(ModelAdmin):
             reverse("translation_admin_url", args=[link.id]),
             reverse("translation_admin_url", args=[type.id]),
             reverse("translation_admin_url", args=[warning.id]),
+            reverse("translation_admin_url", args=[website_description.id]),
         )
 
     action_buttons.short_description = "Translate:"

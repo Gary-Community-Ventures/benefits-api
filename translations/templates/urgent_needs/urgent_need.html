@@ -26,6 +26,10 @@
               >Warning</a
             >
             <a
+              href="/api/translations/admin/{{ urgent_need.website_description.id }}"
+              >Website description</a
+            >
+            <a
               href="/admin/programs/urgentneed/{{ urgent_need.id }}/change/"
               target="_blank"
               rel="noopener noreferrer"
@@ -36,10 +40,5 @@
       </tr>
     </tbody>
   </table>
-</div>
-<div>
-  <a href="/api/translations/admin/{{ urgent_need.website_description.id }}"
-    >Website description</a
-  >
 </div>
 {% endblock content %}
