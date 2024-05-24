@@ -1,8 +1,101 @@
-<ul id="urgent-need-list">
-	{% for urgent_need in urgent_needs %}
-	<li>
-		<span>{{ urgent_need.name.text }} </span>
-		<a href="urgent_needs/{{ urgent_need.id }}">Edit</a>
-	</li>
-	{% endfor %}
-</ul>
+{% load static %}
+<div id="urgent_needs-container">
+  <table
+    id="urgent_need-table"
+    class="urgent_need-table table is-striped is-fullwidth is-bordered"
+  >
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>External Name</th>
+        <th>Name Label</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for urgent_need in page_obj %}
+      <tr>
+        <td>{{ urgent_need.id }}</td>
+        <td>{{ urgent_need.name.text }}</td>
+        <td>{{ urgent_need.external_name }}</td>
+        <td>{{ urgent_need.name }}</td>
+        <td>
+          <div class="dropdown">
+            <div class="dropdown-trigger">
+              <button
+                class="button"
+                aria-haspopup="true"
+                aria-controls="dropdown-menu{{ forloop.counter }}"
+              >
+                <span>Go to</span>
+                <span class="material-symbols-outlined"> expand_more </span>
+              </button>
+            </div>
+            <div
+              class="dropdown-menu"
+              id="dropdown-menu{{ forloop.counter }}"
+              role="menu"
+            >
+              <div class="dropdown-content">
+                <a
+                  href="/api/translations/admin/{{ urgent_need.name.id }}"
+                  class="dropdown-item"
+                  >Name</a
+                >
+                <a
+                  href="/api/translations/admin/{{ urgent_need.description.id }}"
+                  class="dropdown-item"
+                  >Description</a
+                >
+                <a
+                  href="/api/translations/admin/{{ urgent_need.link.id }}"
+                  class="dropdown-item"
+                  >Link</a
+                >
+                <a
+                  href="/api/translations/admin/{{ urgent_need.type.id }}"
+                  class="dropdown-item"
+                  >Type</a
+                >
+                <a
+                  href="/api/translations/admin/{{ urgent_need.warning.id }}"
+                  class="dropdown-item"
+                  >Warning</a
+                >
+                <a
+                  href="/api/translations/admin/{{ urgent_need.website_description.id }}"
+                  class="dropdown-item"
+                  >Website description</a
+                >
+                <hr class="dropdown-divider" />
+                <a
+                  href="/admin/programs/urgentneed/{{urgent_need.id}}/change/"
+                  class="dropdown-item"
+                >
+                  Edit in Main Admin
+                </a>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4">No results</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4">Total: {{ page_obj.paginator.count }}</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  {% include "../pagination.html" %}
+
+  <script>
+    var tableId = "urgent_need-table";
+  </script>
+</div>

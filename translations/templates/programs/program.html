@@ -1,55 +1,72 @@
 {% extends "base.html" %}{% block content %}
-<h2>{{ program.name.text }}</h2>
-<div>
-	<a
-		href="/admin/programs/program/{{ program.id }}/change/"
-		target="_blank"
-		rel="noopener noreferrer"
-	>
-		Django Admin
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.description_short.id }}">
-		Description short
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.name.id }}">Name</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.description.id }}">Description</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.learn_more_link.id }}">
-		Learn more link
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.apply_button_link.id }}">
-		Apply button link
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.value_type.id }}">Value type</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.estimated_delivery_time.id }}">
-		Estimated delivery time
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.estimated_application_time.id }}">
-		Estimated application time
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.category.id }}">Category</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.warning.id }}">Warning</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ program.estimated_value.id }}">Estimated value</a>
+<section class="section">
+  <h2>Program Actions</h2>
+</section>
+<hr />
+<div id="program-actions">
+  <table class="table is-striped is-fullwidth is-bordered">
+    <thead>
+      <tr>
+        <th>Abbreviated Name</th>
+        <th>Actions (add)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ program.name_abbreviated }}</td>
+        <td>
+          <div class="new-actions">
+            <a href="/api/translations/admin/{{ program.name.id }}"> Name </a>
+            <a
+              href="/api/translations/admin/{{ program.description_short.id }}"
+            >
+              Description short
+            </a>
+            <a href="/api/translations/admin/{{ program.description.id }}">
+              Description
+            </a>
+            <a href="/api/translations/admin/{{ program.learn_more_link.id }}">
+              Learn more link
+            </a>
+            <a
+              href="/api/translations/admin/{{ program.apply_button_link.id }}"
+            >
+              Apply button link
+            </a>
+            <a href="/api/translations/admin/{{ program.value_type.id }}">
+              Value type
+            </a>
+            <a
+              href="/api/translations/admin/{{ program.estimated_delivery_time.id }}"
+            >
+              Estimated delivery time
+            </a>
+            <a
+              href="/api/translations/admin/{{ program.estimated_application_time.id }}"
+            >
+              Estimated application time
+            </a>
+            <a href="/api/translations/admin/{{ program.category.id }}">
+              Category
+            </a>
+            <a href="/api/translations/admin/{{ program.warning.id }}">
+              Warning
+            </a>
+            <a
+              href="/api/translations/admin/{{ program.website_description.id }}"
+              >Website description</a
+            >
+            <a
+              href="/admin/programs/program/{{ program.id }}/change/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Edit in Main Admin
+            </a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 {% endblock content %}

@@ -43,10 +43,10 @@ def bulk_add(translations):
             if ref[0] == 'programs_program':
                 try:
                     obj = Program.objects.get(external_name=ref[1])
-                    obj.active = True
                 except ObjectDoesNotExist:
                     obj = Program.objects.new_program(ref[1])
                     obj.external_name = ref[1]
+                obj.active = ref[3] if len(ref) == 4 else False
                 obj.save()
             elif ref[0] == 'programs_navigator':
                 try:
@@ -58,10 +58,10 @@ def bulk_add(translations):
             elif ref[0] == 'programs_urgentneed':
                 try:
                     obj = UrgentNeed.objects.get(external_name=ref[1])
-                    obj.active = True
                 except ObjectDoesNotExist:
                     obj = UrgentNeed.objects.new_urgent_need(ref[1], None)
                     obj.external_name = ref[1]
+                obj.active = ref[3] if len(ref) == 4 else False
                 obj.save()
             elif ref[0] == 'programs_document':
                 try:
