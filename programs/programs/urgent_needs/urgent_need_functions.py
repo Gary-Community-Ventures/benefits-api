@@ -296,7 +296,7 @@ class EarlyChildhoodMentalHealthSupport(UrgentNeedFunction):
     @classmethod
     def eligible(cls, screen: Screen):
         '''
-        Return True if the householdhas a child aged 0-5
+        Return True if the householdh as a child aged 0-5
         '''
         return screen.num_children(age_max=cls.max_age) > 0
 
@@ -323,6 +323,9 @@ class ParentsOfPreschoolYoungsters(UrgentNeedFunction):
 
     @classmethod
     def eligible(cls, screen: Screen):
+        '''
+        Return True if a child is between 2 and 5 and lives in an eligible county
+        '''
         age_eligible = screen.num_children(age_min=cls.min_age, age_max=cls.max_age)
         county_eligible = screen.county in cls.counties
 
@@ -368,6 +371,9 @@ class ParentsAsTeacher(UrgentNeedFunction):
 
     @classmethod
     def eligible(cls, screen: Screen):
+        '''
+        Return True if there is a child younger than 5 and lives in an eligible county
+        '''
         age_eligible = screen.num_children(age_max=cls.max_age)
         county_eligible = screen.county in cls.counties
 
