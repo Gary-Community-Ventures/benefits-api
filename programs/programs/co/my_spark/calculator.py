@@ -34,7 +34,7 @@ class MySpark(ProgramCalculator):
             self.screen.household_members.all(),
             [
                 (
-                    lambda m: m.age > MySpark.min_age and m.age < MySpark.max_age,
+                    lambda m: m.age >= MySpark.min_age and m.age <= MySpark.max_age,
                     messages.child(MySpark.min_age, MySpark.max_age)
                 )
             ]

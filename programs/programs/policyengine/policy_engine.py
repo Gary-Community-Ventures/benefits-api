@@ -1,22 +1,21 @@
-from screener.models import Screen
-from .calculators import all_calculators, PolicyEngineCalulator
+from screener.models import HouseholdMember, Screen
+from .calculators import PolicyEngineCalulator
 from programs.programs.calc import Eligibility
 from programs.util import Dependencies
 from .calculators.dependencies.base import DependencyError
 from typing import List
-import requests
-from .calculators.constants import YEAR, PREVIOUS_YEAR
-from .calculators.dependencies.member import (
-    TaxUnitDependentDependency,
-    TaxUnitHeadDependency,
-    TaxUnitSpouseDependency,
-)
+from sentry_sdk import capture_exception, capture_message
+from .engines import Sim, pe_engines
 
 
-def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[str, Eligibility]:
+def calc_pe_eligibility(
+    screen: Screen,
+    missing_fields: Dependencies,
+    calculators: dict[str, type[PolicyEngineCalulator]],
+) -> dict[str, Eligibility]:
     valid_programs: dict[str, type[PolicyEngineCalulator]] = {}
 
-    for name_abbr, Calculator in all_calculators.items():
+    for name_abbr, Calculator in calculators.items():
         if not Calculator.can_calc(missing_fields):
             continue
 
@@ -25,33 +24,34 @@ def calc_pe_eligibility(screen: Screen, missing_fields: Dependencies) -> dict[st
     if len(valid_programs.values()) == 0 or len(screen.household_members.all()) == 0:
         return {}
 
-    data = policy_engine_calculate(pe_input(screen, valid_programs.values()))['result']
+    input_data = pe_input(screen, valid_programs.values())
 
+    for Method in pe_engines:
+        try:
+            return all_eligibility(Method(input_data), valid_programs, screen)
+        except Exception as e:
+            capture_exception(e, level="warning", message="")
+            capture_message(f"Failed to calculate eligibility with the {Method.method_name} method", level="warning")
+
+    raise Exception("Failed to calculate Policy Engine eligibility")
+
+
+def all_eligibility(method: Sim, valid_programs: dict[str, type[PolicyEngineCalulator]], screen: Screen):
     all_eligibility: dict[str, Eligibility] = {}
     for name_abbr, Calculator in valid_programs.items():
-        calc = Calculator(screen, data)
+        calc = Calculator(screen, method)
 
         e = calc.eligible()
         e.value = calc.value()
-
         all_eligibility[name_abbr] = e.to_dict()
 
     return all_eligibility
 
 
-def policy_engine_calculate(data):
-    response = requests.post(
-        "https://api.policyengine.org/us/calculate",
-        json=data
-    )
-    data = response.json()
-    return data
-
-
 def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
-    '''
+    """
     Generate Policy Engine API request from the list of programs.
-    '''
+    """
     raw_input = {
         "household": {
             "people": {},
@@ -60,43 +60,30 @@ def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
                     "members": [],
                 }
             },
-            "families": {
-                "family": {
-                    "members": []
-                }
-            },
-            "households": {
-                "household": {
-                    "state_code_str": {YEAR: "CO", PREVIOUS_YEAR: "CO"},
-                    "members": []
-                }
-            },
+            "families": {"family": {"members": []}},
+            "households": {"household": {"members": []}},
             "spm_units": {
                 "spm_unit": {
                     "members": [],
                 }
             },
-            "marital_units": {}
+            "marital_units": {},
         }
     }
-    members = screen.household_members.all()
+    members: list[HouseholdMember] = screen.household_members.all()
     relationship_map = screen.relationship_map()
 
     for member in members:
         member_id = str(member.id)
-        household = raw_input['household']
+        household = raw_input["household"]
 
-        household['families']['family']['members'].append(member_id)
-        household['households']['household']['members'].append(member_id)
-        household['spm_units']['spm_unit']['members'].append(member_id)
-        household['people'][member_id] = {}
+        household["families"]["family"]["members"].append(member_id)
+        household["households"]["household"]["members"].append(member_id)
+        household["spm_units"]["spm_unit"]["members"].append(member_id)
+        household["people"][member_id] = {}
 
-        is_tax_unit_head = TaxUnitHeadDependency(screen, member, relationship_map).value()
-        is_tax_unit_spouse = TaxUnitSpouseDependency(screen, member, relationship_map).value()
-        is_tax_unit_dependent = TaxUnitDependentDependency(screen, member, relationship_map).value()
-
-        if is_tax_unit_head or is_tax_unit_spouse or is_tax_unit_dependent:
-            household['tax_units']['tax_unit']['members'].append(member_id)
+        if member.is_in_tax_unit():
+            household["tax_units"]["tax_unit"]["members"].append(member_id)
 
     already_added = set()
     for member_1, member_2 in relationship_map.items():
@@ -104,14 +91,14 @@ def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
             continue
 
         marital_unit = (str(member_1), str(member_2))
-        raw_input['household']['marital_units']['-'.join(marital_unit)] = {'members': marital_unit}
+        raw_input["household"]["marital_units"]["-".join(marital_unit)] = {"members": marital_unit}
         already_added.add(member_1)
         already_added.add(member_2)
 
     for Program in programs:
         for Data in Program.pe_inputs + Program.pe_outputs:
             period = Program.pe_period
-            if hasattr(Program, 'pe_output_period') and Data in Program.pe_outputs:
+            if hasattr(Program, "pe_output_period") and Data in Program.pe_outputs:
                 period = Program.pe_output_period
 
             if not Data.member:

@@ -1,4 +1,5 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.helpers import medicaid_eligible
 import programs.programs.messages as messages
 
 
@@ -15,12 +16,7 @@ class MedicaidChildWithDisability(ProgramCalculator):
         e = Eligibility()
 
         # Does not qualify for Medicaid
-        is_medicaid_eligible = self.screen.has_insurance_types(['medicaid'])
-        for benefit in self.data:
-            if benefit["name_abbreviated"] == 'medicaid':
-                is_medicaid_eligible = benefit["eligible"]
-                break
-        e.condition(not is_medicaid_eligible, messages.must_not_have_benefit('Medicaid'))
+        e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit('Medicaid'))
 
         fpl = self.program.fpl.as_dict()
         income_limit = fpl[self.screen.household_size] * MedicaidChildWithDisability.max_income_percent

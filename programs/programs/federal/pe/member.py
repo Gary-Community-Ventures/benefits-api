@@ -18,13 +18,15 @@ class Wic(PolicyEngineMembersCalculator):
         *dependency.school_lunch_income,
     ]
     pe_outputs = [dependency.member.Wic, dependency.member.WicCategory]
+    tax_unit_dependent = False
 
     def value(self):
         total = 0
 
-        for _, pvalue in self.get_data().items():
-            if pvalue[self.pe_name][self.pe_period] > 0:
-                total += self.wic_categories[pvalue['wic_category'][self.pe_period]] * 12
+        for member in self.screen.household_members.all():
+            if self.get_member_variable(member.id) > 0:
+                wic_category = self.sim.value('people', str(member.id), 'wic_category', self.pe_period)
+                total += self.wic_categories[wic_category] * 12
 
         return total
 
@@ -66,14 +68,29 @@ class Medicaid(PolicyEngineMembersCalculator):
     def value(self):
         total = 0
 
-        for _, pvalue in self.get_data().items():
-            if pvalue[self.pe_name][self.pe_period] <= 0:
+        members = self.screen.household_members.all()
+
+        for member in members:
+            if self.get_member_variable(member.id) <= 0:
                 continue
 
-            total += self._value_by_age(pvalue['age'][self.pe_period])
+            # here we need to adjust for children as policy engine
+            # just uses the average which skews very high for adults and
+            # aged adults
+
+            if self._get_age(member.id) <= 18:
+                medicaid_estimated_value = self.child_medicaid_average
+            elif self._get_age(member.id) > 18 and self._get_age(member.id) < 65:
+                medicaid_estimated_value = self.adult_medicaid_average
+            elif self._get_age(member.id) >= 65:
+                medicaid_estimated_value = self.aged_medicaid_average
+            else:
+                medicaid_estimated_value = 0
+
+            total += medicaid_estimated_value
 
         in_wic_demographic = False
-        for member in self.screen.household_members.all():
+        for member in members:
             if member.pregnant is True or member.age <= 5:
                 in_wic_demographic = True
         if total == 0 and in_wic_demographic:
@@ -83,6 +100,9 @@ class Medicaid(PolicyEngineMembersCalculator):
                 total = self.presumptive_amount
 
         return total
+
+    def _get_age(self, member_id: int) -> int:
+        return self.sim.value(self.pe_category, str(member_id), 'age', self.pe_period)
 
 
 class PellGrant(PolicyEngineMembersCalculator):

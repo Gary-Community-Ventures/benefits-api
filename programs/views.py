@@ -4,32 +4,31 @@ from rest_framework import permissions
 from programs.serializers import ProgramSerializer, NavigatorAPISerializer, UrgentNeedAPISerializer
 
 
-class ProgramViewSet(mixins.RetrieveModelMixin,
-                     viewsets.GenericViewSet):
+class ProgramViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     API endpoint that allows programs to be viewed or edited.
     """
-    queryset = Program.objects.all()
+
+    queryset = Program.objects.filter(active=True)
     serializer_class = ProgramSerializer
     permission_classes = [permissions.IsAuthenticated]
-    # filterset_fields = ['legal_status_required', 'value_type']
 
 
-class NavigatorViewSet(mixins.RetrieveModelMixin,
-                       viewsets.GenericViewSet):
+class NavigatorViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     API endpoint that allows programs to be viewed or edited.
     """
+
     queryset = Navigator.objects.all()
     serializer_class = NavigatorAPISerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
-class UrgentNeedViewSet(mixins.RetrieveModelMixin,
-                        viewsets.GenericViewSet):
+class UrgentNeedViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     API endpoint that allows programs to be viewed or edited.
     """
-    queryset = UrgentNeed.objects.all()
+
+    queryset = UrgentNeed.objects.filter(active=True)
     serializer_class = UrgentNeedAPISerializer
     permission_classes = [permissions.IsAuthenticated]
