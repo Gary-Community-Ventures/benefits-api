@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0014_programtranslation_estimated_application_time'),
+        ("programs", "0014_programtranslation_estimated_application_time"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='programtranslation',
-            name='active',
+            model_name="programtranslation",
+            name="active",
             field=models.BooleanField(blank=True, default=False),
         ),
     ]

@@ -6,16 +6,21 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('screener', '0017_screen_last_email_request_date'),
+        ("screener", "0017_screen_last_email_request_date"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='screen',
-            name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='screens', to=settings.AUTH_USER_MODEL),
+            model_name="screen",
+            name="user",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="screens",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

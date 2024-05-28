@@ -4,10 +4,10 @@ import json
 
 
 class Command(BaseCommand):
-    help = '''
+    help = """
     Get translation export
-    '''
+    """
 
     def handle(self, *args, **options) -> str:
-        self.stdout.reconfigure(encoding='utf-8')
+        self.stdout.reconfigure(encoding="utf-8")
         return json.dumps(Translation.objects.export_translations(), ensure_ascii=False)

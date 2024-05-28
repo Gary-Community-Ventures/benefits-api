@@ -3,11 +3,11 @@ from programs.programs.federal.pe.member import Medicaid
 
 
 class NcMedicaid(Medicaid):
-    child_medicaid_average = 200 * 12 # TODO: NC specific average goes here
-    adult_medicaid_average = 310 * 12 # TODO: NC specific average goes here
-    aged_medicaid_average = 170 * 12 # TODO: NC specific average goes here
+    child_medicaid_average = 200 * 12  # TODO: NC specific average goes here
+    adult_medicaid_average = 310 * 12  # TODO: NC specific average goes here
+    aged_medicaid_average = 170 * 12  # TODO: NC specific average goes here
     pe_inputs = [
-        *Medicaid.pe_inputs, 
+        *Medicaid.pe_inputs,
         dependency.household.NcStateCode,
     ]
 
@@ -15,4 +15,3 @@ class NcMedicaid(Medicaid):
     # def value(self):
     #     ...
     #     return 500
-

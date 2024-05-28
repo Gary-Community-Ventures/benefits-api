@@ -4,19 +4,18 @@ from programs.programs.policyengine.calculators.base import PolicyEngineCalulato
 
 
 co_member_calculators = {
-    'co_medicaid': member.CoMedicaid,
-    'andcs': member.AidToTheNeedyAndDisabled,
-    'oap': member.OldAgePension,
-    'chp': member.Chp,
+    "co_medicaid": member.CoMedicaid,
+    "andcs": member.AidToTheNeedyAndDisabled,
+    "oap": member.OldAgePension,
+    "chp": member.Chp,
 }
 
 co_tax_unit_calculators = {
-    'coeitc': tax.Coeitc,
-    'coctc': tax.Coctc,
+    "coeitc": tax.Coeitc,
+    "coctc": tax.Coctc,
 }
 
 co_pe_calculators: dict[str, type[PolicyEngineCalulator]] = {
     **co_member_calculators,
     **co_tax_unit_calculators,
 }
-
