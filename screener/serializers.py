@@ -1,6 +1,7 @@
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
+from translations.serializers import TranslationSerializer
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -195,11 +196,6 @@ class ScreenSerializer(serializers.ModelSerializer):
         return instance
 
 
-class TranslationSerializer(serializers.Serializer):
-    default_message = serializers.CharField()
-    label = serializers.CharField()
-
-
 class NavigatorSerializer(serializers.Serializer):
     name = TranslationSerializer()
     phone_number = serializers.CharField()
@@ -234,6 +230,8 @@ class EligibilitySerializer(serializers.Serializer):
     new = serializers.BooleanField()
     low_confidence = serializers.BooleanField()
     documents = DocumentSerializer(many=True)
+    multiple_tax_units = serializers.BooleanField()
+    estimated_value_override = TranslationSerializer()
 
     class Meta:
         fields = '__all__'

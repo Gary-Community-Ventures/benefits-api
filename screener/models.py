@@ -257,7 +257,8 @@ class Screen(models.Model):
             'rag': self.has_rag,
             'cowap': self.has_cowap,
             'ubp': self.has_ubp,
-            'medicaid': self.has_medicaid or self.has_medicaid_hi,
+            'co_medicaid': self.has_medicaid or self.has_medicaid_hi,
+            'nc_medicaid': self.has_medicaid or self.has_medicaid_hi,
             'medicare': self.has_medicare_hi,
             'chp': self.has_chp or self.has_chp_hi,
             'va': self.has_va,
@@ -294,6 +295,13 @@ class Screen(models.Model):
             language_code = str(self.request_language_code).lower()
 
         return language_code
+
+    def has_members_ouside_of_tax_unit(self):
+        for member in self.household_members.all():
+            if not member.is_in_tax_unit():
+                return True
+
+        return False
 
     def missing_fields(self):
         screen_fields = ('zipcode', 'county', 'household_size', 'household_assets')
@@ -418,7 +426,7 @@ class HouseholdMember(models.Model):
 
         return is_tax_unit_dependent
 
-    def is_in_household(self):
+    def is_in_tax_unit(self):
         return self.is_head() or self.is_spouse() or self.is_dependent()
 
     def missing_fields(self):
@@ -589,6 +597,8 @@ class Insurance(models.Model):
             'private': self.private,
             'chp': self.chp,
             'medicaid': self.medicaid,
+            'nc_medicaid': self.medicaid,
+            'co_medicaid': self.medicaid,
             'medicare': self.medicare,
             'emergency_medicaid': self.emergency_medicaid,
             'family_planning': self.family_planning,

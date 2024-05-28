@@ -1,28 +1,40 @@
 {% extends "base.html" %}{% block content %}
-<h2>{{ navigator.name.text }}</h2>
-<div>
-	<a
-		href="/admin/programs/navigator/{{ navigator.id }}/change/"
-		target="_blank"
-		rel="noopener noreferrer"
-	>
-		Django Admin
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ navigator.name.id }}">Name</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ navigator.email.id }}">Email</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ navigator.assistance_link.id }}">
-		Assistance Link
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ navigator.description.id }}">
-		Description
-	</a>
+<section class="section">
+  <h2>Navigator Actions</h2>
+</section>
+<hr />
+<div id="navigator-actions">
+  <table class="table is-striped is-fullwidth is-bordered">
+    <thead>
+      <tr>
+        <th>Label</th>
+        <th>Actions (add)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ navigator.name }}</td>
+        <td>
+          <div class="new-actions">
+            <a href="/api/translations/admin/{{ navigator.name.id }}">Name</a>
+            <a href="/api/translations/admin/{{ navigator.email.id }}">Email</a>
+            <a href="/api/translations/admin/{{ navigator.assistance_link.id }}"
+              >Assistance Link</a
+            >
+            <a href="/api/translations/admin/{{ navigator.description.id }}"
+              >Description</a
+            >
+            <a
+              href="/admin/programs/navigator/{{ navigator.id }}/change/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Edit in Main Admin
+            </a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 {% endblock content %}

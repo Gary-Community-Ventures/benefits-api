@@ -17,6 +17,7 @@ db.sqlite3
 
 # Editor directories and files
 .idea
+.editorconfig
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -25,3 +26,6 @@ __pycache__/
 
 .vscode/**/*
 !.vscode/settings.json.default
+
+# Static files
+staticfiles/
