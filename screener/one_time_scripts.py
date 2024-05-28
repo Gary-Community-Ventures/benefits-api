@@ -1,3 +1,5 @@
+from tqdm import trange
+from integrations.services.hubspot.integration import Hubspot, upsert_user_hubspot
 from .models import (
     Screen,
     EligibilitySnapshot,
@@ -8,6 +10,7 @@ from .models import (
 )
 import json
 import uuid
+import time
 
 
 def generate_bwf_snapshots():
@@ -149,3 +152,26 @@ def fix_insurance():
                 member.save()
 
     print('done')
+
+
+def update_hubspot_extra_fields():
+    screens = list(Screen.objects.filter(user__isnull=False))
+    hubspot = Hubspot()
+
+    failed = []
+
+    for i in trange(len(screens), desc='Translations'):
+        screen = screens[i]
+        user = screen.user
+        if user.external_id is None or user.external_id == '':
+            continue
+
+        try:
+            hubspot.update_contact(user.external_id, hubspot.mfb_user_to_hubspot_contact(user, screen))
+        except Exception as e:
+            failed.append(f'failed to update user with id: {user.id} and external id: {user.external_id}')
+        time.sleep(.2)
+
+    print('\n'.join(failed))
+    print('done')
+

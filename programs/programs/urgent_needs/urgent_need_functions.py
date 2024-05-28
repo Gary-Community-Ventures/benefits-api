@@ -296,7 +296,7 @@ class EarlyChildhoodMentalHealthSupport(UrgentNeedFunction):
     @classmethod
     def eligible(cls, screen: Screen):
         '''
-        Return True if the householdh as a child aged 0-5
+        Return True if the household has a child aged 0-5
         '''
         return screen.num_children(age_max=cls.max_age) > 0
 
