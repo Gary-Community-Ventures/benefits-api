@@ -4,28 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0067_alter_expense_household_member_alter_screen_user"),
+        ('screener', '0067_alter_expense_household_member_alter_screen_user'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="householdmember",
-            name="insurance",
-            field=models.CharField(
-                choices=[
-                    ("dont_know", "Dont Know"),
-                    ("none", "None"),
-                    ("employer", "Employer"),
-                    ("private", "Private"),
-                    ("chp", "Chp"),
-                    ("medicaid", "Medicaid"),
-                    ("medicare", "Medicare"),
-                    ("emergency_medicaid", "Emergency Medicaid"),
-                    ("family_planning", "Family Planning"),
-                ],
-                default="dont_know",
-                max_length=64,
-            ),
+            model_name='householdmember',
+            name='insurance',
+            field=models.CharField(choices=[('dont_know', 'Dont Know'), ('none', 'None'), ('employer', 'Employer'), ('private', 'Private'), ('chp', 'Chp'), ('medicaid', 'Medicaid'), ('medicare', 'Medicare'), ('emergency_medicaid', 'Emergency Medicaid'), ('family_planning', 'Family Planning')], default='dont_know', max_length=64),
         ),
     ]

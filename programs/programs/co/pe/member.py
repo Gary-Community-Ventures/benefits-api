@@ -10,7 +10,7 @@ class CoMedicaid(Medicaid):
 
 
 class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
-    pe_name = "co_state_supplement"
+    pe_name = 'co_state_supplement'
     pe_inputs = [
         dependency.member.SsiCountableResourcesDependency,
         dependency.member.SsiReportedDependency,
@@ -27,7 +27,7 @@ class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
 
 
 class OldAgePension(PolicyEngineMembersCalculator):
-    pe_name = "co_oap"
+    pe_name = 'co_oap'
     pe_inputs = [
         dependency.member.SsiCountableResourcesDependency,
         dependency.member.SsiEarnedIncomeDependency,
@@ -41,7 +41,7 @@ class OldAgePension(PolicyEngineMembersCalculator):
 
 
 class Chp(PolicyEngineMembersCalculator):
-    pe_name = "co_chp"
+    pe_name = 'co_chp'
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
@@ -55,7 +55,7 @@ class Chp(PolicyEngineMembersCalculator):
         total = 0
 
         for _, pvalue in self.get_data().items():
-            if pvalue["co_chp_eligible"][self.pe_period] > 0 and self.screen.has_insurance_types(("none",)):
+            if pvalue['co_chp_eligible'][self.pe_period] > 0 and self.screen.has_insurance_types(('none',)):
                 total += self.amount
 
         return total

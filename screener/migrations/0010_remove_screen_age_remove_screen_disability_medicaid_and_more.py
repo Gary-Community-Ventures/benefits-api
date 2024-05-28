@@ -4,61 +4,62 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0009_remove_householdmember_zipcode"),
+        ('screener', '0009_remove_householdmember_zipcode'),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name="screen",
-            name="age",
+            model_name='screen',
+            name='age',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="disability_medicaid",
+            model_name='screen',
+            name='disability_medicaid',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="disabled",
+            model_name='screen',
+            name='disabled',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="has_expenses",
+            model_name='screen',
+            name='has_expenses',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="has_income",
+            model_name='screen',
+            name='has_income',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="medicaid",
+            model_name='screen',
+            name='medicaid',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="pregnant",
+            model_name='screen',
+            name='pregnant',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="student",
+            model_name='screen',
+            name='student',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="student_full_time",
+            model_name='screen',
+            name='student_full_time',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="unemployed",
+            model_name='screen',
+            name='unemployed',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="veteran",
+            model_name='screen',
+            name='veteran',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="visually_impaired",
+            model_name='screen',
+            name='visually_impaired',
         ),
         migrations.RemoveField(
-            model_name="screen",
-            name="worked_in_last_18_mos",
+            model_name='screen',
+            name='worked_in_last_18_mos',
         ),
     ]

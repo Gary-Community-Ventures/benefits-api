@@ -7,16 +7,16 @@ from .constants import YEAR, PREVIOUS_YEAR
 
 
 class PolicyEngineCalulator(ProgramCalculator):
-    """
+    '''
     Base class for all Policy Engine programs
-    """
+    '''
 
     pe_inputs: List[type[PolicyEngineScreenInput]] = []
     pe_outputs: List[type[PolicyEngineScreenInput]] = []
 
-    pe_name = ""
-    pe_category = ""
-    pe_sub_category = ""
+    pe_name = ''
+    pe_category = ''
+    pe_sub_category = ''
     pe_period = YEAR
 
     def __init__(self, screen: Screen, pe_data):
@@ -34,9 +34,9 @@ class PolicyEngineCalulator(ProgramCalculator):
         return self.get_data()[self.pe_name][self.pe_period]
 
     def get_data(self):
-        """
+        '''
         Return Policy Engine dictionary of the program category and subcategory
-        """
+        '''
         return self.pe_data[self.pe_category][self.pe_sub_category]
 
     @classmethod
@@ -47,21 +47,18 @@ class PolicyEngineCalulator(ProgramCalculator):
 
         return True
 
-
 class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
-    pe_category = "tax_units"
-    pe_sub_category = "tax_unit"
+    pe_category = 'tax_units'
+    pe_sub_category = 'tax_unit'
     pe_period = PREVIOUS_YEAR
 
-
 class PolicyEngineSpmCalulator(PolicyEngineCalulator):
-    pe_category = "spm_units"
-    pe_sub_category = "spm_unit"
-
+    pe_category = 'spm_units'
+    pe_sub_category = 'spm_unit'
 
 class PolicyEngineMembersCalculator(PolicyEngineCalulator):
     tax_dependent = True
-    pe_category = "people"
+    pe_category = 'people'
 
     def value(self):
         total = 0
@@ -78,7 +75,8 @@ class PolicyEngineMembersCalculator(PolicyEngineCalulator):
         return total
 
     def in_tax_unit(self, member_id) -> bool:
-        return str(member_id) in self.pe_data["tax_units"]["tax_unit"]["members"]
+        return str(member_id) in self.pe_data['tax_units']['tax_unit']['members']
 
     def get_data(self):
         return self.pe_data[self.pe_category]
+

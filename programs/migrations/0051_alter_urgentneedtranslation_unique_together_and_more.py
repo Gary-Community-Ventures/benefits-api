@@ -4,23 +4,24 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0050_auto_20230906_1427"),
+        ('programs', '0050_auto_20230906_1427'),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name="urgentneedtranslation",
+            name='urgentneedtranslation',
             unique_together=None,
         ),
         migrations.RemoveField(
-            model_name="urgentneedtranslation",
-            name="master",
+            model_name='urgentneedtranslation',
+            name='master',
         ),
         migrations.DeleteModel(
-            name="NavigatorTranslation",
+            name='NavigatorTranslation',
         ),
         migrations.DeleteModel(
-            name="UrgentNeedTranslation",
+            name='UrgentNeedTranslation',
         ),
     ]

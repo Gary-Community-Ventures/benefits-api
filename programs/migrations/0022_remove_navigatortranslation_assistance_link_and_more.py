@@ -5,41 +5,42 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0021_navigatortranslation_program"),
+        ('programs', '0021_navigatortranslation_program'),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name="navigatortranslation",
-            name="assistance_link",
+            model_name='navigatortranslation',
+            name='assistance_link',
         ),
         migrations.RemoveField(
-            model_name="navigatortranslation",
-            name="email",
+            model_name='navigatortranslation',
+            name='email',
         ),
         migrations.RemoveField(
-            model_name="navigatortranslation",
-            name="phone_number",
+            model_name='navigatortranslation',
+            name='phone_number',
         ),
         migrations.RemoveField(
-            model_name="navigatortranslation",
-            name="program",
+            model_name='navigatortranslation',
+            name='program',
         ),
         migrations.AddField(
-            model_name="navigator",
-            name="email",
-            field=models.EmailField(blank=True, max_length=254, null=True, verbose_name="email address"),
+            model_name='navigator',
+            name='email',
+            field=models.EmailField(blank=True, max_length=254, null=True, verbose_name='email address'),
         ),
         migrations.AddField(
-            model_name="navigator",
-            name="phone_number",
+            model_name='navigator',
+            name='phone_number',
             field=phonenumber_field.modelfields.PhoneNumberField(default=0, max_length=128, region=None),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name="navigator",
-            name="program",
-            field=models.ManyToManyField(related_name="navigator", to="programs.program"),
+            model_name='navigator',
+            name='program',
+            field=models.ManyToManyField(related_name='navigator', to='programs.program'),
         ),
     ]

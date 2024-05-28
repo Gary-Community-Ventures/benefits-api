@@ -5,14 +5,15 @@ import uuid
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0045_screen_uuid"),
+        ('screener', '0045_screen_uuid'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="screen",
-            name="uuid",
+            model_name='screen',
+            name='uuid',
             field=models.UUIDField(default=uuid.uuid4),
         ),
     ]

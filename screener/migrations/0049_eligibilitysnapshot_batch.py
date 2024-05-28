@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0048_screen_needs_family_planning_help"),
+        ('screener', '0048_screen_needs_family_planning_help'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="eligibilitysnapshot",
-            name="batch",
+            model_name='eligibilitysnapshot',
+            name='batch',
             field=models.BooleanField(default=False),
         ),
     ]

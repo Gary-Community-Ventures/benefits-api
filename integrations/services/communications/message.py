@@ -16,8 +16,8 @@ class MessageUser:
     cell_auth_token = config("TWILIO_TOKEN")
     cell_from_phone_number = config("TWILIO_PHONE_NUMBER")
 
-    email_from = "screener@myfriendben.org"
-    email_api_key = config("SENDGRID")
+    email_from = 'screener@myfriendben.org'
+    email_api_key = config('SENDGRID')
 
     def __init__(self, screen: Screen, lang: str) -> None:
         self.screen = screen
@@ -45,16 +45,16 @@ class MessageUser:
 
         sg.client.mail.send.post(request_body=mail.get())
 
-        self.log("emailScreen")
+        self.log('emailScreen')
 
     def _email_client(self):
         return sendgrid.SendGridAPIClient(api_key=self.email_api_key)
 
     def _email_subject(self):
-        return Translation.objects.get(label="sendResults.email-subject").get_lang(self.lang).text
+        return Translation.objects.get(label='sendResults.email-subject').get_lang(self.lang).text
 
     def _email_body(self):
-        words = Translation.objects.get(label="sendResults.email").get_lang(self.lang).text
+        words = Translation.objects.get(label='sendResults.email').get_lang(self.lang).text
         url = self._generate_link()
 
         return words + f' <a href="{url}">{url}</a>'
@@ -69,21 +69,22 @@ class MessageUser:
             to=cell,
         )
 
-        self.log("textScreen")
+        self.log('textScreen')
 
     def _text_body(self):
-        words = Translation.objects.get(label="sendResults.email").get_lang(self.lang).text
+        words = Translation.objects.get(label='sendResults.email').get_lang(self.lang).text
         url = self._generate_link()
 
-        return f"{words} {url}"
+        return f'{words} {url}'
 
     def _cell_client(self):
         return Client(self.cell_account_sid, self.cell_auth_token)
 
+
     def _generate_link(self):
         return f"{self.front_end_domain}/{self.screen.uuid}/results"
 
-    def log(self, type: Literal["emailScreen", "textScreen"]):
+    def log(self, type: Literal['emailScreen', 'textScreen']):
         self.screen.last_email_request_date = timezone.now()
         self.screen.save()
 
@@ -91,3 +92,4 @@ class MessageUser:
             type=type,
             screen=self.screen,
         )
+

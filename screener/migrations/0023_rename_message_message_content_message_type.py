@@ -4,20 +4,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0022_rename_messages_message"),
+        ('screener', '0022_rename_messages_message'),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name="message",
-            old_name="message",
-            new_name="content",
+            model_name='message',
+            old_name='message',
+            new_name='content',
         ),
         migrations.AddField(
-            model_name="message",
-            name="type",
-            field=models.CharField(default="", max_length=30),
+            model_name='message',
+            name='type',
+            field=models.CharField(default='', max_length=30),
             preserve_default=False,
         ),
     ]

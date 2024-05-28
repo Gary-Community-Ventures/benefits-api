@@ -7,9 +7,10 @@ from .models import (
 
 
 class screenAdmin(admin.ModelAdmin):
-    search_fields = ("id",)
+    search_fields = ('id',)
 
 
 admin.site.register(Screen, screenAdmin)
 admin.site.register(Message)
 admin.site.register(IncomeStream)
+

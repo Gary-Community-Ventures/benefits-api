@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0012_alter_householdmember_screen_and_more"),
+        ('screener', '0012_alter_householdmember_screen_and_more'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="householdmember",
-            name="relationship",
-            field=models.CharField(default="parent", max_length=30),
+            model_name='householdmember',
+            name='relationship',
+            field=models.CharField(default='parent', max_length=30),
             preserve_default=False,
         ),
     ]

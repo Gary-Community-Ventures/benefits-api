@@ -5,24 +5,26 @@ from integrations.services.hubspot.integration import Hubspot
 
 
 class Command(BaseCommand):
-    help = """
+    help = '''
     Update number of new benefits and amount of new benefits in HubSpot
-    """
+    '''
 
     def add_arguments(self, parser):
-        parser.add_argument("--limit", default=1, type=int)
+        parser.add_argument('--limit', default=1, type=int)
 
     def handle(self, *args, **options):
         screens = Screen.objects.all().exclude(user__isnull=True)
         latest_snapshots = []
-        limit = options["limit"]
+        limit = options['limit']
         for screen in screens:
             try:
-                previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=True, screen=screen).latest(
-                    "submission_date"
-                )
+                previous_snapshot = EligibilitySnapshot.objects \
+                    .filter(is_batch=True, screen=screen) \
+                    .latest('submission_date')
             except ObjectDoesNotExist:
-                self.stdout.write(self.style.WARNING(f"No snapshots for screen with id of {screen.id}"))
+                self.stdout.write(
+                    self.style.WARNING(f'No snapshots for screen with id of {screen.id}')
+                )
                 continue
             latest_snapshots.append(previous_snapshot)
 
@@ -46,7 +48,9 @@ class Command(BaseCommand):
             limit -= 1
 
         if not len(existing_users):
-            self.stdout.write(self.style.WARNING("No users in HubSpot. Make sure that you add users to HubSpot first"))
+            self.stdout.write(
+                self.style.WARNING('No users in HubSpot. Make sure that you add users to HubSpot first')
+            )
             return
 
         hubspot.bulk_update(existing_users)

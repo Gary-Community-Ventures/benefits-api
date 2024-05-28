@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0007_alter_program_estimated_delivery_time"),
+        ('programs', '0007_alter_program_estimated_delivery_time'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="program",
-            name="legal_status_required",
+            model_name='program',
+            name='legal_status_required',
             field=models.CharField(max_length=120),
         ),
     ]

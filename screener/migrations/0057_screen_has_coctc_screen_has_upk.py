@@ -4,19 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0056_screen_completed"),
+        ('screener', '0056_screen_completed'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="screen",
-            name="has_coctc",
+            model_name='screen',
+            name='has_coctc',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_upk",
+            model_name='screen',
+            name='has_upk',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]

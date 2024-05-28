@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0040_screen_has_chp_hi_screen_has_employer_hi_and_more"),
+        ('screener', '0040_screen_has_chp_hi_screen_has_employer_hi_and_more'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="screen",
-            name="referrer_code",
+            model_name='screen',
+            name='referrer_code',
             field=models.CharField(blank=True, default=None, max_length=320, null=True),
         ),
     ]

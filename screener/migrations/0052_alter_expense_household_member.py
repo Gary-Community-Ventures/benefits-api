@@ -5,19 +5,15 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0051_programeligibilitysnapshot_new"),
+        ('screener', '0051_programeligibilitysnapshot_new'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="expense",
-            name="household_member",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name="expenses",
-                to="screener.householdmember",
-            ),
+            model_name='expense',
+            name='household_member',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='expenses', to='screener.householdmember'),
         ),
     ]

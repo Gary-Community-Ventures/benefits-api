@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0033_alter_urgentneed_functions"),
+        ('programs', '0033_alter_urgentneed_functions'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="urgentneedtranslation",
-            name="link",
+            model_name='urgentneedtranslation',
+            name='link',
             field=models.CharField(blank=True, max_length=320, null=True),
         ),
     ]

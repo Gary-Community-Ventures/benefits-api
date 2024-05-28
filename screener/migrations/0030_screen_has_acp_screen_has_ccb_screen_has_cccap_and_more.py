@@ -4,84 +4,85 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0029_alter_screen_housing_situation"),
+        ('screener', '0029_alter_screen_housing_situation'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="screen",
-            name="has_acp",
+            model_name='screen',
+            name='has_acp',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_ccb",
+            model_name='screen',
+            name='has_ccb',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_cccap",
+            model_name='screen',
+            name='has_cccap',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_chp",
+            model_name='screen',
+            name='has_chp',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_coeitc",
+            model_name='screen',
+            name='has_coeitc',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_ctc",
+            model_name='screen',
+            name='has_ctc',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_eitc",
+            model_name='screen',
+            name='has_eitc',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_lifeline",
+            model_name='screen',
+            name='has_lifeline',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_medicaid",
+            model_name='screen',
+            name='has_medicaid',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_mydenver",
+            model_name='screen',
+            name='has_mydenver',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_nslp",
+            model_name='screen',
+            name='has_nslp',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_rtdlive",
+            model_name='screen',
+            name='has_rtdlive',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_snap",
+            model_name='screen',
+            name='has_snap',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_tanf",
+            model_name='screen',
+            name='has_tanf',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="has_wic",
+            model_name='screen',
+            name='has_wic',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]

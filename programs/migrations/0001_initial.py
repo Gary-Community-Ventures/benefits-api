@@ -4,26 +4,27 @@ from django.db import migrations, models
 import parler.fields
 import parler.models
 
-
 class Migration(migrations.Migration):
+
     initial = True
 
-    dependencies = []
+    dependencies = [
+    ]
 
     operations = [
         migrations.CreateModel(
-            name="Program",
+            name='Program',
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("programSnapshot", models.TextField()),
-                ("programName", models.CharField(max_length=120)),
-                ("programDescription", models.TextField()),
-                ("learnMoreLink", models.CharField(max_length=320)),
-                ("applyButtonLink", models.CharField(max_length=320)),
-                ("dollarValue", models.IntegerField()),
-                ("estimatedDeliveryTime", models.CharField(max_length=120)),
-                ("legalStatusRequired", models.BooleanField()),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('programSnapshot', models.TextField()),
+                ('programName', models.CharField(max_length=120)),
+                ('programDescription', models.TextField()),
+                ('learnMoreLink', models.CharField(max_length=320)),
+                ('applyButtonLink', models.CharField(max_length=320)),
+                ('dollarValue', models.IntegerField()),
+                ('estimatedDeliveryTime', models.CharField(max_length=120)),
+                ('legalStatusRequired', models.BooleanField()),
             ],
-            bases=(parler.models.TranslatableModelMixin, models.Model),
+            bases=(parler.models.TranslatableModelMixin, models.Model)
         ),
     ]

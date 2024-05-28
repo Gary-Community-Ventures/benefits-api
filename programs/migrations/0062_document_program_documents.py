@@ -37,6 +37,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="program",
             name="documents",
-            field=models.ManyToManyField(blank=True, related_name="program_documents", to="programs.document"),
+            field=models.ManyToManyField(
+                blank=True, related_name="program_documents", to="programs.document"
+            ),
         ),
     ]

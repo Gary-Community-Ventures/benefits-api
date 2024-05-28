@@ -6,115 +6,70 @@ import django.db.models.deletion
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("translations", "0002_translation_active"),
-        ("programs", "0040_alter_referrer_logo_alter_referrer_white_label_css_and_more"),
+        ('translations', '0002_translation_active'),
+        ('programs', '0040_alter_referrer_logo_alter_referrer_white_label_css_and_more'),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name="referrer",
-            name="logo",
+            model_name='referrer',
+            name='logo',
         ),
         migrations.RemoveField(
-            model_name="referrer",
-            name="white_label_css",
+            model_name='referrer',
+            name='white_label_css',
         ),
         migrations.AddField(
-            model_name="program",
-            name="active_1",
+            model_name='program',
+            name='active_1',
             field=models.BooleanField(blank=True, default=True, null=True),
         ),
         migrations.AddField(
-            model_name="program",
-            name="apply_button_link_1",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="apply_button_link",
-                to="translations.translation",
-            ),
+            model_name='program',
+            name='apply_button_link_1',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='apply_button_link', to='translations.translation'),
         ),
         migrations.AddField(
-            model_name="program",
-            name="category_1",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="category",
-                to="translations.translation",
-            ),
+            model_name='program',
+            name='category_1',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='category', to='translations.translation'),
         ),
         migrations.AddField(
-            model_name="program",
-            name="description_1",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="description",
-                to="translations.translation",
-            ),
+            model_name='program',
+            name='description_1',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='description', to='translations.translation'),
         ),
         migrations.AddField(
-            model_name="program",
-            name="description_short_1",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="description_short",
-                to="translations.translation",
-            ),
+            model_name='program',
+            name='description_short_1',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='description_short', to='translations.translation'),
         ),
         migrations.AddField(
-            model_name="program",
-            name="estimated_application_time_1",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="estimated_application_time",
-                to="translations.translation",
-            ),
+            model_name='program',
+            name='estimated_application_time_1',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='estimated_application_time', to='translations.translation'),
         ),
         migrations.AddField(
-            model_name="program",
-            name="estimated_delivery_time_1",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="estimated_delivery_time",
-                to="translations.translation",
-            ),
+            model_name='program',
+            name='estimated_delivery_time_1',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='estimated_delivery_time', to='translations.translation'),
         ),
         migrations.AddField(
-            model_name="program",
-            name="learn_more_link_1",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="learn_more_link",
-                to="translations.translation",
-            ),
+            model_name='program',
+            name='learn_more_link_1',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='learn_more_link', to='translations.translation'),
         ),
         migrations.AddField(
-            model_name="program",
-            name="name_1",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="name",
-                to="translations.translation",
-            ),
+            model_name='program',
+            name='name_1',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='name', to='translations.translation'),
         ),
         migrations.AddField(
-            model_name="program",
-            name="value_type_1",
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="value_type",
-                to="translations.translation",
-            ),
+            model_name='program',
+            name='value_type_1',
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, related_name='value_type', to='translations.translation'),
         ),
         migrations.DeleteModel(
-            name="ReferrerTranslation",
+            name='ReferrerTranslation',
         ),
     ]

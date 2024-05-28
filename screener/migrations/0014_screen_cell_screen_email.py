@@ -5,19 +5,20 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0013_householdmember_relationship"),
+        ('screener', '0013_householdmember_relationship'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="screen",
-            name="cell",
+            model_name='screen',
+            name='cell',
             field=phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, region=None),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="email",
+            model_name='screen',
+            name='email',
             field=models.CharField(blank=True, max_length=320),
         ),
     ]

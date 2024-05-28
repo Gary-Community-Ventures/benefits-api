@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("authentication", "0009_alter_user_first_name_alter_user_last_name"),
+        ('authentication', '0009_alter_user_first_name_alter_user_last_name'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="user",
-            name="language_code",
+            model_name='user',
+            name='language_code',
             field=models.CharField(blank=True, max_length=12, null=True),
         ),
     ]

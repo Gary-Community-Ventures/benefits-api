@@ -4,13 +4,15 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("authentication", "0010_user_language_code"),
+        ('authentication', '0010_user_language_code'),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name="user",
-            managers=[],
+            name='user',
+            managers=[
+            ],
         ),
     ]

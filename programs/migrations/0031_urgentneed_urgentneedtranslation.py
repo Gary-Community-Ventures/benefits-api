@@ -8,54 +8,43 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0030_rename_catagory_programtranslation_category"),
+        ('programs', '0030_rename_catagory_programtranslation_category'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="UrgentNeed",
+            name='UrgentNeed',
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                (
-                    "phone_number",
-                    phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, null=True, region=None),
-                ),
-                ("type_short", models.CharField(max_length=120)),
-                ("active", models.BooleanField(blank=True, default=True)),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('phone_number', phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, null=True, region=None)),
+                ('type_short', models.CharField(max_length=120)),
+                ('active', models.BooleanField(blank=True, default=True)),
             ],
             options={
-                "abstract": False,
+                'abstract': False,
             },
             bases=(parler.models.TranslatableModelMixin, models.Model),
         ),
         migrations.CreateModel(
-            name="UrgentNeedTranslation",
+            name='UrgentNeedTranslation',
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("language_code", models.CharField(db_index=True, max_length=15, verbose_name="Language")),
-                ("name", models.CharField(max_length=120)),
-                ("description", models.TextField()),
-                ("link", models.CharField(max_length=320)),
-                ("type", models.CharField(max_length=120)),
-                (
-                    "master",
-                    parler.fields.TranslationsForeignKey(
-                        editable=False,
-                        null=True,
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="translations",
-                        to="programs.urgentneed",
-                    ),
-                ),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('language_code', models.CharField(db_index=True, max_length=15, verbose_name='Language')),
+                ('name', models.CharField(max_length=120)),
+                ('description', models.TextField()),
+                ('link', models.CharField(max_length=320)),
+                ('type', models.CharField(max_length=120)),
+                ('master', parler.fields.TranslationsForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='translations', to='programs.urgentneed')),
             ],
             options={
-                "verbose_name": "urgent need Translation",
-                "db_table": "programs_urgentneed_translation",
-                "db_tablespace": "",
-                "managed": True,
-                "default_permissions": (),
-                "unique_together": {("language_code", "master")},
+                'verbose_name': 'urgent need Translation',
+                'db_table': 'programs_urgentneed_translation',
+                'db_tablespace': '',
+                'managed': True,
+                'default_permissions': (),
+                'unique_together': {('language_code', 'master')},
             },
             bases=(parler.models.TranslatedFieldsModelMixin, models.Model),
         ),

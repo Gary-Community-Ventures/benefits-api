@@ -4,15 +4,15 @@ from rest_framework.views import exception_handler
 
 
 def catch_403_view(*args, **kwargs):
-    capture_message("Unauthorized", level="warning")
+    capture_message('Unauthorized', level='warning')
 
-    return HttpResponseForbidden("Forbidden")
+    return HttpResponseForbidden('Forbidden')
 
 
 def catch_400_view(*args, **kwargs):
-    capture_message("Bad Request", level="warning")
+    capture_message('Bad Request', level='warning')
 
-    return HttpResponseBadRequest("Bad Request")
+    return HttpResponseBadRequest('Bad Request')
 
 
 def drf_exception_handler(exc, context):
@@ -23,7 +23,7 @@ def drf_exception_handler(exc, context):
 
     capture_message(
         response.reason_phrase,
-        level="warning",
+        level='warning',
     )
 
     return response

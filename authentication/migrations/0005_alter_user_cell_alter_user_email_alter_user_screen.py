@@ -6,27 +6,26 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0017_screen_last_email_request_date"),
-        ("authentication", "0004_user_tcpa_consent"),
+        ('screener', '0017_screen_last_email_request_date'),
+        ('authentication', '0004_user_tcpa_consent'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="user",
-            name="cell",
+            model_name='user',
+            name='cell',
             field=phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, region=None, unique=True),
         ),
         migrations.AlterField(
-            model_name="user",
-            name="email",
-            field=models.EmailField(blank=True, max_length=254, unique=True, verbose_name="email address"),
+            model_name='user',
+            name='email',
+            field=models.EmailField(blank=True, max_length=254, unique=True, verbose_name='email address'),
         ),
         migrations.AlterField(
-            model_name="user",
-            name="screen",
-            field=models.ForeignKey(
-                blank=True, on_delete=django.db.models.deletion.CASCADE, related_name="users", to="screener.screen"
-            ),
+            model_name='user',
+            name='screen',
+            field=models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, related_name='users', to='screener.screen'),
         ),
     ]

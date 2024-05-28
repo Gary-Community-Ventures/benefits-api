@@ -8,30 +8,30 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            "id",
-            "date_joined",
-            "last_login",
-            "cell",
-            "email",
-            "first_name",
-            "last_name",
-            "email_or_cell",
-            "language_code",
-            "tcpa_consent",
-            "send_offers",
-            "send_updates",
+            'id',
+            'date_joined',
+            'last_login',
+            'cell',
+            'email',
+            'first_name',
+            'last_name',
+            'email_or_cell',
+            'language_code',
+            'tcpa_consent',
+            'send_offers',
+            'send_updates'
         )
         create_only_fields = (
-            "id",
-            "date_joined",
-            "last_login",
-            "cell",
-            "email",
-            "first_name",
-            "last_name",
-            "email_or_cell",
-            "language_code",
-            "tcpa_consent",
+            'id',
+            'date_joined',
+            'last_login',
+            'cell',
+            'email',
+            'first_name',
+            'last_name',
+            'email_or_cell',
+            'language_code',
+            'tcpa_consent',
         )
 
 
@@ -40,4 +40,8 @@ class UserOffersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "send_offers", "send_updates")
+        fields = (
+            'id',
+            'send_offers',
+            'send_updates'
+        )

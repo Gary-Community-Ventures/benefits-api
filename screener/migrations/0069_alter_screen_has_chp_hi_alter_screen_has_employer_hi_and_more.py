@@ -4,39 +4,40 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0068_householdmember_insurance"),
+        ('screener', '0068_householdmember_insurance'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="screen",
-            name="has_chp_hi",
+            model_name='screen',
+            name='has_chp_hi',
             field=models.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
-            model_name="screen",
-            name="has_employer_hi",
+            model_name='screen',
+            name='has_employer_hi',
             field=models.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
-            model_name="screen",
-            name="has_medicaid_hi",
+            model_name='screen',
+            name='has_medicaid_hi',
             field=models.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
-            model_name="screen",
-            name="has_medicare_hi",
+            model_name='screen',
+            name='has_medicare_hi',
             field=models.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
-            model_name="screen",
-            name="has_no_hi",
+            model_name='screen',
+            name='has_no_hi',
             field=models.BooleanField(blank=True, default=None, null=True),
         ),
         migrations.AlterField(
-            model_name="screen",
-            name="has_private_hi",
+            model_name='screen',
+            name='has_private_hi',
             field=models.BooleanField(blank=True, default=None, null=True),
         ),
     ]

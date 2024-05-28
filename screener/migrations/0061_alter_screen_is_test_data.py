@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0060_screen_is_test_data"),
+        ('screener', '0060_screen_is_test_data'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="screen",
-            name="is_test_data",
+            model_name='screen',
+            name='is_test_data',
             field=models.BooleanField(blank=True),
         ),
     ]

@@ -4,19 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0018_alter_navigatortranslation_cell"),
+        ('programs', '0018_alter_navigatortranslation_cell'),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name="navigatortranslation",
-            old_name="cell",
-            new_name="phone_number",
+            model_name='navigatortranslation',
+            old_name='cell',
+            new_name='phone_number',
         ),
         migrations.AlterField(
-            model_name="navigatortranslation",
-            name="program",
-            field=models.ManyToManyField(related_name="navigator", to="programs.program"),
+            model_name='navigatortranslation',
+            name='program',
+            field=models.ManyToManyField(related_name='navigator', to='programs.program'),
         ),
     ]

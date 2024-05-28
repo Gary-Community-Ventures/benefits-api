@@ -4,19 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0030_screen_has_acp_screen_has_ccb_screen_has_cccap_and_more"),
+        ('screener', '0030_screen_has_acp_screen_has_ccb_screen_has_cccap_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="householdmember",
-            name="disability_medicaid",
+            model_name='householdmember',
+            name='disability_medicaid',
             field=models.BooleanField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name="householdmember",
-            name="medicaid",
+            model_name='householdmember',
+            name='medicaid',
             field=models.BooleanField(blank=True, null=True),
         ),
     ]

@@ -4,13 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0069_alter_screen_has_chp_hi_alter_screen_has_employer_hi_and_more"),
+        ('screener', '0069_alter_screen_has_chp_hi_alter_screen_has_employer_hi_and_more'),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name="programeligibilitysnapshot",
-            name="legal_status_required",
+            model_name='programeligibilitysnapshot',
+            name='legal_status_required',
         ),
     ]

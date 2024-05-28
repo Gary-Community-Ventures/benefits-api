@@ -4,39 +4,40 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0041_screen_referrer_code"),
+        ('screener', '0041_screen_referrer_code'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="screen",
-            name="needs_baby_supplies",
+            model_name='screen',
+            name='needs_baby_supplies',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="needs_child_dev_help",
+            model_name='screen',
+            name='needs_child_dev_help',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="needs_food",
+            model_name='screen',
+            name='needs_food',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="needs_funeral_help",
+            model_name='screen',
+            name='needs_funeral_help',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="needs_housing_help",
+            model_name='screen',
+            name='needs_housing_help',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
         migrations.AddField(
-            model_name="screen",
-            name="needs_mental_health_help",
+            model_name='screen',
+            name='needs_mental_health_help',
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]

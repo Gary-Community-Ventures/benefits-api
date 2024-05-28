@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0006_rename_program_description_program_description_and_more"),
+        ('programs', '0006_rename_program_description_program_description_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="program",
-            name="estimated_delivery_time",
+            model_name='program',
+            name='estimated_delivery_time',
             field=models.CharField(max_length=320),
         ),
     ]

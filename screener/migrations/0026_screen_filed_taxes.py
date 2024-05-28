@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0025_screen_external_id"),
+        ('screener', '0025_screen_external_id'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="screen",
-            name="filed_taxes",
+            model_name='screen',
+            name='filed_taxes',
             field=models.BooleanField(blank=True, default=None, null=True),
         ),
     ]

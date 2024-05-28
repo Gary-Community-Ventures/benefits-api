@@ -5,48 +5,35 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0036_screen_request_language_code"),
+        ('screener', '0036_screen_request_language_code'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="EligibilitySnapshot",
+            name='EligibilitySnapshot',
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("submission_date", models.DateTimeField(auto_now=True)),
-                (
-                    "screen",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="eligibility_snapshots",
-                        to="screener.screen",
-                    ),
-                ),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('submission_date', models.DateTimeField(auto_now=True)),
+                ('screen', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='eligibility_snapshots', to='screener.screen')),
             ],
         ),
         migrations.CreateModel(
-            name="ProgramEligibilitySnapshot",
+            name='ProgramEligibilitySnapshot',
             fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("name", models.CharField(max_length=320)),
-                ("name_abbreviated", models.CharField(max_length=32)),
-                ("value_type", models.CharField(max_length=120)),
-                ("estimated_value", models.DecimalField(decimal_places=2, max_digits=10)),
-                ("estimated_delivery_time", models.CharField(max_length=120)),
-                ("estimated_application_time", models.CharField(max_length=120)),
-                ("legal_status_required", models.CharField(max_length=120)),
-                ("eligible", models.BooleanField()),
-                ("failed_tests", models.JSONField()),
-                ("passed_tests", models.JSONField()),
-                (
-                    "eligibility_snapshot",
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE,
-                        related_name="program_snapshots",
-                        to="screener.eligibilitysnapshot",
-                    ),
-                ),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=320)),
+                ('name_abbreviated', models.CharField(max_length=32)),
+                ('value_type', models.CharField(max_length=120)),
+                ('estimated_value', models.DecimalField(decimal_places=2, max_digits=10)),
+                ('estimated_delivery_time', models.CharField(max_length=120)),
+                ('estimated_application_time', models.CharField(max_length=120)),
+                ('legal_status_required', models.CharField(max_length=120)),
+                ('eligible', models.BooleanField()),
+                ('failed_tests', models.JSONField()),
+                ('passed_tests', models.JSONField()),
+                ('eligibility_snapshot', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='program_snapshots', to='screener.eligibilitysnapshot')),
             ],
         ),
     ]

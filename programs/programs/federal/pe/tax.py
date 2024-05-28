@@ -3,7 +3,7 @@ import programs.programs.policyengine.calculators.dependencies as dependency
 
 
 class Eitc(PolicyEngineTaxUnitCalulator):
-    pe_name = "eitc"
+    pe_name = 'eitc'
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.TaxUnitSpouseDependency,
@@ -13,8 +13,9 @@ class Eitc(PolicyEngineTaxUnitCalulator):
     pe_outputs = [dependency.tax.Eitc]
 
 
+
 class Ctc(PolicyEngineTaxUnitCalulator):
-    pe_name = "ctc"
+    pe_name = 'ctc'
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.TaxUnitDependentDependency,
@@ -22,3 +23,5 @@ class Ctc(PolicyEngineTaxUnitCalulator):
         *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.tax.Ctc]
+
+

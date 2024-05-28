@@ -12,6 +12,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="navigator",
             name="program",
-            field=models.ManyToManyField(blank=True, related_name="navigator", to="programs.program"),
+            field=models.ManyToManyField(
+                blank=True, related_name="navigator", to="programs.program"
+            ),
         ),
     ]

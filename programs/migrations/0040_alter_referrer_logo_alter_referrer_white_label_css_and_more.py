@@ -4,34 +4,35 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0039_webhookfunction_referrer_referrertranslation"),
+        ('programs', '0039_webhookfunction_referrer_referrertranslation'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="referrer",
-            name="logo",
-            field=models.ImageField(blank=True, null=True, upload_to=""),
+            model_name='referrer',
+            name='logo',
+            field=models.ImageField(blank=True, null=True, upload_to=''),
         ),
         migrations.AlterField(
-            model_name="referrer",
-            name="white_label_css",
-            field=models.FileField(blank=True, null=True, upload_to=""),
+            model_name='referrer',
+            name='white_label_css',
+            field=models.FileField(blank=True, null=True, upload_to=''),
         ),
         migrations.AlterField(
-            model_name="referrertranslation",
-            name="consent_text",
+            model_name='referrertranslation',
+            name='consent_text',
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AlterField(
-            model_name="referrertranslation",
-            name="footer_html",
-            field=models.FileField(blank=True, null=True, upload_to=""),
+            model_name='referrertranslation',
+            name='footer_html',
+            field=models.FileField(blank=True, null=True, upload_to=''),
         ),
         migrations.AlterField(
-            model_name="referrertranslation",
-            name="header_html",
-            field=models.FileField(blank=True, null=True, upload_to=""),
+            model_name='referrertranslation',
+            name='header_html',
+            field=models.FileField(blank=True, null=True, upload_to=''),
         ),
     ]

@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0028_screen_last_tax_filing_year"),
+        ('screener', '0028_screen_last_tax_filing_year'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="screen",
-            name="housing_situation",
+            model_name='screen',
+            name='housing_situation',
             field=models.CharField(blank=True, default=None, max_length=30, null=True),
         ),
     ]

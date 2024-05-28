@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0031_alter_householdmember_disability_medicaid_and_more"),
+        ('screener', '0031_alter_householdmember_disability_medicaid_and_more'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="message",
-            name="uid",
+            model_name='message',
+            name='uid',
             field=models.IntegerField(blank=True, null=True),
         ),
     ]

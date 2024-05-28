@@ -4,19 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0043_auto_20230906_0938"),
+        ('programs', '0043_auto_20230906_0938'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="program",
-            name="legal_status_required_1",
+            model_name='program',
+            name='legal_status_required_1',
             field=models.CharField(max_length=120, null=True),
         ),
         migrations.AddField(
-            model_name="program",
-            name="name_abbreviated_1",
+            model_name='program',
+            name='name_abbreviated_1',
             field=models.CharField(max_length=120, null=True),
         ),
     ]

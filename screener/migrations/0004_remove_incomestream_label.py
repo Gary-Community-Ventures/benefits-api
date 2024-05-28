@@ -4,13 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0003_rename_type_incomestream_name"),
+        ('screener', '0003_rename_type_incomestream_name'),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name="incomestream",
-            name="label",
+            model_name='incomestream',
+            name='label',
         ),
     ]

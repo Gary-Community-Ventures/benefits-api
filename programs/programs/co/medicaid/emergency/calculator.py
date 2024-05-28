@@ -4,7 +4,7 @@ import programs.programs.messages as messages
 
 class EmergencyMedicaid(ProgramCalculator):
     amount = 9_540
-    dependencies = ["insurance"]
+    dependencies = ['insurance']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -12,14 +12,19 @@ class EmergencyMedicaid(ProgramCalculator):
         # Does qualify for Medicaid
         is_medicaid_eligible = False
         for benefit in self.data:
-            if benefit["name_abbreviated"] == "medicaid":
+            if benefit["name_abbreviated"] == 'medicaid':
                 is_medicaid_eligible = benefit["eligible"]
                 break
-        e.condition(is_medicaid_eligible, messages.must_have_benefit("Medicaid"))
+        e.condition(is_medicaid_eligible, messages.must_have_benefit('Medicaid'))
 
         e.member_eligibility(
             self.screen.household_members.all(),
-            [(lambda m: m.insurance.has_insurance_types(("none",)), messages.has_no_insurance())],
+            [
+                (
+                    lambda m: m.insurance.has_insurance_types(('none',)),
+                    messages.has_no_insurance()
+                )
+            ]
         )
 
         return e

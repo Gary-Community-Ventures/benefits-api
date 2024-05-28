@@ -6,9 +6,9 @@ from integrations.util.cache import Cache
 
 
 class GoogleSheets:
-    info = json.loads(config("GOOGLE_APPLICATION_CREDENTIALS"))
+    info = json.loads(config('GOOGLE_APPLICATION_CREDENTIALS'))
     creds = service_account.Credentials.from_service_account_info(info)
-    service = build("sheets", "v4", credentials=creds)
+    service = build('sheets', 'v4', credentials=creds)
     sheet = service.spreadsheets()
 
     class ColumnDoesNotExist(Exception):
@@ -19,18 +19,20 @@ class GoogleSheets:
         self.cell_range = cell_range
 
     def data(self) -> list[list[any]]:
-        """
+        '''
         return a list of rows in the cell range
-        """
-        result = self.sheet.values().get(spreadsheetId=self.spreadsheet_id, range=self.cell_range).execute()
-        values = result.get("values", [])
+        '''
+        result = self.sheet.values().get(
+                spreadsheetId=self.spreadsheet_id, range=self.cell_range
+        ).execute()
+        values = result.get('values', [])
 
         return values
 
     def data_by_column(self, *column_names: str) -> list[dict[str, any]]:
-        """
+        '''
         return an array of dictionaries containing the column names and their values
-        """
+        '''
         data = self.data()
 
         raw_column_names = data[0]
@@ -59,20 +61,20 @@ class GoogleSheets:
         return organized_data
 
     def print_raw_column_names(self):
-        """
+        '''
         print the column names of the spreadsheet
 
         WARN: this should only be used during development
-        """
+        '''
         raw_column_names = self.data()[0]
 
         for name in raw_column_names:
             print(repr(name))
 
     def _raise_missing_columns(self, needed_columns: list[str], existing_columns: list[str]):
-        """
+        '''
         raise an exception with the column names from needed_columns that are not in existing_columns
-        """
+        '''
         missing_columns = []
 
         for column in needed_columns:
@@ -86,10 +88,11 @@ class GoogleSheetsCache(Cache):
     expire_time = 60 * 60 * 24
     default = []
 
-    sheet_id = ""
-    range_name = ""
+    sheet_id = ''
+    range_name = ''
 
     def update(self):
         sheet_values = GoogleSheets(self.sheet_id, self.range_name).data()
 
         return sheet_values
+

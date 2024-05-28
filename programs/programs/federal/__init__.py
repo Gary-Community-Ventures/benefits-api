@@ -4,7 +4,7 @@ from .medicare_savings.calculator import MedicareSavings
 from ..calc import ProgramCalculator
 
 federal_calculators: dict[str, type[ProgramCalculator]] = {
-    "ssdi": Ssdi,
-    "chs": HeadStart,
-    "medicare_savings": MedicareSavings,
+    'ssdi': Ssdi,
+    'chs': HeadStart,
+    'medicare_savings': MedicareSavings,
 }

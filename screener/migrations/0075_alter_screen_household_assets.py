@@ -12,6 +12,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="screen",
             name="household_assets",
-            field=models.DecimalField(blank=True, decimal_places=2, default=None, max_digits=10, null=True),
+            field=models.DecimalField(
+                blank=True, decimal_places=2, default=None, max_digits=10, null=True
+            ),
         ),
     ]

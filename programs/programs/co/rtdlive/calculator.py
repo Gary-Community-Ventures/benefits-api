@@ -6,19 +6,19 @@ from screener.models import HouseholdMember
 
 class RtdLive(ProgramCalculator):
     eligible_counties = [
-        "Adams County",
-        "Arapahoe County",
-        "Boulder County",
-        "Broomfield County",
-        "Denver County",
-        "Douglas County",
-        "Jefferson County",
+        'Adams County',
+        'Arapahoe County',
+        'Boulder County',
+        'Broomfield County',
+        'Denver County',
+        'Douglas County',
+        'Jefferson County'
     ]
     min_age = 20
     max_age = 64
     percent_of_fpl = 2.5
     amount = 732
-    dependencies = ["age", "income_amount", "income_frequency", "zipcode", "household_size"]
+    dependencies = ['age', 'income_amount', 'income_frequency', 'zipcode', 'household_size']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -29,7 +29,7 @@ class RtdLive(ProgramCalculator):
 
         # income
         frequency = "yearly"
-        income_types = ["all"]
+        income_types = ['all']
         fpl = self.program.fpl.as_dict()
         income_limit = RtdLive.percent_of_fpl * fpl[len(members)]
 
@@ -47,7 +47,7 @@ class RtdLive(ProgramCalculator):
                     lambda m: m.age >= RtdLive.min_age and m.age <= RtdLive.max_age,
                     messages.adult(RtdLive.min_age, RtdLive.max_age),
                 ),
-            ],
+            ]
         )
 
         # geography

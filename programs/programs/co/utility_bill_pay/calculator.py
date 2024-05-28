@@ -13,9 +13,9 @@ class UtilityBillPay(ProgramCalculator):
         96_014,
         101_120,
     )
-    presumptive_eligibility = ("snap", "ssi", "andcs", "tanf", "wic")
+    presumptive_eligibility = ('snap', 'ssi', 'andcs', 'tanf', 'wic')
     amount = 350
-    dependencies = ["household_size", "income_amount", "income_frequency"]
+    dependencies = ['household_size', 'income_amount', 'income_frequency']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -27,7 +27,7 @@ class UtilityBillPay(ProgramCalculator):
                 presumptive_eligible = True
 
         # income
-        income = int(self.screen.calc_gross_income("yearly", ["all"]))
+        income = int(self.screen.calc_gross_income('yearly', ['all']))
         income_limit = UtilityBillPay.income_limits[self.screen.household_size - 1]
 
         e.condition(income < income_limit or presumptive_eligible, messages.income(income, income_limit))

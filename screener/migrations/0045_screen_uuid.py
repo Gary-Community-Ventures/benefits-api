@@ -5,14 +5,15 @@ import uuid
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0044_screen_is_verified"),
+        ('screener', '0044_screen_is_verified'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="screen",
-            name="uuid",
+            model_name='screen',
+            name='uuid',
             field=models.UUIDField(default=uuid.uuid4, editable=False),
         ),
     ]

@@ -5,21 +5,20 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("authentication", "0006_remove_user_screen"),
+        ('authentication', '0006_remove_user_screen'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="user",
-            name="cell",
-            field=phonenumber_field.modelfields.PhoneNumberField(
-                blank=True, max_length=128, null=True, region=None, unique=True
-            ),
+            model_name='user',
+            name='cell',
+            field=phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128, null=True, region=None, unique=True),
         ),
         migrations.AlterField(
-            model_name="user",
-            name="email",
-            field=models.EmailField(blank=True, max_length=254, null=True, unique=True, verbose_name="email address"),
+            model_name='user',
+            name='email',
+            field=models.EmailField(blank=True, max_length=254, null=True, unique=True, verbose_name='email address'),
         ),
     ]

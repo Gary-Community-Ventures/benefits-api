@@ -4,13 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0019_rename_cell_navigatortranslation_phone_number_and_more"),
+        ('programs', '0019_rename_cell_navigatortranslation_phone_number_and_more'),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name="navigatortranslation",
-            name="program",
+            model_name='navigatortranslation',
+            name='program',
         ),
     ]

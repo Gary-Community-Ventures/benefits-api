@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0046_alter_screen_uuid"),
+        ('screener', '0046_alter_screen_uuid'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="incomestream",
-            name="hours_worked",
+            model_name='incomestream',
+            name='hours_worked',
             field=models.IntegerField(null=True),
         ),
     ]

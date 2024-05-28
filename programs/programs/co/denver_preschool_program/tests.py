@@ -6,11 +6,14 @@ from screener.models import Screen, HouseholdMember
 class TestDenverPreschoolProgram(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
-            agree_to_tos=True, zipcode="80205", county="Denver County", household_size=2
+            agree_to_tos=True,
+            zipcode='80205',
+            county='Denver County',
+            household_size=2
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
-            relationship="headOfHousehold",
+            relationship='headOfHousehold',
             age=30,
             student=False,
             student_full_time=False,
@@ -25,7 +28,7 @@ class TestDenverPreschoolProgram(TestCase):
         )
         self.person2 = HouseholdMember.objects.create(
             screen=self.screen1,
-            relationship="child",
+            relationship='child',
             age=3,
             student=False,
             student_full_time=False,

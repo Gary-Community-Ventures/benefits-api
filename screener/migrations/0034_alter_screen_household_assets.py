@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0033_screen_referral_source"),
+        ('screener', '0033_screen_referral_source'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="screen",
-            name="household_assets",
+            model_name='screen',
+            name='household_assets',
             field=models.DecimalField(blank=True, decimal_places=2, default=None, max_digits=10, null=True),
         ),
     ]

@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0008_alter_program_legal_status_required"),
+        ('programs', '0008_alter_program_legal_status_required'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="program",
-            name="value_type",
-            field=models.CharField(default="non-discretionary", max_length=120),
+            model_name='program',
+            name='value_type',
+            field=models.CharField(default='non-discretionary', max_length=120),
             preserve_default=False,
         ),
     ]

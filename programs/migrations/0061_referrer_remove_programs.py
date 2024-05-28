@@ -12,6 +12,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="referrer",
             name="remove_programs",
-            field=models.ManyToManyField(blank=True, related_name="removed_programs", to="programs.program"),
+            field=models.ManyToManyField(
+                blank=True, related_name="removed_programs", to="programs.program"
+            ),
         ),
     ]

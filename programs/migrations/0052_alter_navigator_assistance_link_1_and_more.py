@@ -5,82 +5,51 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("translations", "0003_alter_translation_managers"),
-        ("programs", "0051_alter_urgentneedtranslation_unique_together_and_more"),
+        ('translations', '0003_alter_translation_managers'),
+        ('programs', '0051_alter_urgentneedtranslation_unique_together_and_more'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="navigator",
-            name="assistance_link_1",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="navigator_assistance_link",
-                to="translations.translation",
-            ),
+            model_name='navigator',
+            name='assistance_link_1',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='navigator_assistance_link', to='translations.translation'),
         ),
         migrations.AlterField(
-            model_name="navigator",
-            name="description_1",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="navigator_name_description",
-                to="translations.translation",
-            ),
+            model_name='navigator',
+            name='description_1',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='navigator_name_description', to='translations.translation'),
         ),
         migrations.AlterField(
-            model_name="navigator",
-            name="email_1",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="navigator_email",
-                to="translations.translation",
-            ),
+            model_name='navigator',
+            name='email_1',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='navigator_email', to='translations.translation'),
         ),
         migrations.AlterField(
-            model_name="navigator",
-            name="name_1",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="navigator_name",
-                to="translations.translation",
-            ),
+            model_name='navigator',
+            name='name_1',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='navigator_name', to='translations.translation'),
         ),
         migrations.AlterField(
-            model_name="urgentneed",
-            name="description_1",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="urgent_need_description",
-                to="translations.translation",
-            ),
+            model_name='urgentneed',
+            name='description_1',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='urgent_need_description', to='translations.translation'),
         ),
         migrations.AlterField(
-            model_name="urgentneed",
-            name="link_1",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="urgent_need_link",
-                to="translations.translation",
-            ),
+            model_name='urgentneed',
+            name='link_1',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='urgent_need_link', to='translations.translation'),
         ),
         migrations.AlterField(
-            model_name="urgentneed",
-            name="name_1",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="urgent_need_name",
-                to="translations.translation",
-            ),
+            model_name='urgentneed',
+            name='name_1',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='urgent_need_name', to='translations.translation'),
         ),
         migrations.AlterField(
-            model_name="urgentneed",
-            name="type_1",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.PROTECT,
-                related_name="urgent_need_type",
-                to="translations.translation",
-            ),
+            model_name='urgentneed',
+            name='type_1',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='urgent_need_type', to='translations.translation'),
         ),
     ]

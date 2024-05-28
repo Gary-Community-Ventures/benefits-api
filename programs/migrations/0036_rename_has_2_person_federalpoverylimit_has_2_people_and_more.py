@@ -4,44 +4,45 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0035_federalpoverylimit"),
+        ('programs', '0035_federalpoverylimit'),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name="federalpoverylimit",
-            old_name="has_2_person",
-            new_name="has_2_people",
+            model_name='federalpoverylimit',
+            old_name='has_2_person',
+            new_name='has_2_people',
         ),
         migrations.RenameField(
-            model_name="federalpoverylimit",
-            old_name="has_3_person",
-            new_name="has_3_people",
+            model_name='federalpoverylimit',
+            old_name='has_3_person',
+            new_name='has_3_people',
         ),
         migrations.RenameField(
-            model_name="federalpoverylimit",
-            old_name="has_4_person",
-            new_name="has_4_people",
+            model_name='federalpoverylimit',
+            old_name='has_4_person',
+            new_name='has_4_people',
         ),
         migrations.RenameField(
-            model_name="federalpoverylimit",
-            old_name="has_5_person",
-            new_name="has_5_people",
+            model_name='federalpoverylimit',
+            old_name='has_5_person',
+            new_name='has_5_people',
         ),
         migrations.RenameField(
-            model_name="federalpoverylimit",
-            old_name="has_6_person",
-            new_name="has_6_people",
+            model_name='federalpoverylimit',
+            old_name='has_6_person',
+            new_name='has_6_people',
         ),
         migrations.RenameField(
-            model_name="federalpoverylimit",
-            old_name="has_7_person",
-            new_name="has_7_people",
+            model_name='federalpoverylimit',
+            old_name='has_7_person',
+            new_name='has_7_people',
         ),
         migrations.RenameField(
-            model_name="federalpoverylimit",
-            old_name="has_8_person",
-            new_name="has_8_people",
+            model_name='federalpoverylimit',
+            old_name='has_8_person',
+            new_name='has_8_people',
         ),
     ]

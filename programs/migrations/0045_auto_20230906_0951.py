@@ -4,18 +4,25 @@ from django.db import migrations
 
 
 def other_data_migrations(apps, _):
-    Program = apps.get_model("programs", "Program")
+    Program = apps.get_model('programs', 'Program')
 
-    non_translated_fields = ("active", "legal_status_required", "name_abbreviated")
+    non_translated_fields = (
+        'active',
+        'legal_status_required',
+        'name_abbreviated'
+    )
     for program in Program.objects.all():
         for field in non_translated_fields:
-            setattr(program, field + "_1", getattr(program, field))
+            setattr(program, field + '_1', getattr(program, field))
         program.save()
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("programs", "0044_program_legal_status_required_1_and_more"),
+        ('programs', '0044_program_legal_status_required_1_and_more'),
     ]
 
-    operations = [migrations.RunPython(other_data_migrations)]
+    operations = [
+        migrations.RunPython(other_data_migrations)
+    ]

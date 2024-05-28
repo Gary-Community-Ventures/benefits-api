@@ -4,19 +4,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("authentication", "0007_alter_user_cell_alter_user_email"),
+        ('authentication', '0007_alter_user_cell_alter_user_email'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="user",
-            name="send_offers",
+            model_name='user',
+            name='send_offers',
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name="user",
-            name="send_updates",
+            model_name='user',
+            name='send_updates',
             field=models.BooleanField(default=False),
         ),
     ]

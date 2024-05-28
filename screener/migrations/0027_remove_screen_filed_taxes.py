@@ -4,13 +4,14 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("screener", "0026_screen_filed_taxes"),
+        ('screener', '0026_screen_filed_taxes'),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name="screen",
-            name="filed_taxes",
+            model_name='screen',
+            name='filed_taxes',
         ),
     ]

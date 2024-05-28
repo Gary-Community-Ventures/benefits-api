@@ -4,7 +4,7 @@ from programs.programs.calc import ProgramCalculator, Eligibility
 
 class CashBack(ProgramCalculator):
     amount = 750
-    dependencies = ["age"]
+    dependencies = ['age']
 
     def eligible(self) -> Eligibility:
         e = Eligibility()

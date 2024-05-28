@@ -4,14 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("authentication", "0003_user_screen"),
+        ('authentication', '0003_user_screen'),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="user",
-            name="tcpa_consent",
+            model_name='user',
+            name='tcpa_consent',
             field=models.BooleanField(default=False),
             preserve_default=False,
         ),
