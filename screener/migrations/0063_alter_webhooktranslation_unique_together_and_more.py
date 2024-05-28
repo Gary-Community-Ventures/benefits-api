@@ -4,27 +4,26 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0062_alter_screen_is_test_data'),
+        ("screener", "0062_alter_screen_is_test_data"),
     ]
 
     operations = [
         migrations.AlterUniqueTogether(
-            name='webhooktranslation',
+            name="webhooktranslation",
             unique_together=None,
         ),
         migrations.RemoveField(
-            model_name='webhooktranslation',
-            name='master',
+            model_name="webhooktranslation",
+            name="master",
         ),
         migrations.DeleteModel(
-            name='WebHook',
+            name="WebHook",
         ),
         migrations.DeleteModel(
-            name='WebHookFunction',
+            name="WebHookFunction",
         ),
         migrations.DeleteModel(
-            name='WebHookTranslation',
+            name="WebHookTranslation",
         ),
     ]

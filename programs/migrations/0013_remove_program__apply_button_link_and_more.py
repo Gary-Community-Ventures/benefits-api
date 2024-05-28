@@ -4,50 +4,49 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0012_migrate_translatable_fields'),
+        ("programs", "0012_migrate_translatable_fields"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='program',
-            name='_apply_button_link',
+            model_name="program",
+            name="_apply_button_link",
         ),
         migrations.RemoveField(
-            model_name='program',
-            name='_description',
+            model_name="program",
+            name="_description",
         ),
         migrations.RemoveField(
-            model_name='program',
-            name='_description_short',
+            model_name="program",
+            name="_description_short",
         ),
         migrations.RemoveField(
-            model_name='program',
-            name='_dollar_value',
+            model_name="program",
+            name="_dollar_value",
         ),
         migrations.RemoveField(
-            model_name='program',
-            name='_estimated_delivery_time',
+            model_name="program",
+            name="_estimated_delivery_time",
         ),
         migrations.RemoveField(
-            model_name='program',
-            name='_learn_more_link',
+            model_name="program",
+            name="_learn_more_link",
         ),
         migrations.RemoveField(
-            model_name='program',
-            name='_legal_status_required',
+            model_name="program",
+            name="_legal_status_required",
         ),
         migrations.RemoveField(
-            model_name='program',
-            name='_name',
+            model_name="program",
+            name="_name",
         ),
         migrations.RemoveField(
-            model_name='program',
-            name='_name_abbreviated',
+            model_name="program",
+            name="_name_abbreviated",
         ),
         migrations.RemoveField(
-            model_name='program',
-            name='_value_type',
+            model_name="program",
+            name="_value_type",
         ),
     ]

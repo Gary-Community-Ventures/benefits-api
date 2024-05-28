@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0042_screen_needs_baby_supplies_and_more'),
+        ("screener", "0042_screen_needs_baby_supplies_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='screen',
-            name='has_medicare_hi',
+            model_name="screen",
+            name="has_medicare_hi",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]

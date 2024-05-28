@@ -5,22 +5,22 @@ from programs.programs.policyengine.calculators.base import PolicyEngineCalulato
 
 
 federal_member_calculators = {
-    'wic': member.Wic,
-    'pell_grant': member.PellGrant,
-    'ssi': member.Ssi,
+    "wic": member.Wic,
+    "pell_grant": member.PellGrant,
+    "ssi": member.Ssi,
 }
 
 federal_spm_unit_calculators = {
-    'acp': spm.Acp,
-    'lifeline': spm.Lifeline,
-    'nslp': spm.SchoolLunch,
-    'snap': spm.Snap,
-    'tanf': spm.Tanf,
+    "acp": spm.Acp,
+    "lifeline": spm.Lifeline,
+    "nslp": spm.SchoolLunch,
+    "snap": spm.Snap,
+    "tanf": spm.Tanf,
 }
 
 federal_tax_unit_calculators = {
-    'eitc': tax.Eitc,
-    'ctc': tax.Ctc,
+    "eitc": tax.Eitc,
+    "ctc": tax.Ctc,
 }
 
 federal_pe_calculators: dict[str, type[PolicyEngineCalulator]] = {
@@ -28,4 +28,3 @@ federal_pe_calculators: dict[str, type[PolicyEngineCalulator]] = {
     **federal_spm_unit_calculators,
     **federal_tax_unit_calculators,
 }
-

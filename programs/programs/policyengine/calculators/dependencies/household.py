@@ -2,17 +2,17 @@ from .base import Household
 
 
 class StateCode(Household):
-    field = 'state_code'
+    field = "state_code"
 
-    state = ''
+    state = ""
 
     def value(self):
         return self.state
 
 
 class CoStateCode(StateCode):
-    state = 'CO'
+    state = "CO"
+
 
 class NcStateCode(StateCode):
-    state = 'NC'
-
+    state = "NC"

@@ -7,7 +7,7 @@ import math
 
 class LowWageCovidRelief(ProgramCalculator):
     amount = 1_500
-    auto_eligible_benefits = (*STATE_MEDICAID_OPTIONS, 'tanf', 'snap', 'wic', 'leap')
+    auto_eligible_benefits = (*STATE_MEDICAID_OPTIONS, "tanf", "snap", "wic", "leap")
     income_limits = {
         1: -math.inf,
         2: 3_266.25,
@@ -18,8 +18,8 @@ class LowWageCovidRelief(ProgramCalculator):
         7: 7_522.50,
         8: 8_373.75,
     }
-    county = 'Adams County'
-    dependencies = ['zipode', 'household_size', 'income_amount', 'income_frequency']
+    county = "Adams County"
+    dependencies = ["zipode", "household_size", "income_amount", "income_frequency"]
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -38,13 +38,13 @@ class LowWageCovidRelief(ProgramCalculator):
             has_benefit = self.screen.has_benefit(benefit)
 
         for benefit in self.data:
-            if benefit['name_abbreviated'] in LowWageCovidRelief.auto_eligible_benefits and benefit['eligible']:
+            if benefit["name_abbreviated"] in LowWageCovidRelief.auto_eligible_benefits and benefit["eligible"]:
                 has_benefit = True
                 break
 
         # meets income limit
         income_limit = LowWageCovidRelief.income_limits[self.screen.household_size]
-        income = self.screen.calc_gross_income('monthly', ['all'])
+        income = self.screen.calc_gross_income("monthly", ["all"])
         meets_income_limit = income <= income_limit
 
         if not (meets_income_limit or has_benefit):

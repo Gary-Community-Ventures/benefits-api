@@ -27,8 +27,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="navigator",
             name="counties",
-            field=models.ManyToManyField(
-                blank=True, related_name="navigator", to="programs.navigatorcounties"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="navigator", to="programs.navigatorcounties"),
         ),
     ]

@@ -4,25 +4,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0053_rename_assistance_link_1_navigator_assistance_link_and_more'),
+        ("programs", "0053_rename_assistance_link_1_navigator_assistance_link_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='navigator',
-            name='external_name',
+            model_name="navigator",
+            name="external_name",
             field=models.CharField(max_length=120, null=True, unique=True),
         ),
         migrations.AddField(
-            model_name='program',
-            name='external_name',
+            model_name="program",
+            name="external_name",
             field=models.CharField(max_length=120, null=True, unique=True),
         ),
         migrations.AddField(
-            model_name='urgentneed',
-            name='external_name',
+            model_name="urgentneed",
+            name="external_name",
             field=models.CharField(max_length=120, null=True, unique=True),
         ),
     ]

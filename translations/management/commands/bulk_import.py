@@ -6,21 +6,24 @@ import json
 
 
 class Command(BaseCommand):
-    '''
+    """
     Run on heroku:
     `heroku run --no-tty -a [HEROKU APP NAME] manage.py bulk_import < [PATH TO FILE]`
-    '''
+    """
 
-    help = '''
+    help = """
     Get translation export
-    '''
+    """
 
     def add_arguments(self, parser):
         parser.add_argument(
-            'data', nargs='?', type=argparse.FileType('r', encoding='utf-8'), default=stdin,
+            "data",
+            nargs="?",
+            type=argparse.FileType("r", encoding="utf-8"),
+            default=stdin,
         )
 
     def handle(self, *args, **options):
-        data = json.load(options['data'])
+        data = json.load(options["data"])
 
         bulk_add(data)

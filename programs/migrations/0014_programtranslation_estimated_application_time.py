@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0013_remove_program__apply_button_link_and_more'),
+        ("programs", "0013_remove_program__apply_button_link_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='programtranslation',
-            name='estimated_application_time',
+            model_name="programtranslation",
+            name="estimated_application_time",
             field=models.CharField(blank=True, default=None, max_length=320, null=True),
         ),
     ]

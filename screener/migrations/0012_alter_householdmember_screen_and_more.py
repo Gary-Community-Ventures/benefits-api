@@ -5,25 +5,32 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0011_expense_household_member_and_more'),
+        ("screener", "0011_expense_household_member_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='householdmember',
-            name='screen',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='household_members', to='screener.screen'),
+            model_name="householdmember",
+            name="screen",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="household_members", to="screener.screen"
+            ),
         ),
         migrations.AlterField(
-            model_name='incomestream',
-            name='household_member',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='income_streams', to='screener.householdmember'),
+            model_name="incomestream",
+            name="household_member",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="income_streams",
+                to="screener.householdmember",
+            ),
         ),
         migrations.AlterField(
-            model_name='incomestream',
-            name='screen',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='income_streams', to='screener.screen'),
+            model_name="incomestream",
+            name="screen",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="income_streams", to="screener.screen"
+            ),
         ),
     ]
