@@ -39,6 +39,19 @@ class UrgentNeedFunction:
         return True
 
 
+class ChildAgeFunction(UrgentNeedFunction):
+    dependencies = ["age"]
+    min_age = 0
+    max_age = 18
+
+    @classmethod
+    def eligible(cls, screen: Screen):
+        """
+        return True if the child is between the ages of min_age and max_age
+        """
+        return screen.num_children(age_min=cls.min_age, age_max=cls.max_age) > 0
+
+
 class LivesInDenver(UrgentNeedFunction):
     dependencies = ["county"]
 
@@ -95,15 +108,8 @@ class HelpkitchenZipcode(UrgentNeedFunction):
         return screen.zipcode in zipcodes
 
 
-class Child(UrgentNeedFunction):
+class Child(ChildAgeFunction):
     dependencies = ["age"]
-
-    @classmethod
-    def eligible(cls, screen: Screen):
-        """
-        Return True if someone is younger than 18
-        """
-        return screen.num_children(child_relationship=["all"]) > 0
 
 
 class BiaFoodDelivery(UrgentNeedFunction):
@@ -284,16 +290,9 @@ class ChildFirst(UrgentNeedFunction):
         return is_age_eligible and screen.county in eligible_counties
 
 
-class EarlyChildhoodMentalHealthSupport(UrgentNeedFunction):
+class EarlyChildhoodMentalHealthSupport(ChildAgeFunction):
     dependencies = ["age"]
     max_age = 5
-
-    @classmethod
-    def eligible(cls, screen: Screen):
-        """
-        Return True if the household has a child aged 0-5
-        """
-        return screen.num_children(age_max=cls.max_age) > 0
 
 
 class ParentsOfPreschoolYoungsters(UrgentNeedFunction):
@@ -373,3 +372,8 @@ class ParentsAsTeacher(UrgentNeedFunction):
         county_eligible = screen.county in cls.counties
 
         return age_eligible and county_eligible
+
+
+class EarlyIntervention(ChildAgeFunction):
+    dependencies = ["age"]
+    max_age = 2
