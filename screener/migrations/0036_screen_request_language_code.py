@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0035_screen_county'),
+        ("screener", "0035_screen_county"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='screen',
-            name='request_language_code',
+            model_name="screen",
+            name="request_language_code",
             field=models.CharField(blank=True, max_length=12, null=True),
         ),
     ]

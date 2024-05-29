@@ -9,15 +9,18 @@ from .models import User
 
 class CustomUserAdmin(ModelAdmin):
     search_fields = ("email",)
-    ordering = ('email_or_cell', 'email')
+    ordering = ("email_or_cell", "email")
 
-    list_display = ('email_or_cell', 'is_staff')
+    list_display = ("email_or_cell", "is_staff")
+
 
 class CustomGroupAdmin(ModelAdmin, GroupAdmin):
     pass
 
+
 class CustomTokenAdmin(ModelAdmin, TokenAdmin):
     pass
+
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.unregister(Group)

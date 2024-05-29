@@ -9,7 +9,7 @@ from .models import (
 
 
 class screenAdmin(ModelAdmin):
-    search_fields = ('id',)
+    search_fields = ("id",)
 
 
 class CustomMessageAdmin(ModelAdmin):

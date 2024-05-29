@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('translations', '0003_alter_translation_managers'),
+        ("translations", "0003_alter_translation_managers"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='translation',
-            name='no_auto',
+            model_name="translation",
+            name="no_auto",
             field=models.BooleanField(default=False),
         ),
     ]

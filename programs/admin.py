@@ -20,10 +20,13 @@ from .models import (
 class ProgramAdmin(ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "name_abbreviated", "active", "action_buttons"]
-    filter_horizontal = ('legal_status_required', 'documents',)
+    filter_horizontal = (
+        "legal_status_required",
+        "documents",
+    )
 
     def get_str(self, obj):
-        return str(obj) if str(obj).strip() else 'unnamed'
+        return str(obj) if str(obj).strip() else "unnamed"
 
     get_str.admin_order_field = "name"
     get_str.short_description = "Program"
@@ -66,10 +69,8 @@ class ProgramAdmin(ModelAdmin):
             reverse("translation_admin_url", args=[category.id]),
             reverse("translation_admin_url", args=[learn_more_link.id]),
             reverse("translation_admin_url", args=[apply_button_link.id]),
-            reverse("translation_admin_url", args=[
-                    estimated_delivery_time.id]),
-            reverse("translation_admin_url", args=[
-                    estimated_application_time.id]),
+            reverse("translation_admin_url", args=[estimated_delivery_time.id]),
+            reverse("translation_admin_url", args=[estimated_application_time.id]),
             reverse("translation_admin_url", args=[value_type.id]),
             reverse("translation_admin_url", args=[warning.id]),
             reverse("translation_admin_url", args=[website_description.id]),
@@ -90,10 +91,13 @@ class NavigatorCountiesAdmin(ModelAdmin):
 class NavigatorAdmin(ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "action_buttons"]
-    filter_horizontal = ('program', 'counties',)
+    filter_horizontal = (
+        "program",
+        "counties",
+    )
 
     def get_str(self, obj):
-        return str(obj) if str(obj).strip() else 'unnamed'
+        return str(obj) if str(obj).strip() else "unnamed"
 
     get_str.admin_order_field = "name"
     get_str.short_description = "Navigator"
@@ -129,10 +133,13 @@ class NavigatorAdmin(ModelAdmin):
 class UrgentNeedAdmin(ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "active", "action_buttons"]
-    filter_horizontal = ('type_short', 'functions',)
+    filter_horizontal = (
+        "type_short",
+        "functions",
+    )
 
     def get_str(self, obj):
-        return str(obj) if str(obj).strip() else 'unnamed'
+        return str(obj) if str(obj).strip() else "unnamed"
 
     get_str.admin_order_field = "name"
     get_str.short_description = "Urgent Need"
@@ -191,8 +198,11 @@ class DocumentAdmin(ModelAdmin):
 
 class ReferrerAdmin(ModelAdmin):
     search_fields = ("referrer_code",)
-    filter_horizontal = ('webhook_functions',
-                         'primary_navigators', 'remove_programs',)
+    filter_horizontal = (
+        "webhook_functions",
+        "primary_navigators",
+        "remove_programs",
+    )
 
 
 class WebHookFunctionsAdmin(ModelAdmin):

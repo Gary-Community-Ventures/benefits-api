@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0052_alter_expense_household_member'),
+        ("screener", "0052_alter_expense_household_member"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='householdmember',
-            name='has_expenses',
+            model_name="householdmember",
+            name="has_expenses",
             field=models.BooleanField(null=True),
         ),
         migrations.AlterField(
-            model_name='householdmember',
-            name='has_income',
+            model_name="householdmember",
+            name="has_income",
             field=models.BooleanField(null=True),
         ),
     ]

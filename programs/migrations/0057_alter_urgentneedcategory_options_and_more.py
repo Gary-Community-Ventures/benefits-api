@@ -5,31 +5,39 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0056_urgentneedcategory_remove_urgentneed_type_short_and_more'),
+        ("programs", "0056_urgentneedcategory_remove_urgentneed_type_short_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='urgentneedcategory',
-            options={'verbose_name_plural': 'Urgent Need Categories'},
+            name="urgentneedcategory",
+            options={"verbose_name_plural": "Urgent Need Categories"},
         ),
         migrations.RemoveField(
-            model_name='program',
-            name='legal_status_required',
+            model_name="program",
+            name="legal_status_required",
         ),
         migrations.AlterField(
-            model_name='urgentneed',
-            name='type_short',
-            field=models.ManyToManyField(related_name='urgent_needs', to='programs.urgentneedcategory'),
+            model_name="urgentneed",
+            name="type_short",
+            field=models.ManyToManyField(related_name="urgent_needs", to="programs.urgentneedcategory"),
         ),
         migrations.CreateModel(
-            name='LegalStatus',
+            name="LegalStatus",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(max_length=256)),
-                ('parent', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='children', to='programs.legalstatus')),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("status", models.CharField(max_length=256)),
+                (
+                    "parent",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="children",
+                        to="programs.legalstatus",
+                    ),
+                ),
             ],
         ),
     ]

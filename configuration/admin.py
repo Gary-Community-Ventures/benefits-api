@@ -4,7 +4,7 @@ from .models import Configuration
 
 
 class ConfigurationAdmin(ModelAdmin):
-    search_fields = ('name',)
+    search_fields = ("name",)
 
 
 admin.site.register(Configuration, ConfigurationAdmin)
