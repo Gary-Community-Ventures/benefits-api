@@ -6,21 +6,13 @@ def calculate_nfp(screen, data, program):
     eligibility = eligibility_nfp(screen, program)
     value = value_nfp(screen)
 
-    calculation = {
-        'eligibility': eligibility,
-        'value': value
-    }
+    calculation = {"eligibility": eligibility, "value": value}
 
     return calculation
 
 
 def eligibility_nfp(screen, program):
-
-    eligibility = {
-        "eligible": True,
-        "passed": [],
-        "failed": []
-    }
+    eligibility = {"eligible": True, "passed": [], "failed": []}
 
     frequency = "yearly"
 
@@ -36,10 +28,12 @@ def eligibility_nfp(screen, program):
         eligibility["eligible"] = False
         eligibility["failed"].append(
             _("Calculated income of ")
-            + str(math.trunc(gross_income)) + _(" for a household with ")
+            + str(math.trunc(gross_income))
+            + _(" for a household with ")
             + str(screen.household_size)
             + _(" members is above the income limit of ")
-            + str(income_limit))
+            + str(income_limit)
+        )
     else:
         eligibility["passed"].append(
             _("Calculated income of ")
@@ -47,7 +41,8 @@ def eligibility_nfp(screen, program):
             + _(" for a household with ")
             + str(screen.household_size)
             + _(" members is below the income limit of ")
-            + str(income_limit))
+            + str(income_limit)
+        )
 
     return eligibility
 

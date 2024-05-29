@@ -4,60 +4,59 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0009_program_value_type'),
+        ("programs", "0009_program_value_type"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='program',
-            old_name='apply_button_link',
-            new_name='_apply_button_link',
+            model_name="program",
+            old_name="apply_button_link",
+            new_name="_apply_button_link",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='description',
-            new_name='_description',
+            model_name="program",
+            old_name="description",
+            new_name="_description",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='description_short',
-            new_name='_description_short',
+            model_name="program",
+            old_name="description_short",
+            new_name="_description_short",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='dollar_value',
-            new_name='_dollar_value',
+            model_name="program",
+            old_name="dollar_value",
+            new_name="_dollar_value",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='estimated_delivery_time',
-            new_name='_estimated_delivery_time',
+            model_name="program",
+            old_name="estimated_delivery_time",
+            new_name="_estimated_delivery_time",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='learn_more_link',
-            new_name='_learn_more_link',
+            model_name="program",
+            old_name="learn_more_link",
+            new_name="_learn_more_link",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='legal_status_required',
-            new_name='_legal_status_required',
+            model_name="program",
+            old_name="legal_status_required",
+            new_name="_legal_status_required",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='name',
-            new_name='_name',
+            model_name="program",
+            old_name="name",
+            new_name="_name",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='name_abbreviated',
-            new_name='_name_abbreviated',
+            model_name="program",
+            old_name="name_abbreviated",
+            new_name="_name_abbreviated",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='value_type',
-            new_name='_value_type',
+            model_name="program",
+            old_name="value_type",
+            new_name="_value_type",
         ),
     ]

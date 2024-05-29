@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0038_alter_programeligibilitysnapshot_estimated_application_time_and_more'),
+        ("screener", "0038_alter_programeligibilitysnapshot_estimated_application_time_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='screen',
-            name='has_ssi',
+            model_name="screen",
+            name="has_ssi",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]

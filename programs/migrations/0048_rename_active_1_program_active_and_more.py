@@ -4,70 +4,69 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0047_alter_program_active_1_and_more'),
+        ("programs", "0047_alter_program_active_1_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='program',
-            old_name='active_1',
-            new_name='active',
+            model_name="program",
+            old_name="active_1",
+            new_name="active",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='apply_button_link_1',
-            new_name='apply_button_link',
+            model_name="program",
+            old_name="apply_button_link_1",
+            new_name="apply_button_link",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='category_1',
-            new_name='category',
+            model_name="program",
+            old_name="category_1",
+            new_name="category",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='description_1',
-            new_name='description',
+            model_name="program",
+            old_name="description_1",
+            new_name="description",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='description_short_1',
-            new_name='description_short',
+            model_name="program",
+            old_name="description_short_1",
+            new_name="description_short",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='estimated_application_time_1',
-            new_name='estimated_application_time',
+            model_name="program",
+            old_name="estimated_application_time_1",
+            new_name="estimated_application_time",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='estimated_delivery_time_1',
-            new_name='estimated_delivery_time',
+            model_name="program",
+            old_name="estimated_delivery_time_1",
+            new_name="estimated_delivery_time",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='learn_more_link_1',
-            new_name='learn_more_link',
+            model_name="program",
+            old_name="learn_more_link_1",
+            new_name="learn_more_link",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='legal_status_required_1',
-            new_name='legal_status_required',
+            model_name="program",
+            old_name="legal_status_required_1",
+            new_name="legal_status_required",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='name_1',
-            new_name='name',
+            model_name="program",
+            old_name="name_1",
+            new_name="name",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='name_abbreviated_1',
-            new_name='name_abbreviated',
+            model_name="program",
+            old_name="name_abbreviated_1",
+            new_name="name_abbreviated",
         ),
         migrations.RenameField(
-            model_name='program',
-            old_name='value_type_1',
-            new_name='value_type',
+            model_name="program",
+            old_name="value_type_1",
+            new_name="value_type",
         ),
     ]

@@ -24,7 +24,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-.vscode
+.vscode/**/*
+!.vscode/settings.json.default
 
 # Static files
 staticfiles/

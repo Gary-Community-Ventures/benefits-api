@@ -30,9 +30,7 @@ class TestReproductiveHealthCarePension(TestCase):
         )
 
     def test_reproductive_health_care_pass_all_conditions(self):
-        rhc = ReproductiveHealthCare(
-            self.screen1, [{"name_abbreviated": "medicaid", "eligible": True}]
-        )
+        rhc = ReproductiveHealthCare(self.screen1, [{"name_abbreviated": "medicaid", "eligible": True}])
         eligibility = rhc.eligibility
 
         self.assertTrue(eligibility["eligible"])
@@ -41,9 +39,7 @@ class TestReproductiveHealthCarePension(TestCase):
         self.person1.has_no_hi = False
         self.person1.save()
 
-        rhc = ReproductiveHealthCare(
-            self.screen1, [{"name_abbreviated": "medicaid", "eligible": False}]
-        )
+        rhc = ReproductiveHealthCare(self.screen1, [{"name_abbreviated": "medicaid", "eligible": False}])
         eligibility = rhc.eligibility
 
         self.assertFalse(eligibility["eligible"])

@@ -4,14 +4,14 @@ import programs.programs.policyengine.calculators.dependencies as dependency
 
 class Wic(PolicyEngineMembersCalculator):
     wic_categories = {
-        'NONE': 0,
-        'INFANT': 130,
-        'CHILD': 74,
+        "NONE": 0,
+        "INFANT": 130,
+        "CHILD": 74,
         "PREGNANT": 100,
         "POSTPARTUM": 100,
         "BREASTFEEDING": 100,
     }
-    pe_name = 'wic'
+    pe_name = "wic"
     pe_inputs = [
         dependency.member.PregnancyDependency,
         dependency.member.AgeDependency,
@@ -25,14 +25,14 @@ class Wic(PolicyEngineMembersCalculator):
 
         for member in self.screen.household_members.all():
             if self.get_member_variable(member.id) > 0:
-                wic_category = self.sim.value('people', str(member.id), 'wic_category', self.pe_period)
+                wic_category = self.sim.value("people", str(member.id), "wic_category", self.pe_period)
                 total += self.wic_categories[wic_category] * 12
 
         return total
 
 
 class Medicaid(PolicyEngineMembersCalculator):
-    pe_name = 'medicaid'
+    pe_name = "medicaid"
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
@@ -94,19 +94,21 @@ class Medicaid(PolicyEngineMembersCalculator):
             if member.pregnant is True or member.age <= 5:
                 in_wic_demographic = True
         if total == 0 and in_wic_demographic:
-            if self.screen.has_benefit('medicaid') is True \
-                    or self.screen.has_benefit('tanf') is True \
-                    or self.screen.has_benefit('snap') is True:
+            if (
+                self.screen.has_benefit("medicaid") is True
+                or self.screen.has_benefit("tanf") is True
+                or self.screen.has_benefit("snap") is True
+            ):
                 total = self.presumptive_amount
 
         return total
 
     def _get_age(self, member_id: int) -> int:
-        return self.sim.value(self.pe_category, str(member_id), 'age', self.pe_period)
+        return self.sim.value(self.pe_category, str(member_id), "age", self.pe_period)
 
 
 class PellGrant(PolicyEngineMembersCalculator):
-    pe_name = 'pell_grant'
+    pe_name = "pell_grant"
     pe_inputs = [
         dependency.member.PellGrantDependentAvailableIncomeDependency,
         dependency.member.PellGrantCountableAssetsDependency,
@@ -122,7 +124,7 @@ class PellGrant(PolicyEngineMembersCalculator):
 
 
 class Ssi(PolicyEngineMembersCalculator):
-    pe_name = 'ssi'
+    pe_name = "ssi"
     pe_inputs = [
         dependency.member.SsiCountableResourcesDependency,
         dependency.member.SsiReportedDependency,
@@ -136,4 +138,3 @@ class Ssi(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitDependentDependency,
     ]
     pe_outputs = [dependency.member.Ssi]
-

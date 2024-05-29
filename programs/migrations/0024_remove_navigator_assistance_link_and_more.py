@@ -5,37 +5,36 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0023_navigator_assistance_link'),
+        ("programs", "0023_navigator_assistance_link"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='navigator',
-            name='assistance_link',
+            model_name="navigator",
+            name="assistance_link",
         ),
         migrations.RemoveField(
-            model_name='navigator',
-            name='email',
+            model_name="navigator",
+            name="email",
         ),
         migrations.RemoveField(
-            model_name='navigator',
-            name='phone_number',
+            model_name="navigator",
+            name="phone_number",
         ),
         migrations.AddField(
-            model_name='navigatortranslation',
-            name='assistance_link',
+            model_name="navigatortranslation",
+            name="assistance_link",
             field=models.CharField(blank=True, max_length=320),
         ),
         migrations.AddField(
-            model_name='navigatortranslation',
-            name='email',
-            field=models.EmailField(blank=True, max_length=254, null=True, verbose_name='email address'),
+            model_name="navigatortranslation",
+            name="email",
+            field=models.EmailField(blank=True, max_length=254, null=True, verbose_name="email address"),
         ),
         migrations.AddField(
-            model_name='navigatortranslation',
-            name='phone_number',
+            model_name="navigatortranslation",
+            name="phone_number",
             field=phonenumber_field.modelfields.PhoneNumberField(default=0, max_length=128, region=None),
             preserve_default=False,
         ),

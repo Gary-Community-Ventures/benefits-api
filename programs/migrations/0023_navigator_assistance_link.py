@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0022_remove_navigatortranslation_assistance_link_and_more'),
+        ("programs", "0022_remove_navigatortranslation_assistance_link_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='navigator',
-            name='assistance_link',
+            model_name="navigator",
+            name="assistance_link",
             field=models.CharField(blank=True, max_length=320),
         ),
     ]

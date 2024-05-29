@@ -5,8 +5,8 @@ from programs.co_county_zips import counties_from_zip
 
 class BasicCashAssistance(ProgramCalculator):
     amount = 1_000
-    county = 'Denver County'
-    dependencies = ['zipcode', 'age']
+    county = "Denver County"
+    dependencies = ["zipcode", "age"]
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
