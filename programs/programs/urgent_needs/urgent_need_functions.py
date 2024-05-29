@@ -109,7 +109,7 @@ class HelpkitchenZipcode(UrgentNeedFunction):
 
 
 class Child(ChildAgeFunction):
-    dependencies = ["age"]
+    pass
 
 
 class BiaFoodDelivery(UrgentNeedFunction):
@@ -291,7 +291,6 @@ class ChildFirst(UrgentNeedFunction):
 
 
 class EarlyChildhoodMentalHealthSupport(ChildAgeFunction):
-    dependencies = ["age"]
     max_age = 5
 
 
@@ -375,5 +374,4 @@ class ParentsAsTeacher(UrgentNeedFunction):
 
 
 class EarlyIntervention(ChildAgeFunction):
-    dependencies = ["age"]
     max_age = 2
