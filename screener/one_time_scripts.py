@@ -297,6 +297,7 @@ def fix_insurance():
 
 
 def update_hubspot_extra_fields():
+    raise Exception("Do not run in production. Will overide some contact info.")
     screens = list(Screen.objects.filter(user__isnull=False))
     hubspot = Hubspot()
 
