@@ -43,12 +43,13 @@ class UrgentNeedFunction:
 
 class LivesInDenver(UrgentNeedFunction):
     dependencies = ["county"]
+    county = "Denver County"
 
     def eligible(self):
         """
         Household lives in the Denver County
         """
-        return self.screen.county == "Denver County"
+        return self.screen.county == self.county
 
 
 class MealInCounties(UrgentNeedFunction):
@@ -365,6 +366,28 @@ class ParentsAsTeacher(UrgentNeedFunction):
         return age_eligible and county_eligible
 
 
+class SnapEmployment(UrgentNeedFunction):
+    dependencies = ["county"]
+    county = "Denver County"
+
+    def eligible(self):
+        """
+        Return True if the household is SNAP eligible and lives in Denver
+        """
+        county_eligible = self.screen.county == self.county
+
+        snap_eligible = self.screen.has_benefit("snap")
+        for program in self.data:
+            if program["name_abbreviated"] != "snap":
+                continue
+
+            if program["eligible"]:
+                snap_eligible = True
+            break
+
+        return county_eligible and snap_eligible
+
+
 urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "denver": LivesInDenver,
     "meal": MealInCounties,
@@ -380,4 +403,5 @@ urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "ecmh": EarlyChildhoodMentalHealthSupport,
     "hippy": ParentsOfPreschoolYoungsters,
     "pat": ParentsAsTeacher,
+    "snap_employment": SnapEmployment,
 }
