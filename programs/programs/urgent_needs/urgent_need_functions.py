@@ -41,6 +41,18 @@ class UrgentNeedFunction:
         return True
 
 
+class ChildAgeFunction(UrgentNeedFunction):
+    dependencies = ["age"]
+    min_age = 0
+    max_age = 18
+
+    def eligible(self):
+        """
+        return True if the child is between the ages of min_age and max_age
+        """
+        return self.screen.num_children(age_min=self.min_age, age_max=self.max_age) > 0
+
+
 class LivesInDenver(UrgentNeedFunction):
     dependencies = ["county"]
     county = "Denver County"
@@ -95,14 +107,8 @@ class HelpkitchenZipcode(UrgentNeedFunction):
         return self.screen.zipcode in self.zipcodes
 
 
-class Child(UrgentNeedFunction):
-    dependencies = ["age"]
-
-    def eligible(self):
-        """
-        Return True if someone is younger than 18
-        """
-        return self.screen.num_children(child_relationship=["all"]) > 0
+class Child(ChildAgeFunction):
+    pass
 
 
 class BiaFoodDelivery(UrgentNeedFunction):
@@ -278,15 +284,8 @@ class ChildFirst(UrgentNeedFunction):
         return is_age_eligible and self.screen.county in self.eligible_counties
 
 
-class EarlyChildhoodMentalHealthSupport(UrgentNeedFunction):
-    dependencies = ["age"]
+class EarlyChildhoodMentalHealthSupport(ChildAgeFunction):
     max_age = 5
-
-    def eligible(self):
-        """
-        Return True if the household has a child aged 0-5
-        """
-        return self.screen.num_children(age_max=self.max_age) > 0
 
 
 class ParentsOfPreschoolYoungsters(UrgentNeedFunction):
@@ -388,6 +387,10 @@ class SnapEmployment(UrgentNeedFunction):
         return county_eligible and snap_eligible
 
 
+class EarlyIntervention(ChildAgeFunction):
+    max_age = 2
+
+
 urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "denver": LivesInDenver,
     "meal": MealInCounties,
@@ -404,4 +407,5 @@ urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "hippy": ParentsOfPreschoolYoungsters,
     "pat": ParentsAsTeacher,
     "snap_employment": SnapEmployment,
+    "eic": EarlyIntervention,
 }
