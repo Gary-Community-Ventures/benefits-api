@@ -373,20 +373,3 @@ class ParentsAsTeacher(UrgentNeedFunction):
         county_eligible = screen.county in cls.counties
 
         return age_eligible and county_eligible
-
-
-class DenverEmergencyAssistance(UrgentNeedFunction):
-    dependencies = ["county", "income_amount", "income_frequency", "household_size"]
-    county = "Denver County"
-    fpl_percent = 4
-
-    @classmethod
-    def eligible(cls, screen: Screen):
-        """
-        Return True if the household is bellow 400% fpl and lives in Denver
-        """
-        county_eligible = screen.county == cls.county
-        fpl = FederalPoveryLimit.objects.get(year="THIS YEAR").as_dict()
-        income_eligible = screen.calc_gross_income("yearly", ["all"]) < fpl[screen.household_size] * cls.fpl_percent
-
-        return county_eligible and income_eligible
