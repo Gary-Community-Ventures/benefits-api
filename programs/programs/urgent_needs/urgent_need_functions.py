@@ -11,29 +11,31 @@ class UrgentNeedFunction:
 
     dependencies = []
 
-    @classmethod
-    def calc(cls, screen: Screen, missing_dependencies: Dependencies):
+    def __init__(self, screen: Screen, missing_dependencies: Dependencies, data) -> None:
+        self.screen = screen
+        self.missing_dependencies = missing_dependencies
+        self.data = data
+
+    def calc(self):
         """
         Calculate if the urgent need can be calculated and if the condition is met
         """
-        if not cls.can_calc(missing_dependencies):
+        if not self.can_calc():
             return False
 
-        return cls.eligible(screen)
+        return self.eligible()
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Returns if the condition is met
         """
         return True
 
-    @classmethod
-    def can_calc(cls, missing_dependencies: Dependencies):
+    def can_calc(self):
         """
         Returns if the condition can be calculated
         """
-        if missing_dependencies.has(*cls.dependencies):
+        if self.missing_dependencies.has(*self.dependencies):
             return False
 
         return True
@@ -42,131 +44,124 @@ class UrgentNeedFunction:
 class LivesInDenver(UrgentNeedFunction):
     dependencies = ["county"]
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Household lives in the Denver County
         """
-        return screen.county == "Denver County"
+        return self.screen.county == "Denver County"
 
 
 class MealInCounties(UrgentNeedFunction):
     dependencies = ["county"]
+    counties = ["Denver County", "Jefferson County"]
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Household lives in Denver or Jefferson County
         """
-        eligible_counties = ["Denver County", "Jefferson County"]
-        return screen.county in eligible_counties
+        return self.screen.county in self.counties
 
 
 class HelpkitchenZipcode(UrgentNeedFunction):
     dependencies = ["zipcode"]
+    zipcodes = [
+        "80010",
+        "80011",
+        "80012",
+        "80013",
+        "80014",
+        "80015",
+        "80016",
+        "80017",
+        "80018",
+        "80019",
+        "80045",
+        "80102",
+        "80112",
+        "80137",
+        "80138",
+        "80230",
+        "80231",
+        "80238",
+        "80247",
+        "80249",
+    ]
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Lives in a zipcode that is eligible for HelpKitchen
         """
-        zipcodes = [
-            "80010",
-            "80011",
-            "80012",
-            "80013",
-            "80014",
-            "80015",
-            "80016",
-            "80017",
-            "80018",
-            "80019",
-            "80045",
-            "80102",
-            "80112",
-            "80137",
-            "80138",
-            "80230",
-            "80231",
-            "80238",
-            "80247",
-            "80249",
-        ]
-        return screen.zipcode in zipcodes
+        return self.screen.zipcode in self.zipcodes
 
 
 class Child(UrgentNeedFunction):
     dependencies = ["age"]
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Return True if someone is younger than 18
         """
-        return screen.num_children(child_relationship=["all"]) > 0
+        return self.screen.num_children(child_relationship=["all"]) > 0
 
 
 class BiaFoodDelivery(UrgentNeedFunction):
     dependencies = ["county"]
+    eligible_counties = [
+        "Adams County",
+        "Arapahoe County",
+        "Denver County",
+        "Jefferson County",
+    ]
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Return True if in Adams, Arapahoe, Denver or Jefferson county
         """
-        eligible_counties = [
-            "Adams County",
-            "Arapahoe County",
-            "Denver County",
-            "Jefferson County",
-        ]
-        return screen.county in eligible_counties
+        return self.screen.county in self.eligible_counties
 
 
 class Trua(UrgentNeedFunction):
     dependencies = ["household_size", "income_amount", "income_frequency"]
+    income_limits = {
+        1: 66_300,
+        2: 75_750,
+        3: 85_200,
+        4: 94_560,
+        5: 102_250,
+        6: 109_800,
+        7: 117_400,
+        8: 124_950,
+    }
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Return True if the household is below the income limit for their household size
         """
-        income_limits = {
-            1: 66_300,
-            2: 75_750,
-            3: 85_200,
-            4: 94_560,
-            5: 102_250,
-            6: 109_800,
-            7: 117_400,
-            8: 124_950,
-        }
-        household_income = screen.calc_gross_income("yearly", ["all"])
-        income_limit = income_limits[screen.household_size]
+        household_income = self.screen.calc_gross_income("yearly", ["all"])
+        income_limit = self.income_limits[self.screen.household_size]
         return household_income <= income_limit
 
 
 class ForeclosureFinAssistProgram(UrgentNeedFunction):
     dependencies = ["household_size", "income_amount", "income_frequency", "county"]
+    income_limits = {
+        1: 66_300,
+        2: 75_750,
+        3: 85_200,
+        4: 94_560,
+        5: 102_250,
+        6: 109_800,
+        7: 117_400,
+        8: 124_950,
+    }
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Return True if the household is at or below 80% the income limit for their household size & they live in Denver
         """
-        income_limits = {
-            1: 66_300,
-            2: 75_750,
-            3: 85_200,
-            4: 94_560,
-            5: 102_250,
-            6: 109_800,
-            7: 117_400,
-            8: 124_950,
-        }
-        household_income = screen.calc_gross_income("yearly", ["all"])
-        income_limit = income_limits[screen.household_size]
-        return household_income <= income_limit and screen.county == "Denver County"
+        household_income = self.screen.calc_gross_income("yearly", ["all"])
+        income_limit = self.income_limits[self.screen.household_size]
+        return household_income <= income_limit and self.screen.county == "Denver County"
 
 
 class EocIncomeLimitCache(GoogleSheetsCache):
@@ -181,38 +176,37 @@ class EocIncomeLimitCache(GoogleSheetsCache):
 
 
 class Eoc(UrgentNeedFunction):
-    limits_cache = EocIncomeLimitCache()
     dependencies = ["income_amount", "income_frequency", "household_size", "county"]
+    limits_cache = EocIncomeLimitCache()
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Return True if the household is below the income limit for their county and household size
         """
 
-        income = int(screen.calc_gross_income("yearly", ["all"]))
+        income = int(self.screen.calc_gross_income("yearly", ["all"]))
 
         limits = Eoc.limits_cache.fetch()
 
-        if screen.county not in limits:
+        if self.screen.county not in limits:
             return False
 
-        income_limit = limits[screen.county][screen.household_size - 1]
+        income_limit = limits[self.screen.county][self.screen.household_size - 1]
 
         return income < income_limit
 
 
 class CoLegalServices(UrgentNeedFunction):
     dependencies = ["income_amount", "income_frequency", "household_size", "age"]
+    max_age = 60
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Return True if the household is has an income bellow 200% FPL or someone in the household is over 60 years old
         """
         fpl = FederalPoveryLimit.objects.get(year="THIS YEAR").as_dict()
-        is_income_eligible = screen.calc_gross_income("yearly", ["all"]) < fpl[screen.household_size]
-        is_age_eligible = screen.num_adults(age_max=60) > 0
+        is_income_eligible = self.screen.calc_gross_income("yearly", ["all"]) < fpl[self.screen.household_size]
+        is_age_eligible = self.screen.num_adults(age_max=self.max_age) > 0
         return is_income_eligible or is_age_eligible
 
 
@@ -231,69 +225,67 @@ class CoEmergencyMortgageAssistance(UrgentNeedFunction):
     limits_cache = CoEmergencyMortgageIncomeLimitCache()
     dependencies = ["income_amount", "income_frequency", "household_size", "county"]
 
-    @classmethod
-    def eligible(cls, screen: Screen):
-        income = int(screen.calc_gross_income("yearly", ["all"]))
+    def eligible(self):
+        income = int(self.screen.calc_gross_income("yearly", ["all"]))
 
         limits = CoEmergencyMortgageAssistance.limits_cache.fetch()
 
-        if screen.county not in limits:
+        if self.screen.county not in limits:
             return False
 
-        income_limit = limits[screen.county][screen.household_size - 1]
+        income_limit = limits[self.screen.county][self.screen.household_size - 1]
 
         return income < income_limit
 
 
 class ChildFirst(UrgentNeedFunction):
     dependencies = ["age", "county"]
+    max_age = 5
+    eligible_counties = [
+        "Adams County",
+        "Alamosa County",
+        "Arapahoe County",
+        "Bent County",
+        "Boulder County",
+        "Broomfield County",
+        "Chaffee County",
+        "Clear Creek County",
+        "Conejos County",
+        "Costilla County",
+        "Crowley County",
+        "Custer County",
+        "Douglas County",
+        "El Paso County",
+        "Fremont County",
+        "Gilpin County",
+        "Jefferson County",
+        "Lake County",
+        "Mineral County",
+        "Otero County",
+        "Rio Grand County",
+        "Routt County",
+        "Saguache County",
+        "Weld County",
+    ]
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Return True if the household has a child aged 0-5 and lives in an eligible county
         """
-        is_age_eligible = screen.num_children(age_max=5) > 0
-        eligible_counties = [
-            "Adams County",
-            "Alamosa County",
-            "Arapahoe County",
-            "Bent County",
-            "Boulder County",
-            "Broomfield County",
-            "Chaffee County",
-            "Clear Creek County",
-            "Conejos County",
-            "Costilla County",
-            "Crowley County",
-            "Custer County",
-            "Douglas County",
-            "El Paso County",
-            "Fremont County",
-            "Gilpin County",
-            "Jefferson County",
-            "Lake County",
-            "Mineral County",
-            "Otero County",
-            "Rio Grand County",
-            "Routt County",
-            "Saguache County",
-            "Weld County",
-        ]
+        is_age_eligible = self.screen.num_children(age_max=self.max_age) > 0
 
-        return is_age_eligible and screen.county in eligible_counties
+        return is_age_eligible and self.screen.county in self.eligible_counties
 
 
 class EarlyChildhoodMentalHealthSupport(UrgentNeedFunction):
     dependencies = ["age"]
     max_age = 5
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Return True if the household has a child aged 0-5
         """
-        return screen.num_children(age_max=cls.max_age) > 0
+        return self.screen.num_children(age_max=self.max_age) > 0
 
 
 class ParentsOfPreschoolYoungsters(UrgentNeedFunction):
@@ -316,13 +308,12 @@ class ParentsOfPreschoolYoungsters(UrgentNeedFunction):
     min_age = 2
     max_age = 5
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Return True if a child is between 2 and 5 and lives in an eligible county
         """
-        age_eligible = screen.num_children(age_min=cls.min_age, age_max=cls.max_age) > 0
-        county_eligible = screen.county in cls.counties
+        age_eligible = self.screen.num_children(age_min=self.min_age, age_max=self.max_age) > 0
+        county_eligible = self.screen.county in self.counties
 
         return age_eligible and county_eligible
 
@@ -364,12 +355,29 @@ class ParentsAsTeacher(UrgentNeedFunction):
     ]
     max_age = 5
 
-    @classmethod
-    def eligible(cls, screen: Screen):
+    def eligible(self):
         """
         Return True if there is a child younger than 5 and lives in an eligible county
         """
-        age_eligible = screen.num_children(age_max=cls.max_age) > 0
-        county_eligible = screen.county in cls.counties
+        age_eligible = self.screen.num_children(age_max=self.max_age) > 0
+        county_eligible = self.screen.county in self.counties
 
         return age_eligible and county_eligible
+
+
+urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
+    "denver": LivesInDenver,
+    "meal": MealInCounties,
+    "helpkitchen_zipcode": HelpkitchenZipcode,
+    "child": Child,
+    "bia_food_delivery": BiaFoodDelivery,
+    "trua": Trua,
+    "ffap": ForeclosureFinAssistProgram,
+    "eoc": Eoc,
+    "co_legal_services": CoLegalServices,
+    "co_emergency_mortgage": CoEmergencyMortgageAssistance,
+    "child_first": ChildFirst,
+    "ecmh": EarlyChildhoodMentalHealthSupport,
+    "hippy": ParentsOfPreschoolYoungsters,
+    "pat": ParentsAsTeacher,
+}
