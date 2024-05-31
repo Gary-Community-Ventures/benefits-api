@@ -23,10 +23,9 @@ from screener.serializers import (
     MessageSerializer,
     ResultsSerializer,
 )
-from programs.programs.policyengine.calculators import all_pe_programs
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError
-import programs.programs.urgent_needs.urgent_need_functions as urgent_need_functions
+from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
 from programs.models import UrgentNeed, Program, Referrer
 from django.core.exceptions import ObjectDoesNotExist
 from .webhooks import eligibility_hooks
@@ -120,7 +119,7 @@ class EligibilityTranslationView(views.APIView):
     def get(self, request, id):
         screen = Screen.objects.get(uuid=id)
         eligibility, missing_programs = eligibility_results(screen)
-        urgent_needs = urgent_need_results(screen)
+        urgent_needs = urgent_need_results(screen, eligibility)
 
         results = {
             "programs": eligibility,
@@ -328,7 +327,7 @@ def serialized_navigator(navigator):
     }
 
 
-def urgent_need_results(screen):
+def urgent_need_results(screen, data):
     possible_needs = {
         "food": screen.needs_food,
         "baby supplies": screen.needs_baby_supplies,
@@ -344,25 +343,6 @@ def urgent_need_results(screen):
 
     missing_dependencies = screen.missing_fields()
 
-    need_functions = {
-        "denver": urgent_need_functions.LivesInDenver.calc(screen, missing_dependencies),
-        "meal": urgent_need_functions.MealInCounties.calc(screen, missing_dependencies),
-        "helpkitchen_zipcode": urgent_need_functions.HelpkitchenZipcode.calc(screen, missing_dependencies),
-        "child": urgent_need_functions.Child.calc(screen, missing_dependencies),
-        "bia_food_delivery": urgent_need_functions.BiaFoodDelivery.calc(screen, missing_dependencies),
-        "trua": urgent_need_functions.Trua.calc(screen, missing_dependencies),
-        "ffap": urgent_need_functions.ForeclosureFinAssistProgram.calc(screen, missing_dependencies),
-        "eoc": urgent_need_functions.Eoc.calc(screen, missing_dependencies),
-        "co_legal_services": urgent_need_functions.CoLegalServices.calc(screen, missing_dependencies),
-        "co_emergency_mortgage": urgent_need_functions.CoEmergencyMortgageAssistance.calc(screen, missing_dependencies),
-        "child_first": urgent_need_functions.ChildFirst.calc(screen, missing_dependencies),
-        "ecmh": urgent_need_functions.EarlyChildhoodMentalHealthSupport.calc(screen, missing_dependencies),
-        "hippy": urgent_need_functions.ParentsOfPreschoolYoungsters.calc(screen, missing_dependencies),
-        "pat": urgent_need_functions.ParentsAsTeacher.calc(screen, missing_dependencies),
-        "deap": urgent_need_functions.DenverEmergencyAssistance.calc(screen, missing_dependencies),
-        "eic": urgent_need_functions.EarlyIntervention.calc(screen, missing_dependencies),
-    }
-
     list_of_needs = []
     for need, has_need in possible_needs.items():
         if has_need:
@@ -374,7 +354,11 @@ def urgent_need_results(screen):
     for need in urgent_need_resources:
         eligible = True
         for function in need.functions.all():
-            if not need_functions[function.name]:
+            Calculator = urgent_need_functions[function.name]
+
+            calculator = Calculator(screen, missing_dependencies, data)
+
+            if not calculator.calc():
                 eligible = False
         if eligible:
             phone_number = str(need.phone_number) if need.phone_number else None
