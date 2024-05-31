@@ -7,29 +7,27 @@ from translations.models import Translation
 
 
 class Command(BaseCommand):
-    help = (
-        'Remove all programs and navigators and their translations'
-    )
+    help = "Remove all programs and navigators and their translations"
 
     def handle(self, *args, **options):
         program_translated_fields = (
-            'description_short',
-            'name',
-            'description',
-            'learn_more_link',
-            'apply_button_link',
-            'value_type',
-            'estimated_delivery_time',
-            'estimated_application_time',
-            'category',
-            'warning',
+            "description_short",
+            "name",
+            "description",
+            "learn_more_link",
+            "apply_button_link",
+            "value_type",
+            "estimated_delivery_time",
+            "estimated_application_time",
+            "category",
+            "warning",
         )
 
         navigator_translated_fields = (
-            'name',
-            'email',
-            'assistance_link',
-            'description',
+            "name",
+            "email",
+            "assistance_link",
+            "description",
         )
 
         navigators = Navigator.objects.all()
@@ -38,9 +36,7 @@ class Command(BaseCommand):
         for navigator in navigators:
             translations_to_delete = []
             for field in navigator_translated_fields:
-                translations_to_delete.append(
-                    getattr(navigator, field)
-                )
+                translations_to_delete.append(getattr(navigator, field))
             navigator.delete()
             for translation in translations_to_delete:
                 translation.delete()
@@ -48,12 +44,9 @@ class Command(BaseCommand):
         for program in programs:
             translations_to_delete = []
             for field in program_translated_fields:
-                translations_to_delete.append(
-                    getattr(program, field)
-                )
+                translations_to_delete.append(getattr(program, field))
             program.delete()
             for translation in translations_to_delete:
                 translation.delete()
 
-        self.stdout.write(self.style.SUCCESS(
-            'Successfully deleted all programs and navigators and their translations'))
+        self.stdout.write(self.style.SUCCESS("Successfully deleted all programs and navigators and their translations"))
