@@ -69,8 +69,10 @@ class ProgramAdmin(ModelAdmin):
             reverse("translation_admin_url", args=[category.id]),
             reverse("translation_admin_url", args=[learn_more_link.id]),
             reverse("translation_admin_url", args=[apply_button_link.id]),
-            reverse("translation_admin_url", args=[estimated_delivery_time.id]),
-            reverse("translation_admin_url", args=[estimated_application_time.id]),
+            reverse("translation_admin_url", args=[
+                    estimated_delivery_time.id]),
+            reverse("translation_admin_url", args=[
+                    estimated_application_time.id]),
             reverse("translation_admin_url", args=[value_type.id]),
             reverse("translation_admin_url", args=[warning.id]),
             reverse("translation_admin_url", args=[website_description.id]),
@@ -194,6 +196,31 @@ class FederalPovertyLimitAdmin(ModelAdmin):
 
 class DocumentAdmin(ModelAdmin):
     search_fields = ("external_name",)
+    list_display = ["get_str", "action_buttons"]
+
+    def get_str(self, obj):
+        return str(obj)
+
+    get_str.admin_order_field = "external_name"
+    get_str.short_description = "Document"
+
+    def action_buttons(self, obj):
+        text = obj.text
+
+        return format_html(
+            """
+            <div class="dropdown">
+                <span class="dropdown-btn material-symbols-outlined"> menu </span>
+                <div class="dropdown-content">
+                    <a href="{}">Document Text</a>
+                </div>
+            </div>
+            """,
+            reverse("translation_admin_url", args=[text.id]),
+        )
+
+    action_buttons.short_description = "Translate:"
+    action_buttons.allow_tags = True
 
 
 class ReferrerAdmin(ModelAdmin):
