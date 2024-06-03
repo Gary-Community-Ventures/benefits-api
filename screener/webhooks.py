@@ -1,6 +1,7 @@
 from .models import Screen
 from programs.models import Referrer
 from .serializers import ScreenSerializer
+from sentry_sdk import capture_exception
 import requests
 
 
@@ -22,9 +23,8 @@ class Hook:
 
         try:
             requests.post(self.hook.webhook_url, json=request_data)
-        except requests.exceptions.RequestException:
-            # TODO: add logging
-            pass
+        except requests.exceptions.RequestException as e:
+            capture_exception(e)
 
     def screen_data(self, screen: Screen):
         screen_dict = ScreenSerializer(screen).data
