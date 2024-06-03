@@ -69,10 +69,8 @@ class ProgramAdmin(ModelAdmin):
             reverse("translation_admin_url", args=[category.id]),
             reverse("translation_admin_url", args=[learn_more_link.id]),
             reverse("translation_admin_url", args=[apply_button_link.id]),
-            reverse("translation_admin_url", args=[
-                    estimated_delivery_time.id]),
-            reverse("translation_admin_url", args=[
-                    estimated_application_time.id]),
+            reverse("translation_admin_url", args=[estimated_delivery_time.id]),
+            reverse("translation_admin_url", args=[estimated_application_time.id]),
             reverse("translation_admin_url", args=[value_type.id]),
             reverse("translation_admin_url", args=[warning.id]),
             reverse("translation_admin_url", args=[website_description.id]),
