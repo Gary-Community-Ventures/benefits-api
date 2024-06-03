@@ -8,7 +8,7 @@
       <tr>
         <th>ID</th>
         <th>External Name</th>
-        <th>External Name Label</th>
+        <th>Text Label</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -17,7 +17,7 @@
       <tr>
         <td>{{ document.id }}</td>
         <td>{{ document.external_name }}</td>
-        <td>{{ document.name }}</td>
+        <td>{{ document.text }}</td>
         <td>
           <div class="dropdown">
             <div class="dropdown-trigger">
@@ -37,7 +37,7 @@
             >
               <div class="dropdown-content">
                 <a
-                  href="/api/translations/admin/{{ document.id }}"
+                  href="/api/translations/admin/{{ document.text.id }}"
                   class="dropdown-item"
                   >Edit</a
                 >
