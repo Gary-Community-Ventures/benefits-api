@@ -1,6 +1,8 @@
 from django.db import models
 from decimal import Decimal
 import uuid
+
+from google.auth import default
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
@@ -610,6 +612,7 @@ class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name="eligibility_snapshots", on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
     is_batch = models.BooleanField(default=False)
+    had_error = models.BooleanField(default=False)
 
 
 # Eligibility results for each specific program per screen. These are
