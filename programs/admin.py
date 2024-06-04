@@ -43,6 +43,7 @@ class ProgramAdmin(ModelAdmin):
         value_type = obj.value_type
         warning = obj.warning
         website_description = obj.website_description
+        estimated_value = obj.estimated_value
 
         return format_html(
             """
@@ -60,6 +61,7 @@ class ProgramAdmin(ModelAdmin):
                     <a href="{}">Value Type</a>
                     <a href="{}">Warning</a>
                     <a href="{}">Website Description</a>
+                    <a href="{}">Esitmated Value</a>
                 </div>
             </div>
             """,
@@ -74,6 +76,7 @@ class ProgramAdmin(ModelAdmin):
             reverse("translation_admin_url", args=[value_type.id]),
             reverse("translation_admin_url", args=[warning.id]),
             reverse("translation_admin_url", args=[website_description.id]),
+            reverse("translation_admin_url", args=[estimated_value.id]),
         )
 
     action_buttons.short_description = "Translate:"
