@@ -1,4 +1,3 @@
-from programs.programs.co.denver_trash_rebate.calculator import DenverTrashRebate
 from .nurse_family_partnership.calculator import NurseFamilyPartnership
 from .rtdlive.calculator import RtdLive
 from .child_care_assistance.calculator import ChildCareAssistance
