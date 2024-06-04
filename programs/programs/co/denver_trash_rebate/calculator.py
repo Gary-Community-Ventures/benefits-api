@@ -7,7 +7,7 @@ import programs.programs.messages as messages
 class DenverAmiCache(GoogleSheetsCache):
     sheet_id = "1dahRu8UVdWBBU1jMiGiWehY4kOUkzcOmKRPJ-GfcfGo"
     range_name = "current Denver Trash - 60% AMI!B2:I2"
-    default = []
+    default = [0, 0, 0, 0, 0, 0, 0, 0]
 
     def update(self):
         data = super().update()
