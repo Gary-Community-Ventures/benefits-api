@@ -118,3 +118,114 @@ MyFriendBen programs are stored in the database. The quick_start command will cr
 #### Import Translations: 
 
 MyFriendBen uses google translate to translate MyFriendBen into other languages. If a translation is incorrect, it is possible to manually edit the translations. 
+
+
+#### Download translations:
+
+Download: [10_17_2023_translations.json](10_17_2023_translations.json)
+
+#### Import translations: 
+
+`python manage.py bulk_import < [PATH TO FILE]`
+
+***
+### Get API Key: 
+
+An API key is needed for the front end to connect to the backend. 
+
+#### Create group :
+
+Go to http://localhost:8000/admin/auth/group/ 
+
+Create a group with:
+
+![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/3e1c666f-bad2-41e5-b7b5-f1806e0d1983)
+
+
+#### Create API user: 
+
+Go to http://localhost:8000/admin/authentication/user/ 
+
+Create a new user and add the group that was just created. 
+
+
+#### Create API key: 
+Go to http://localhost:8000/admin/authtoken/tokenproxy/ 
+
+Create a token and add the user that was just created. 
+
+
+***
+### Set up Google Cloud Services:
+
+The API currently uses 2 google cloud services: Cloud Translation API & Google Sheets API
+
+#### Sign up:
+Visit the google cloud services sign up page and click on “TRY FOR FREE”
+ - https://cloud.google.com/
+
+![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/f3eff8f3-ad47-468d-988c-172f0001a514)
+
+- In one of the steps a payment method is required to finish the sign up process, though nothing will be billed as google provides a $300 free credit for 90 days.
+
+#### Add Services:
+The next step is to go the google services APIs library page and add and enable the required services:
+ - https://console.cloud.google.com/apis/library
+ - Google Sheets API
+
+![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/f868693e-3e8b-4756-bcfa-05a9e5037045)
+
+- Cloud Translation API
+![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/9aaef941-cc5c-4900-8dc1-c8910cff7985)
+
+#### Create Credentials:
+Go to the “Credentials” tab and add a new “Service account”
+ - https://console.cloud.google.com/apis/credentials
+
+![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/0d500669-bc1d-4a70-b736-d649e6d912f0)
+
+#### Generate Keys:
+After adding the service account, select it and go to its page. And from the “KEYS” tab press the “ADD KEY” and “Create new key” and select the type of key to be JSON. 
+
+![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/cff48795-f396-4258-a007-1787f217fbd0)
+
+#### Format JSON:
+The generated JSON is going to be something like so:
+
+![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/4c27a010-04d3-4e69-bf8d-61bf5a324a08)
+
+Though in order for the .env file to make use of this JSON object properly it needs to be formatted so that everything is in one line, like so:
+
+![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/90a1e09a-72c7-4cc4-9641-d04d703bb95e)
+
+A tool like this can be used to make the json into the correct format:
+https://www.text-utils.com/json-formatter/
+
+***
+### Set up front end: 
+#### Clone: 
+
+In a new directory 
+
+`git clone https://github.com/Gary-Community-Ventures/benefits-calculator.git`
+
+#### Install dependencies: 
+`npm install`
+
+
+
+#### Set environment variables: 
+Create an .env file and add the following 
+- REACT_APP_API_KEY
+  - The api key for the backend (generated token) 
+- REACT_APP_DOMAIN_URL
+  - The url for the backend. Ex: http://localhost:8000 
+- REACT_APP_GOOGLE_ANALYTICS_ID [optional] 
+  - App id for google analytics 
+- REACT_APP_MUI_LICENSE_KEY [optional] 
+  - Key for React MUI. If not included there will be a water mark on the table in the results page.
+  -  
+#### Run server: 
+Can see local environment at http://localhost:3000/ 
+ 
+`npm run dev`
