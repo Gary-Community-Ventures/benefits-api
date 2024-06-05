@@ -201,31 +201,4 @@ Though in order for the .env file to make use of this JSON object properly it ne
 A tool like this can be used to make the json into the correct format:
 https://www.text-utils.com/json-formatter/
 
-***
-### Set up front end: 
-#### Clone: 
 
-In a new directory 
-
-`git clone https://github.com/Gary-Community-Ventures/benefits-calculator.git`
-
-#### Install dependencies: 
-`npm install`
-
-
-
-#### Set environment variables: 
-Create an .env file and add the following 
-- REACT_APP_API_KEY
-  - The api key for the backend (generated token) 
-- REACT_APP_DOMAIN_URL
-  - The url for the backend. Ex: http://localhost:8000 
-- REACT_APP_GOOGLE_ANALYTICS_ID [optional] 
-  - App id for google analytics 
-- REACT_APP_MUI_LICENSE_KEY [optional] 
-  - Key for React MUI. If not included there will be a water mark on the table in the results page.
-  -  
-#### Run server: 
-Can see local environment at http://localhost:3000/ 
- 
-`npm run dev`
