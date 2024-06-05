@@ -259,6 +259,7 @@ class Screen(models.Model):
             "ssdi": self.has_ssdi or self.calc_gross_income("yearly", ("sSDisability",)) > 0,
             "pell_grant": self.has_pell_grant,
             "rag": self.has_rag,
+            "nfp": self.has_nfp,
             "cowap": self.has_cowap,
             "ubp": self.has_ubp,
             "co_medicaid": self.has_medicaid or self.has_medicaid_hi,
