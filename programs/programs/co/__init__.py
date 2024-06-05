@@ -27,6 +27,7 @@ from .utility_bill_pay.calculator import UtilityBillPay
 from ..calc import ProgramCalculator
 from .rental_assistance_grant.calculator import RentalAssistanceGrant
 from .emergency_rental_assistance.calculator import EmergencyRentalAssistance
+from .denver_trash_rebate.calculator import DenverTrashRebate
 
 
 co_calculators: dict[str, type[ProgramCalculator]] = {
@@ -58,4 +59,5 @@ co_calculators: dict[str, type[ProgramCalculator]] = {
     "rag": RentalAssistanceGrant,
     "erap": EmergencyRentalAssistance,
     "nfp": NurseFamilyPartnership,
+    "dtr": DenverTrashRebate,
 }
