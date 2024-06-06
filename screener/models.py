@@ -610,6 +610,7 @@ class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name="eligibility_snapshots", on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
     is_batch = models.BooleanField(default=False)
+    had_error = models.BooleanField(default=False)
 
 
 # Eligibility results for each specific program per screen. These are
