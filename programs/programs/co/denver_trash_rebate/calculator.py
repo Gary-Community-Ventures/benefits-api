@@ -18,7 +18,6 @@ class DenverAmiCache(GoogleSheetsCache):
 class DenverTrashRebate(ProgramCalculator):
     amount = 252
     county = "Denver County"
-    ami_percent = 0.6
     ami = DenverAmiCache()
     dependencies = ["zipcode", "income_amount", "income_frequency"]
 
@@ -34,7 +33,7 @@ class DenverTrashRebate(ProgramCalculator):
 
         # income
         ami = DenverTrashRebate.ami.fetch()
-        limit = ami[self.screen.household_size - 1] * DenverTrashRebate.ami_percent
+        limit = ami[self.screen.household_size - 1]
         income = self.screen.calc_gross_income("yearly", ["all"])
         e.condition(income <= limit, messages.income(income, limit))
 
