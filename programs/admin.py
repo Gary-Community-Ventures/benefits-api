@@ -61,7 +61,7 @@ class ProgramAdmin(ModelAdmin):
                     <a href="{}">Value Type</a>
                     <a href="{}">Warning</a>
                     <a href="{}">Website Description</a>
-                    <a href="{}">Esitmated Value</a>
+                    <a href="{}">Estimated Value</a>
                 </div>
             </div>
             """,
