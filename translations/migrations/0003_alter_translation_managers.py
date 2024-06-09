@@ -5,16 +5,15 @@ import translations.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('translations', '0002_translation_active'),
+        ("translations", "0002_translation_active"),
     ]
 
     operations = [
         migrations.AlterModelManagers(
-            name='translation',
+            name="translation",
             managers=[
-                ('objects', translations.models.TranslationManager()),
+                ("objects", translations.models.TranslationManager()),
             ],
         ),
     ]

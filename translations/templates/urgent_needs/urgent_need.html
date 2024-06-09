@@ -1,29 +1,44 @@
 {% extends "base.html" %}{% block content %}
-<h2>{{ urgent_need.name.text }}</h2>
-<div>
-	<a
-		href="/admin/programs/urgentneed/{{ urgent_need.id }}/change/"
-		target="_blank"
-		rel="noopener noreferrer"
-	>
-		Django Admin
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ urgent_need.name.id }}">Name</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ urgent_need.description.id }}">
-		Description
-	</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ urgent_need.link.id }}">Link</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ urgent_need.type.id }}">Type</a>
-</div>
-<div>
-	<a href="/api/translations/admin/{{ urgent_need.warning.id }}">Warning</a>
+<section class="section">
+  <h2>Urgent Need Actions</h2>
+</section>
+<hr />
+<div id="urgentneed-actions">
+  <table class="table is-striped is-fullwidth is-bordered">
+    <thead>
+      <tr>
+        <th>Label</th>
+        <th>Actions (add)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ urgent_need.name }}</td>
+        <td>
+          <div class="new-actions">
+            <a href="/api/translations/admin/{{ urgent_need.name.id }}">Name</a>
+            <a href="/api/translations/admin/{{ urgent_need.description.id }}">
+              Description
+            </a>
+            <a href="/api/translations/admin/{{ urgent_need.link.id }}">Link</a>
+            <a href="/api/translations/admin/{{ urgent_need.type.id }}">Type</a>
+            <a href="/api/translations/admin/{{ urgent_need.warning.id }}"
+              >Warning</a
+            >
+            <a
+              href="/api/translations/admin/{{ urgent_need.website_description.id }}"
+              >Website description</a
+            >
+            <a
+              href="/admin/programs/urgentneed/{{ urgent_need.id }}/change/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Edit in Main Admin</a
+            >
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 {% endblock content %}

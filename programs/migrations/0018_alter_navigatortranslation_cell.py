@@ -5,15 +5,14 @@ import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('programs', '0017_navigator_navigatortranslation'),
+        ("programs", "0017_navigator_navigatortranslation"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='navigatortranslation',
-            name='cell',
+            model_name="navigatortranslation",
+            name="cell",
             field=phonenumber_field.modelfields.PhoneNumberField(max_length=128, region=None),
         ),
     ]

@@ -1,7 +1,10 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 from .models import Configuration
 
-class ConfigurationAdmin(admin.ModelAdmin):
-    search_fields = ('name',)
+
+class ConfigurationAdmin(ModelAdmin):
+    search_fields = ("name",)
+
 
 admin.site.register(Configuration, ConfigurationAdmin)

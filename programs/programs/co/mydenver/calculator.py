@@ -4,11 +4,11 @@ import programs.programs.messages as messages
 
 
 class MyDenver(ProgramCalculator):
-    eligible_counties = ['Denver County']
+    eligible_counties = ["Denver County"]
     child_age_min = 5
     child_age_max = 18
-    child_relationship = ['child', 'fosterChild', 'stepChild', 'grandChild', 'relatedOther', 'headOfHousehold']
-    dependencies = ['age', 'zipcode', 'relationship']
+    child_relationship = ["child", "fosterChild", "stepChild", "grandChild", "relatedOther", "headOfHousehold"]
+    dependencies = ["age", "zipcode", "relationship"]
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -30,7 +30,7 @@ class MyDenver(ProgramCalculator):
         children = self.screen.num_children(
             age_max=MyDenver.child_age_max,
             age_min=MyDenver.child_age_min,
-            child_relationship=MyDenver.child_relationship
+            child_relationship=MyDenver.child_relationship,
         )
 
         e.condition(children > 0, messages.child(min_age=5))
@@ -41,7 +41,7 @@ class MyDenver(ProgramCalculator):
         children = self.screen.num_children(
             age_max=MyDenver.child_age_max,
             age_min=MyDenver.child_age_min,
-            child_relationship=MyDenver.child_relationship
+            child_relationship=MyDenver.child_relationship,
         )
 
         return children * 150

@@ -5,24 +5,24 @@ from integrations.services.google_translate.integration import Translate
 
 
 class Command(BaseCommand):
-    help = '''
+    help = """
     Get translation export
-    '''
+    """
 
     def add_arguments(self, parser):
-        parser.add_argument('--limit', default=1, type=int)
-        parser.add_argument('--all', default=False, type=bool)
-        parser.add_argument('--lang', default=settings.LANGUAGE_CODE, type=str)
+        parser.add_argument("--limit", default=1, type=int)
+        parser.add_argument("--all", default=False, type=bool)
+        parser.add_argument("--lang", default=settings.LANGUAGE_CODE, type=str)
 
     def handle(self, *args, **options):
-        limit = 10_000 if options['all'] else min(10_000, options['limit'])
+        limit = 10_000 if options["all"] else min(10_000, options["limit"])
         max_batch_size = 128
         char_limit = 5_000
-        lang = options['lang']
+        lang = options["lang"]
 
         translate = Translate()
 
-        translations = Translation.objects.prefetch_related('translations').language(settings.LANGUAGE_CODE).all()
+        translations = Translation.objects.prefetch_related("translations").language(settings.LANGUAGE_CODE).all()
 
         total_count = 0
         temp_chars = 0

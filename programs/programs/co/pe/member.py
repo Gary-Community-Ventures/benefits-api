@@ -8,13 +8,13 @@ class CoMedicaid(Medicaid):
     adult_medicaid_average = 310 * 12
     aged_medicaid_average = 170 * 12
     pe_inputs = [
-        *Medicaid.pe_inputs, 
+        *Medicaid.pe_inputs,
         dependency.household.CoStateCode,
     ]
 
 
 class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
-    pe_name = 'co_state_supplement'
+    pe_name = "co_state_supplement"
     pe_inputs = [
         dependency.member.SsiCountableResourcesDependency,
         dependency.member.SsiReportedDependency,
@@ -32,7 +32,7 @@ class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
 
 
 class OldAgePension(PolicyEngineMembersCalculator):
-    pe_name = 'co_oap'
+    pe_name = "co_oap"
     pe_inputs = [
         dependency.member.SsiCountableResourcesDependency,
         dependency.member.SsiEarnedIncomeDependency,
@@ -47,7 +47,7 @@ class OldAgePension(PolicyEngineMembersCalculator):
 
 
 class Chp(PolicyEngineMembersCalculator):
-    pe_name = 'co_chp'
+    pe_name = "co_chp"
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
@@ -61,11 +61,12 @@ class Chp(PolicyEngineMembersCalculator):
     def value(self):
         total = 0
 
-        for pkey, pvalue in self.get_data().items():
-            if not self.in_tax_unit(pkey):
+        for member in self.screen.household_members.all():
+            if not self.in_tax_unit(member.id):
                 continue
 
-            if pvalue['co_chp_eligible'][self.pe_period] > 0 and self.screen.has_insurance_types(('none',)):
+            chp_eligible = self.sim.value(self.pe_category, str(member.id), "co_chp_eligible", self.pe_period) > 0
+            if chp_eligible and self.screen.has_insurance_types(("none",)):
                 total += self.amount
 
         return total

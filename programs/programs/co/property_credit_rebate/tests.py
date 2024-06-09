@@ -7,16 +7,16 @@ class TestPropertyCreditRebatePension(TestCase):
     def setUp(self):
         self.screen1 = Screen.objects.create(
             agree_to_tos=True,
-            zipcode='80205',
-            county='Denver County',
+            zipcode="80205",
+            county="Denver County",
             household_size=2,
             household_assets=0,
             has_tanf=False,
-            has_ssi=False
+            has_ssi=False,
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,
-            relationship='headOfHousehold',
+            relationship="headOfHousehold",
             age=65,
             student=False,
             student_full_time=False,
@@ -45,12 +45,8 @@ class TestPropertyCreditRebatePension(TestCase):
         self.person1.disabled = False
         self.person1.save()
         income = IncomeStream.objects.create(
-                    screen=self.screen1,
-                    household_member=self.person1,
-                    type='wages',
-                    amount=2000,
-                    frequency='monthly'
-                )
+            screen=self.screen1, household_member=self.person1, type="wages", amount=2000, frequency="monthly"
+        )
 
         cpcr = PropertyCreditRebate(self.screen1)
         eligibility = cpcr.eligibility

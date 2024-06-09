@@ -5,25 +5,26 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0005_alter_incomestream_screen'),
+        ("screener", "0005_alter_incomestream_screen"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='expense',
-            old_name='name',
-            new_name='type',
+            model_name="expense",
+            old_name="name",
+            new_name="type",
         ),
         migrations.RenameField(
-            model_name='incomestream',
-            old_name='name',
-            new_name='type',
+            model_name="incomestream",
+            old_name="name",
+            new_name="type",
         ),
         migrations.AlterField(
-            model_name='expense',
-            name='screen',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='expenses', to='screener.screen'),
+            model_name="expense",
+            name="screen",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="expenses", to="screener.screen"
+            ),
         ),
     ]

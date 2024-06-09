@@ -1,6 +1,7 @@
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
+from translations.serializers import TranslationSerializer
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -8,7 +9,7 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
-        fields = '__all__'
+        fields = "__all__"
 
 
 class InsuranceSerializer(serializers.ModelSerializer):
@@ -16,8 +17,8 @@ class InsuranceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Insurance
-        fields = '__all__'
-        read_only_fields = ('household_member',)
+        fields = "__all__"
+        read_only_fields = ("household_member",)
 
 
 class IncomeStreamSerializer(serializers.ModelSerializer):
@@ -25,8 +26,8 @@ class IncomeStreamSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IncomeStream
-        fields = '__all__'
-        read_only_fields = ('screen', 'household_member', 'id')
+        fields = "__all__"
+        read_only_fields = ("screen", "household_member", "id")
 
 
 class ExpenseSerializer(serializers.ModelSerializer):
@@ -34,8 +35,8 @@ class ExpenseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Expense
-        fields = '__all__'
-        read_only_fields = ('screen', 'household_member', 'id')
+        fields = "__all__"
+        read_only_fields = ("screen", "household_member", "id")
 
 
 class HouseholdMemberSerializer(serializers.ModelSerializer):
@@ -45,26 +46,26 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
     class Meta:
         model = HouseholdMember
         fields = (
-            'id',
-            'screen',
-            'relationship',
-            'age',
-            'student',
-            'student_full_time',
-            'pregnant',
-            'unemployed',
-            'worked_in_last_18_mos',
-            'visually_impaired',
-            'disabled',
-            'long_term_disability',
-            'veteran',
-            'medicaid',
-            'disability_medicaid',
-            'has_income',
-            'income_streams',
-            'insurance',
+            "id",
+            "screen",
+            "relationship",
+            "age",
+            "student",
+            "student_full_time",
+            "pregnant",
+            "unemployed",
+            "worked_in_last_18_mos",
+            "visually_impaired",
+            "disabled",
+            "long_term_disability",
+            "veteran",
+            "medicaid",
+            "disability_medicaid",
+            "has_income",
+            "income_streams",
+            "insurance",
         )
-        read_only_fields = ('screen', 'id')
+        read_only_fields = ("screen", "id")
 
 
 class ScreenSerializer(serializers.ModelSerializer):
@@ -75,98 +76,98 @@ class ScreenSerializer(serializers.ModelSerializer):
     class Meta:
         model = Screen
         fields = (
-            'id',
-            'uuid',
-            'completed',
-            'is_test',
-            'is_test_data',
-            'start_date',
-            'submission_date',
-            'agree_to_tos',
-            'is_13_or_older',
-            'zipcode',
-            'county',
-            'referral_source',
-            'referrer_code',
-            'household_size',
-            'household_assets',
-            'housing_situation',
-            'household_members',
-            'last_email_request_date',
-            'last_tax_filing_year',
-            'expenses',
-            'user',
-            'external_id',
-            'request_language_code',
-            'has_benefits',
-            'has_tanf',
-            'has_wic',
-            'has_snap',
-            'has_lifeline',
-            'has_acp',
-            'has_eitc',
-            'has_coeitc',
-            'has_nslp',
-            'has_ctc',
-            'has_medicaid',
-            'has_rtdlive',
-            'has_cccap',
-            'has_mydenver',
-            'has_chp',
-            'has_ccb',
-            'has_ssi',
-            'has_andcs',
-            'has_chs',
-            'has_cpcr',
-            'has_cdhcs',
-            'has_dpp',
-            'has_ede',
-            'has_erc',
-            'has_leap',
-            'has_oap',
-            'has_coctc',
-            'has_upk',
-            'has_ssdi',
-            'has_cowap',
-            'has_ubp',
-            'has_pell_grant',
-            'has_rag',
-            'has_employer_hi',
-            'has_private_hi',
-            'has_medicaid_hi',
-            'has_medicare_hi',
-            'has_chp_hi',
-            'has_no_hi',
-            'has_va',
-            'needs_food',
-            'needs_baby_supplies',
-            'needs_housing_help',
-            'needs_mental_health_help',
-            'needs_child_dev_help',
-            'needs_funeral_help',
-            'needs_family_planning_help',
-            'needs_job_resources',
-            'needs_dental_care',
-            'needs_legal_services'
+            "id",
+            "uuid",
+            "completed",
+            "is_test",
+            "is_test_data",
+            "start_date",
+            "submission_date",
+            "agree_to_tos",
+            "is_13_or_older",
+            "zipcode",
+            "county",
+            "referral_source",
+            "referrer_code",
+            "household_size",
+            "household_assets",
+            "housing_situation",
+            "household_members",
+            "last_email_request_date",
+            "last_tax_filing_year",
+            "expenses",
+            "user",
+            "external_id",
+            "request_language_code",
+            "has_benefits",
+            "has_tanf",
+            "has_wic",
+            "has_snap",
+            "has_lifeline",
+            "has_acp",
+            "has_eitc",
+            "has_coeitc",
+            "has_nslp",
+            "has_ctc",
+            "has_medicaid",
+            "has_rtdlive",
+            "has_cccap",
+            "has_mydenver",
+            "has_chp",
+            "has_ccb",
+            "has_ssi",
+            "has_andcs",
+            "has_chs",
+            "has_cpcr",
+            "has_cdhcs",
+            "has_dpp",
+            "has_ede",
+            "has_erc",
+            "has_leap",
+            "has_oap",
+            "has_coctc",
+            "has_upk",
+            "has_ssdi",
+            "has_cowap",
+            "has_ubp",
+            "has_pell_grant",
+            "has_rag",
+            "has_employer_hi",
+            "has_private_hi",
+            "has_medicaid_hi",
+            "has_medicare_hi",
+            "has_chp_hi",
+            "has_no_hi",
+            "has_va",
+            "needs_food",
+            "needs_baby_supplies",
+            "needs_housing_help",
+            "needs_mental_health_help",
+            "needs_child_dev_help",
+            "needs_funeral_help",
+            "needs_family_planning_help",
+            "needs_job_resources",
+            "needs_dental_care",
+            "needs_legal_services",
         )
         read_only_fields = (
-            'id',
-            'uuid',
-            'submision_date',
-            'last_email_request_date',
-            'completed',
-            'user',
-            'is_test_data'
+            "id",
+            "uuid",
+            "submision_date",
+            "last_email_request_date",
+            "completed",
+            "user",
+            "is_test_data",
         )
 
     def create(self, validated_data):
-        household_members = validated_data.pop('household_members')
-        expenses = validated_data.pop('expenses')
+        household_members = validated_data.pop("household_members")
+        expenses = validated_data.pop("expenses")
         screen = Screen.objects.create(**validated_data, completed=False)
         screen.set_screen_is_test()
         for member in household_members:
-            incomes = member.pop('income_streams')
-            insurance = member.pop('insurance')
+            incomes = member.pop("income_streams")
+            insurance = member.pop("insurance")
             household_member = HouseholdMember.objects.create(**member, screen=screen)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
@@ -176,14 +177,14 @@ class ScreenSerializer(serializers.ModelSerializer):
         return screen
 
     def update(self, instance, validated_data):
-        household_members = validated_data.pop('household_members')
-        expenses = validated_data.pop('expenses')
+        household_members = validated_data.pop("household_members")
+        expenses = validated_data.pop("expenses")
         Screen.objects.filter(pk=instance.id).update(**validated_data)
         HouseholdMember.objects.filter(screen=instance).delete()
         Expense.objects.filter(screen=instance).delete()
         for member in household_members:
-            incomes = member.pop('income_streams')
-            insurance = member.pop('insurance')
+            incomes = member.pop("income_streams")
+            insurance = member.pop("insurance")
             household_member = HouseholdMember.objects.create(**member, screen=instance)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
@@ -193,11 +194,6 @@ class ScreenSerializer(serializers.ModelSerializer):
         instance.refresh_from_db()
         instance.set_screen_is_test()
         return instance
-
-
-class TranslationSerializer(serializers.Serializer):
-    default_message = serializers.CharField()
-    label = serializers.CharField()
 
 
 class NavigatorSerializer(serializers.Serializer):
@@ -238,14 +234,14 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_value_override = TranslationSerializer()
 
     class Meta:
-        fields = '__all__'
+        fields = "__all__"
 
 
 class EligibilityTranslationSerializer(serializers.Serializer):
     translations = serializers.DictField()
 
     class Meta:
-        fields = ('translations',)
+        fields = ("translations",)
 
 
 class UrgentNeedSerializer(serializers.Serializer):

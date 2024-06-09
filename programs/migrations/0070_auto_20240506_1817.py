@@ -3,12 +3,12 @@ from django.db import migrations
 
 
 def add_estimated_value(apps, schema_editor):
-    Program = apps.get_model('programs', 'Program')
-    Translation = apps.get_model('translations', 'Translation')
+    Program = apps.get_model("programs", "Program")
+    Translation = apps.get_model("translations", "Translation")
 
     for program in Program.objects.all():
         translation = Translation.objects.add_translation(
-            f'programs.{program.name_abbreviated}-{program.id}_estimated_value', ''
+            f"programs.{program.name_abbreviated}-{program.id}_estimated_value", ""
         )
         Program.objects.filter(pk=program.id).update(estimated_value=translation.id)
 

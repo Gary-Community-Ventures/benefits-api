@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('screener', '0059_webhook_webhookfunction_webhooktranslation_and_more'),
+        ("screener", "0059_webhook_webhookfunction_webhooktranslation_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='screen',
-            name='is_test_data',
+            model_name="screen",
+            name="is_test_data",
             field=models.BooleanField(blank=True, default=False),
         ),
     ]
