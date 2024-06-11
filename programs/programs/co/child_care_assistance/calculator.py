@@ -16,6 +16,7 @@ class ChildCareAssistance(ProgramCalculator):
     max_age_preschool = 4
     max_age_afterschool = 13
     max_age_afterschool_disabled = 19
+    asset_limit = 1_000_000
     dependencies = ["age", "income_amount", "income_frequency", "zipcode", "household_size"]
     county_values = CCCAPCache()
 
@@ -35,13 +36,20 @@ class ChildCareAssistance(ProgramCalculator):
 
         # income
         frequency = "yearly"
-        income_types = ["all"]
-        gross_income = self.screen.calc_gross_income(frequency, income_types)
+        gross_income = self.screen.calc_gross_income(frequency, ["all"])
+        deductions = self.screen.calc_expenses(frequency, ["childSupport"])
+        net_income = gross_income - deductions
         if cccap_county_data:
             income_limit = cccap_county_data[self.screen.household_size] * 12
-            e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
+            e.condition(net_income < income_limit, messages.income(net_income, income_limit))
         else:
             e.eligible = False
+
+        # assets
+        e.condition(
+            self.screen.household_assets < ChildCareAssistance.asset_limit,
+            messages.assets(ChildCareAssistance.asset_limit),
+        )
 
         return e
 
