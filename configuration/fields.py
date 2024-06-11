@@ -2,6 +2,7 @@ from django.db import models
 from collections import OrderedDict
 import json
 
+
 class OrderedJSONField(models.JSONField):
     def from_db_value(self, value, expression, connection):
         if value is None:
