@@ -1,6 +1,8 @@
 from django.db import models
 from decimal import Decimal
 import uuid
+
+from google.auth import default
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
@@ -66,6 +68,7 @@ class Screen(models.Model):
     has_ubp = models.BooleanField(default=False, blank=True, null=True)
     has_pell_grant = models.BooleanField(default=False, blank=True, null=True)
     has_rag = models.BooleanField(default=False, blank=True, null=True)
+    has_nfp = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -256,10 +259,12 @@ class Screen(models.Model):
             "ssdi": self.has_ssdi or self.calc_gross_income("yearly", ("sSDisability",)) > 0,
             "pell_grant": self.has_pell_grant,
             "rag": self.has_rag,
+            "nfp": self.has_nfp,
             "cowap": self.has_cowap,
             "ubp": self.has_ubp,
             "co_medicaid": self.has_medicaid or self.has_medicaid_hi,
             "nc_medicaid": self.has_medicaid or self.has_medicaid_hi,
+            "medicaid": self.has_medicaid or self.has_medicaid_hi,
             "medicare": self.has_medicare_hi,
             "chp": self.has_chp or self.has_chp_hi,
             "va": self.has_va,
@@ -610,7 +615,6 @@ class EligibilitySnapshot(models.Model):
     screen = models.ForeignKey(Screen, related_name="eligibility_snapshots", on_delete=models.CASCADE)
     submission_date = models.DateTimeField(auto_now=True)
     is_batch = models.BooleanField(default=False)
-    had_error = models.BooleanField(default=False)
 
 
 # Eligibility results for each specific program per screen. These are

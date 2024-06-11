@@ -179,13 +179,11 @@ def eligibility_results(screen, batch=False):
     data = []
 
     try:
-        previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen, had_error=False).latest(
-            "submission_date"
-        )
+        previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen).latest("submission_date")
         previous_results = None if previous_snapshot is None else previous_snapshot.program_snapshots.all()
     except ObjectDoesNotExist:
         previous_snapshot = None
-    snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch, had_error=True)
+    snapshot = EligibilitySnapshot.objects.create(screen=screen, is_batch=batch)
 
     missing_dependencies = screen.missing_fields()
 
@@ -211,8 +209,6 @@ def eligibility_results(screen, batch=False):
 
     # make certain benifits calculate first so that they can be used in other benefits
     all_programs = sorted(all_programs, key=sort_first)
-
-    program_snapshots = []
 
     for program in all_programs:
         skip = False
@@ -262,20 +258,18 @@ def eligibility_results(screen, batch=False):
 
         if not skip and program.active:
             legal_status = [status.status for status in program.legal_status_required.all()]
-            program_snapshots.append(
-                ProgramEligibilitySnapshot(
-                    eligibility_snapshot=snapshot,
-                    name=program.name.text,
-                    name_abbreviated=program.name_abbreviated,
-                    value_type=program.value_type.text,
-                    estimated_value=eligibility["estimated_value"],
-                    estimated_delivery_time=program.estimated_delivery_time.text,
-                    estimated_application_time=program.estimated_application_time.text,
-                    eligible=eligibility["eligible"],
-                    failed_tests=json.dumps(eligibility["failed"]),
-                    passed_tests=json.dumps(eligibility["passed"]),
-                    new=new,
-                )
+            ProgramEligibilitySnapshot.objects.create(
+                eligibility_snapshot=snapshot,
+                name=program.name.text,
+                name_abbreviated=program.name_abbreviated,
+                value_type=program.value_type.text,
+                estimated_value=eligibility["estimated_value"],
+                estimated_delivery_time=program.estimated_delivery_time.text,
+                estimated_application_time=program.estimated_application_time.text,
+                eligible=eligibility["eligible"],
+                failed_tests=json.dumps(eligibility["failed"]),
+                passed_tests=json.dumps(eligibility["passed"]),
+                new=new,
             )
             data.append(
                 {
@@ -306,10 +300,6 @@ def eligibility_results(screen, batch=False):
                     "multiple_tax_units": eligibility["multiple_tax_units"],
                 }
             )
-
-    ProgramEligibilitySnapshot.objects.bulk_create(program_snapshots)
-    snapshot.had_error = False
-    snapshot.save()
 
     eligible_programs = []
     for program in data:

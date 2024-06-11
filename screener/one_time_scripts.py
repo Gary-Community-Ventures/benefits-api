@@ -303,7 +303,7 @@ def update_hubspot_extra_fields():
 
     failed = []
 
-    for i in trange(len(screens), desc="Contacts"):
+    for i in trange(len(screens), desc="Translations"):
         screen = screens[i]
         user = screen.user
         if user.external_id is None or user.external_id == "":
@@ -317,25 +317,3 @@ def update_hubspot_extra_fields():
 
     print("\n".join(failed))
     print("done")
-
-
-def backfill_hubspot_annual_income_field():
-    screens = list(Screen.objects.filter(user__isnull=False))
-    hubspot = Hubspot()
-
-    failed = []
-
-    for i in trange(len(screens), desc="Contacts"):
-        screen = screens[i]
-        user = screen.user
-        if user.external_id is None or user.external_id == "":
-            continue
-
-        try:
-            data = {"ab01___mfb_annual_income": int(screen.calc_gross_income("yearly", ["all"]))}
-            hubspot.update_contact(user.external_id, data)
-        except Exception:
-            failed.append(f"failed to update user with id: {user.id} and external id: {user.external_id}")
-        time.sleep(0.11)
-
-    print("\n".join(failed))
