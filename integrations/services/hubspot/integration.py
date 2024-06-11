@@ -107,7 +107,6 @@ class Hubspot:
             contact["ab01___uuid"] = str(screen.uuid)
             contact["ab01___county"] = screen.county
             contact["ab01___number_of_household_members"] = screen.household_size
-            contact["ab01___mfb_annual_income"] = int(screen.calc_gross_income("yearly", ["all"]))
 
             members = screen.household_members.all()
             if len(members) > self.MAX_HOUSEHOLD_SIZE:

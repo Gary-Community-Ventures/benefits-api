@@ -7,11 +7,8 @@
     <p class="help is-danger">{{ error }}</p>
     {% endfor %}
   </div>
-  {% endfor %} {% if lang == 'en-us' %}
-  <button class="button" type="submit">Save All</button>
-  {% else %}
+  {% endfor %}
   <button class="button" type="submit">Save</button>
-  {% endif %} {% if lang != 'en-us' %}
   <button
     class="button"
     type="button"
@@ -22,5 +19,5 @@
   >
     Translate
   </button>
-  {% endif %} {% if error_message %} {% include "error.html" %} {% endif %}
+  {% if error_message %} {% include "error.html" %} {% endif %}
 </span>

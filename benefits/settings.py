@@ -219,7 +219,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 CSRF_FAILURE_VIEW = "benefits.views.catch_403_view"
 
-SWAGGER_SETTINGS = {"SUPPORTED_SUBMIT_METHODS": ("get",), "DEEP_LINKING": True}
+SWAGGER_SETTINGS = {"SUPPORTED_SUBMIT_METHODS": ("get",)}
 
 # Enable logging with Sentry if it is enabled
 if config("SENTRY_DSN", None) is not None:
