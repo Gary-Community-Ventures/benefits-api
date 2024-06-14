@@ -31,7 +31,7 @@ class Command(BaseCommand):
         "childDevelopment": {
             "icon": {"_name": "Child_development", "_classname": "option-card-icon"},
             "_label": "acuteConditionOptions.childDevelopment",
-            "_default_message": "Concern about your childs's development",
+            "_default_message": "Concern about your child's development",
         },
         "familyPlanning": {
             "icon": {"_name": "Family_planning", "_classname": "option-card-icon"},
