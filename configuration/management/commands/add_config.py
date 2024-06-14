@@ -31,7 +31,7 @@ class Command(BaseCommand):
         "childDevelopment": {
             "icon": {"_name": "Child_development", "_classname": "option-card-icon"},
             "_label": "acuteConditionOptions.childDevelopment",
-            "_default_message": "Concern about your baby or toddler's development",
+            "_default_message": "Concern about your child's development",
         },
         "familyPlanning": {
             "icon": {"_name": "Family_planning", "_classname": "option-card-icon"},
@@ -102,6 +102,10 @@ class Command(BaseCommand):
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
         "villageExchange": "Village Exchange",
+        "fircsummitresourcecenter": {
+            "_label": "referralOptions.fircsummitresourcecenter",
+            "_default_message": "FIRC Summit Resource Center",
+        },
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
             "_default_message": "Test / Prospective Partner",
@@ -121,7 +125,7 @@ class Command(BaseCommand):
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "汉语",
+        "zh": "中文",
         "ar": "عربي",
     }
 
