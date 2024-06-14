@@ -2547,10 +2547,6 @@ class Command(BaseCommand):
                     "_default_message": "Low-cost dental care for people 60 years of age or older (Colorado Dental Health Program for Low-Income Seniors)",
                 }
             },
-            "nfp": {
-                "_label": "healthCareBenefits.nfp",
-                "_default_message": "Personalized support for first-time parents (Nurse-Family Partnership)",
-            },
             "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
         },
         "taxCredits": {
