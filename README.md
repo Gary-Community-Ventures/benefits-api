@@ -11,7 +11,7 @@ This is the repository for the backend Python/Django rules engine that takes hou
 
 Clone the project: `git clone https://github.com/Gary-Community-Ventures/benefits-api.git`
 
-Start virtual environment: Pip3.9 
+Create virtual environment: `python -m venv venv` 
 
 Install dependencies: `pip install -r requirements.txt`
 
@@ -66,7 +66,6 @@ Create a `.env` file in the backend root directory
 - GOOGLE_APPLICATION_CREDENTIALS
   
   - This is required for Google Translate. This is also used for fetching benefit data from google sheets for Colorado LEAP and CCCAP. The quickstart utility generates these programs but you can remove them.
-  Service Account in Google Cloud | Cloud Translate Tutorial w/ Python | Cre…
   
 - SENDGRID
   
@@ -122,7 +121,7 @@ MyFriendBen uses google translate to translate MyFriendBen into other languages.
 
 #### Download translations:
 
-Download: [10_17_2023_translations.json](10_17_2023_translations.json)
+Download: [Translations](https://github.com/Gary-Community-Ventures/mfb-translations/tree/main/translations)
 
 #### Import translations: 
 
@@ -192,7 +191,7 @@ After adding the service account, select it and go to its page. And from the “
 #### Format JSON:
 The generated JSON is going to be something like so:
 
-![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/4c27a010-04d3-4e69-bf8d-61bf5a324a08)
+![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/1f5e6751-6f77-4205-a496-d1a3acff9d7b)
 
 Though in order for the .env file to make use of this JSON object properly it needs to be formatted so that everything is in one line, like so:
 
