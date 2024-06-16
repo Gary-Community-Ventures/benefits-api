@@ -195,7 +195,8 @@ The generated JSON is going to be something like so:
 
 Though in order for the .env file to make use of this JSON object properly it needs to be formatted so that everything is in one line, like so:
 
-![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/90a1e09a-72c7-4cc4-9641-d04d703bb95e)
+![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/ab679675-4b88-48a1-9141-f1fc15c87287)
+
 
 A tool like this can be used to make the json into the correct format:
 https://www.text-utils.com/json-formatter/
