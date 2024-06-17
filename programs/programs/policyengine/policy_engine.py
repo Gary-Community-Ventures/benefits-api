@@ -38,11 +38,16 @@ def calc_pe_eligibility(
 
 def all_eligibility(method: Sim, valid_programs: dict[str, type[PolicyEngineCalulator]], screen: Screen):
     all_eligibility: dict[str, Eligibility] = {}
+    has_non_tax_unit_members = screen.has_members_ouside_of_tax_unit()
     for name_abbr, Calculator in valid_programs.items():
         calc = Calculator(screen, method)
 
         e = calc.eligible()
         e.value = calc.value()
+
+        if Calculator.tax_unit_dependent and has_non_tax_unit_members:
+            e.multiple_tax_units = True
+
         all_eligibility[name_abbr] = e.to_dict()
 
     return all_eligibility
