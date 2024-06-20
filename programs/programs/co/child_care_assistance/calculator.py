@@ -12,7 +12,7 @@ class CccapFplCache(GoogleSheetsCache):
     def update(self):
         data = super().update()
 
-        county_fpls = {r[0] + ' County': int(r[1]) for r in data}
+        county_fpls = {r[0] + " County": int(r[1]) for r in data}
 
         return county_fpls
 
