@@ -15,6 +15,18 @@ class FederalPoveryLimit(models.Model):
     has_6_people = models.IntegerField()
     has_7_people = models.IntegerField()
     has_8_people = models.IntegerField()
+    additional = models.IntegerField()
+
+    MAX_DEFINED_SIZE = 8
+
+    def get_limit(self, household_size: int):
+        limits = self.as_dict()
+
+        if household_size <= self.MAX_DEFINED_SIZE:
+            return limits[household_size]
+
+        additional_member_count = household_size - self.MAX_DEFINED_SIZE
+        return limits[self.MAX_DEFINED_SIZE] + self.additional * additional_member_count
 
     def as_dict(self):
         return {
