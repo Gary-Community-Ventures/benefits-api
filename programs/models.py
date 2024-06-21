@@ -190,7 +190,7 @@ class Program(models.Model):
 
         eligibility.value = calculator.value(eligibility.eligible_member_count)
 
-        if Calculator.tax_unit_dependent and screen.has_members_ouside_of_tax_unit():
+        if Calculator.tax_unit_dependent and screen.has_members_outside_of_tax_unit():
             eligibility.multiple_tax_units = True
 
         return eligibility.to_dict()

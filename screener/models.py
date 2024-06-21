@@ -299,7 +299,7 @@ class Screen(models.Model):
 
         return language_code
 
-    def has_members_ouside_of_tax_unit(self):
+    def has_members_outside_of_tax_unit(self):
         for member in self.household_members.all():
             if not member.is_in_tax_unit():
                 return True
