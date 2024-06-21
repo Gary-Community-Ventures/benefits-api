@@ -53,8 +53,9 @@ class ChildCareAssistance(ProgramCalculator):
         e.condition(net_income <= income_limit, messages.income(net_income, income_limit))
 
         # assets
+        assets = self.screen.household_assets if self.screen.household_assets is not None else 0
         e.condition(
-            self.screen.household_assets < ChildCareAssistance.asset_limit,
+            assets < ChildCareAssistance.asset_limit,
             messages.assets(ChildCareAssistance.asset_limit),
         )
 
