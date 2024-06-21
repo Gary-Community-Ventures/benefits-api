@@ -15,6 +15,18 @@ class FederalPoveryLimit(models.Model):
     has_6_people = models.IntegerField()
     has_7_people = models.IntegerField()
     has_8_people = models.IntegerField()
+    additional = models.IntegerField()
+
+    MAX_DEFINED_SIZE = 8
+
+    def get_limit(self, household_size: int):
+        limits = self.as_dict()
+
+        if household_size <= self.MAX_DEFINED_SIZE:
+            return limits[household_size]
+
+        additional_member_count = household_size - self.MAX_DEFINED_SIZE
+        return limits[self.MAX_DEFINED_SIZE] + self.additional * additional_member_count
 
     def as_dict(self):
         return {
@@ -190,7 +202,7 @@ class Program(models.Model):
 
         eligibility.value = calculator.value(eligibility.eligible_member_count)
 
-        if Calculator.tax_unit_dependent and screen.has_members_ouside_of_tax_unit():
+        if Calculator.tax_unit_dependent and screen.has_members_outside_of_tax_unit():
             eligibility.multiple_tax_units = True
 
         return eligibility.to_dict()

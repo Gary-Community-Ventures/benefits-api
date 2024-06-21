@@ -132,6 +132,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_ubp",
             "has_pell_grant",
             "has_rag",
+            "has_nfp",
             "has_employer_hi",
             "has_private_hi",
             "has_medicaid_hi",
