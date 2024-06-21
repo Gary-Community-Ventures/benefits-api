@@ -32,7 +32,6 @@ class FamilyPlanningServices(ProgramCalculator):
 
         # Income
         fpl = self.program.fpl
-        print(fpl.get_limit(self.screen.household_size + e.eligible_member_count))
         income_limit = int(
             FamilyPlanningServices.fpl_percent * fpl.get_limit(self.screen.household_size + e.eligible_member_count)
         )
