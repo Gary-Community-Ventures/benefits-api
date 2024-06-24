@@ -1,18 +1,22 @@
+from integrations.services.sheets.sheets import GoogleSheets
+from integrations.util.cache import Cache
 from programs.programs.calc import ProgramCalculator, Eligibility
 from programs.programs.helpers import medicaid_eligible
 import programs.programs.messages as messages
-from integrations.services.sheets import GoogleSheetsCache
 
 
-class CFHCache(GoogleSheetsCache):
+class CFHCache(Cache):
+    expire_time = 60 * 60 * 24
     default = {}
     sheet_id = "1SuOhwX5psXsipMS_G5DE_f9jLS2qWxf6temxY445EQg"
-    range_name = "'2023 report'!A2:B65"
+    range_name = "current report"
+    average_column = "Average Monthly Premium Tax Credit"
+    county_column = "County\n(source here)"
 
     def update(self):
-        data = super().update()
+        data = GoogleSheets(self.sheet_id, self.range_name).data_by_column(self.county_column, self.average_column)
 
-        return {d[0].strip() + " County": float(d[1].replace(",", "")) for d in data}
+        return {row[self.county_column].strip() + " County": float(row[self.average_column]) for row in data}
 
 
 class ConnectForHealth(ProgramCalculator):
@@ -46,4 +50,4 @@ class ConnectForHealth(ProgramCalculator):
 
     def value(self, eligible_members: int):
         values = self.county_values.fetch()
-        return values[self.screen.county] * 12
+        return int(values[self.screen.county] * 12)
