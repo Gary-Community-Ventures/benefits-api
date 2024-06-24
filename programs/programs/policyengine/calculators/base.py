@@ -27,7 +27,8 @@ class PolicyEngineCalulator(ProgramCalculator):
     def eligible(self) -> Eligibility:
         e = Eligibility()
 
-        e.eligible = self.value() > 0
+        e.value = self.value()
+        e.eligible = e.value > 0
 
         return e
 
