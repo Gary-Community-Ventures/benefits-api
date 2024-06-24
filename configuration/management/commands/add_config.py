@@ -2579,13 +2579,13 @@ class Command(BaseCommand):
                 },
                 "fatc": {
                     "_label": "taxCreditBenefits.fatc",
-                    "_default_message": "State tax credit: family affordability tax credit (Family Affordability Tax Credit)"
-                }
+                    "_default_message": "State tax credit: family affordability tax credit (Family Affordability Tax Credit)",
+                },
             },
             "category_name": {"_label": "taxCredits", "_default_message": "Tax Credits"},
         },
     }
-    
+
     @transaction.atomic
     def handle(self, *args, **options):
         # clear existing config
