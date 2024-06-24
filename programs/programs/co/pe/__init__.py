@@ -8,6 +8,7 @@ co_member_calculators = {
     "andcs": member.AidToTheNeedyAndDisabled,
     "oap": member.OldAgePension,
     "chp": member.Chp,
+    "fatc": member.FamilyAffordabilityTaxCredit,
 }
 
 co_tax_unit_calculators = {

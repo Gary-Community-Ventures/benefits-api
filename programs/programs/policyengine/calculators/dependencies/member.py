@@ -117,6 +117,10 @@ class Oap(Member):
     field = "co_oap"
 
 
+class FamilyAffordabilityTaxCredit(Member):
+    field = "co_family_affordability_credit"
+
+
 class PellGrant(Member):
     field = "pell_grant"
 

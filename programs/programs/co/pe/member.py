@@ -70,3 +70,15 @@ class Chp(PolicyEngineMembersCalculator):
                 total += self.amount
 
         return total
+
+
+class FamilyAffordabilityTaxCredit(PolicyEngineMembersCalculator):
+    pe_name = "co_family_affordability_credit"
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.household.CoStateCode,
+        dependency.member.TaxUnitSpouseDependency,
+        *dependency.irs_gross_income,
+    ]
+    pe_outputs = [dependency.member.FamilyAffordabilityTaxCredit]
