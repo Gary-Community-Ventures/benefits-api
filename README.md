@@ -191,11 +191,23 @@ After adding the service account, select it and go to its page. And from the “
 #### Format JSON:
 The generated JSON is going to be something like so:
 
-![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/1f5e6751-6f77-4205-a496-d1a3acff9d7b)
+{
+    "type":"service_account",
+    "project_id":"[YOUR_PROJECT_ID]",
+    "private_key_id":"[PRIVATE_KEY_ID]",
+    "private_key":"[PRIVATE_KEY]",
+    "client_email":"[CLIENT_EMAIL]",
+    "client_id":"[CLIENT_ID]",
+    "auth_uri":"[AUTH_URI]",
+    "token_uri":"[TOKEN_URI]",
+    "auth_provider_x509_cert_url":"[AUTH_PROVIDER_URL]",
+    "client_x509_cert_url":"[CLIENT_CERT_URL]",
+    "universe_domain":"[UNIVERSE_DOMAIN]"
+}
 
 Though in order for the .env file to make use of this JSON object properly it needs to be formatted so that everything is in one line, like so:
 
-![image](https://github.com/Gary-Community-Ventures/benefits-api/assets/65931890/ab679675-4b88-48a1-9141-f1fc15c87287)
+{"type": "service_account", "project_id": "[YOUR_PROJECT_ID]"}
 
 
 A tool like this can be used to make the json into the correct format:
