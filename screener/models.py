@@ -67,6 +67,7 @@ class Screen(models.Model):
     has_pell_grant = models.BooleanField(default=False, blank=True, null=True)
     has_rag = models.BooleanField(default=False, blank=True, null=True)
     has_nfp = models.BooleanField(default=False, blank=True, null=True)
+    has_fatc = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -258,6 +259,7 @@ class Screen(models.Model):
             "pell_grant": self.has_pell_grant,
             "rag": self.has_rag,
             "nfp": self.has_nfp,
+            "fatc": self.has_fatc,
             "cowap": self.has_cowap,
             "ubp": self.has_ubp,
             "co_medicaid": self.has_medicaid or self.has_medicaid_hi,
