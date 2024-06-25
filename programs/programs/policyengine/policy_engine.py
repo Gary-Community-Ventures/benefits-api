@@ -43,7 +43,6 @@ def all_eligibility(method: Sim, valid_programs: dict[str, type[PolicyEngineCalu
         calc = Calculator(screen, method)
 
         e = calc.eligible()
-        e.value = calc.value()
 
         if Calculator.tax_unit_dependent and has_non_tax_unit_members:
             e.multiple_tax_units = True
