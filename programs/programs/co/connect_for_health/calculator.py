@@ -30,15 +30,18 @@ class ConnectForHealth(ProgramCalculator):
         # Medicade eligibility
         e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
 
-        # Someone has no health insurance
-        has_no_hi = self.screen.has_insurance_types(("none", "private"))
-        e.condition(has_no_hi, messages.has_no_insurance())
-
-        # HH member has no va insurance
+        # HH member has no insurace or private insurance
         e.member_eligibility(
             self.screen.household_members.all(),
-            [(lambda m: not m.insurance.has_insurance_types(("va", "private")), messages.must_not_have_benefit("VA"))],
+            [
+                (lambda m: m.insurance.has_insurance_types(("none", "private")), messages.has_no_insurance()),
+                (
+                    lambda m: not m.insurance.has_insurance_types(("va",)),
+                    messages.must_not_have_benefit("VA"),
+                ),
+            ],
         )
+        print(e.eligible_member_count)
 
         # Income
         fpl = self.program.fpl.as_dict()
@@ -50,4 +53,4 @@ class ConnectForHealth(ProgramCalculator):
 
     def value(self, eligible_members: int):
         values = self.county_values.fetch()
-        return int(values[self.screen.county] * 12)
+        return int(values[self.screen.county] * 12 * eligible_members)
