@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django.db import transaction
 from configuration.models import (
     Configuration,
 )
@@ -101,7 +102,7 @@ class Command(BaseCommand):
         "jeffcoHS": "Jeffco Human Services",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
-        "acph": "Arapahoe County Public Health",
+        "arapahoectypublichealth": "Arapahoe County Public Health",
         "villageExchange": "Village Exchange",
         "fircsummitresourcecenter": {
             "_label": "referralOptions.fircsummitresourcecenter",
@@ -2576,12 +2577,20 @@ class Command(BaseCommand):
                     "_label": "taxCreditBenefits.coctc",
                     "_default_message": "State tax credit: Colorado child tax credit",
                 },
+                "fatc": {
+                    "_label": "taxCreditBenefits.fatc",
+                    "_default_message": "State tax credit: family affordability tax credit (Family Affordability Tax Credit)",
+                },
             },
             "category_name": {"_label": "taxCredits", "_default_message": "Tax Credits"},
         },
     }
 
+    @transaction.atomic
     def handle(self, *args, **options):
+        # clear existing config
+        Configuration.objects.all().delete()
+
         # Save acute_condition_options to database
         Configuration.objects.create(name="acute_condition_options", data=self.acute_condition_options, active=True)
 
