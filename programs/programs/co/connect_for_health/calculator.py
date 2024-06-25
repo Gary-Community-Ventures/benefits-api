@@ -41,7 +41,6 @@ class ConnectForHealth(ProgramCalculator):
                 ),
             ],
         )
-        print(e.eligible_member_count)
 
         # Income
         fpl = self.program.fpl.as_dict()
