@@ -101,7 +101,7 @@ class Command(BaseCommand):
         "jeffcoHS": "Jeffco Human Services",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
-        "acph": "Arapahoe County Public Health",
+        "arapahoectypublichealth": "Arapahoe County Public Health",
         "villageExchange": "Village Exchange",
         "fircsummitresourcecenter": {
             "_label": "referralOptions.fircsummitresourcecenter",
