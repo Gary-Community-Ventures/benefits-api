@@ -168,8 +168,8 @@ class ForeclosureFinAssistProgram(UrgentNeedFunction):
         """
         household_income = self.screen.calc_gross_income("yearly", ["all"])
         income_limit = self.income_limits[self.screen.household_size]
-        return household_income <= income_limit and self.screen.county == "Denver County"
-
+        has_mortgage = self.screen.has_expense(['mortgage'])
+        return household_income <= income_limit and self.screen.county == "Denver County" and has_mortgage
 
 class EocIncomeLimitCache(GoogleSheetsCache):
     default = {}
