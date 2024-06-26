@@ -35,9 +35,13 @@ class Trua(ProgramCalculator):
         else:
             counties = counties_from_zip(zipcode)
 
-        # Denever County
+        # Denver County
         e.condition(Trua.county in counties, messages.location())
 
         e.condition(gross_income <= income_limit, messages.income(gross_income, income_limit))
+
+        # has rent or mortgage
+        has_rent_or_mortgage = self.screen.has_expense(['rent', 'mortgage'])
+        e.condition(has_rent_or_mortgage)
 
         return e
