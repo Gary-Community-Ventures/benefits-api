@@ -41,7 +41,7 @@ class Trua(ProgramCalculator):
         e.condition(gross_income <= income_limit, messages.income(gross_income, income_limit))
 
         # has rent or mortgage
-        has_rent_or_mortgage = self.screen.has_expense(['rent', 'mortgage'])
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
         e.condition(has_rent_or_mortgage)
 
         return e

@@ -34,7 +34,7 @@ class EmergencyRentalAssistance(ProgramCalculator):
         e.condition(income < income_limit, messages.income(income, income_limit))
 
         # has rent expense
-        has_rent = self.screen.has_expense(['rent'])
+        has_rent = self.screen.has_expense(["rent"])
         e.condition(has_rent)
-        
+
         return e
