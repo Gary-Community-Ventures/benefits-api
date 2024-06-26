@@ -241,8 +241,9 @@ class CoEmergencyMortgageAssistance(UrgentNeedFunction):
             return False
 
         income_limit = limits[self.screen.county][self.screen.household_size - 1]
+        has_mortgage = self.screen.has_expense(['mortgage'])
 
-        return income < income_limit
+        return income < income_limit and has_mortgage
 
 
 class ChildFirst(UrgentNeedFunction):
