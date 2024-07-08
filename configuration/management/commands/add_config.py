@@ -115,6 +115,7 @@ class Command(BaseCommand):
         "searchEngine": {"_label": "referralOptions.searchEngine", "_default_message": "Google or other search engine"},
         "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
         "other": {"_label": "referralOptions.other", "_default_message": "Other"},
+        "chs": "Colorado Human Services",
     }
 
     language_options = {
