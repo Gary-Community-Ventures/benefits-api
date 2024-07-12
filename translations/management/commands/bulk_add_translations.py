@@ -26,8 +26,6 @@ class Command(BaseCommand):
             )
 
             for lang, message in details["langs"].items():
-                Translation.objects.edit_translation_by_id(
-                    translation.id, lang, message[0], manual=message[1]
-                )
+                Translation.objects.edit_translation_by_id(translation.id, lang, message[0], manual=message[1])
 
         self.stdout.write(self.style.SUCCESS("Successfully added translations."))
