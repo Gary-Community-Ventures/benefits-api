@@ -22,16 +22,12 @@ class Command(BaseCommand):
                 label,
                 details["langs"].get(settings.LANGUAGE_CODE, ["", False])[0],
                 active=details["active"],
-                no_auto=details["no_auto"]
+                no_auto=details["no_auto"],
             )
 
             for lang, message in details["langs"].items():
                 Translation.objects.edit_translation_by_id(
-                    translation.id,
-                    lang,
-                    message[0],
-                    manual=message[1]
+                    translation.id, lang, message[0], manual=message[1]
                 )
 
-        self.stdout.write(self.style.SUCCESS(
-            'Successfully added translations.'))
+        self.stdout.write(self.style.SUCCESS("Successfully added translations."))
