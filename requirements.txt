@@ -18,7 +18,7 @@ django-parler==2.3
 django-parler-rest==2.2
 django-phonenumber-field==6.3.0
 django-sesame==3.1
-djangorestframework==3.14.0
+djangorestframework==3.15.2
 django-import-export==3.3.8
 django-unfold==0.22.0
 drf-yasg==1.21.7
