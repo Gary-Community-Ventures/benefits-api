@@ -2,7 +2,7 @@ asgiref==3.7.2
 attrs==21.4.0
 Babel==2.15.0
 beautifulsoup4==4.12.2
-black==23.3.0
+black==24.3.0
 cachetools==4.2.4
 certifi==2023.7.22
 charset-normalizer==2.1.0
