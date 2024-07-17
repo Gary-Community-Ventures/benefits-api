@@ -11,7 +11,9 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             "data",
+            nargs="?",
             type=argparse.FileType("r", encoding="utf-8"),
+            default=stdin,
         )
 
     def handle(self, *args, **options):
