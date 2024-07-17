@@ -96,18 +96,17 @@ class Command(BaseCommand):
 
     referral_options = {
         "211co": "2-1-1 Colorado",
-        "cedp": "Community Economic Defense Project (CEDP)",
         "cch": "Colorado Coalition for the Homeless",
         "frca": "Family Resource Center Association",
         "jeffcoHS": "Jeffco Human Services",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
         "arapahoectypublichealth": "Arapahoe County Public Health",
-        "villageExchange": "Village Exchange",
         "fircsummitresourcecenter": {
             "_label": "referralOptions.fircsummitresourcecenter",
             "_default_message": "FIRC Summit Resource Center",
         },
+        "dhs": "Denver Human Services",
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
             "_default_message": "Test / Prospective Partner",
