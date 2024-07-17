@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from translations.models import Translation
 from django.conf import settings
+from sys import stdin
 import argparse
 import json
 
