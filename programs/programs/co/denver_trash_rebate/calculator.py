@@ -19,7 +19,7 @@ class DenverTrashRebate(ProgramCalculator):
     amount = 252
     county = "Denver County"
     ami = DenverAmiCache()
-    dependencies = ["zipcode", "income_amount", "income_frequency"]
+    dependencies = ["zipcode", "income_amount", "income_frequency", "household_size"]
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
