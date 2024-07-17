@@ -146,7 +146,8 @@ class Trua(UrgentNeedFunction):
         """
         household_income = self.screen.calc_gross_income("yearly", ["all"])
         income_limit = self.income_limits[self.screen.household_size]
-        return household_income <= income_limit
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        return household_income <= income_limit and has_rent_or_mortgage
 
 
 class ForeclosureFinAssistProgram(UrgentNeedFunction):
@@ -168,7 +169,8 @@ class ForeclosureFinAssistProgram(UrgentNeedFunction):
         """
         household_income = self.screen.calc_gross_income("yearly", ["all"])
         income_limit = self.income_limits[self.screen.household_size]
-        return household_income <= income_limit and self.screen.county == "Denver County"
+        has_mortgage = self.screen.has_expense(["mortgage"])
+        return household_income <= income_limit and self.screen.county == "Denver County" and has_mortgage
 
 
 class EocIncomeLimitCache(GoogleSheetsCache):
@@ -241,8 +243,9 @@ class CoEmergencyMortgageAssistance(UrgentNeedFunction):
             return False
 
         income_limit = limits[self.screen.county][self.screen.household_size - 1]
+        has_mortgage = self.screen.has_expense(["mortgage"])
 
-        return income < income_limit
+        return income < income_limit and has_mortgage
 
 
 class ChildFirst(UrgentNeedFunction):
@@ -401,8 +404,9 @@ class DenverEmergencyAssistance(UrgentNeedFunction):
         income_eligible = (
             self.screen.calc_gross_income("yearly", ["all"]) < fpl[self.screen.household_size] * self.fpl_percent
         )
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
 
-        return county_eligible and income_eligible
+        return county_eligible and income_eligible and has_rent_or_mortgage
 
 
 class EarlyIntervention(ChildAgeFunction):
