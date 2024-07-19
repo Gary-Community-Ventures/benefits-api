@@ -8,6 +8,24 @@ from configuration.models import (
 class Command(BaseCommand):
     help = "Create and add config data to database"
 
+    more_help_options = {
+        "moreHelpOptions": [
+            {
+                "name": {"_default_message": "2-1-1 Colorado", "_label": "moreHelp.resource_name1"},
+                "link": "https://www.211colorado.org",
+                "phone": {"_default_message": "Dial 2-1-1 or 866.760.6489", "_label": "moreHelp.resource_phone1"},
+            },
+            {
+                "name": {"_default_message": "Family Resource Center Association", "_label": "moreHelp.resource_name2"},
+                "description": {
+                    "_default_message": "Your local family resource center may be able to connect you to other resources and support services. Visit a center near you.",
+                    "_label": "moreHelp.resource_description1",
+                },
+                "link": "https://maps.cofamilycenters.org",
+            },
+        ]
+    }
+
     acute_condition_options = {
         "food": {
             "icon": {"_name": "Food", "_classname": "option-card-icon"},
