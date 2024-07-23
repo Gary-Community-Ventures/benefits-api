@@ -3,7 +3,6 @@ from programs.programs.calc import ProgramCalculator, Eligibility
 from integrations.services.sheets import GoogleSheetsCache
 import programs.programs.messages as messages
 from screener.models import HouseholdMember
-import math
 
 
 class DenverAmiCache(GoogleSheetsCache):
@@ -72,7 +71,7 @@ class DenverPropertyTaxRelief(ProgramCalculator):
 
         # income
         multiple_adults = self.screen.num_adults(DenverPropertyTaxRelief.child_max_age + 1) >= 2
-        ami_percent = math.inf
+        ami_percent = -1
         if has_rent and multiple_adults:
             ami_percent = DenverPropertyTaxRelief.ami_percent_rental_couple
         elif has_rent:
