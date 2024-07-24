@@ -25,6 +25,22 @@ class DenverPropertyTaxRelief(ProgramCalculator):
     age_eligible = 65
     county = "Denver County"
     ami = DenverAmiCache()
+    income_types = [
+        "wages",
+        "selfEmployment",
+        "pension",
+        "veteran",
+        "unemployment",
+        "investment",
+        "cOSDisability",
+        "rental",
+        "alimony",
+        "deferredComp",
+        "workersComp",
+        "boarder",
+    ]
+    mortgage_amount = 1_800
+    rent_amount = 1_000
     dependencies = [
         "zipcode",
         "income_amount",
@@ -60,14 +76,13 @@ class DenverPropertyTaxRelief(ProgramCalculator):
             if member.age >= DenverPropertyTaxRelief.age_eligible:
                 return True
 
-            if member.disabled or self.screen.has_ssi or self.screen.has_ssdi:
+            if member.disabled or self.screen.has_benefit('ssi') or self.screen.has_benefit('ssdi'):
                 return True
 
             return False
 
-        e.member_eligibility(
-            self.screen.household_members, [(lambda m: m.is_head or m.is_spouse, None), (meets_one_condition, None)]
-        )
+        members: list[HouseholdMember] = self.screen.household_members.all()
+        e.member_eligibility(members, [(lambda m: m.is_head() or m.is_spouse(), None), (meets_one_condition, None)])
 
         # income
         multiple_adults = self.screen.num_adults(DenverPropertyTaxRelief.child_max_age + 1) >= 2
@@ -81,8 +96,17 @@ class DenverPropertyTaxRelief(ProgramCalculator):
 
         ami = DenverPropertyTaxRelief.ami.fetch()
         limit = ami[self.screen.household_size - 1] * ami_percent
-        # TODO: use the right income types
-        income = self.screen.calc_gross_income("yearly", ["all"])
-        e.condition(income <= limit, messages.income(income, limit))
+        total_income = 0
+        for member in members:
+            if member.is_head() or member.is_spouse():
+                total_income += member.calc_gross_income("yearly", DenverPropertyTaxRelief.income_types)
+        e.condition(total_income <= limit, messages.income(total_income, limit))
 
         return e
+
+    def value(self, eligible_members: int):
+        if self.screen.has_expense(["mortgage"]):
+            return DenverPropertyTaxRelief.mortgage_amount
+        elif self.screen.has_expense(["rent"]):
+            return DenverPropertyTaxRelief.rent_amount
+        return 0
