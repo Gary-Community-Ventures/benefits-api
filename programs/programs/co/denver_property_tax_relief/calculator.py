@@ -76,7 +76,7 @@ class DenverPropertyTaxRelief(ProgramCalculator):
             if member.age >= DenverPropertyTaxRelief.age_eligible:
                 return True
 
-            if member.disabled or self.screen.has_benefit('ssi') or self.screen.has_benefit('ssdi'):
+            if member.disabled or self.screen.has_benefit("ssi") or self.screen.has_benefit("ssdi"):
                 return True
 
             return False
