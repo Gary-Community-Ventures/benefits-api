@@ -2613,6 +2613,9 @@ class Command(BaseCommand):
         Configuration.objects.all().delete()
 
         # Save acute_condition_options to database
+        Configuration.objects.create(name="public_charge_rule", data=self.public_charge_rule, active=True)
+
+        # Save acute_condition_options to database
         Configuration.objects.create(name="acute_condition_options", data=self.acute_condition_options, active=True)
 
         # Save sign_up_options to database
