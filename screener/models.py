@@ -18,7 +18,6 @@ class Screen(models.Model):
     start_date = models.DateTimeField(blank=True, null=True)
     referral_source = models.CharField(max_length=320, default=None, blank=True, null=True)
     referrer_code = models.CharField(max_length=320, default=None, blank=True, null=True)
-    frozen = models.BooleanField(default=False)
     agree_to_tos = models.BooleanField(blank=True, null=True)
     is_13_or_older = models.BooleanField(blank=True, null=True)
     zipcode = models.CharField(max_length=5, blank=True, null=True)
@@ -86,6 +85,10 @@ class Screen(models.Model):
     needs_job_resources = models.BooleanField(default=False, blank=True, null=True)
     needs_dental_care = models.BooleanField(default=False, blank=True, null=True)
     needs_legal_services = models.BooleanField(default=False, blank=True, null=True)
+
+    @property
+    def frozen(self):
+        return self.validations.count() > 0
 
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()

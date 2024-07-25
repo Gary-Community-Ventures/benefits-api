@@ -32,11 +32,3 @@ class ValidationSerializer(serializers.ModelSerializer):
         attrs["screen"] = screen
 
         return attrs
-
-    def create(self, validated_data):
-        screen = validated_data["screen"]
-        screen.frozen = True
-        screen.save()
-
-        return super().create(validated_data)
-
