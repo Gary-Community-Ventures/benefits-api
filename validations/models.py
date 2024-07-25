@@ -9,6 +9,9 @@ class Validation(models.Model):
     value = models.DecimalField(decimal_places=2, max_digits=10)
     created_date = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        unique_together = ("screen", "program_name")
+
     @property
     def screen_uuid(self):
         return self.screen.uuid

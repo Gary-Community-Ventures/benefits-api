@@ -2,6 +2,7 @@ from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Mess
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from translations.serializers import TranslationSerializer
+from validations.serializers import ValidationSerializer
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -219,6 +220,7 @@ class EligibilitySerializer(serializers.Serializer):
     description_short = TranslationSerializer()
     name = TranslationSerializer()
     name_abbreviated = serializers.CharField()
+    external_name = serializers.CharField()
     description = TranslationSerializer()
     value_type = TranslationSerializer()
     learn_more_link = TranslationSerializer()
@@ -265,3 +267,4 @@ class ResultsSerializer(serializers.Serializer):
     screen_id = serializers.CharField()
     default_language = serializers.CharField()
     missing_programs = serializers.BooleanField()
+    validations = ValidationSerializer(many=True)
