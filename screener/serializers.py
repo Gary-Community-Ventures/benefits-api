@@ -83,6 +83,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "is_test_data",
             "start_date",
             "submission_date",
+            "frozen",
             "agree_to_tos",
             "is_13_or_older",
             "zipcode",
@@ -156,6 +157,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "id",
             "uuid",
             "submision_date",
+            "frozen",
             "last_email_request_date",
             "completed",
             "user",
@@ -179,6 +181,9 @@ class ScreenSerializer(serializers.ModelSerializer):
         return screen
 
     def update(self, instance, validated_data):
+        if instance.frozen:
+            return instance
+
         household_members = validated_data.pop("household_members")
         expenses = validated_data.pop("expenses")
         Screen.objects.filter(pk=instance.id).update(**validated_data)
