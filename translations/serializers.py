@@ -1,5 +1,4 @@
 from parler_rest.serializers import TranslatableModelSerializer
-from parler_rest.fields import TranslatedFieldsField
 from rest_framework import serializers
 from translations.models import Translation
 

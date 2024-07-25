@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import include, path
 from sesame.views import LoginView
@@ -39,6 +40,7 @@ urlpatterns = [
     path("api/", include("screener.urls")),
     path("api/", include("programs.urls")),
     path("api/", include("authentication.urls")),
+    path("api/", include("validations.urls")),
     path("api/translations/", include("translations.urls")),
     path("admin/", admin.site.urls),
     path("sesame/login/", LoginView.as_view(), name="sesame-login"),
