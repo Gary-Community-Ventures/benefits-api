@@ -360,7 +360,7 @@ class HouseholdMember(models.Model):
 
     def calc_gross_income(self, frequency, types):
         gross_income = 0
-        earned_income_types = ["wages", "selfEmployment", "investment"]
+        earned_income_types = ["wages", "selfEmployment"]
 
         income_streams = self.income_streams.all()
         for income_stream in income_streams:
