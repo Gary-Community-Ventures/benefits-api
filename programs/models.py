@@ -16,6 +16,7 @@ class FederalPoveryLimit(models.Model):
     has_7_people = models.IntegerField()
     has_8_people = models.IntegerField()
     additional = models.IntegerField()
+    pe_period = models.CharField(max_length=32)
 
     MAX_DEFINED_SIZE = 8
 
