@@ -191,7 +191,6 @@ def eligibility_results(screen, batch=False):
     missing_dependencies = screen.missing_fields()
 
     # pe_eligibility = eligibility_policy_engine(screen)
-    all_program_names = [p.name_abbreviated for p in all_programs]
     pe_calculators = {}
     for calculator_name, Calculator in all_calculators.items():
         program: Optional[Program] = None
