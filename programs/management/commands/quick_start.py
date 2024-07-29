@@ -23,6 +23,8 @@ class Command(BaseCommand):
         6: 37_190,
         7: 41_910,
         8: 41_910,
+        "additional": 5380,
+        "pe_period": "2024",
     }
     legal_statuses = [
         "gc_under18_no5",
@@ -143,6 +145,8 @@ class Command(BaseCommand):
             has_6_people=self.fpl[6],
             has_7_people=self.fpl[7],
             has_8_people=self.fpl[8],
+            additional=self.fpl["additional"],
+            pe_period=self.fpl["pe_period"],
         )
 
         # create legal statuses

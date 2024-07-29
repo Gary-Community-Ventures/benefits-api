@@ -1,9 +1,9 @@
+from programs.models import Program
 from programs.util import Dependencies
 from screener.models import Screen
 from programs.programs.calc import Eligibility, ProgramCalculator
 from .dependencies.base import PolicyEngineScreenInput
 from typing import List
-from .constants import YEAR, PREVIOUS_YEAR
 from ..engines import Sim
 
 
@@ -18,11 +18,14 @@ class PolicyEngineCalulator(ProgramCalculator):
     pe_name = ""
     pe_category = ""
     pe_sub_category = ""
-    pe_period = YEAR
 
-    def __init__(self, screen: Screen, sim: Sim):
+    def __init__(self, screen: Screen, program: Program):
         self.screen = screen
-        self.sim = sim
+        self.program = program
+        self._sim = None
+
+    def set_engine(self, sim: Sim):
+        self._sim = sim
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -34,6 +37,20 @@ class PolicyEngineCalulator(ProgramCalculator):
 
     def value(self):
         return int(self.get_variable())
+
+    @property
+    def pe_period(self) -> str:
+        if self.program.fpl is None:
+            raise Exception(f'the period is not configured for: {self.pe_name}')
+
+        return self.program.fpl.pe_period
+
+    @property
+    def sim(self) -> Sim:
+        if self._sim is None:
+            raise Exception("Engine is not configured")
+
+        return self._sim
 
     def get_variable(self):
         """
@@ -54,7 +71,6 @@ class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
     pe_category = "tax_units"
     pe_sub_category = "tax_unit"
     tax_unit_dependent = True
-    pe_period = PREVIOUS_YEAR
 
 
 class PolicyEngineSpmCalulator(PolicyEngineCalulator):
