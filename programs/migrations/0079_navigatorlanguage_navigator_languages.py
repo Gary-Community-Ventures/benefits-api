@@ -28,8 +28,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="navigator",
             name="languages",
-            field=models.ManyToManyField(
-                blank=True, related_name="navigator", to="programs.navigatorlanguage"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="navigator", to="programs.navigatorlanguage"),
         ),
     ]
