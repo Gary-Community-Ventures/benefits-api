@@ -11,15 +11,15 @@ from .engines import Sim, pe_engines
 def calc_pe_eligibility(
     screen: Screen,
     missing_fields: Dependencies,
-    calculators: dict[str, type[PolicyEngineCalulator]],
+    calculators: dict[str, PolicyEngineCalulator],
 ) -> dict[str, Eligibility]:
-    valid_programs: dict[str, type[PolicyEngineCalulator]] = {}
+    valid_programs: dict[str, PolicyEngineCalulator] = {}
 
-    for name_abbr, Calculator in calculators.items():
-        if not Calculator.can_calc(missing_fields):
+    for name_abbr, calculator in calculators.items():
+        if not calculator.can_calc(missing_fields):
             continue
 
-        valid_programs[name_abbr] = Calculator
+        valid_programs[name_abbr] = calculator
 
     if len(valid_programs.values()) == 0 or len(screen.household_members.all()) == 0:
         return {}
@@ -36,15 +36,15 @@ def calc_pe_eligibility(
     raise Exception("Failed to calculate Policy Engine eligibility")
 
 
-def all_eligibility(method: Sim, valid_programs: dict[str, type[PolicyEngineCalulator]], screen: Screen):
+def all_eligibility(method: Sim, valid_programs: dict[str, PolicyEngineCalulator], screen: Screen):
     all_eligibility: dict[str, Eligibility] = {}
     has_non_tax_unit_members = screen.has_members_outside_of_tax_unit()
-    for name_abbr, Calculator in valid_programs.items():
-        calc = Calculator(screen, method)
+    for name_abbr, calculator in valid_programs.items():
+        calculator.set_engine(method)
 
-        e = calc.eligible()
+        e = calculator.eligible()
 
-        if Calculator.tax_unit_dependent and has_non_tax_unit_members:
+        if calculator.tax_unit_dependent and has_non_tax_unit_members:
             e.multiple_tax_units = True
 
         all_eligibility[name_abbr] = e.to_dict()
@@ -52,7 +52,7 @@ def all_eligibility(method: Sim, valid_programs: dict[str, type[PolicyEngineCalu
     return all_eligibility
 
 
-def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
+def pe_input(screen: Screen, programs: List[PolicyEngineCalulator]):
     """
     Generate Policy Engine API request from the list of programs.
     """
@@ -99,11 +99,11 @@ def pe_input(screen: Screen, programs: List[type[PolicyEngineCalulator]]):
         already_added.add(member_1)
         already_added.add(member_2)
 
-    for Program in programs:
-        for Data in Program.pe_inputs + Program.pe_outputs:
-            period = Program.pe_period
-            if hasattr(Program, "pe_output_period") and Data in Program.pe_outputs:
-                period = Program.pe_output_period
+    for program in programs:
+        for Data in program.pe_inputs + program.pe_outputs:
+            period = program.pe_period
+            if hasattr(program, "pe_output_period") and Data in program.pe_outputs:
+                period = program.pe_output_period
 
             if not Data.member:
                 data = Data(screen, members, relationship_map)
