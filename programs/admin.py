@@ -13,6 +13,7 @@ from .models import (
     WebHookFunction,
     UrgentNeedCategory,
     NavigatorCounty,
+    NavigatorLanguage,
     Document,
 )
 
@@ -91,13 +92,14 @@ class NavigatorCountiesAdmin(ModelAdmin):
     search_fields = ("name",)
 
 
+class NavigatorLanguageAdmin(ModelAdmin):
+    search_fields = ("code",)
+
+
 class NavigatorAdmin(ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "action_buttons"]
-    filter_horizontal = (
-        "program",
-        "counties",
-    )
+    filter_horizontal = ("program", "counties", "languages")
 
     def get_str(self, obj):
         return str(obj) if str(obj).strip() else "unnamed"
@@ -240,6 +242,7 @@ class WebHookFunctionsAdmin(ModelAdmin):
 admin.site.register(LegalStatus, LegalStatusAdmin)
 admin.site.register(Program, ProgramAdmin)
 admin.site.register(NavigatorCounty, NavigatorCountiesAdmin)
+admin.site.register(NavigatorLanguage, NavigatorLanguageAdmin)
 admin.site.register(Navigator, NavigatorAdmin)
 admin.site.register(UrgentNeed, UrgentNeedAdmin)
 admin.site.register(UrgentNeedCategory, UrgentNeedCategoryAdmin)

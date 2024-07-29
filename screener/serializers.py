@@ -204,6 +204,7 @@ class NavigatorSerializer(serializers.Serializer):
     email = TranslationSerializer()
     assistance_link = TranslationSerializer()
     description = TranslationSerializer()
+    languages = serializers.ListField()
 
 
 class DocumentSerializer(serializers.Serializer):

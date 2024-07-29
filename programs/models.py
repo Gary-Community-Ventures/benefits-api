@@ -304,6 +304,13 @@ class NavigatorCounty(models.Model):
         return self.name
 
 
+class NavigatorLanguage(models.Model):
+    code = models.CharField(max_length=8, unique=True)
+
+    def __str__(self) -> str:
+        return self.code
+
+
 class NavigatorManager(models.Manager):
     translated_fields = (
         "name",
@@ -338,6 +345,7 @@ class Navigator(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
     counties = models.ManyToManyField(NavigatorCounty, related_name="navigator", blank=True)
+    languages = models.ManyToManyField(NavigatorLanguage, related_name="navigator", blank=True)
 
     name = models.ForeignKey(
         Translation, related_name="navigator_name", blank=False, null=False, on_delete=models.PROTECT
