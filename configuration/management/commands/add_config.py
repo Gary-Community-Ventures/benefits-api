@@ -2611,14 +2611,14 @@ class Command(BaseCommand):
         "en-us": "https://co.myfriendben.org/en/additional-terms-and-consent-to-contact",
         "es": "https://co.myfriendben.org/es/additional-terms-and-consent-to-contact",
         "fr": "https://co.myfriendben.org/fr/additional-terms-and-consent-to-contact",
-        "vi": "https://co.myfriendben.org/vi/additional-terms-and-consent-to-contact"
+        "vi": "https://co.myfriendben.org/vi/additional-terms-and-consent-to-contact",
     }
 
     privacy_policy = {
         "en-us": "https://co.myfriendben.org/en/data-privacy-policy",
         "es": "https://co.myfriendben.org/es/data-privacy-policy",
         "fr": "https://co.myfriendben.org/fr/data-privacy-policy",
-        "vi": "https://co.myfriendben.org/vi/data-privacy-policy"
+        "vi": "https://co.myfriendben.org/vi/data-privacy-policy",
     }
 
     @transaction.atomic
