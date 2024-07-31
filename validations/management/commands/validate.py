@@ -19,10 +19,11 @@ class Result(Enum):
 
 
 class ValidationResult:
+    MAX_HEX = 255
     COLORS = {
         Result.SKIPPED: {"red": 0.6, "green": 0.6, "blue": 0.6},
-        Result.PASSED: {"red": 0, "green": 1, "blue": 0},
-        Result.FAILED: {"red": 1, "green": 0, "blue": 0},
+        Result.PASSED: {"red": 217 / MAX_HEX, "green": 234 / MAX_HEX, "blue": 211 / MAX_HEX},
+        Result.FAILED: {"red": 234 / MAX_HEX, "green": 153 / MAX_HEX, "blue": 153 / MAX_HEX},
     }
 
     def __init__(
