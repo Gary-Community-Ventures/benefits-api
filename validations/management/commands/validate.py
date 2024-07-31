@@ -20,7 +20,7 @@ class Result(Enum):
 
 class ValidationResult:
     COLORS = {
-        Result.SKIPPED: {"red": 0.5, "green": 0.5, "blue": 0.5},
+        Result.SKIPPED: {"red": 0.6, "green": 0.6, "blue": 0.6},
         Result.PASSED: {"red": 0, "green": 1, "blue": 0},
         Result.FAILED: {"red": 1, "green": 0, "blue": 0},
     }
