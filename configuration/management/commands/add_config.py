@@ -2616,7 +2616,7 @@ class Command(BaseCommand):
 
     privacy_policy = {
         "en-us": "https://co.myfriendben.org/en/data-privacy-policy",
-        "es": "https://co.myfriendben.org/es/nata-privacy-policy",
+        "es": "https://co.myfriendben.org/es/data-privacy-policy",
         "fr": "https://co.myfriendben.org/fr/data-privacy-policy",
         "vi": "https://co.myfriendben.org/vi/data-privacy-policy"
     }
