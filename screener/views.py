@@ -233,7 +233,7 @@ def eligibility_results(screen, batch=False):
 
             eligibility = pe_eligibility[program.name_abbreviated]
 
-        all_navigators = program.navigator.all().prefetch_related("counties")
+        all_navigators = program.navigator.all().prefetch_related("counties").prefetch_related("languages")
 
         county_navigators = []
         for nav in all_navigators:
@@ -332,6 +332,7 @@ def default_message(translation):
 
 def serialized_navigator(navigator):
     phone_number = str(navigator.phone_number) if navigator.phone_number else None
+    langs = [lang.code for lang in navigator.languages.all()]
     return {
         "id": navigator.id,
         "name": default_message(navigator.name),
@@ -339,6 +340,7 @@ def serialized_navigator(navigator):
         "email": default_message(navigator.email),
         "assistance_link": default_message(navigator.assistance_link),
         "description": default_message(navigator.description),
+        "languages": langs,
     }
 
 

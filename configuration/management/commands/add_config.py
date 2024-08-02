@@ -8,6 +8,28 @@ from configuration.models import (
 class Command(BaseCommand):
     help = "Create and add config data to database"
 
+    public_charge_rule = {
+        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract."
+    }
+
+    more_help_options = {
+        "moreHelpOptions": [
+            {
+                "name": {"_default_message": "2-1-1 Colorado", "_label": "moreHelp.resource_name1"},
+                "link": "https://www.211colorado.org",
+                "phone": {"_default_message": "Dial 2-1-1 or 866.760.6489", "_label": "moreHelp.resource_phone1"},
+            },
+            {
+                "name": {"_default_message": "Family Resource Center Association", "_label": "moreHelp.resource_name2"},
+                "description": {
+                    "_default_message": "Your local family resource center may be able to connect you to other resources and support services. Visit a center near you.",
+                    "_label": "moreHelp.resource_description1",
+                },
+                "link": "https://maps.cofamilycenters.org",
+            },
+        ]
+    }
+
     acute_condition_options = {
         "food": {
             "icon": {"_name": "Food", "_classname": "option-card-icon"},
@@ -2585,10 +2607,30 @@ class Command(BaseCommand):
         },
     }
 
+    consent_to_contact = {
+        "en-us": "https://co.myfriendben.org/en/additional-terms-and-consent-to-contact",
+        "es": "https://co.myfriendben.org/es/additional-terms-and-consent-to-contact",
+        "fr": "https://co.myfriendben.org/fr/additional-terms-and-consent-to-contact",
+        "vi": "https://co.myfriendben.org/vi/additional-terms-and-consent-to-contact",
+    }
+
+    privacy_policy = {
+        "en-us": "https://co.myfriendben.org/en/data-privacy-policy",
+        "es": "https://co.myfriendben.org/es/data-privacy-policy",
+        "fr": "https://co.myfriendben.org/fr/data-privacy-policy",
+        "vi": "https://co.myfriendben.org/vi/data-privacy-policy",
+    }
+
     @transaction.atomic
     def handle(self, *args, **options):
         # clear existing config
         Configuration.objects.all().delete()
+
+        # Save acute_condition_options to database
+        Configuration.objects.create(name="public_charge_rule", data=self.public_charge_rule, active=True)
+
+        # Save acute_condition_options to database
+        Configuration.objects.create(name="more_help_options", data=self.more_help_options, active=True)
 
         # Save acute_condition_options to database
         Configuration.objects.create(name="acute_condition_options", data=self.acute_condition_options, active=True)
@@ -2628,3 +2670,9 @@ class Command(BaseCommand):
 
         # Save category_benefits to database
         Configuration.objects.create(name="category_benefits", data=self.category_benefits, active=True)
+
+        # Save consent_to_contact to database
+        Configuration.objects.create(name="consent_to_contact", data=self.consent_to_contact, active=True)
+
+        # Save privacy_policy to database
+        Configuration.objects.create(name="privacy_policy", data=self.privacy_policy, active=True)
