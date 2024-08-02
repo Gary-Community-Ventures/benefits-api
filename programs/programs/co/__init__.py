@@ -24,11 +24,12 @@ from .weatherization_assistance.calculator import WeatherizationAssistance
 from .tabor.calculator import Tabor
 from .trua.calculator import Trua
 from .utility_bill_pay.calculator import UtilityBillPay
-from ..calc import ProgramCalculator
 from .rental_assistance_grant.calculator import RentalAssistanceGrant
 from .emergency_rental_assistance.calculator import EmergencyRentalAssistance
 from .denver_trash_rebate.calculator import DenverTrashRebate
 from .denver_property_tax_relief.calculator import DenverPropertyTaxRelief
+from .nurturing_futures.calculator import NurturingFutures
+from ..calc import ProgramCalculator
 
 
 co_calculators: dict[str, type[ProgramCalculator]] = {
@@ -62,4 +63,5 @@ co_calculators: dict[str, type[ProgramCalculator]] = {
     "nfp": NurseFamilyPartnership,
     "dtr": DenverTrashRebate,
     "dptr": DenverPropertyTaxRelief,
+    "nf": NurturingFutures,
 }

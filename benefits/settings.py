@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     "configuration.apps.ConfigurationConfig",
     "integrations.apps.IntegrationsConfig",
     "translations.apps.TranslationsConfig",
+    "validations.apps.ValidationsConfig",
     "rest_framework",
     "rest_framework.authtoken",
     "phonenumber_field",

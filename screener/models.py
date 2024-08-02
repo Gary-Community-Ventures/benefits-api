@@ -86,6 +86,10 @@ class Screen(models.Model):
     needs_dental_care = models.BooleanField(default=False, blank=True, null=True)
     needs_legal_services = models.BooleanField(default=False, blank=True, null=True)
 
+    @property
+    def frozen(self):
+        return self.validations.count() > 0
+
     def calc_gross_income(self, frequency, types):
         household_members = self.household_members.all()
         gross_income = 0
