@@ -2,6 +2,7 @@ from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Mess
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from translations.serializers import TranslationSerializer
+from validations.serializers import ValidationSerializer
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -83,6 +84,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "is_test_data",
             "start_date",
             "submission_date",
+            "frozen",
             "agree_to_tos",
             "is_13_or_older",
             "zipcode",
@@ -156,6 +158,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "id",
             "uuid",
             "submision_date",
+            "frozen",
             "last_email_request_date",
             "completed",
             "user",
@@ -179,6 +182,9 @@ class ScreenSerializer(serializers.ModelSerializer):
         return screen
 
     def update(self, instance, validated_data):
+        if instance.frozen:
+            return instance
+
         household_members = validated_data.pop("household_members")
         expenses = validated_data.pop("expenses")
         Screen.objects.filter(pk=instance.id).update(**validated_data)
@@ -215,6 +221,7 @@ class EligibilitySerializer(serializers.Serializer):
     description_short = TranslationSerializer()
     name = TranslationSerializer()
     name_abbreviated = serializers.CharField()
+    external_name = serializers.CharField()
     description = TranslationSerializer()
     value_type = TranslationSerializer()
     learn_more_link = TranslationSerializer()
@@ -261,3 +268,4 @@ class ResultsSerializer(serializers.Serializer):
     screen_id = serializers.CharField()
     default_language = serializers.CharField()
     missing_programs = serializers.BooleanField()
+    validations = ValidationSerializer(many=True)

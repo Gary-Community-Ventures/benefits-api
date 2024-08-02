@@ -28,6 +28,8 @@ from programs.util import DependencyError
 from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
 from programs.models import UrgentNeed, Program, Referrer
 from django.core.exceptions import ObjectDoesNotExist
+
+from validations.serializers import ValidationSerializer
 from .webhooks import eligibility_hooks
 from drf_yasg.utils import swagger_auto_schema
 import math
@@ -120,6 +122,7 @@ class EligibilityTranslationView(views.APIView):
         screen = Screen.objects.get(uuid=id)
         eligibility, missing_programs = eligibility_results(screen)
         urgent_needs = urgent_need_results(screen, eligibility)
+        validations = ValidationSerializer(screen.validations.all(), many=True).data
 
         results = {
             "programs": eligibility,
@@ -127,6 +130,7 @@ class EligibilityTranslationView(views.APIView):
             "screen_id": screen.id,
             "default_language": screen.request_language_code,
             "missing_programs": missing_programs,
+            "validations": validations,
         }
         hooks = eligibility_hooks()
         if screen.referrer_code in hooks:
@@ -282,6 +286,7 @@ def eligibility_results(screen, batch=False):
                     "program_id": program.id,
                     "name": default_message(program.name),
                     "name_abbreviated": program.name_abbreviated,
+                    "external_name": program.external_name,
                     "estimated_value": eligibility["estimated_value"],
                     "estimated_delivery_time": default_message(program.estimated_delivery_time),
                     "estimated_application_time": default_message(program.estimated_application_time),
