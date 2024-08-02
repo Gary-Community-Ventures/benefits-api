@@ -19,10 +19,11 @@ class Result(Enum):
 
 
 class ValidationResult:
+    MAX_HEX = 255
     COLORS = {
         Result.SKIPPED: {"red": 0.6, "green": 0.6, "blue": 0.6},
-        Result.PASSED: {"red": 0, "green": 1, "blue": 0},
-        Result.FAILED: {"red": 1, "green": 0, "blue": 0},
+        Result.PASSED: {"red": 217 / MAX_HEX, "green": 234 / MAX_HEX, "blue": 211 / MAX_HEX},
+        Result.FAILED: {"red": 234 / MAX_HEX, "green": 153 / MAX_HEX, "blue": 153 / MAX_HEX},
     }
 
     def __init__(
@@ -53,7 +54,7 @@ class ValidationResult:
         return f"{front_end_domain}/{self.uuid}/results/benefits{program_id}?admin=true"
 
     def format_value_change(self):
-        return f"{self.value} => {self.expected_value}"
+        return f"{self.expected_value} => {self.value}"
 
     def sheets_cell(self, value, type="stringValue", is_link=False):
         return color_cell(value, self.COLORS[self.result], type=type, is_link=is_link)
@@ -176,9 +177,9 @@ class Command(BaseCommand):
                     validation.eligible,
                     program["eligible"],
                 )
-            self._stdout_display(validation_results, options["hide_skipped"])
-            if options["sheet_id"] is not None:
-                self._google_sheet_display(validation_results, options["sheet_id"], options["hide_skipped"])
+        self._stdout_display(validation_results, options["hide_skipped"])
+        if options["sheet_id"] is not None:
+            self._google_sheet_display(validation_results, options["sheet_id"], options["hide_skipped"])
 
     def _find_program(self, validation: Validation, programs):
         for program in programs:
