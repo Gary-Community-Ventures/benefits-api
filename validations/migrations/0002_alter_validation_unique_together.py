@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("screener", "0084_screen_has_fatc"),
         ("validations", "0001_initial"),
