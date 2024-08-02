@@ -43,6 +43,6 @@ class NurturingFutures(ProgramCalculator):
         # income
         income_limit = NurturingFutures.ami.fetch()[self.screen.household_size - 1] * NurturingFutures.ami_percent
         income = self.screen.calc_gross_income("yearly", ["all"])
-        e.condition(income < income_limit, messages.income(income, income_limit))
+        e.condition(income <= income_limit, messages.income(income, income_limit))
 
         return e
