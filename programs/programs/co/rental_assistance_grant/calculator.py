@@ -39,4 +39,9 @@ class RentalAssistanceGrant(ProgramCalculator):
 
         e.condition(gross_income <= income_limit, messages.income(gross_income, income_limit))
 
+        # has rent or mortgage expense
+        has_mortgage = self.screen.has_expense(["mortgage"])
+        has_rent = self.screen.has_expense(["rent"])
+        e.condition(has_mortgage or has_rent)
+
         return e

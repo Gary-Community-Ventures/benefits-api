@@ -102,6 +102,11 @@ class DenverPropertyTaxRelief(ProgramCalculator):
                 total_income += member.calc_gross_income("yearly", DenverPropertyTaxRelief.income_types)
         e.condition(total_income <= limit, messages.income(total_income, limit))
 
+        # has rent or mortgage expense
+        has_mortgage = self.screen.has_expense(["mortgage"])
+        has_rent = self.screen.has_expense(["rent"])
+        e.condition(has_mortgage or has_rent)
+
         return e
 
     def value(self, eligible_members: int):

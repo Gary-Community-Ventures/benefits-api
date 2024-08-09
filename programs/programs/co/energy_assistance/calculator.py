@@ -45,6 +45,20 @@ class EnergyAssistance(ProgramCalculator):
 
         e.condition(leap_income < income_limit, messages.income(leap_income, income_limit))
 
+        # has rent or mortgage expense
+        has_mortgage = self.screen.has_expense(["mortgage"])
+        has_rent = self.screen.has_expense(["rent"])
+        e.condition(has_mortgage or has_rent)
+
+        return e
+
+    def value(self, eligible_members: int):
+        if self.screen.has_expense(["mortgage"]):
+            return DenverPropertyTaxRelief.mortgage_amount
+        elif self.screen.has_expense(["rent"]):
+            return DenverPropertyTaxRelief.rent_amount
+        return 0
+
         return e
 
     def value(self, eligible_members: int):

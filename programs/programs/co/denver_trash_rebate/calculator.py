@@ -35,10 +35,11 @@ class DenverTrashRebate(ProgramCalculator):
         ami = DenverTrashRebate.ami.fetch()
         limit = ami[self.screen.household_size - 1]
         income = self.screen.calc_gross_income("yearly", ["all"])
-        e.condition(income <= limit and has_rent_or_mortgage, messages.income(income, limit))
+        e.condition(income <= limit, messages.income(income, limit))
 
-        #has rent or mortgage
-        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
-        e.condition(has_rent_or_mortgage)
+        # has rent or mortgage expense
+        has_mortgage = self.screen.has_expense(["mortgage"])
+        has_rent = self.screen.has_expense(["rent"])
+        e.condition(has_mortgage or has_rent)
 
         return e

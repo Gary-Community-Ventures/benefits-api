@@ -33,8 +33,9 @@ class WeatherizationAssistance(ProgramCalculator):
                 break
         e.condition(income_eligible or categorical_eligible, messages.income(income, income_limit))
 
-        # has rent or mortgage
-        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
-        e.condition(has_rent_or_mortgage)
+        # has rent or mortgage expense
+        has_mortgage = self.screen.has_expense(["mortgage"])
+        has_rent = self.screen.has_expense(["rent"])
+        e.condition(has_mortgage or has_rent)
 
         return e
