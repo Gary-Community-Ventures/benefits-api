@@ -8,13 +8,9 @@ import json
 
 class ConfigurationAdmin(ModelAdmin):
     formfield_overrides = {
-        JSONField: {'widget': JSONEditorWidget(
-            options={
-                'modes': ['tree', 'code'],
-                'mode': 'tree',
-                'enableDrag': False
-            }
-        )},
+        JSONField: {
+            "widget": JSONEditorWidget(options={"modes": ["tree", "code"], "mode": "tree", "enableDrag": False})
+        },
     }
     search_fields = ("name",)
 
