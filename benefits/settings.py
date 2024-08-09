@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "phonenumber_field",
     "parler",
+    "django_json_widget",
     "django_filters",
     "django.contrib.admin",
     "django.contrib.auth",
