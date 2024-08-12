@@ -7,7 +7,7 @@ from integrations.services.sheets import GoogleSheetsCache
 class CFHCache(GoogleSheetsCache):
     default = {}
     sheet_id = "1tk8zfO_Ou96UvGrIwZoI3Pv8TvPZZipg7YfzGMT2o3c"
-    range_name = "'2023 report'!A2:B65"
+    range_name = "'2023 report'!A2:B101"
 
     def update(self):
         data = super().update()
