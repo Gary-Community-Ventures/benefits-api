@@ -416,6 +416,14 @@ class DenverEmergencyAssistance(UrgentNeedFunction):
 class EarlyIntervention(ChildAgeFunction):
     max_age = 2
 
+class HasRentOrMortgage(UrgentNeedFunction):
+    def eligible(self):
+        '''
+        Return True if rent or mortgage is listed as an expense
+        '''
+        has_rent_or_mortgage = self.screen.has_expense(["rent","mortgage"])
+
+        return has_rent_or_mortgage
 
 urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "denver": LivesInDenver,
