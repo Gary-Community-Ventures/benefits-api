@@ -1,3 +1,4 @@
+from typing import Optional
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from integrations.services.communications import MessageUser
@@ -194,11 +195,15 @@ def eligibility_results(screen, batch=False):
     missing_dependencies = screen.missing_fields()
 
     # pe_eligibility = eligibility_policy_engine(screen)
-    all_program_names = [p.name_abbreviated for p in all_programs]
     pe_calculators = {}
     for calculator_name, Calculator in all_calculators.items():
-        if calculator_name in all_program_names:
-            pe_calculators[calculator_name] = Calculator
+        program: Optional[Program] = None
+        for p in all_programs:
+            if calculator_name == p.name_abbreviated:
+                program = p
+
+        if program is not None:
+            pe_calculators[calculator_name] = Calculator(screen, program)
 
     pe_eligibility = calc_pe_eligibility(screen, missing_dependencies, pe_calculators)
     pe_programs = pe_calculators.keys()
