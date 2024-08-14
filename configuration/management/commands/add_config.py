@@ -2618,10 +2618,7 @@ class Command(BaseCommand):
     }
 
     referrer_data = {
-        "theme": {
-            "default": "default",
-            "211co": "twoOneOne"
-        },
+        "theme": {"default": "default", "211co": "twoOneOne"},
         "logoSource": {
             "default": "MFB_COLogo",
             "bia": "BIA_MFBLogo",
@@ -2633,70 +2630,49 @@ class Command(BaseCommand):
             "gac": "GAC_Logo",
             "fircsummitresourcecenter": "FIRC_Logo",
             "coBenefits": "CO_MFBLogo",
-            "dhs": "DHS_MFBLogo"
+            "dhs": "DHS_MFBLogo",
         },
         "logoAlt": {
-            "default": {
-                "id": "referrerHook.logoAlts.default",
-                "defaultMessage": "MyFriendBen home page button"
-            },
+            "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
             "bia": {
                 "id": "referrerHook.logoAlts.bia",
-                "defaultMessage": "Benefits in Action and MyFriendBen home page button"
+                "defaultMessage": "Benefits in Action and MyFriendBen home page button",
             },
             "jeffcoHS": {
                 "id": "referrerHook.logoAlts.jeffcoHS",
-                "defaultMessage": "Jeffco Human Services and MyFriendBen home page button"
+                "defaultMessage": "Jeffco Human Services and MyFriendBen home page button",
             },
             "jeffcoHSCM": {
                 "id": "referrerHook.logoAlts.jeffcoHSCM",
-                "defaultMessage": "Jeffco Human Services and MyFriendBen home page button"
+                "defaultMessage": "Jeffco Human Services and MyFriendBen home page button",
             },
             "cch": {
                 "id": "referrerHook.logoAlts.cch",
-                "defaultMessage": "Colorado Coalition for the Homeless and MyFriendBen home page button"
+                "defaultMessage": "Colorado Coalition for the Homeless and MyFriendBen home page button",
             },
-            "lgs": {
-                "id": "referrerHook.logoAlts.lgs",
-                "defaultMessage": "Let's Get Set home page button"
-            },
-            "gac": {
-                "id": "referrerHook.logoAlts.gac",
-                "defaultMessage": "Get Ahead Colorado home page button"
-            },
+            "lgs": {"id": "referrerHook.logoAlts.lgs", "defaultMessage": "Let's Get Set home page button"},
+            "gac": {"id": "referrerHook.logoAlts.gac", "defaultMessage": "Get Ahead Colorado home page button"},
             "fircsummitresourcecenter": {
                 "id": "referrerHook.logoAlts.fircsummitresourcecenter",
-                "defaultMessage": "Firc Summit Resource Center"
+                "defaultMessage": "Firc Summit Resource Center",
             },
-            "coBenefits": {
-                "id": "referrerHook.logoAlts.coBenefits",
-                "defaultMessage": "MyFriendBen home page button"
-            },
+            "coBenefits": {"id": "referrerHook.logoAlts.coBenefits", "defaultMessage": "MyFriendBen home page button"},
             "dhs": {
                 "id": "referrerHook.logoAlts.dhs",
-                "defaultMessage": "Denver Human Services and MyFriendBen home page button"
-            }
+                "defaultMessage": "Denver Human Services and MyFriendBen home page button",
+            },
         },
-        "logoFooterSource": {
-            "default": "MFB_Logo"
-        },
-        "logoFooterAlt": {
-            "default": {
-                "id": "footer.logo.alt",
-                "defaultMessage": "MFB Logo"
-            }
-        },
-        "logoClass": {
-            "default": "logo"
-        },
+        "logoFooterSource": {"default": "MFB_Logo"},
+        "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
+        "logoClass": {"default": "logo"},
         "twoOneOneLink": {
-            "default": "https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=\"211mfb\"",
-            "211co": "https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=whitelabel&utm_id=\"211mfb\""
+            "default": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id="211mfb"',
+            "211co": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=whitelabel&utm_id="211mfb"',
         },
         "shareLink": {
             "default": "https://screener.myfriendben.org",
-            "211co": "https://screener.myfriendben.org?referrer=\"211co\""
-        }
+            "211co": 'https://screener.myfriendben.org?referrer="211co"',
+        },
     }
 
     @transaction.atomic
