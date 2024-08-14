@@ -1,5 +1,6 @@
 import programs.programs.policyengine.calculators.dependencies as dependency
 from programs.programs.federal.pe.member import Medicaid
+from programs.programs.federal.pe.member import Wic
 
 
 class NcMedicaid(Medicaid):
@@ -15,3 +16,16 @@ class NcMedicaid(Medicaid):
     # def value(self):
     #     ...
     #     return 500
+class NcWic(Wic):
+    wic_categories = {
+        "NONE": 0,
+        "INFANT": 130,
+        "CHILD": 26,
+        "PREGNANT": 47,
+        "POSTPARTUM": 47,
+        "BREASTFEEDING": 52,
+    }
+    pe_inputs = [
+        *Wic.pe_inputs,
+        dependency.household.NcStateCode,
+    ]
