@@ -14,6 +14,10 @@ class Ctc(TaxUnit):
     field = "ctc"
 
 
+class Coctc(TaxUnit):
+    field = "co_ctc"
+
+
 class JointDependency(TaxUnit):
     field = "tax_unit_is_joint"
 
