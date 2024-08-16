@@ -1,7 +1,7 @@
 from .models import Screen
 from programs.models import Referrer
 from .serializers import ScreenSerializer
-from sentry_sdk import capture_exception
+from sentry_sdk import capture_exception, capture_message
 import requests
 
 
@@ -22,7 +22,9 @@ class Hook:
             request_data[key] = value
 
         try:
-            requests.post(self.hook.webhook_url, json=request_data)
+            res = requests.post(self.hook.webhook_url, json=request_data)
+            if res.status_code != 200:
+                capture_message(f"{res.text}", level="error")
         except requests.exceptions.RequestException as e:
             capture_exception(e)
 
