@@ -78,6 +78,7 @@ class PrivateApiSim(ApiSim):
         res = requests.post(self.pe_url, json=data, headers=headers)
 
         self.data = res.json()["result"]
+        print(self.data)
 
 
 # NOTE: Code to run Policy Engine locally. This is currently too CPU expensive to run in production.
