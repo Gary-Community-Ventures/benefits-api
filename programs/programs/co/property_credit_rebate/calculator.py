@@ -38,4 +38,8 @@ class PropertyCreditRebate(ProgramCalculator):
             messages.income(gross_income, PropertyCreditRebate.income_limit[relationship_status]),
         )
 
+        # has rent or mortgage expense
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        e.condition(has_rent_or_mortgage)
+
         return e

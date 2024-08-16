@@ -37,4 +37,8 @@ class DenverTrashRebate(ProgramCalculator):
         income = self.screen.calc_gross_income("yearly", ["all"])
         e.condition(income <= limit, messages.income(income, limit))
 
+        # has rent or mortgage expense
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        e.condition(has_rent_or_mortgage)
+
         return e
