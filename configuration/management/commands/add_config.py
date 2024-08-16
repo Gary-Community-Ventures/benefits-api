@@ -129,6 +129,7 @@ class Command(BaseCommand):
             "_default_message": "FIRC Summit Resource Center",
         },
         "dhs": "Denver Human Services",
+        "ccig": "Colorado Community Insight Group",
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
             "_default_message": "Test / Prospective Partner",
@@ -2631,6 +2632,7 @@ class Command(BaseCommand):
             "fircsummitresourcecenter": "FIRC_Logo",
             "coBenefits": "CO_MFBLogo",
             "dhs": "DHS_MFBLogo",
+            "ccig": "CCIG_Logo",
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
@@ -2660,6 +2662,10 @@ class Command(BaseCommand):
             "dhs": {
                 "id": "referrerHook.logoAlts.dhs",
                 "defaultMessage": "Denver Human Services and MyFriendBen home page button",
+            },
+            "ccig": {
+                "id": "referrerHook.logoAlts.ccig",
+                "defaultMessage": "CCIG and MyFriendBen home page button",
             },
         },
         "logoFooterSource": {"default": "MFB_Logo"},

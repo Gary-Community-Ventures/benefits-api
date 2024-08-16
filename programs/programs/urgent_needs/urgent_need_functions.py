@@ -147,6 +147,7 @@ class Trua(UrgentNeedFunction):
         household_income = self.screen.calc_gross_income("yearly", ["all"])
         income_limit = self.income_limits[self.screen.household_size]
         has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+
         return household_income <= income_limit and has_rent_or_mortgage
 
 
@@ -202,7 +203,10 @@ class Eoc(UrgentNeedFunction):
 
         income_limit = limits[self.screen.county][self.screen.household_size - 1]
 
-        return income < income_limit
+        # has rent or mortgage expense
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+
+        return income < income_limit and has_rent_or_mortgage
 
 
 class CoLegalServices(UrgentNeedFunction):
@@ -411,6 +415,16 @@ class DenverEmergencyAssistance(UrgentNeedFunction):
 
 class EarlyIntervention(ChildAgeFunction):
     max_age = 2
+
+
+class HasRentOrMortgage(UrgentNeedFunction):
+    def eligible(self):
+        """
+        Return True if rent or mortgage is listed as an expense
+        """
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+
+        return has_rent_or_mortgage
 
 
 urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {

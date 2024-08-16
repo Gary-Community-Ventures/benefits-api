@@ -164,6 +164,11 @@ class ScreenSerializer(serializers.ModelSerializer):
             "user",
             "is_test_data",
         )
+        create_only_fields = (
+            "external_id",
+            "is_test",
+            "referrer_code",
+        )
 
     def create(self, validated_data):
         household_members = validated_data.pop("household_members")
@@ -187,6 +192,11 @@ class ScreenSerializer(serializers.ModelSerializer):
 
         household_members = validated_data.pop("household_members")
         expenses = validated_data.pop("expenses")
+
+        # don't update create only fields
+        for field in self.Meta.create_only_fields:
+            validated_data.pop(field)
+
         Screen.objects.filter(pk=instance.id).update(**validated_data)
         HouseholdMember.objects.filter(screen=instance).delete()
         Expense.objects.filter(screen=instance).delete()

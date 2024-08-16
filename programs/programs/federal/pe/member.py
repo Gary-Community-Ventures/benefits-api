@@ -6,10 +6,10 @@ class Wic(PolicyEngineMembersCalculator):
     wic_categories = {
         "NONE": 0,
         "INFANT": 130,
-        "CHILD": 74,
-        "PREGNANT": 100,
-        "POSTPARTUM": 100,
-        "BREASTFEEDING": 100,
+        "CHILD": 79,
+        "PREGNANT": 104,
+        "POSTPARTUM": 104,
+        "BREASTFEEDING": 104,
     }
     pe_name = "wic"
     pe_inputs = [
