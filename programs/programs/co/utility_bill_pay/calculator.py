@@ -32,4 +32,8 @@ class UtilityBillPay(ProgramCalculator):
 
         e.condition(income < income_limit or presumptive_eligible, messages.income(income, income_limit))
 
+        # has rent or mortgage expense
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        e.condition(has_rent_or_mortgage)
+
         return e

@@ -63,9 +63,8 @@ class DenverPropertyTaxRelief(ProgramCalculator):
         e.condition(DenverPropertyTaxRelief.county in counties, messages.location())
 
         # has rent or mortgage expense
-        has_mortgage = self.screen.has_expense(["mortgage"])
-        has_rent = self.screen.has_expense(["rent"])
-        e.condition(has_mortgage or has_rent)
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        e.condition(has_rent_or_mortgage)
 
         has_child = self.screen.num_children(age_max=DenverPropertyTaxRelief.child_max_age) > 0
 
@@ -101,6 +100,10 @@ class DenverPropertyTaxRelief(ProgramCalculator):
             if member.is_head() or member.is_spouse():
                 total_income += member.calc_gross_income("yearly", DenverPropertyTaxRelief.income_types)
         e.condition(total_income <= limit, messages.income(total_income, limit))
+
+        # has rent or mortgage expense
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        e.condition(has_rent_or_mortgage)
 
         return e
 
