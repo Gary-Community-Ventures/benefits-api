@@ -2632,7 +2632,10 @@ class Command(BaseCommand):
             "fircsummitresourcecenter": "FIRC_Logo",
             "coBenefits": "CO_MFBLogo",
             "dhs": "DHS_MFBLogo",
+<<<<<<< HEAD
+=======
             "ccig": "CCIG_Logo",
+>>>>>>> e2392fe93b84572aff22d46676c4a5bf5e665fe6
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
@@ -2663,10 +2666,13 @@ class Command(BaseCommand):
                 "id": "referrerHook.logoAlts.dhs",
                 "defaultMessage": "Denver Human Services and MyFriendBen home page button",
             },
+<<<<<<< HEAD
+=======
             "ccig": {
                 "id": "referrerHook.logoAlts.ccig",
                 "defaultMessage": "CCIG and MyFriendBen home page button",
             },
+>>>>>>> e2392fe93b84572aff22d46676c4a5bf5e665fe6
         },
         "logoFooterSource": {"default": "MFB_Logo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
