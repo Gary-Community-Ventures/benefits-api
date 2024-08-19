@@ -100,7 +100,7 @@ class NavigatorLanguageAdmin(ModelAdmin):
 class NavigatorAdmin(ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "action_buttons"]
-    filter_horizontal = ("program", "counties", "languages")
+    filter_horizontal = ("programs", "counties", "languages")
 
     def get_str(self, obj):
         return str(obj) if str(obj).strip() else "unnamed"
@@ -139,6 +139,10 @@ class NavigatorAdmin(ModelAdmin):
 class WarningMessageAdmin(ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "action_buttons"]
+    filter_horizontal = (
+        "programs",
+        "counties",
+    )
 
     def get_str(self, obj):
         return str(obj)

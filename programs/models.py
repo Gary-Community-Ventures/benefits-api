@@ -343,7 +343,7 @@ class NavigatorManager(models.Manager):
 
 
 class Navigator(models.Model):
-    program = models.ManyToManyField(Program, related_name="navigator", blank=True)
+    programs = models.ManyToManyField(Program, related_name="navigator", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
     counties = models.ManyToManyField(County, related_name="navigator", blank=True)
@@ -393,13 +393,13 @@ class WarningMessageManager(models.Manager):
 
 
 class WarningMessage(models.Model):
-    program = models.ManyToManyField(Program, related_name="warning_message", blank=True)
+    programs = models.ManyToManyField(Program, related_name="warning_messages", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
-    counties = models.ManyToManyField(County, related_name="warning_message", blank=True)
+    counties = models.ManyToManyField(County, related_name="warning_messages", blank=True)
 
     message = models.ForeignKey(
-        Translation, related_name="warning_message", blank=False, null=False, on_delete=models.PROTECT
+        Translation, related_name="warning_messages", blank=False, null=False, on_delete=models.PROTECT
     )
 
     objects = WarningMessageManager()
@@ -407,7 +407,7 @@ class WarningMessage(models.Model):
     @property
     def county_names(self) -> list[str]:
         """List of county names"""
-        return [c.name for c in self.counties]
+        return [c.name for c in self.counties.all()]
 
     def __str__(self):
         return self.external_name if self.external_name is not None else self.calculator

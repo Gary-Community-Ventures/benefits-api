@@ -1,12 +1,12 @@
 from .base import WarningCalculator
-from .ineligible import DontShow
+from .dont_show import DontShow
 
 
-general_calculators = {
+general_calculators: dict[str, WarningCalculator] = {
     "_show": WarningCalculator,
     "_dont_show": DontShow,
 }
 
-specific_caculators = {}
+specific_caculators: dict[str, WarningCalculator] = {}
 
-warning_calculators = {**general_calculators, **specific_caculators}
+warning_calculators: dict[str, WarningCalculator] = {**general_calculators, **specific_caculators}

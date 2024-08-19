@@ -213,10 +213,6 @@ class NavigatorSerializer(serializers.Serializer):
     languages = serializers.ListField()
 
 
-class DocumentSerializer(serializers.Serializer):
-    text = TranslationSerializer()
-
-
 class EligibilitySerializer(serializers.Serializer):
     description_short = TranslationSerializer()
     name = TranslationSerializer()
@@ -239,9 +235,10 @@ class EligibilitySerializer(serializers.Serializer):
     already_has = serializers.BooleanField()
     new = serializers.BooleanField()
     low_confidence = serializers.BooleanField()
-    documents = DocumentSerializer(many=True)
+    documents = TranslationSerializer(many=True)
     multiple_tax_units = serializers.BooleanField()
     estimated_value_override = TranslationSerializer()
+    warning_messages = TranslationSerializer(many=True)
 
     class Meta:
         fields = "__all__"
