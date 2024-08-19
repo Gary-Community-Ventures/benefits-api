@@ -4,7 +4,7 @@ import programs.programs.messages as messages
 from integrations.services.sheets import GoogleSheetsCache
 
 
-class CFHCache(GoogleSheetsCache):
+class ACACache(GoogleSheetsCache):
     default = {}
     sheet_id = "1tk8zfO_Ou96UvGrIwZoI3Pv8TvPZZipg7YfzGMT2o3c"
     range_name = "'2023 report'!A2:B101"
@@ -18,7 +18,7 @@ class CFHCache(GoogleSheetsCache):
 class ACASubsidiesNC(ProgramCalculator):
     percent_of_fpl = 4
     dependencies = ["insurance", "income_amount", "income_frequency", "county", "household_size"]
-    county_values = CFHCache()
+    county_values = ACACache()
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
