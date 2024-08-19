@@ -13,7 +13,7 @@ from .models import (
     WarningMessage,
     WebHookFunction,
     UrgentNeedCategory,
-    NavigatorCounty,
+    County,
     NavigatorLanguage,
     Document,
 )
@@ -89,7 +89,7 @@ class LegalStatusAdmin(ModelAdmin):
     search_fields = ("status",)
 
 
-class NavigatorCountiesAdmin(ModelAdmin):
+class CountiesAdmin(ModelAdmin):
     search_fields = ("name",)
 
 
@@ -271,7 +271,7 @@ class WebHookFunctionsAdmin(ModelAdmin):
 
 admin.site.register(LegalStatus, LegalStatusAdmin)
 admin.site.register(Program, ProgramAdmin)
-admin.site.register(NavigatorCounty, NavigatorCountiesAdmin)
+admin.site.register(County, CountiesAdmin)
 admin.site.register(NavigatorLanguage, NavigatorLanguageAdmin)
 admin.site.register(Navigator, NavigatorAdmin)
 admin.site.register(WarningMessage, WarningMessageAdmin)

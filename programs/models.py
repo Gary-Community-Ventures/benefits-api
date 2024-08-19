@@ -1,4 +1,5 @@
 from django.db import models
+from googleapiclient import model
 from phonenumber_field.modelfields import PhoneNumberField
 from translations.models import Translation
 from programs.programs import calc, calculators
@@ -298,7 +299,7 @@ class UrgentNeed(models.Model):
         return self.name.text
 
 
-class NavigatorCounty(models.Model):
+class County(models.Model):
     name = models.CharField(max_length=64)
 
     def __str__(self) -> str:
@@ -345,7 +346,7 @@ class Navigator(models.Model):
     program = models.ManyToManyField(Program, related_name="navigator", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
-    counties = models.ManyToManyField(NavigatorCounty, related_name="navigator", blank=True)
+    counties = models.ManyToManyField(County, related_name="navigator", blank=True)
     languages = models.ManyToManyField(NavigatorLanguage, related_name="navigator", blank=True)
 
     name = models.ForeignKey(
@@ -395,6 +396,7 @@ class WarningMessage(models.Model):
     program = models.ManyToManyField(Program, related_name="warning_message", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
+    counties = models.ManyToManyField(County, related_name="warning_message", blank=True)
 
     message = models.ForeignKey(
         Translation, related_name="warning_message", blank=False, null=False, on_delete=models.PROTECT
