@@ -404,6 +404,11 @@ class WarningMessage(models.Model):
 
     objects = WarningMessageManager()
 
+    @property
+    def county_names(self) -> list[str]:
+        """List of county names"""
+        return [c.name for c in self.counties]
+
     def __str__(self):
         return self.external_name if self.external_name is not None else self.calculator
 
