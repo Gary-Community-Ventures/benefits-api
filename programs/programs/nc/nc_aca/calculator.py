@@ -25,6 +25,8 @@ class ACASubsidiesNC(ProgramCalculator):
         eligible_medicaid=medicaid_eligible(self.data)
         print(">>>>>>>>>>>>>eligible_medicaideligible_medicaideligible_medicaideligible_medicaid<<<<<<<<<<")
         print(eligible_medicaid)
+        print("---->>>>SELF")
+        print(self.data)
         # Medicade eligibility
         e.condition(not eligible_medicaid, messages.must_not_have_benefit("Medicaid"))
 
