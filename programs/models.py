@@ -1,7 +1,7 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from translations.models import Translation
-from programs.programs import calculators
+from programs.programs import calc, calculators
 from programs.util import Dependencies, DependencyError
 
 
@@ -365,6 +365,45 @@ class Navigator(models.Model):
 
     def __str__(self):
         return self.name.text
+
+
+class WarningMessageManager(models.Manager):
+    translated_fields = ("message",)
+
+    def new_warning(self, calculator):
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(f"warning.{calculator}_temporary_key-{field}")
+
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=calculator).count() > 0
+
+        warning = self.create(
+            external_name=calculator if not external_name_exists else None,
+            calculator=calculator,
+            **translations,
+        )
+
+        for [field, translation] in translations.items():
+            translation.label = f"navigator.{calculator}_{warning.id}-{field}"
+            translation.save()
+
+        return warning
+
+
+class WarningMessage(models.Model):
+    program = models.ManyToManyField(Program, related_name="warning_message", blank=True)
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
+    calculator = models.CharField(max_length=120, blank=False, null=False)
+
+    message = models.ForeignKey(
+        Translation, related_name="warning_message", blank=False, null=False, on_delete=models.PROTECT
+    )
+
+    objects = WarningMessageManager()
+
+    def __str__(self):
+        return self.external_name if self.external_name is not None else self.calculator
 
 
 class WebHookFunction(models.Model):

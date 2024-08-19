@@ -2,5 +2,5 @@ from programs.programs.warnings.base import WarningCalculator
 
 
 class DontShow(WarningCalculator):
-    def show(self) -> bool:
+    def eligible(self) -> bool:
         return False
