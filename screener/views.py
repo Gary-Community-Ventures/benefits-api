@@ -328,7 +328,7 @@ def eligibility_results(screen: Screen, batch=False):
                     "low_confidence": program.low_confidence,
                     "documents": [default_message(d.text) for d in program.documents.all()],
                     "multiple_tax_units": eligibility["multiple_tax_units"],
-                    "warnings": [default_message(w.message) for w in warnings],
+                    "warning_messages": [default_message(w.message) for w in warnings],
                 }
             )
 
