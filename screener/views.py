@@ -220,6 +220,8 @@ def eligibility_results(screen, batch=False):
         skip = False
         if program.name_abbreviated not in pe_programs and program.active:
             try:
+                print("------PROGRAM-------")
+                print(program.name_abbreviated)
                 eligibility = program.eligibility(screen, data, missing_dependencies)
             except DependencyError:
                 missing_programs = True
@@ -252,6 +254,7 @@ def eligibility_results(screen, batch=False):
                 navigators = referrer_navigators
 
         if previous_snapshot is not None:
+            print("SOME_SNAP- PREVIOUS SNAP", program.name_abbreviated)
             new = True
             for previous_snapshot in previous_results:
                 if (
@@ -263,6 +266,7 @@ def eligibility_results(screen, batch=False):
             new = False
 
         if not skip and program.active:
+            print("NOT SKIP", program.name_abbreviated)
             legal_status = [status.status for status in program.legal_status_required.all()]
             program_snapshots.append(
                 ProgramEligibilitySnapshot(
@@ -279,6 +283,8 @@ def eligibility_results(screen, batch=False):
                     new=new,
                 )
             )
+            print("----------APPENDING-----------")
+            print(program.name_abbreviated)
             data.append(
                 {
                     "program_id": program.id,
