@@ -202,11 +202,13 @@ def eligibility_results(screen, batch=False):
     pe_programs = pe_calculators.keys()
 
     def sort_first(program):
-        calc_first = ("tanf", "ssi", "medicaid", "nslp", "leap")
+        calc_first = ("tanf", "ssi", "medicaid", "nslp", "leap", "nc_medicaid")
 
         if program.name_abbreviated in calc_first:
+            print(program.name_abbreviated, "-0")
             return 0
         else:
+            print(program.name_abbreviated, "-1")
             return 1
 
     missing_programs = False
