@@ -17,8 +17,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="warningmessage",
             name="counties",
-            field=models.ManyToManyField(
-                blank=True, related_name="warning_message", to="programs.county"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="warning_message", to="programs.county"),
         ),
     ]

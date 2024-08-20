@@ -15,9 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="warningmessage",
             name="counties",
-            field=models.ManyToManyField(
-                blank=True, related_name="warning_messages", to="programs.county"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="warning_messages", to="programs.county"),
         ),
         migrations.AlterField(
             model_name="warningmessage",
@@ -31,8 +29,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="warningmessage",
             name="program",
-            field=models.ManyToManyField(
-                blank=True, related_name="warning_messages", to="programs.program"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="warning_messages", to="programs.program"),
         ),
     ]
