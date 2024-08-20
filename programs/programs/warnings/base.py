@@ -12,15 +12,26 @@ class WarningCalculator:
         self.missing_dependencies = missing_dependencies
 
     def calc(self) -> bool:
+        """
+        Returns whether or not to display the message
+        """
         if not self.can_calc():
             return False
 
         return self.county_eligible() and self.eligible()
 
     def eligible(self) -> bool:
+        """
+        Custom requirements for whether or not to display the message
+        """
         return True
 
     def county_eligible(self) -> bool:
+        """
+        Returns whether or not the screen county is in the list of eligible warning counties
+
+        If there are no warning counties then we assume all counties are eligible
+        """
         if len(self.warning.county_names) == 0:
             return True
 
