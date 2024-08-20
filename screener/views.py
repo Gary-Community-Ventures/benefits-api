@@ -216,6 +216,9 @@ def eligibility_results(screen, batch=False):
 
     program_snapshots = []
 
+    print("-SORTED-SORTED-")
+    print(all_programs)
+
     for program in all_programs:
         skip = False
         if program.name_abbreviated not in pe_programs and program.active:
