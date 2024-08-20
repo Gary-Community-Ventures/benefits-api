@@ -1,5 +1,5 @@
 from .models import Translation
-from programs.models import Program, Navigator, UrgentNeed, Document
+from programs.models import Program, Navigator, UrgentNeed, Document, WarningMessage
 from django.db import transaction
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -18,6 +18,7 @@ def bulk_add(translations):
     protected_translation_ids += translation_ids(Navigator)
     protected_translation_ids += translation_ids(UrgentNeed)
     protected_translation_ids += translation_ids(Document)
+    protected_translation_ids += translation_ids(WarningMessage)
 
     Program.objects.select_for_update().all()
     UrgentNeed.objects.select_for_update().all()
@@ -65,6 +66,11 @@ def bulk_add(translations):
                     obj = Document.objects.get(external_name=ref[1])
                 except ObjectDoesNotExist:
                     obj = Document.objects.new_document(ref[1])
+            elif ref[0] == "programs_warningmessage":
+                try:
+                    obj = WarningMessage.objects.get(external_name=ref[1])
+                except ObjectDoesNotExist:
+                    obj = WarningMessage.objects.new_warning(ref[1])
 
             getattr(translation, ref[2]).set([obj])
 

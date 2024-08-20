@@ -6,25 +6,28 @@ from screener.models import Screen
 class WarningCalculator:
     dependencies = tuple()
 
-    def __init__(self, screen: Screen, warning: WarningMessage):
+    def __init__(self, screen: Screen, warning: WarningMessage, missing_dependencies: Dependencies):
         self.screen = screen
         self.warning = warning
+        self.missing_dependencies = missing_dependencies
 
     def calc(self) -> bool:
+        if not self.can_calc():
+            return False
+
         return self.county_eligible() and self.eligible()
 
-    def eligible(self):
+    def eligible(self) -> bool:
         return True
 
-    def county_eligible(self):
+    def county_eligible(self) -> bool:
         if len(self.warning.county_names) == 0:
             return True
 
         return self.screen.county in self.warning.county_names
 
-    @classmethod
-    def can_calc(cls, missing_dependencies: Dependencies):
+    def can_calc(self) -> bool:
         """
         Returns whether or not the program can be calculated with the missing dependencies
         """
-        return not missing_dependencies.has(*cls.dependencies)
+        return not self.missing_dependencies.has(*self.dependencies)

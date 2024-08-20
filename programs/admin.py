@@ -138,7 +138,7 @@ class NavigatorAdmin(ModelAdmin):
 
 class WarningMessageAdmin(ModelAdmin):
     search_fields = ("external_name",)
-    list_display = ["get_str", "action_buttons"]
+    list_display = ["get_str", "calculator", "action_buttons"]
     filter_horizontal = (
         "programs",
         "counties",

@@ -371,16 +371,19 @@ class Navigator(models.Model):
 class WarningMessageManager(models.Manager):
     translated_fields = ("message",)
 
-    def new_warning(self, calculator):
+    def new_warning(self, calculator, external_name=None):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(f"warning.{calculator}_temporary_key-{field}")
 
+        if external_name is None:
+            external_name = calculator
+
         # try to set the external_name to the name
-        external_name_exists = self.filter(external_name=calculator).count() > 0
+        external_name_exists = self.filter(external_name=external_name).count() > 0
 
         warning = self.create(
-            external_name=calculator if not external_name_exists else None,
+            external_name=external_name if not external_name_exists else None,
             calculator=calculator,
             **translations,
         )

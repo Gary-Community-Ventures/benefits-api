@@ -166,7 +166,7 @@ class MessageViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         return Response({}, status=status.HTTP_201_CREATED)
 
 
-def eligibility_results(screen, batch=False):
+def eligibility_results(screen: Screen, batch=False):
     try:
         referrer = Referrer.objects.get(referrer_code=screen.referrer_code)
     except ObjectDoesNotExist:
@@ -238,6 +238,17 @@ def eligibility_results(screen, batch=False):
 
             eligibility = pe_eligibility[program.name_abbreviated]
 
+        if previous_snapshot is not None:
+            new = True
+            for previous_snapshot in previous_results:
+                if (
+                    previous_snapshot.name_abbreviated == program.name_abbreviated
+                    and eligibility["eligible"] == previous_snapshot.eligible
+                ):
+                    new = False
+        else:
+            new = False
+
         warnings = []
         navigators = []
 
@@ -263,22 +274,11 @@ def eligibility_results(screen, batch=False):
                 else:
                     navigators = referrer_navigators
 
-            if previous_snapshot is not None:
-                new = True
-                for previous_snapshot in previous_results:
-                    if (
-                        previous_snapshot.name_abbreviated == program.name_abbreviated
-                        and eligibility["eligible"] == previous_snapshot.eligible
-                    ):
-                        new = False
-            else:
-                new = False
-
             for warning in program.warning_messages.all():
                 if warning.calculator not in warning_calculators:
                     raise Exception(f"{warning.calculator} is not a valid calculator name")
 
-                warning_calculator = warning_calculators[warning.calculator](screen, warning)
+                warning_calculator = warning_calculators[warning.calculator](screen, warning, missing_dependencies)
 
                 if warning_calculator.calc():
                     warnings.append(warning)
