@@ -67,15 +67,15 @@ class PolicyEngineCalulator(ProgramCalculator):
         return True
 
 
+class PolicyEngineSpmCalulator(PolicyEngineCalulator):
+    pe_category = "spm_units"
+    pe_sub_category = "spm_unit"
+
+
 class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
     pe_category = "tax_units"
     pe_sub_category = "tax_unit"
     tax_unit_dependent = True
-
-
-class PolicyEngineSpmCalulator(PolicyEngineCalulator):
-    pe_category = "spm_units"
-    pe_sub_category = "spm_unit"
 
 
 class PolicyEngineMembersCalculator(PolicyEngineCalulator):
