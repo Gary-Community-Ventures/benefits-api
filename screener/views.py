@@ -2,6 +2,7 @@ from typing import Optional
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from integrations.services.communications import MessageUser
+from programs.programs.helpers import STATE_MEDICAID_OPTIONS
 from programs.programs.policyengine.calculators import all_calculators
 from screener.models import (
     Screen,
@@ -209,7 +210,7 @@ def eligibility_results(screen, batch=False):
     pe_programs = pe_calculators.keys()
 
     def sort_first(program):
-        calc_first = ("tanf", "ssi", "medicaid", "nslp", "leap")
+        calc_first = ("tanf", "ssi", "nslp", "leap", *STATE_MEDICAID_OPTIONS)
 
         if program.name_abbreviated in calc_first:
             return 0
