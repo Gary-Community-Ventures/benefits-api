@@ -44,16 +44,9 @@ class FplCache(Cache):
 
 class FederalPoveryLimit(models.Model):
     year = models.CharField(max_length=32, unique=True)
-    has_1_person = models.IntegerField()
-    has_2_people = models.IntegerField()
-    has_3_people = models.IntegerField()
-    has_4_people = models.IntegerField()
-    has_5_people = models.IntegerField()
-    has_6_people = models.IntegerField()
-    has_7_people = models.IntegerField()
-    has_8_people = models.IntegerField()
-    additional = models.IntegerField()
-    pe_period = models.CharField(max_length=32)
+    period = models.CharField(max_length=32)
+
+    fpl_cache = FplCache()
 
     MAX_DEFINED_SIZE = 8
 
@@ -64,19 +57,10 @@ class FederalPoveryLimit(models.Model):
             return limits[household_size]
 
         additional_member_count = household_size - self.MAX_DEFINED_SIZE
-        return limits[self.MAX_DEFINED_SIZE] + self.additional * additional_member_count
+        return limits[self.MAX_DEFINED_SIZE] + limits['additional'] * additional_member_count
 
     def as_dict(self):
-        return {
-            1: self.has_1_person,
-            2: self.has_2_people,
-            3: self.has_3_people,
-            4: self.has_4_people,
-            5: self.has_5_people,
-            6: self.has_6_people,
-            7: self.has_7_people,
-            8: self.has_8_people,
-        }
+        return self.fpl_cache.fetch()[self.period]
 
     def __str__(self):
         return self.year
