@@ -8,38 +8,38 @@ from programs.util import Dependencies, DependencyError
 import requests
 from integrations.util.cache import Cache
 
+
 class FplCache(Cache):
-    expire_time = 60 * 60 * 24 # 24 hours
+    expire_time = 60 * 60 * 24  # 24 hours
     default = {}
     api_url = "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/api/"
     max_household_size = 8
 
-    #need to obtain the FPL for each of these years for hhSizes 1-8 and return that as a dictionary to match the current fpl dictionary
+    # need to obtain the FPL for each of these years for hhSizes 1-8 and return that as a dictionary to match the current fpl dictionary
     def update(self):
-    #need to obtain all of the years that we have data for on the backend
-    #we do this by querying the backend this needs to happen in update because anything below these functions won't run
+        # need to obtain all of the years that we have data for on the backend
+        # we do this by querying the backend this needs to happen in update because anything below these functions won't run
         fpls = FederalPoveryLimit.objects.filter(fpl__isnull=False).distinct()
         fpl_dict = {}
         for fpl in fpls:
             household_sz_fpl = {}
-            #now we want to request the fpl from the api
+            # now we want to request the fpl from the api
             for i in range(1, self.max_household_size + 1):
                 data = self._fetch_income_limit(fpl.period, str(i))
                 household_sz_fpl[i] = data
                 if i == self.max_household_size:
                     income_limit_extra_member = self._fetch_income_limit(fpl.period, str(self.max_household_size + 1))
-                    household_sz_fpl['additional'] = income_limit_extra_member - data
+                    household_sz_fpl["additional"] = income_limit_extra_member - data
             fpl_dict[fpl.period] = household_sz_fpl
         return fpl_dict
 
     def _fetch_income_limit(self, year: str, household_size: str):
         response = requests.get(self._fpl_url(year, household_size))
-        response.raise_for_status() # Raise an exception for any unsuccessful request
-        return int(response.json()['data']['income'])
+        response.raise_for_status()  # Raise an exception for any unsuccessful request
+        return int(response.json()["data"]["income"])
 
-    def _fpl_url(self, year: str, household_size: str): #underscore for functions that are only used in this class
+    def _fpl_url(self, year: str, household_size: str):  # underscore for functions that are only used in this class
         return self.api_url + year + "/us/" + household_size
-
 
 
 class FederalPoveryLimit(models.Model):
@@ -57,7 +57,7 @@ class FederalPoveryLimit(models.Model):
             return limits[household_size]
 
         additional_member_count = household_size - self.MAX_DEFINED_SIZE
-        return limits[self.MAX_DEFINED_SIZE] + limits['additional'] * additional_member_count
+        return limits[self.MAX_DEFINED_SIZE] + limits["additional"] * additional_member_count
 
     def as_dict(self):
         return self.fpl_cache.fetch()[self.period]
