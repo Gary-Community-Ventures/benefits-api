@@ -31,7 +31,6 @@ def calc_pe_eligibility(
         try:
             return all_eligibility(Method(input_data), valid_programs, screen)
         except Exception as e:
-            print(repr(e))
             capture_exception(e, level="warning", message="")
             capture_message(f"Failed to calculate eligibility with the {Method.method_name} method", level="warning")
 
