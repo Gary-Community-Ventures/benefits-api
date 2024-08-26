@@ -23,6 +23,7 @@ class FplCache(Cache):
         fpl_dict = {}
         for fpl in fpls:
             household_sz_fpl = {}
+            #get the FPL for the household sizes 1-8
             for i in range(1, self.max_household_size + 1):
                 data = self._fetch_income_limit(fpl.period, str(i))
                 household_sz_fpl[i] = data
@@ -33,11 +34,17 @@ class FplCache(Cache):
         return fpl_dict
 
     def _fetch_income_limit(self, year: str, household_size: str):
+        '''
+        Request the FPL from the API for the indicated year and household size
+        '''
         response = requests.get(self._fpl_url(year, household_size))
         response.raise_for_status()
         return int(response.json()["data"]["income"])
 
     def _fpl_url(self, year: str, household_size: str):
+        '''
+        The URL to request the FPL for a year and household size
+        '''
         return self.api_url + year + "/us/" + household_size
 
 
