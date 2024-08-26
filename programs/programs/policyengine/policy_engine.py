@@ -31,6 +31,7 @@ def calc_pe_eligibility(
         try:
             return all_eligibility(Method(input_data), valid_programs, screen)
         except Exception as e:
+            print(repr(e))
             capture_exception(e, level="warning", message="")
             capture_message(f"Failed to calculate eligibility with the {Method.method_name} method", level="warning")
 
@@ -138,6 +139,9 @@ def pe_input(screen: Screen, programs: List[PolicyEngineCalulator]):
                 unit = raw_input["household"][data.unit][data.sub_unit]
 
                 update_unit(unit, data, period)
+
+    if len(secondary_tax_members) == 0:
+        del raw_input["household"]["tax_units"][SECONDARY_TAX_UNIT]
 
     return raw_input
 
