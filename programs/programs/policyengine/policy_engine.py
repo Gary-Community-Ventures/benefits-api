@@ -139,6 +139,7 @@ def pe_input(screen: Screen, programs: List[PolicyEngineCalulator]):
 
                 update_unit(unit, data, period)
 
+    # delete the second tax unit if it is empty because PE can't handle empty tax units
     if len(secondary_tax_members) == 0:
         del raw_input["household"]["tax_units"][SECONDARY_TAX_UNIT]
 
