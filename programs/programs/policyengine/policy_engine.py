@@ -145,6 +145,7 @@ def pe_input(screen: Screen, programs: List[PolicyEngineCalulator]):
 
     return raw_input
 
+
 def update_unit(unit, data: PolicyEngineCalulator, period: str):
     value = data.value()
     if data.field in unit and period in unit[data.field]:
