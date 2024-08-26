@@ -15,15 +15,14 @@ class FplCache(Cache):
     api_url = "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/api/"
     max_household_size = 8
 
-    # need to obtain the FPL for each of these years for hhSizes 1-8 and return that as a dictionary to match the current fpl dictionary
     def update(self):
-        # need to obtain all of the years that we have data for on the backend
-        # we do this by querying the backend this needs to happen in update because anything below these functions won't run
+        '''
+        Get FPLs for all relevant years using the official ASPE Poverty Guidelines API
+        '''
         fpls = FederalPoveryLimit.objects.filter(fpl__isnull=False).distinct()
         fpl_dict = {}
         for fpl in fpls:
             household_sz_fpl = {}
-            # now we want to request the fpl from the api
             for i in range(1, self.max_household_size + 1):
                 data = self._fetch_income_limit(fpl.period, str(i))
                 household_sz_fpl[i] = data
@@ -35,10 +34,10 @@ class FplCache(Cache):
 
     def _fetch_income_limit(self, year: str, household_size: str):
         response = requests.get(self._fpl_url(year, household_size))
-        response.raise_for_status()  # Raise an exception for any unsuccessful request
+        response.raise_for_status()
         return int(response.json()["data"]["income"])
 
-    def _fpl_url(self, year: str, household_size: str):  # underscore for functions that are only used in this class
+    def _fpl_url(self, year: str, household_size: str):
         return self.api_url + year + "/us/" + household_size
 
 
