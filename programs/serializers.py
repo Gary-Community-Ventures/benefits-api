@@ -1,6 +1,6 @@
 from programs.models import Program, UrgentNeed, Navigator
 from rest_framework import serializers
-from translations.serializers import ModelTranslationSerializer, TranslationSerializer
+from translations.serializers import ModelTranslationSerializer
 
 
 class NavigatorAPISerializer(serializers.ModelSerializer):

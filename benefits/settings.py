@@ -264,6 +264,11 @@ UNFOLD = {
                         "link": reverse_lazy("admin:programs_navigator_changelist"),
                     },
                     {
+                        "title": _("Warning Messages"),
+                        "icon": "error",
+                        "link": reverse_lazy("admin:programs_warningmessage_changelist"),
+                    },
+                    {
                         "title": _("Configurations"),
                         "icon": "tune",
                         "link": reverse_lazy("admin:configuration_configuration_changelist"),

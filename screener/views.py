@@ -2,6 +2,7 @@ from typing import Optional
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from integrations.services.communications import MessageUser
+from programs.programs.helpers import STATE_MEDICAID_OPTIONS
 from programs.programs.policyengine.calculators import all_calculators
 from screener.models import (
     Screen,
@@ -27,9 +28,9 @@ from screener.serializers import (
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError
 from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
-from programs.models import UrgentNeed, Program, Referrer
+from programs.models import UrgentNeed, Program, Referrer, WarningMessage
 from django.core.exceptions import ObjectDoesNotExist
-
+from programs.programs.warnings import warning_calculators
 from validations.serializers import ValidationSerializer
 from .webhooks import eligibility_hooks
 from drf_yasg.utils import swagger_auto_schema
@@ -166,7 +167,7 @@ class MessageViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         return Response({}, status=status.HTTP_201_CREATED)
 
 
-def eligibility_results(screen, batch=False):
+def eligibility_results(screen: Screen, batch=False):
     try:
         referrer = Referrer.objects.get(referrer_code=screen.referrer_code)
     except ObjectDoesNotExist:
@@ -179,7 +180,7 @@ def eligibility_results(screen, batch=False):
     all_programs = (
         Program.objects.filter(active=True)
         .exclude(id__in=excluded_programs)
-        .prefetch_related("legal_status_required", "documents")
+        .prefetch_related("legal_status_required", "documents", "warning_messages")
     )
     data = []
 
@@ -209,7 +210,7 @@ def eligibility_results(screen, batch=False):
     pe_programs = pe_calculators.keys()
 
     def sort_first(program):
-        calc_first = ("tanf", "ssi", "medicaid", "nslp", "leap")
+        calc_first = ("tanf", "ssi", "nslp", "leap", *STATE_MEDICAID_OPTIONS)
 
         if program.name_abbreviated in calc_first:
             return 0
@@ -238,26 +239,6 @@ def eligibility_results(screen, batch=False):
 
             eligibility = pe_eligibility[program.name_abbreviated]
 
-        all_navigators = program.navigator.all().prefetch_related("counties").prefetch_related("languages")
-
-        county_navigators = []
-        for nav in all_navigators:
-            counties = nav.counties.all()
-            if len(counties) == 0 or (
-                screen.county is not None and any(screen.county in county.name for county in counties)
-            ):
-                county_navigators.append(nav)
-
-        if referrer is None:
-            navigators = county_navigators
-        else:
-            primary_navigators = referrer.primary_navigators.all()
-            referrer_navigators = [nav for nav in primary_navigators if nav in county_navigators]
-            if len(referrer_navigators) == 0:
-                navigators = county_navigators
-            else:
-                navigators = referrer_navigators
-
         if previous_snapshot is not None:
             new = True
             for previous_snapshot in previous_results:
@@ -268,6 +249,40 @@ def eligibility_results(screen, batch=False):
                     new = False
         else:
             new = False
+
+        warnings = []
+        navigators = []
+
+        # don't calculate navigator and warnings for ineligible programs
+        if eligibility["eligible"]:
+            all_navigators = program.navigator.all().prefetch_related("counties").prefetch_related("languages")
+
+            county_navigators = []
+            for nav in all_navigators:
+                counties = nav.counties.all()
+                if len(counties) == 0 or (
+                    screen.county is not None and any(screen.county in county.name for county in counties)
+                ):
+                    county_navigators.append(nav)
+
+            if referrer is None:
+                navigators = county_navigators
+            else:
+                primary_navigators = referrer.primary_navigators.all()
+                referrer_navigators = [nav for nav in primary_navigators if nav in county_navigators]
+                if len(referrer_navigators) == 0:
+                    navigators = county_navigators
+                else:
+                    navigators = referrer_navigators
+
+            for warning in program.warning_messages.all():
+                if warning.calculator not in warning_calculators:
+                    raise Exception(f"{warning.calculator} is not a valid calculator name")
+
+                warning_calculator = warning_calculators[warning.calculator](screen, warning, missing_dependencies)
+
+                if warning_calculator.calc():
+                    warnings.append(warning)
 
         if not skip and program.active:
             legal_status = [status.status for status in program.legal_status_required.all()]
@@ -314,6 +329,7 @@ def eligibility_results(screen, batch=False):
                     "low_confidence": program.low_confidence,
                     "documents": [default_message(d.text) for d in program.documents.all()],
                     "multiple_tax_units": eligibility["multiple_tax_units"],
+                    "warning_messages": [default_message(w.message) for w in warnings],
                 }
             )
 

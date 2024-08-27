@@ -445,4 +445,5 @@ urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "snap_employment": SnapEmployment,
     "eic": EarlyIntervention,
     "deap": DenverEmergencyAssistance,
+    "has_rent_or_mtg": HasRentOrMortgage,
 }
