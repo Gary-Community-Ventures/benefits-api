@@ -10,9 +10,10 @@ from .models import (
     UrgentNeedFunction,
     FederalPoveryLimit,
     Referrer,
+    WarningMessage,
     WebHookFunction,
     UrgentNeedCategory,
-    NavigatorCounty,
+    County,
     NavigatorLanguage,
     Document,
 )
@@ -88,7 +89,7 @@ class LegalStatusAdmin(ModelAdmin):
     search_fields = ("status",)
 
 
-class NavigatorCountiesAdmin(ModelAdmin):
+class CountiesAdmin(ModelAdmin):
     search_fields = ("name",)
 
 
@@ -99,7 +100,7 @@ class NavigatorLanguageAdmin(ModelAdmin):
 class NavigatorAdmin(ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "action_buttons"]
-    filter_horizontal = ("program", "counties", "languages")
+    filter_horizontal = ("programs", "counties", "languages")
 
     def get_str(self, obj):
         return str(obj) if str(obj).strip() else "unnamed"
@@ -129,6 +130,39 @@ class NavigatorAdmin(ModelAdmin):
             reverse("translation_admin_url", args=[email.id]),
             reverse("translation_admin_url", args=[assistance_link.id]),
             reverse("translation_admin_url", args=[description.id]),
+        )
+
+    action_buttons.short_description = "Translate:"
+    action_buttons.allow_tags = True
+
+
+class WarningMessageAdmin(ModelAdmin):
+    search_fields = ("external_name",)
+    list_display = ["get_str", "calculator", "action_buttons"]
+    filter_horizontal = (
+        "programs",
+        "counties",
+    )
+
+    def get_str(self, obj):
+        return str(obj)
+
+    get_str.admin_order_field = "external_name"
+    get_str.short_description = "Name"
+
+    def action_buttons(self, obj):
+        message = obj.message
+
+        return format_html(
+            """
+            <div class="dropdown">
+                <span class="dropdown-btn material-symbols-outlined"> menu </span>
+                <div class="dropdown-content">
+                    <a href="{}">Warning message</a>
+                </div>
+            </div>
+            """,
+            reverse("translation_admin_url", args=[message.id]),
         )
 
     action_buttons.short_description = "Translate:"
@@ -241,9 +275,10 @@ class WebHookFunctionsAdmin(ModelAdmin):
 
 admin.site.register(LegalStatus, LegalStatusAdmin)
 admin.site.register(Program, ProgramAdmin)
-admin.site.register(NavigatorCounty, NavigatorCountiesAdmin)
+admin.site.register(County, CountiesAdmin)
 admin.site.register(NavigatorLanguage, NavigatorLanguageAdmin)
 admin.site.register(Navigator, NavigatorAdmin)
+admin.site.register(WarningMessage, WarningMessageAdmin)
 admin.site.register(UrgentNeed, UrgentNeedAdmin)
 admin.site.register(UrgentNeedCategory, UrgentNeedCategoryAdmin)
 admin.site.register(UrgentNeedFunction, UrgentNeedFunctionAdmin)

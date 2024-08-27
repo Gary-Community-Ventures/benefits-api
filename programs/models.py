@@ -1,6 +1,8 @@
 from django.db import models
+from googleapiclient import model
 from phonenumber_field.modelfields import PhoneNumberField
 from translations.models import Translation
+from programs.programs import calc, calculators
 from programs.programs import calculators
 from programs.programs.fpl import FplCache
 from programs.util import Dependencies, DependencyError
@@ -325,7 +327,7 @@ class UrgentNeed(models.Model):
         return self.name.text
 
 
-class NavigatorCounty(models.Model):
+class County(models.Model):
     name = models.CharField(max_length=64)
 
     def __str__(self) -> str:
@@ -369,10 +371,10 @@ class NavigatorManager(models.Manager):
 
 
 class Navigator(models.Model):
-    program = models.ManyToManyField(Program, related_name="navigator", blank=True)
+    programs = models.ManyToManyField(Program, related_name="navigator", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
-    counties = models.ManyToManyField(NavigatorCounty, related_name="navigator", blank=True)
+    counties = models.ManyToManyField(County, related_name="navigator", blank=True)
     languages = models.ManyToManyField(NavigatorLanguage, related_name="navigator", blank=True)
 
     name = models.ForeignKey(
@@ -392,6 +394,54 @@ class Navigator(models.Model):
 
     def __str__(self):
         return self.name.text
+
+
+class WarningMessageManager(models.Manager):
+    translated_fields = ("message",)
+
+    def new_warning(self, calculator, external_name=None):
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(f"warning.{calculator}_temporary_key-{field}")
+
+        if external_name is None:
+            external_name = calculator
+
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=external_name).count() > 0
+
+        warning = self.create(
+            external_name=external_name if not external_name_exists else None,
+            calculator=calculator,
+            **translations,
+        )
+
+        for [field, translation] in translations.items():
+            translation.label = f"navigator.{calculator}_{warning.id}-{field}"
+            translation.save()
+
+        return warning
+
+
+class WarningMessage(models.Model):
+    programs = models.ManyToManyField(Program, related_name="warning_messages", blank=True)
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
+    calculator = models.CharField(max_length=120, blank=False, null=False)
+    counties = models.ManyToManyField(County, related_name="warning_messages", blank=True)
+
+    message = models.ForeignKey(
+        Translation, related_name="warning_messages", blank=False, null=False, on_delete=models.PROTECT
+    )
+
+    objects = WarningMessageManager()
+
+    @property
+    def county_names(self) -> list[str]:
+        """List of county names"""
+        return [c.name for c in self.counties.all()]
+
+    def __str__(self):
+        return self.external_name if self.external_name is not None else self.calculator
 
 
 class WebHookFunction(models.Model):
