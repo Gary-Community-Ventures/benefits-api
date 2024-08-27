@@ -1,10 +1,7 @@
 from django.db import models
-from googleapiclient import model
 from phonenumber_field.modelfields import PhoneNumberField
 from translations.models import Translation
-from programs.programs import calc, calculators
 from programs.programs import calculators
-from programs.programs.fpl import FplCache
 from programs.util import Dependencies, DependencyError
 
 import requests
