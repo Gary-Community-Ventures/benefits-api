@@ -2,21 +2,57 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from translations.models import Translation
 from programs.programs import calculators
+from programs.programs.fpl import FplCache
 from programs.util import Dependencies, DependencyError
+
+import requests
+from integrations.util.cache import Cache
+
+
+class FplCache(Cache):
+    expire_time = 60 * 60 * 24  # 24 hours
+    default = {}
+    api_url = "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/api/"
+    max_household_size = 8
+
+    def update(self):
+        """
+        Get FPLs for all relevant years using the official ASPE Poverty Guidelines API
+        """
+        fpls = FederalPoveryLimit.objects.filter(fpl__isnull=False).distinct()
+        fpl_dict = {}
+        for fpl in fpls:
+            household_sz_fpl = {}
+            # get the FPL for the household sizes 1-8
+            for i in range(1, self.max_household_size + 1):
+                data = self._fetch_income_limit(fpl.period, str(i))
+                household_sz_fpl[i] = data
+                if i == self.max_household_size:
+                    income_limit_extra_member = self._fetch_income_limit(fpl.period, str(self.max_household_size + 1))
+                    household_sz_fpl["additional"] = income_limit_extra_member - data
+            fpl_dict[fpl.period] = household_sz_fpl
+        return fpl_dict
+
+    def _fetch_income_limit(self, year: str, household_size: str):
+        """
+        Request the FPL from the API for the indicated year and household size
+        """
+        response = requests.get(self._fpl_url(year, household_size))
+        response.raise_for_status()
+        return int(response.json()["data"]["income"])
+
+    def _fpl_url(self, year: str, household_size: str):
+        """
+        The URL to request the FPL for a year and household size
+        """
+        return self.api_url + year + "/us/" + household_size
 
 
 class FederalPoveryLimit(models.Model):
     year = models.CharField(max_length=32, unique=True)
-    has_1_person = models.IntegerField()
-    has_2_people = models.IntegerField()
-    has_3_people = models.IntegerField()
-    has_4_people = models.IntegerField()
-    has_5_people = models.IntegerField()
-    has_6_people = models.IntegerField()
-    has_7_people = models.IntegerField()
-    has_8_people = models.IntegerField()
-    additional = models.IntegerField()
-    pe_period = models.CharField(max_length=32)
+    period = models.CharField(max_length=32)
+
+    fpl_cache = FplCache()
 
     MAX_DEFINED_SIZE = 8
 
@@ -27,19 +63,10 @@ class FederalPoveryLimit(models.Model):
             return limits[household_size]
 
         additional_member_count = household_size - self.MAX_DEFINED_SIZE
-        return limits[self.MAX_DEFINED_SIZE] + self.additional * additional_member_count
+        return limits[self.MAX_DEFINED_SIZE] + limits["additional"] * additional_member_count
 
     def as_dict(self):
-        return {
-            1: self.has_1_person,
-            2: self.has_2_people,
-            3: self.has_3_people,
-            4: self.has_4_people,
-            5: self.has_5_people,
-            6: self.has_6_people,
-            7: self.has_7_people,
-            8: self.has_8_people,
-        }
+        return self.fpl_cache.fetch()[self.period]
 
     def __str__(self):
         return self.year
