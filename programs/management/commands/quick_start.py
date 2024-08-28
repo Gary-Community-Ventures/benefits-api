@@ -15,16 +15,7 @@ class Command(BaseCommand):
     help = "create programs, navigators, urgent needs, and other starting database stuff"
 
     fpl = {
-        1: 13_590,
-        2: 18_130,
-        3: 23_030,
-        4: 27_750,
-        5: 27_750,
-        6: 37_190,
-        7: 41_910,
-        8: 41_910,
-        "additional": 5380,
-        "pe_period": "2024",
+        "period": "2024",
     }
     legal_statuses = [
         "gc_under18_no5",
@@ -137,16 +128,7 @@ class Command(BaseCommand):
         # create FPL
         fpl = FederalPoveryLimit.objects.create(
             year="THIS YEAR",
-            has_1_person=self.fpl[1],
-            has_2_people=self.fpl[2],
-            has_3_people=self.fpl[3],
-            has_4_people=self.fpl[4],
-            has_5_people=self.fpl[5],
-            has_6_people=self.fpl[6],
-            has_7_people=self.fpl[7],
-            has_8_people=self.fpl[8],
-            additional=self.fpl["additional"],
-            pe_period=self.fpl["pe_period"],
+            period=self.fpl["period"],
         )
 
         # create legal statuses

@@ -4,19 +4,54 @@ from translations.models import Translation
 from programs.programs import calculators
 from programs.util import Dependencies, DependencyError
 
+import requests
+from integrations.util.cache import Cache
+
+
+class FplCache(Cache):
+    expire_time = 60 * 60 * 24  # 24 hours
+    default = {}
+    api_url = "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/api/"
+    max_household_size = 8
+
+    def update(self):
+        """
+        Get FPLs for all relevant years using the official ASPE Poverty Guidelines API
+        """
+        fpls = FederalPoveryLimit.objects.filter(fpl__isnull=False).distinct()
+        fpl_dict = {}
+        for fpl in fpls:
+            household_sz_fpl = {}
+            # get the FPL for the household sizes 1-8
+            for i in range(1, self.max_household_size + 1):
+                data = self._fetch_income_limit(fpl.period, str(i))
+                household_sz_fpl[i] = data
+                if i == self.max_household_size:
+                    income_limit_extra_member = self._fetch_income_limit(fpl.period, str(self.max_household_size + 1))
+                    household_sz_fpl["additional"] = income_limit_extra_member - data
+            fpl_dict[fpl.period] = household_sz_fpl
+        return fpl_dict
+
+    def _fetch_income_limit(self, year: str, household_size: str):
+        """
+        Request the FPL from the API for the indicated year and household size
+        """
+        response = requests.get(self._fpl_url(year, household_size))
+        response.raise_for_status()
+        return int(response.json()["data"]["income"])
+
+    def _fpl_url(self, year: str, household_size: str):
+        """
+        The URL to request the FPL for a year and household size
+        """
+        return self.api_url + year + "/us/" + household_size
+
 
 class FederalPoveryLimit(models.Model):
     year = models.CharField(max_length=32, unique=True)
-    has_1_person = models.IntegerField()
-    has_2_people = models.IntegerField()
-    has_3_people = models.IntegerField()
-    has_4_people = models.IntegerField()
-    has_5_people = models.IntegerField()
-    has_6_people = models.IntegerField()
-    has_7_people = models.IntegerField()
-    has_8_people = models.IntegerField()
-    additional = models.IntegerField()
-    pe_period = models.CharField(max_length=32)
+    period = models.CharField(max_length=32)
+
+    fpl_cache = FplCache()
 
     MAX_DEFINED_SIZE = 8
 
@@ -27,19 +62,10 @@ class FederalPoveryLimit(models.Model):
             return limits[household_size]
 
         additional_member_count = household_size - self.MAX_DEFINED_SIZE
-        return limits[self.MAX_DEFINED_SIZE] + self.additional * additional_member_count
+        return limits[self.MAX_DEFINED_SIZE] + limits["additional"] * additional_member_count
 
     def as_dict(self):
-        return {
-            1: self.has_1_person,
-            2: self.has_2_people,
-            3: self.has_3_people,
-            4: self.has_4_people,
-            5: self.has_5_people,
-            6: self.has_6_people,
-            7: self.has_7_people,
-            8: self.has_8_people,
-        }
+        return self.fpl_cache.fetch()[self.period]
 
     def __str__(self):
         return self.year
@@ -298,7 +324,7 @@ class UrgentNeed(models.Model):
         return self.name.text
 
 
-class NavigatorCounty(models.Model):
+class County(models.Model):
     name = models.CharField(max_length=64)
 
     def __str__(self) -> str:
@@ -342,10 +368,10 @@ class NavigatorManager(models.Manager):
 
 
 class Navigator(models.Model):
-    program = models.ManyToManyField(Program, related_name="navigator", blank=True)
+    programs = models.ManyToManyField(Program, related_name="navigator", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
-    counties = models.ManyToManyField(NavigatorCounty, related_name="navigator", blank=True)
+    counties = models.ManyToManyField(County, related_name="navigator", blank=True)
     languages = models.ManyToManyField(NavigatorLanguage, related_name="navigator", blank=True)
 
     name = models.ForeignKey(
@@ -365,6 +391,54 @@ class Navigator(models.Model):
 
     def __str__(self):
         return self.name.text
+
+
+class WarningMessageManager(models.Manager):
+    translated_fields = ("message",)
+
+    def new_warning(self, calculator, external_name=None):
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(f"warning.{calculator}_temporary_key-{field}")
+
+        if external_name is None:
+            external_name = calculator
+
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=external_name).count() > 0
+
+        warning = self.create(
+            external_name=external_name if not external_name_exists else None,
+            calculator=calculator,
+            **translations,
+        )
+
+        for [field, translation] in translations.items():
+            translation.label = f"navigator.{calculator}_{warning.id}-{field}"
+            translation.save()
+
+        return warning
+
+
+class WarningMessage(models.Model):
+    programs = models.ManyToManyField(Program, related_name="warning_messages", blank=True)
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
+    calculator = models.CharField(max_length=120, blank=False, null=False)
+    counties = models.ManyToManyField(County, related_name="warning_messages", blank=True)
+
+    message = models.ForeignKey(
+        Translation, related_name="warning_messages", blank=False, null=False, on_delete=models.PROTECT
+    )
+
+    objects = WarningMessageManager()
+
+    @property
+    def county_names(self) -> list[str]:
+        """List of county names"""
+        return [c.name for c in self.counties.all()]
+
+    def __str__(self):
+        return self.external_name if self.external_name is not None else self.calculator
 
 
 class WebHookFunction(models.Model):

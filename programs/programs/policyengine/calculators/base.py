@@ -44,7 +44,7 @@ class PolicyEngineCalulator(ProgramCalculator):
         if self.program.fpl is None:
             raise Exception(f"the period is not configured for: {self.pe_name}")
 
-        return self.program.fpl.pe_period
+        return self.program.fpl.period
 
     @property
     def sim(self) -> Sim:

@@ -112,7 +112,6 @@ class Command(BaseCommand):
             "_default_message": "Boyfriend/Girlfriend",
         },
         "domesticPartner": {"_label": "relationshipOptions.domesticPartner", "_default_message": "Domestic Partner"},
-        "unrelated": {"_label": "relationshipOptions.unrelated", "_default_message": "Unrelated"},
         "relatedOther": {"_label": "relationshipOptions.relatedOther", "_default_message": "Related in some other way"},
     }
 

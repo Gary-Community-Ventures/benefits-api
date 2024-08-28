@@ -45,7 +45,6 @@ class Hubspot:
             contact_id = api_response.id
         except ApiException as e:
             http_body = json.loads(e.body)
-            print(http_body)
             if http_body["category"] == "CONFLICT":
                 try:
                     contact_id = self.get_conflict_contact_id(e)
