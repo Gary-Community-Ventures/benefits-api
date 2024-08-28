@@ -225,6 +225,33 @@ class Screen(models.Model):
 
         return relationship_map
 
+    def other_tax_unit_structure(self):
+        other_tax_unit: list[HouseholdMember] = []
+        for member in self.household_members.all():
+            if not member.is_in_tax_unit():
+                other_tax_unit.append(member)
+
+        unit = {"head": None, "spouse": None, "dependents": []}
+        if len(other_tax_unit) == 0:
+            return unit
+
+        for member in other_tax_unit:
+            if unit["head"] is None or member.age > unit["head"].age:
+                unit["head"] = member
+
+        spouse_id = self.relationship_map()[unit["head"].id]
+
+        for member in other_tax_unit:
+            if member.id == unit["head"].id:
+                continue
+
+            if member.id == spouse_id:
+                unit["spouse"] = member
+            else:
+                unit["dependents"].append(member)
+
+        return unit
+
     def has_insurance_types(self, types, strict=True):
         for member in self.household_members.all():
             if member.insurance.has_insurance_types(types, strict):
