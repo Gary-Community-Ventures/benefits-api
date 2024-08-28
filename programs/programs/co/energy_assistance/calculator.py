@@ -1,3 +1,4 @@
+from integrations.services.sheets.sheets import GoogleSheetsCache
 from integrations.util.cache import Cache
 from integrations.services.sheets import GoogleSheets
 from programs.programs.calc import ProgramCalculator, Eligibility
@@ -20,19 +21,21 @@ class LeapValueCache(Cache):
         return [[row[self.county_column], row[self.average_column]] for row in data if row != []]
 
 
+class LeapIncomeLimitCache(GoogleSheetsCache):
+    sheet_id = "15dxjTY0k1l4nqm8TAwtJPaMpYWPDbwTYKGbDu7Dc3bI"
+    range_name = "current!B2:I2"
+    default = [0, 0, 0, 0, 0, 0, 0, 0]
+
+    def update(self):
+        data = super().update()
+
+        return [int(a.replace(",", "")) for a in data[0]]
+
+
 class EnergyAssistance(ProgramCalculator):
-    income_bands = {
-        1: 3_081,
-        2: 4_030,
-        3: 4_978,
-        4: 5_926,
-        5: 6_875,
-        6: 7_823,
-        7: 8_001,
-        8: 8_179,
-    }
     dependencies = ["income_frequency", "income_amount", "zipcode", "household_size"]
     county_values = LeapValueCache()
+    income_bands = LeapIncomeLimitCache()  # monthly
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -40,23 +43,14 @@ class EnergyAssistance(ProgramCalculator):
         # income
         frequency = "monthly"
         income_types = ["all"]
-        income_limit = EnergyAssistance.income_bands[self.screen.household_size]
+        income_limit = EnergyAssistance.income_bands.fetch()[self.screen.household_size - 1]
         leap_income = self.screen.calc_gross_income(frequency, income_types)
 
-        e.condition(leap_income < income_limit, messages.income(leap_income, income_limit))
+        e.condition(leap_income <= income_limit, messages.income(leap_income, income_limit))
 
         # has rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
         e.condition(has_rent_or_mortgage)
-
-        return e
-
-    def value(self, eligible_members: int):
-        if self.screen.has_expense(["mortgage"]):
-            return DenverPropertyTaxRelief.mortgage_amount
-        elif self.screen.has_expense(["rent"]):
-            return DenverPropertyTaxRelief.rent_amount
-        return 0
 
         return e
 
