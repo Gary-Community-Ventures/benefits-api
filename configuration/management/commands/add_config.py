@@ -74,7 +74,7 @@ class Command(BaseCommand):
         "legalServices": {
             "icon": {"_name": "Legal_services", "_classname": "option-card-icon"},
             "_label": "acuteConditionOptions.legalServices",
-            "_default_message": "Free or low-cost help with civil legal needs",
+            "_default_message": "Free or low-cost help with civil legal needs or IDs",
         },
     }
 
