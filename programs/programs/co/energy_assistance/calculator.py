@@ -52,15 +52,6 @@ class EnergyAssistance(ProgramCalculator):
         return e
 
     def value(self, eligible_members: int):
-        if self.screen.has_expense(["mortgage"]):
-            return DenverPropertyTaxRelief.mortgage_amount
-        elif self.screen.has_expense(["rent"]):
-            return DenverPropertyTaxRelief.rent_amount
-        return 0
-
-        return e
-
-    def value(self, eligible_members: int):
         data = self.county_values.fetch()
 
         # if there is no county, then we want to estimate based off of zipcode

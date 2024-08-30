@@ -65,9 +65,6 @@ class Member(PolicyEngineScreenInput):
         self.member = member
         self.relationship_map = relationship_map
 
-    def value(self):
-        return None
-
 
 class DependencyError(Exception):
     """

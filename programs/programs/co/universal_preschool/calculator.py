@@ -40,9 +40,10 @@ class UniversalPreschool(ProgramCalculator):
         value = 0
         income_requirement = self._meets_income_requirement()
 
-        for child in self.screen.household_members.filter(
-            age__range=(UniversalPreschool.qualifying_age, UniversalPreschool.age)
-        ):
+        for child in self.screen.household_members.all():
+            if not (UniversalPreschool.qualifying_age <= child.age <= UniversalPreschool.age):
+                continue
+
             if child.relationship == "fosterChild" or income_requirement:
                 if child.age == 3:
                     value += UniversalPreschool.amount["10_hours"]
