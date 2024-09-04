@@ -237,7 +237,6 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_application_time = TranslationSerializer()
     legal_status_required = serializers.ListField()
     category = TranslationSerializer()
-    warning = TranslationSerializer()
     eligible = serializers.BooleanField()
     failed_tests = serializers.ListField()
     passed_tests = serializers.ListField()
