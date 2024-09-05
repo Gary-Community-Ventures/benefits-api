@@ -2487,7 +2487,7 @@ class Command(BaseCommand):
                     "name": {"_label": "cashAssistanceBenefits.oap", "_default_message": "Old Age Pension (OAP): "},
                     "description": {
                         "_label": "cashAssistanceBenefits.oap_desc",
-                        "_default_message": " State cash assistance for individuals 60 years of age or older",
+                        "_default_message": "State cash assistance for individuals 60 years of age or older",
                     },
                 },
                 "ssdi": {
@@ -2704,7 +2704,7 @@ class Command(BaseCommand):
                 },
                 "ctc": {
                     "name": {"_label": "taxCreditBenefits.ctc", "_default_message": "Child Tax Credit (CTC): "},
-                    "description": {"_label": "taxCreditBenefits.ctc_desc", "_default_message": " Federal tax credit"},
+                    "description": {"_label": "taxCreditBenefits.ctc_desc", "_default_message": "Federal tax credit"},
                 },
                 "coeitc": {
                     "name": {
