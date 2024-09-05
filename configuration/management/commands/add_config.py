@@ -2480,7 +2480,7 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "cashAssistanceBenefits.andcs_desc",
-                        "_default_message": " State cash assistance for individuals who are disabled and receiving SSI",
+                        "_default_message": "State cash assistance for individuals who are disabled and receiving SSI",
                     },
                 },
                 "oap": {
@@ -2497,7 +2497,7 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "cashAssistanceBenefits.ssdi_desc",
-                        "_default_message": " Social security benefit for people with disabilities",
+                        "_default_message": "Social security benefit for people with disabilities",
                     },
                 },
             },
@@ -2512,7 +2512,7 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "foodAndNutritionBenefits.snap_desc",
-                        "_default_message": " Food assistance",
+                        "_default_message": "Food assistance",
                     },
                 },
                 "wic": {
@@ -2522,7 +2522,7 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "foodAndNutritionBenefits.wic_desc",
-                        "_default_message": " Food and breastfeeding assistance",
+                        "_default_message": "Food and breastfeeding assistance",
                     },
                 },
                 "nslp": {
@@ -2532,14 +2532,14 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "foodAndNutritionBenefits.nslp_desc",
-                        "_default_message": " Free school meals",
+                        "_default_message": "Free school meals",
                     },
                 },
                 "ede": {
                     "name": {"_label": "foodAndNutritionBenefits.ede", "_default_message": "Everyday Eats: "},
                     "description": {
                         "_label": "foodAndNutritionBenefits.ede_desc",
-                        "_default_message": " Food support for people 60 years of age or older",
+                        "_default_message": "Food support for people 60 years of age or older",
                     },
                 },
             },
@@ -2554,7 +2554,7 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "childCareBenefits.cccap_desc",
-                        "_default_message": " Help with child care costs",
+                        "_default_message": "Help with child care costs",
                     },
                 },
                 "denverpresc": {
@@ -2564,21 +2564,21 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "childCareBenefits.denverpresc_desc",
-                        "_default_message": " Tuition credits for Denver preschoolers",
+                        "_default_message": "Tuition credits for Denver preschoolers",
                     },
                 },
                 "coheadstart": {
                     "name": {"_label": "childCareBenefits.coheadstart", "_default_message": "Colorado Head Start: "},
                     "description": {
                         "_label": "childCareBenefits.coheadstart_desc",
-                        "_default_message": " Free early child care and preschool",
+                        "_default_message": "Free early child care and preschool",
                     },
                 },
                 "mydenver": {
                     "name": {"_label": "childCareBenefits.mydenver", "_default_message": "MY Denver Card: "},
                     "description": {
                         "_label": "childCareBenefits.mydenver_desc",
-                        "_default_message": " Reduced-cost youth programs",
+                        "_default_message": "Reduced-cost youth programs",
                     },
                 },
                 "upk": {
@@ -2588,14 +2588,14 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "childCareBenefits.univpresc_desc",
-                        "_default_message": " Free preschool",
+                        "_default_message": "Free preschool",
                     },
                 },
                 "pell": {
                     "name": {"_label": "childCareBenefits.pell", "_default_message": "Pell Grant: "},
                     "description": {
                         "_label": "childCareBenefits.pell_desc",
-                        "_default_message": " Federal grant to help with the cost of college or technical school",
+                        "_default_message": "Federal grant to help with the cost of college or technical school",
                     },
                 },
             },
@@ -2610,7 +2610,7 @@ class Command(BaseCommand):
                     "name": {"_label": "housingAndUtilities.lifeline", "_default_message": "Lifeline: "},
                     "description": {
                         "_label": "housingAndUtilities.lifeline_desc",
-                        "_default_message": " Phone or internet discount",
+                        "_default_message": "Phone or internet discount",
                     },
                 },
                 "leap": {
@@ -2620,7 +2620,7 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "housingAndUtilities.leap_desc",
-                        "_default_message": " Help with winter heating bills",
+                        "_default_message": "Help with winter heating bills",
                     },
                 },
                 "cowap": {
@@ -2630,7 +2630,7 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "housingAndUtilities.cowap_desc",
-                        "_default_message": " Free home energy upgrades",
+                        "_default_message": "Free home energy upgrades",
                     },
                 },
                 "ubp": {
@@ -2640,7 +2640,7 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "housingAndUtilities.ubp_desc",
-                        "_default_message": " Help paying utility bills",
+                        "_default_message": "Help paying utility bills",
                     },
                 },
                 "coPropTaxRentHeatCreditRebate": {
@@ -2650,7 +2650,7 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "cashAssistanceBenefits.coPropTaxRentHeatCreditRebate_desc",
-                        "_default_message": " Cash to pay property tax, rent, and heat bills",
+                        "_default_message": "Cash to pay property tax, rent, and heat bills",
                     },
                 },
             },
@@ -2662,7 +2662,7 @@ class Command(BaseCommand):
                     "name": {"_label": "transportationBenefits.rtdlive", "_default_message": "RTD LiVE: "},
                     "description": {
                         "_label": "transportationBenefits.rtdlive_desc",
-                        "_default_message": " Discounted RTD fares",
+                        "_default_message": "Discounted RTD fares",
                     },
                 }
             },
@@ -2677,14 +2677,14 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "healthCareBenefits.dentallowincseniors_desc",
-                        "_default_message": " Low-cost dental care for people 60 years of age or older",
+                        "_default_message": "Low-cost dental care for people 60 years of age or older",
                     },
                 },
                 "nfp": {
                     "name": {"_label": "healthCareBenefits.nfp", "_default_message": "Nurse-Family Partnership: "},
                     "description": {
                         "_label": "healthCareBenefits.nfp_desc",
-                        "_default_message": " Personalized support for first-time parents",
+                        "_default_message": "Personalized support for first-time parents",
                     },
                 },
             },
@@ -2699,7 +2699,7 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "taxCreditBenefits.eitc_desc",
-                        "_default_message": " Federal tax credit - earned income",
+                        "_default_message": "Federal tax credit - earned income",
                     },
                 },
                 "ctc": {
@@ -2713,19 +2713,19 @@ class Command(BaseCommand):
                     },
                     "description": {
                         "_label": "taxCreditBenefits.coeitc_desc",
-                        "_default_message": " State tax credit - earned income",
+                        "_default_message": "State tax credit - earned income",
                     },
                 },
                 "coctc": {
                     "name": {"_label": "taxCreditBenefits.coctc", "_default_message": "Colorado Child Tax Credit: "},
-                    "description": {"_label": "taxCreditBenefits.coctc_desc", "_default_message": " State tax credit"},
+                    "description": {"_label": "taxCreditBenefits.coctc_desc", "_default_message": "State tax credit"},
                 },
                 "fatc": {
                     "name": {
                         "_label": "taxCreditBenefits.fatc",
                         "_default_message": "Family Affordability Tax Credit: ",
                     },
-                    "description": {"_label": "taxCreditBenefits.fatc_desc", "_default_message": " State tax credit"},
+                    "description": {"_label": "taxCreditBenefits.fatc_desc", "_default_message": "State tax credit"},
                 },
             },
             "category_name": {"_label": "taxCredits", "_default_message": "Tax Credits"},
