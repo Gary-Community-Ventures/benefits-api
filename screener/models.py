@@ -236,6 +236,7 @@ class Screen(models.Model):
         name_map = {
             "tanf": self.has_tanf,
             "wic": self.has_wic,
+            "nc_wic": self.has_wic,
             "snap": self.has_snap,
             "lifeline": self.has_lifeline,
             "acp": self.has_acp,

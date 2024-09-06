@@ -1,5 +1,6 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineMembersCalculator
 from programs.programs.federal.pe.member import Medicaid
+from programs.programs.federal.pe.member import Wic
 import programs.programs.policyengine.calculators.dependencies as dependency
 
 
@@ -82,3 +83,17 @@ class FamilyAffordabilityTaxCredit(PolicyEngineMembersCalculator):
         *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.member.FamilyAffordabilityTaxCredit]
+
+class CoWic(Wic):
+    wic_categories = {
+        "NONE": 0,
+        "INFANT": 130,
+        "CHILD": 26,
+        "PREGNANT": 47,
+        "POSTPARTUM": 47,
+        "BREASTFEEDING": 52,
+    }
+    pe_inputs = [
+        *Wic.pe_inputs,
+        dependency.household.CoStateCode,
+    ]
