@@ -2,10 +2,11 @@ from screener.models import HouseholdMember, Screen
 from .calculators import PolicyEngineCalulator
 from programs.programs.calc import Eligibility
 from programs.util import Dependencies
-from .calculators.dependencies.base import DependencyError
+from .calculators.dependencies.base import DependencyError, Member, TaxUnit
 from typing import List
 from sentry_sdk import capture_exception, capture_message
 from .engines import Sim, pe_engines
+from .calculators.constants import MAIN_TAX_UNIT, SECONDARY_TAX_UNIT
 
 
 def calc_pe_eligibility(
@@ -60,9 +61,12 @@ def pe_input(screen: Screen, programs: List[PolicyEngineCalulator]):
         "household": {
             "people": {},
             "tax_units": {
-                "tax_unit": {
+                MAIN_TAX_UNIT: {
                     "members": [],
-                }
+                },
+                SECONDARY_TAX_UNIT: {
+                    "members": [],
+                },
             },
             "families": {"family": {"members": []}},
             "households": {"household": {"members": []}},
@@ -77,6 +81,8 @@ def pe_input(screen: Screen, programs: List[PolicyEngineCalulator]):
     members: list[HouseholdMember] = screen.household_members.all()
     relationship_map = screen.relationship_map()
 
+    main_tax_members = []
+    secondary_tax_members = []
     for member in members:
         member_id = str(member.id)
         household = raw_input["household"]
@@ -87,7 +93,11 @@ def pe_input(screen: Screen, programs: List[PolicyEngineCalulator]):
         household["people"][member_id] = {}
 
         if member.is_in_tax_unit():
-            household["tax_units"]["tax_unit"]["members"].append(member_id)
+            household["tax_units"][MAIN_TAX_UNIT]["members"].append(member_id)
+            main_tax_members.append(member)
+        else:
+            household["tax_units"][SECONDARY_TAX_UNIT]["members"].append(member_id)
+            secondary_tax_members.append(member)
 
     already_added = set()
     for member_1, member_2 in relationship_map.items():
@@ -105,35 +115,44 @@ def pe_input(screen: Screen, programs: List[PolicyEngineCalulator]):
             if hasattr(program, "pe_output_period") and Data in program.pe_outputs:
                 period = program.pe_output_period
 
-            if not Data.member:
+            if issubclass(Data, Member):
+                for member in members:
+                    member_id = str(member.id)
+                    data = Data(screen, member, relationship_map)
+                    unit = raw_input["household"][data.unit][member_id]
+
+                    update_unit(unit, data, period)
+            elif issubclass(Data, TaxUnit):
+                # split the household into the main and secondary tax unit.
+                data = Data(screen, main_tax_members, relationship_map)
+                unit = raw_input["household"][data.unit][MAIN_TAX_UNIT]
+
+                update_unit(unit, data, period)
+
+                data = Data(screen, secondary_tax_members, relationship_map)
+                unit = raw_input["household"][data.unit][SECONDARY_TAX_UNIT]
+
+                update_unit(unit, data, period)
+            else:
                 data = Data(screen, members, relationship_map)
-                value = data.value()
                 unit = raw_input["household"][data.unit][data.sub_unit]
 
-                if data.field in unit and period in unit[data.field]:
-                    if value != unit[data.field][period]:
-                        raise DependencyError(data.field, value, unit[data.field][period])
+                update_unit(unit, data, period)
 
-                if data.field not in unit:
-                    unit[data.field] = {}
-
-                unit[data.field][period] = value
-                continue
-
-            for member in members:
-                member_id = str(member.id)
-                data = Data(screen, member, relationship_map)
-                value = data.value()
-
-                unit = raw_input["household"][data.unit][member_id]
-
-                if data.field in unit and period in unit[data.field]:
-                    if value != unit[data.field][period]:
-                        raise DependencyError(data.field, value, unit[data.field][period])
-
-                if data.field not in unit:
-                    unit[data.field] = {}
-
-                unit[data.field][period] = value
+    # delete the second tax unit if it is empty because PE can't handle empty tax units
+    if len(secondary_tax_members) == 0:
+        del raw_input["household"]["tax_units"][SECONDARY_TAX_UNIT]
 
     return raw_input
+
+
+def update_unit(unit, data: PolicyEngineCalulator, period: str):
+    value = data.value()
+    if data.field in unit and period in unit[data.field]:
+        if value != unit[data.field][period]:
+            raise DependencyError(data.field, value, unit[data.field][period])
+
+    if data.field not in unit:
+        unit[data.field] = {}
+
+    unit[data.field][period] = value

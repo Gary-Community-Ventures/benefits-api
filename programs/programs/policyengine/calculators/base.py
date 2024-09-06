@@ -1,4 +1,5 @@
 from programs.models import Program
+from programs.programs.policyengine.calculators.constants import MAIN_TAX_UNIT, SECONDARY_TAX_UNIT
 from programs.util import Dependencies
 from screener.models import Screen
 from programs.programs.calc import Eligibility, ProgramCalculator
@@ -58,6 +59,9 @@ class PolicyEngineCalulator(ProgramCalculator):
         """
         return self.sim.value(self.pe_category, self.pe_sub_category, self.pe_name, self.pe_period)
 
+    def get_tax_variable(self, unit: str):
+        return self.sim.value(self.pe_category, unit, self.pe_name, self.pe_period)
+
     @classmethod
     def can_calc(cls, missing_dependencies: Dependencies):
         for input in cls.pe_inputs:
@@ -67,15 +71,23 @@ class PolicyEngineCalulator(ProgramCalculator):
         return True
 
 
-class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
-    pe_category = "tax_units"
-    pe_sub_category = "tax_unit"
-    tax_unit_dependent = True
-
-
 class PolicyEngineSpmCalulator(PolicyEngineCalulator):
     pe_category = "spm_units"
     pe_sub_category = "spm_unit"
+
+
+class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
+    pe_category = "tax_units"
+    tax_unit_dependent = True
+
+    def value(self):
+        return self.tax_unit_value(MAIN_TAX_UNIT) + self.tax_unit_value(SECONDARY_TAX_UNIT)
+
+    def tax_unit_value(self, unit: str):
+        try:
+            return int(self.get_tax_variable(unit))
+        except KeyError:
+            return 0  # if the second tax unit does not exist
 
 
 class PolicyEngineMembersCalculator(PolicyEngineCalulator):
@@ -85,19 +97,11 @@ class PolicyEngineMembersCalculator(PolicyEngineCalulator):
     def value(self):
         total = 0
         for member in self.screen.household_members.all():
-            # The following programs use income from the tax unit,
-            # so we want to skip any members that are not in the tax unit.
-            if not self.in_tax_unit(member.id) and self.tax_unit_dependent:
-                continue
-
             pe_value = self.get_member_variable(member.id)
 
             total += pe_value
 
         return total
-
-    def in_tax_unit(self, member_id: int) -> bool:
-        return str(member_id) in self.sim.members("tax_units", "tax_unit")
 
     def get_member_variable(self, member_id: int):
         return self.sim.value(self.pe_category, str(member_id), self.pe_name, self.pe_period)

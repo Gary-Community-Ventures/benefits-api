@@ -63,9 +63,6 @@ class Chp(PolicyEngineMembersCalculator):
         total = 0
 
         for member in self.screen.household_members.all():
-            if not self.in_tax_unit(member.id):
-                continue
-
             chp_eligible = self.sim.value(self.pe_category, str(member.id), "co_chp_eligible", self.pe_period) > 0
             if chp_eligible and self.screen.has_insurance_types(("none",)):
                 total += self.amount
