@@ -9,6 +9,7 @@ co_member_calculators = {
     "oap": member.OldAgePension,
     "chp": member.Chp,
     "fatc": member.FamilyAffordabilityTaxCredit,
+    "co_wic": member.CoWic,
 }
 
 co_tax_unit_calculators = {

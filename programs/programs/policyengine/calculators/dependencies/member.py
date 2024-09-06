@@ -28,7 +28,15 @@ class TaxUnitHeadDependency(Member):
     dependencies = ("relationship",)
 
     def value(self):
-        return self.member.is_head()
+        if self.member.is_head():
+            return True
+
+        other_unit = self.screen.other_tax_unit_structure()
+
+        if other_unit["head"] is None:
+            return False
+
+        return other_unit["head"].id == self.member.id
 
 
 class TaxUnitSpouseDependency(Member):
@@ -36,7 +44,15 @@ class TaxUnitSpouseDependency(Member):
     dependencies = ("relationship",)
 
     def value(self):
-        return self.member.is_spouse()
+        if self.member.is_spouse():
+            return True
+
+        other_unit = self.screen.other_tax_unit_structure()
+
+        if other_unit["spouse"] is None:
+            return False
+
+        return other_unit["spouse"].id == self.member.id
 
 
 class TaxUnitDependentDependency(Member):
@@ -49,7 +65,16 @@ class TaxUnitDependentDependency(Member):
     )
 
     def value(self):
-        return self.member.is_dependent()
+        if self.member.is_dependent():
+            return True
+
+        other_unit = self.screen.other_tax_unit_structure()
+
+        for member in other_unit["dependents"]:
+            if member.id == self.member.id:
+                return True
+
+        return False
 
 
 class WicCategory(Member):
@@ -86,7 +111,7 @@ class SsiReportedDependency(Member):
     field = "ssi_reported"
 
     def value(self):
-        # Policy Eninge uses this value for is_ssi_disabled, but it does not apply to MFB
+        # Policy Engine uses this value for is_ssi_disabled, but it does not apply to MFB
         return 0
 
 

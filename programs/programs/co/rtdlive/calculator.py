@@ -23,27 +23,40 @@ class RtdLive(ProgramCalculator):
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
-        members: list[HouseholdMember] = []
-        for member in self.screen.household_members.all():
-            if member.is_in_tax_unit():
-                members.append(member)
-
-        # income
-        frequency = "yearly"
-        income_types = ["all"]
-        fpl = self.program.fpl.as_dict()
-        income_limit = RtdLive.percent_of_fpl * fpl[len(members)]
-
-        gross_income = 0
+        main_tax_unit_members: list[HouseholdMember] = []
+        secondary_tax_unit_members: list[HouseholdMember] = []
+        members = self.screen.household_members.all()
         for member in members:
-            gross_income += member.calc_gross_income(frequency, income_types)
+            if member.is_in_tax_unit():
+                main_tax_unit_members.append(member)
+            else:
+                secondary_tax_unit_members.append(member)
 
-        e.condition(gross_income <= income_limit, messages.income(gross_income, income_limit))
+        def income_eligible(member: HouseholdMember):
+            if member in main_tax_unit_members:
+                tax_unit = main_tax_unit_members
+            elif member in secondary_tax_unit_members:
+                tax_unit = secondary_tax_unit_members
+            else:
+                raise Exception("member is not in a tax unit")
+
+            # income
+            frequency = "yearly"
+            income_types = ["all"]
+            fpl = self.program.fpl.as_dict()
+            income_limit = RtdLive.percent_of_fpl * fpl[len(tax_unit)]
+
+            gross_income = 0
+            for member in tax_unit:
+                gross_income += member.calc_gross_income(frequency, income_types)
+
+            return gross_income <= income_limit
 
         # age
         e.member_eligibility(
             members,
             [
+                (income_eligible, None),
                 (
                     lambda m: m.age >= RtdLive.min_age and m.age <= RtdLive.max_age,
                     messages.adult(RtdLive.min_age, RtdLive.max_age),

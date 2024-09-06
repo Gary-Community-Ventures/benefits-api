@@ -5,6 +5,7 @@ from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
 from django.conf import settings
+from django.db import connection
 
 
 # The screen is the top most container for all information collected in the
@@ -116,9 +117,10 @@ class Screen(models.Model):
         Returns True if one household member has one of the expenses in expense_types
         """
         for expense_type in expense_types:
-            household_expense_types = self.expenses.values_list("type", flat=True)
-            if expense_type in household_expense_types:
-                return True
+            household_expense_types = self.expenses.all()
+            for expense in household_expense_types:
+                if expense_type == expense.type:
+                    return True
         return False
 
     def num_children(self, age_min=0, age_max=18, include_pregnant=False, child_relationship=["all"]):
@@ -188,42 +190,69 @@ class Screen(models.Model):
     def relationship_map(self):
         relationship_map = {}
 
-        all_members = self.household_members.values()
+        all_members = self.household_members.all()
         for member in all_members:
-            if member["id"] in relationship_map and relationship_map[member["id"]] is not None:
+            if member.id in relationship_map and relationship_map[member.id] is not None:
                 continue
 
-            relationship = member["relationship"]
+            relationship = member.relationship
             probable_spouse = None
 
             if relationship == "headOfHousehold":
                 for other_member in all_members:
                     if (
-                        other_member["relationship"] in ("spouse", "domesticPartner")
-                        and other_member["id"] not in relationship_map
+                        other_member.relationship in ("spouse", "domesticPartner")
+                        and other_member.id not in relationship_map
                     ):
-                        probable_spouse = other_member["id"]
+                        probable_spouse = other_member.id
                         break
             elif relationship in ("spouse", "domesticPartner"):
                 for other_member in all_members:
-                    if other_member["relationship"] == "headOfHousehold" and other_member["id"] not in relationship_map:
-                        probable_spouse = other_member["id"]
+                    if other_member.relationship == "headOfHousehold" and other_member.id not in relationship_map:
+                        probable_spouse = other_member.id
                         break
             elif relationship in ("parent", "fosterParent", "stepParent", "grandParent"):
                 for other_member in all_members:
                     if (
-                        other_member["relationship"] == relationship
-                        and other_member["id"] != member["id"]
-                        and other_member["id"] not in relationship_map
+                        other_member.relationship == relationship
+                        and other_member.id != member.id
+                        and other_member.id not in relationship_map
                     ):
-                        probable_spouse = other_member["id"]
+                        probable_spouse = other_member.id
                         break
 
-            relationship_map[member["id"]] = probable_spouse
+            relationship_map[member.id] = probable_spouse
             if probable_spouse is not None:
-                relationship_map[probable_spouse] = member["id"]
+                relationship_map[probable_spouse] = member.id
 
         return relationship_map
+
+    def other_tax_unit_structure(self):
+        other_tax_unit: list[HouseholdMember] = []
+        for member in self.household_members.all():
+            if not member.is_in_tax_unit():
+                other_tax_unit.append(member)
+
+        unit = {"head": None, "spouse": None, "dependents": []}
+        if len(other_tax_unit) == 0:
+            return unit
+
+        for member in other_tax_unit:
+            if unit["head"] is None or member.age > unit["head"].age:
+                unit["head"] = member
+
+        spouse_id = self.relationship_map()[unit["head"].id]
+
+        for member in other_tax_unit:
+            if member.id == unit["head"].id:
+                continue
+
+            if member.id == spouse_id:
+                unit["spouse"] = member
+            else:
+                unit["dependents"].append(member)
+
+        return unit
 
     def has_insurance_types(self, types, strict=True):
         for member in self.household_members.all():
@@ -236,6 +265,7 @@ class Screen(models.Model):
         name_map = {
             "tanf": self.has_tanf,
             "wic": self.has_wic,
+            "nc_wic": self.has_wic,
             "snap": self.has_snap,
             "lifeline": self.has_lifeline,
             "acp": self.has_acp,
@@ -401,11 +431,10 @@ class HouseholdMember(models.Model):
         return float(net_income)
 
     def is_married(self):
+        all_household_members = self.screen.household_members.all()
         if self.relationship in ("spouse", "domesticPartner"):
-            head_of_house = HouseholdMember.objects.all().filter(screen=self.screen, relationship="headOfHousehold")[0]
-            return {"is_married": True, "married_to": head_of_house}
+            return {"is_married": True, "married_to": self.screen.get_head()}
         if self.relationship == "headOfHousehold":
-            all_household_members = HouseholdMember.objects.all().filter(screen=self.screen)
             for member in all_household_members:
                 if member.relationship in ("spouse", "domesticPartner"):
                     return {"is_married": True, "married_to": member}

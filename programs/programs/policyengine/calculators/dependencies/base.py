@@ -7,7 +7,6 @@ class PolicyEngineScreenInput:
     Base class for all Policy Engine dependencies
     """
 
-    member = False
     unit = ""
     sub_unit = ""
     field = ""
@@ -58,15 +57,11 @@ class Member(PolicyEngineScreenInput):
     """
 
     unit = "people"
-    member = True
 
     def __init__(self, screen: Screen, member: HouseholdMember, relationship_map):
         self.screen = screen
         self.member = member
         self.relationship_map = relationship_map
-
-    def value(self):
-        return None
 
 
 class DependencyError(Exception):

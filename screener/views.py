@@ -28,7 +28,7 @@ from screener.serializers import (
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError
 from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
-from programs.models import UrgentNeed, Program, Referrer, WarningMessage
+from programs.models import Document, Navigator, UrgentNeed, Program, Referrer, WarningMessage
 from django.core.exceptions import ObjectDoesNotExist
 from programs.programs.warnings import warning_calculators
 from validations.serializers import ValidationSerializer
@@ -121,7 +121,9 @@ class EligibilityView(views.APIView):
 class EligibilityTranslationView(views.APIView):
     @swagger_auto_schema(responses={200: ResultsSerializer()})
     def get(self, request, id):
-        screen = Screen.objects.get(uuid=id)
+        screen = Screen.objects.prefetch_related(
+            "household_members", "household_members__income_streams", "household_members__insurance", "expenses"
+        ).get(uuid=id)
         eligibility, missing_programs = eligibility_results(screen)
         urgent_needs = urgent_need_results(screen, eligibility)
         validations = ValidationSerializer(screen.validations.all(), many=True).data
@@ -167,26 +169,48 @@ class MessageViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
         return Response({}, status=status.HTTP_201_CREATED)
 
 
+def translations_prefetch_name(prefix: str, fields):
+    return [f"{prefix}{f}__translations" for f in fields]
+
+
 def eligibility_results(screen: Screen, batch=False):
     try:
-        referrer = Referrer.objects.get(referrer_code=screen.referrer_code)
+        referrer = Referrer.objects.prefetch_related("remove_programs", "primary_navigators").get(
+            referrer_code=screen.referrer_code
+        )
     except ObjectDoesNotExist:
         referrer = None
 
     excluded_programs = []
     if referrer is not None:
-        excluded_programs = referrer.remove_programs.values("id")
+        excluded_programs = [p.id for p in referrer.remove_programs.all()]
 
     all_programs = (
         Program.objects.filter(active=True)
+        .prefetch_related(
+            "legal_status_required",
+            "fpl",
+            *translations_prefetch_name("", Program.objects.translated_fields),
+            "navigator",
+            "navigator__counties",
+            "navigator__languages",
+            "navigator__primary_navigators",
+            *translations_prefetch_name("navigator__", Navigator.objects.translated_fields),
+            "documents",
+            *translations_prefetch_name("documents__", Document.objects.translated_fields),
+            "warning_messages",
+            "warning_messages__counties",
+            *translations_prefetch_name("warning_messages__", WarningMessage.objects.translated_fields),
+        )
         .exclude(id__in=excluded_programs)
-        .prefetch_related("legal_status_required", "documents", "warning_messages")
     )
     data = []
 
     try:
-        previous_snapshot = EligibilitySnapshot.objects.filter(is_batch=False, screen=screen, had_error=False).latest(
-            "submission_date"
+        previous_snapshot = (
+            EligibilitySnapshot.objects.prefetch_related("program_snapshots")
+            .filter(is_batch=False, screen=screen, had_error=False)
+            .latest("submission_date")
         )
         previous_results = None if previous_snapshot is None else previous_snapshot.program_snapshots.all()
     except ObjectDoesNotExist:
@@ -255,7 +279,7 @@ def eligibility_results(screen: Screen, batch=False):
 
         # don't calculate navigator and warnings for ineligible programs
         if eligibility["eligible"]:
-            all_navigators = program.navigator.all().prefetch_related("counties").prefetch_related("languages")
+            all_navigators = program.navigator.all()
 
             county_navigators = []
             for nav in all_navigators:
@@ -318,7 +342,6 @@ def eligibility_results(screen: Screen, batch=False):
                     "apply_button_link": default_message(program.apply_button_link),
                     "legal_status_required": legal_status,
                     "category": default_message(program.category),
-                    "warning": default_message(program.warning),
                     "estimated_value_override": default_message(program.estimated_value),
                     "eligible": eligibility["eligible"],
                     "failed_tests": eligibility["failed"],
@@ -348,7 +371,8 @@ def eligibility_results(screen: Screen, batch=False):
 
 def default_message(translation):
     translation.set_current_language(settings.LANGUAGE_CODE)
-    return {"default_message": translation.text, "label": translation.label}
+    d = {"default_message": translation.text, "label": translation.label}
+    return d
 
 
 def serialized_navigator(navigator):
@@ -386,7 +410,13 @@ def urgent_need_results(screen, data):
         if has_need:
             list_of_needs.append(need)
 
-    urgent_need_resources = UrgentNeed.objects.filter(type_short__name__in=list_of_needs, active=True).distinct()
+    urgent_need_resources = (
+        UrgentNeed.objects.prefetch_related(
+            "functions", *translations_prefetch_name("", UrgentNeed.objects.translated_fields)
+        )
+        .filter(type_short__name__in=list_of_needs, active=True)
+        .distinct()
+    )
 
     eligible_urgent_needs = []
     for need in urgent_need_resources:
