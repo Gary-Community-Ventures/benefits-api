@@ -114,7 +114,6 @@ class ProgramManager(models.Manager):
         "estimated_delivery_time",
         "estimated_application_time",
         "category",
-        "warning",
         "estimated_value",
         "website_description",
     )
@@ -187,13 +186,6 @@ class Program(models.Model):
     )
     category = models.ForeignKey(
         Translation, related_name="program_category", blank=False, null=False, on_delete=models.PROTECT
-    )
-    warning = models.ForeignKey(
-        Translation,
-        related_name="program_warning",
-        blank=False,
-        null=False,
-        on_delete=models.PROTECT,
     )
     estimated_value = models.ForeignKey(
         Translation,

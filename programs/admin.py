@@ -43,7 +43,6 @@ class ProgramAdmin(ModelAdmin):
         estimated_delivery_time = obj.estimated_delivery_time
         estimated_application_time = obj.estimated_application_time
         value_type = obj.value_type
-        warning = obj.warning
         website_description = obj.website_description
         estimated_value = obj.estimated_value
 
@@ -61,7 +60,6 @@ class ProgramAdmin(ModelAdmin):
                     <a href="{}">Estimated Delivery Time</a>
                     <a href="{}">Estimated Application Time</a>
                     <a href="{}">Value Type</a>
-                    <a href="{}">Warning</a>
                     <a href="{}">Website Description</a>
                     <a href="{}">Estimated Value</a>
                 </div>
@@ -76,7 +74,6 @@ class ProgramAdmin(ModelAdmin):
             reverse("translation_admin_url", args=[estimated_delivery_time.id]),
             reverse("translation_admin_url", args=[estimated_application_time.id]),
             reverse("translation_admin_url", args=[value_type.id]),
-            reverse("translation_admin_url", args=[warning.id]),
             reverse("translation_admin_url", args=[website_description.id]),
             reverse("translation_admin_url", args=[estimated_value.id]),
         )
