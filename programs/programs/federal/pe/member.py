@@ -138,3 +138,12 @@ class Ssi(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitDependentDependency,
     ]
     pe_outputs = [dependency.member.Ssi]
+
+
+class CommoditySupplementalFoodProgram(PolicyEngineMembersCalculator):
+    pe_name = "commodity_supplemental_food_program"
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        *dependency.school_lunch_income,
+    ]
+    pe_outputs = [dependency.member.CommoditySupplementalFoodProgramEligible]
