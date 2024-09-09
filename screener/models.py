@@ -7,13 +7,6 @@ from programs.util import Dependencies
 from django.conf import settings
 
 
-
-
-
-
-
-
-
 # The screen is the top most container for all information collected in the
 # app and is synonymous with a household model. In addition to general
 # application fields like submission_date, it also contains non-individual
