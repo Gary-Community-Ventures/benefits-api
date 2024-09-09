@@ -110,4 +110,3 @@ class EveryDayEats(CommoditySupplementalFoodProgram):
                 total += self.amount
 
         return value
-
