@@ -2762,7 +2762,7 @@ class Command(BaseCommand):
             "coBenefits": "CO_MFBLogo",
             "dhs": "DHS_MFBLogo",
             "ccig": "CCIG_Logo",
-            "eaglecounty": "EC_MFBLogo"
+            "eaglecounty": "EC_MFBLogo",
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
