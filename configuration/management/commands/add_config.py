@@ -2816,7 +2816,7 @@ class Command(BaseCommand):
         "state": "CO",
         "zip_code": 80202,
         "email": "myfriendben@garycommunity.org",
-        "privacy_policy_link": "https://co.myfriendben.org/en/data-privacy-policy"
+        "privacy_policy_link": "https://co.myfriendben.org/en/data-privacy-policy",
     }
 
     @transaction.atomic
