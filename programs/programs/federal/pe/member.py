@@ -146,4 +146,4 @@ class CommoditySupplementalFoodProgram(PolicyEngineMembersCalculator):
         dependency.member.AgeDependency,
         *dependency.school_lunch_income,
     ]
-    pe_outputs = [dependency.member.CommoditySupplementalFoodProgramEligible]
+    pe_outputs = [dependency.member.CommoditySupplementalFoodProgram]

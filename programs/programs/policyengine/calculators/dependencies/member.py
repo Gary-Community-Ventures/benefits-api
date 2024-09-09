@@ -189,7 +189,7 @@ class ChpEligible(Member):
     field = "co_chp_eligible"
 
 
-class CommoditySupplementalFoodProgramEligible(Member):
+class CommoditySupplementalFoodProgram(Member):
     field = "commodity_supplemental_food_program"
 
 
