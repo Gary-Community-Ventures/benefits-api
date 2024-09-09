@@ -18,7 +18,6 @@ class Cache:
             self.data = self.update()
             self.last_update = datetime.datetime.now()
         except Exception as e:
-            print(e)
             capture_exception(e, level="warning")
 
     def should_update(self):
