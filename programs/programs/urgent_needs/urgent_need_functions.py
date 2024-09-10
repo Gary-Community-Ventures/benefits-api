@@ -426,6 +426,7 @@ class HasRentOrMortgage(UrgentNeedFunction):
 
         return has_rent_or_mortgage
 
+
 class FamilyResourceCenterAssociation(UrgentNeedFunction):
     dependencies = ["county"]
 
@@ -443,10 +444,11 @@ class FamilyResourceCenterAssociation(UrgentNeedFunction):
             "Jefferson County",
             "Larimer County",
             "Mesa County",
-            "Weld County"
+            "Weld County",
         ]
 
         return self.screen.county not in ineligible_counties
+
 
 urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "denver": LivesInDenver,
@@ -467,5 +469,5 @@ urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "eic": EarlyIntervention,
     "deap": DenverEmergencyAssistance,
     "has_rent_or_mtg": HasRentOrMortgage,
-    "frca": FamilyResourceCenterAssociation
+    "frca": FamilyResourceCenterAssociation,
 }
