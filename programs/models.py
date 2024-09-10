@@ -1,11 +1,13 @@
+from logging import warn
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from translations.model_data import ModelDataController
 from translations.models import Translation
 from programs.programs import calculators
 from programs.util import Dependencies, DependencyError
-
 import requests
 from integrations.util.cache import Cache
+from typing import Optional, Type, TypedDict
 
 
 class FplCache(Cache):
@@ -93,11 +95,21 @@ class DocumentManager(models.Manager):
         return document
 
 
+class DocumentDataController(ModelDataController["Document"]):
+    _model_name = "Document"
+
+    @classmethod
+    def initialize_instance(cls, external_name: str) -> "Document":
+        return Document.objects.new_document(external_name)
+
+
 class Document(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     text = models.ForeignKey(Translation, related_name="documents", blank=False, null=False, on_delete=models.PROTECT)
 
     objects = DocumentManager()
+
+    TranslationExportBuilder = DocumentDataController
 
     def __str__(self) -> str:
         return self.external_name
@@ -142,6 +154,84 @@ class ProgramManager(models.Manager):
             translation.save()
 
         return program
+
+
+class ProgramDataController(ModelDataController["Program"]):
+    _model_name = "Program"
+    dependencies = ["Document"]
+
+    FplDataType = TypedDict("FplDataType", {"year": str, "period": str})
+    LegalStatusesDataType = list[TypedDict("LegalStatusDataType", {"status": str})]
+    DataType = TypedDict(
+        "DataType",
+        {
+            "fpl": Optional[FplDataType],
+            "legal_status_required": LegalStatusesDataType,
+            "name_abbreviated": str,
+            "active": bool,
+            "low_confidence": bool,
+            "documents": list[str],
+        },
+    )
+
+    def _fpl(self) -> Optional[FplDataType]:
+        if self.instance.fpl is None:
+            return None
+        return {"year": self.instance.fpl.year, "period": self.instance.fpl.period}
+
+    def _legal_statuses(self) -> LegalStatusesDataType:
+        return [{"status": l.status} for l in self.instance.legal_status_required.all()]
+
+    def to_model_data(self) -> DataType:
+        program = self.instance
+        return {
+            "fpl": self._fpl(),
+            "legal_status_required": {"statuses": self._legal_statuses()},
+            "active": program.active,
+            "low_confidence": program.low_confidence,
+            "documents": [d.external_name for d in program.documents.all()],
+        }
+
+    def from_model_data(self, data: DataType):
+        program = self.instance
+
+        # set fields
+        program.name_abbreviated = data["name_abbreviated"]
+        program.active = data["active"]
+        program.low_confidence = data["low_confidence"]
+
+        # get or create fpl
+        fpl = data["fpl"]
+        try:
+            fpl_instance = FederalPoveryLimit.objects.get(year=fpl["name"])
+        except FederalPoveryLimit.DoesNotExist:
+            fpl_instance = FederalPoveryLimit.objects.create(year=fpl["name"], period=fpl["period"])
+
+        program.fpl = fpl_instance
+
+        # get or create legal status required
+        legal_status_required = data["legal_status_required"]
+        statuses = []
+        for status in legal_status_required:
+            try:
+                legal_status_instance = LegalStatus.objects.get(name=status["status"])
+            except LegalStatus.DoesNotExist:
+                legal_status_instance = LegalStatus.objects.create(name=status["status"])
+            statuses.append(legal_status_instance)
+        program.legal_status_required = statuses
+
+        # add documents
+        documents = []
+        for document_name in data["documents"]:
+            doc = Document.objects.get(external_name=document_name)
+            documents.append(doc)
+        program.documents = documents
+
+        program.save()
+
+    @classmethod
+    def initialize_instance(cls, external_name: str) -> "Program":
+        return Program.objects.new_program(external_name)
 
 
 # This model describes all of the benefit programs available in the screener
@@ -203,6 +293,8 @@ class Program(models.Model):
     )
 
     objects = ProgramManager()
+
+    TranslationExportBuilder = ProgramDataController
 
     # This function provides eligibility calculation for any benefit program
     # in the system when passed the screen. As some benefits depend on
@@ -283,6 +375,71 @@ class UrgentNeedManager(models.Manager):
         return urgent_need
 
 
+class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
+    _model_name = "UrgentNeed"
+
+    CategoriesType = list[TypedDict("CategoryType", {"name": str})]
+    NeedFunctionsType = list[TypedDict("NeedFunctionType", {"name": str})]
+    DataType = TypedDict(
+        "DataType",
+        {
+            "phone_number": Optional[str],
+            "active": bool,
+            "low_confidence": str,
+            "categories": CategoriesType,
+            "functions": NeedFunctionsType,
+        },
+    )
+
+    def _category(self) -> CategoriesType:
+        return ([t.name for t in self.instance.type_short.all()],)
+
+    def _functions(self) -> NeedFunctionsType:
+        return [f.name for f in self.instance.functions.all()]
+
+    def to_model_data(self) -> DataType:
+        need = self.instance
+        return {
+            "phone_number": need.phone_number,
+            "active": need.active,
+            "low_confidence": need.low_confidence,
+            "categories": self._category(),
+            "functions": self._functions(),
+        }
+
+    def from_model_data(self, data: DataType):
+        need = self.instance
+        need.phone_number = data["phone_number"]
+        need.active = data["active"]
+        need.low_confidence = data["low_confidence"]
+
+        # get or create type short
+        categories = []
+        for category in data["categories"]:
+            try:
+                cat_instance = UrgentNeedCategory.objects.get(name=category["name"])
+            except UrgentNeedCategory.DoesNotExist:
+                cat_instance = UrgentNeedFunction.objects.create(name=category["name"])
+            categories.append(cat_instance)
+        need.type_short = categories
+
+        # get or create functions
+        functions = []
+        for function in data["functions"]:
+            try:
+                func_instance = UrgentNeedFunction.objects.get(name=function["name"])
+            except UrgentNeedFunction.DoesNotExist:
+                func_instance = UrgentNeedFunction.objects.create(name=function["name"])
+            functions.append(func_instance)
+        need.functions = functions
+
+        need.save()
+
+    @classmethod
+    def initialize_instance(cls, external_name: str) -> "UrgentNeed":
+        return UrgentNeed.objects.new_urgent_need(external_name, None)
+
+
 class UrgentNeed(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
@@ -311,6 +468,8 @@ class UrgentNeed(models.Model):
     )
 
     objects = UrgentNeedManager()
+
+    TranslationExportBuilder = UrgentNeedDataController
 
     def __str__(self):
         return self.name.text
@@ -359,6 +518,76 @@ class NavigatorManager(models.Manager):
         return navigator
 
 
+class NavigatorDataController(ModelDataController["Navigator"]):
+    _model_name = "Navigator"
+    dependencies = ["Program"]
+
+    CountiesType = list[TypedDict("CountyType", {"name": str})]
+    LanugagesType = list[TypedDict("LanguageType", {"code": str})]
+    DataType = TypedDict(
+        "DataType",
+        {
+            "phone_number": Optional[str],
+            "counties": CountiesType,
+            "languages": LanugagesType,
+            "programs": list[str],
+        },
+    )
+
+    def _counties(self) -> CountiesType:
+        return [{"name": c.name} for c in self.instance.counties.all()]
+
+    def _languages(self) -> LanugagesType:
+        return [{"code": l.code} for l in self.instance.languages.all()]
+
+    def to_model_data(self) -> DataType:
+        navigator = self.instance
+        return {
+            "phone_number": navigator.phone_number,
+            "counties": self._counties(),
+            "languages": self._languages(),
+            "programs": [p.external_name for p in navigator.programs.all()],
+        }
+
+    def from_model_data(self, data: DataType):
+        navigator = self.instance
+
+        navigator.phone_number = data["phone_number"]
+
+        # get or create counties
+        counties = []
+        for county in data["counties"]:
+            try:
+                county_instance = County.objects.get(name=county["name"])
+            except County.DoesNotExist:
+                county_instance = County.objects.create(name=county["name"])
+            counties.append(county_instance)
+        navigator.counties = counties
+
+        # get or create languages
+        langs = []
+        for lang in data["languages"]:
+            try:
+                lang_instance = NavigatorLanguage.objects.get(code=lang["code"])
+            except NavigatorLanguage.DoesNotExist:
+                lang_instance = NavigatorLanguage.objects.create(code=lang["code"])
+            langs.append(lang_instance)
+        navigator.languages = langs
+
+        # get programs
+        programs = []
+        for external_name in data["programs"]:
+            program_instance = Program.objects.get(external_id=external_name)
+            programs.append(program_instance)
+        navigator.programs = programs
+
+        navigator.save()
+
+    @classmethod
+    def initialize_instance(cls, external_name: str) -> "Navigator":
+        return Navigator.objects.new_navigator(external_name, None)
+
+
 class Navigator(models.Model):
     programs = models.ManyToManyField(Program, related_name="navigator", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
@@ -380,6 +609,8 @@ class Navigator(models.Model):
     )
 
     objects = NavigatorManager()
+
+    TranslationExportBuilder = NavigatorDataController
 
     def __str__(self):
         return self.name.text
@@ -412,6 +643,53 @@ class WarningMessageManager(models.Manager):
         return warning
 
 
+class WarningMessageDataController(ModelDataController["WarningMessage"]):
+    _model_name = "WarningMessage"
+    dependencies = ["Programs"]
+
+    CountiesType = list[TypedDict("CountyType", {"name": str})]
+    DataType = TypedDict("DataType", {"calculator": str, "counties": CountiesType, "programs": list[str]})
+
+    def _counties(self) -> CountiesType:
+        return [{"name": c.name} for c in self.instance.counties.all()]
+
+    def to_model_data(self) -> DataType:
+        warning = self.instance
+        return {
+            "calculator": warning.calculator,
+            "counties": self._counties(),
+            "programs": [p.external_name for p in warning.programs.all()],
+        }
+
+    def from_model_data(self, data: DataType):
+        warning = self.instance
+
+        warning.calculator = data["calculator"]
+
+        # get or create counties
+        counties = []
+        for county in data["counties"]:
+            try:
+                county_instance = County.objects.get(name=county["name"])
+            except County.DoesNotExist:
+                county_instance = County.objects.create(name=county["name"])
+            counties.append(county_instance)
+        warning.counties = counties
+
+        # get programs
+        programs = []
+        for external_name in data["programs"]:
+            program_instance = Program.objects.get(external_id=external_name)
+            programs.append(program_instance)
+        warning.programs = programs
+
+        warning.save()
+
+    @classmethod
+    def initialize_instance(cls, external_name: str) -> "WarningMessage":
+        return WarningMessage.objects.create("_show", external_name)
+
+
 class WarningMessage(models.Model):
     programs = models.ManyToManyField(Program, related_name="warning_messages", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
@@ -423,6 +701,8 @@ class WarningMessage(models.Model):
     )
 
     objects = WarningMessageManager()
+
+    TranslationExportBuilder = WarningMessageDataController
 
     @property
     def county_names(self) -> list[str]:
