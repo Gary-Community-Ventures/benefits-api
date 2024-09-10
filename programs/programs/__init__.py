@@ -4,4 +4,9 @@ from .federal import federal_calculators
 from .dev import dev_calculators
 from .calc import ProgramCalculator
 
-calculators: dict[str, type[ProgramCalculator]] = {**co_calculators, **nc_calculators, **federal_calculators, **dev_calculators}
+calculators: dict[str, type[ProgramCalculator]] = {
+    **co_calculators,
+    **nc_calculators,
+    **federal_calculators,
+    **dev_calculators,
+}
