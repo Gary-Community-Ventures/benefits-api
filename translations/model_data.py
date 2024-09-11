@@ -13,11 +13,11 @@ class ModelDataController(Generic[T]):
         self.instance = instance
 
     @property
-    def model_name(self):
+    def model_name(self) -> str:
         return self._model_name if self._model_name != "" else self.instance.__class__.__name__
 
     @property
-    def external_name(self):
+    def external_name(self) -> str:
         return self.instance.external_name
 
     def to_model_data(self) -> DataType:

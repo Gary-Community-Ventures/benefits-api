@@ -89,6 +89,7 @@ class TranslationManager(TranslatableManager):
                     instance_data[export_builder.external_name] = {
                         "data": export_builder.to_model_data(),
                         "labels": {},
+                        "external_name": export_builder.external_name,
                     }
 
                 instance_data[export_builder.external_name]["labels"][field_name] = translation.label
