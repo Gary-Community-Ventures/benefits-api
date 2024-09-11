@@ -27,5 +27,16 @@ class ModelDataController(Generic[T]):
         pass
 
     @classmethod
-    def initialize_instance(cls, external_name: str) -> T:
-        raise NotImplemented("initialize_instance must be defined")
+    def get_instance(cls, external_name: str, Model: type[T]) -> T:
+        return Model.objects.get(external_name=external_name)
+
+    @classmethod
+    def create_instance(cls, external_name: str, Model: type[T]) -> T:
+        raise NotImplemented('"create_instance" must be defined')
+
+    @classmethod
+    def initialize_instance(cls, external_name: str, Model: type[T]) -> T:
+        try:
+            return cls.get_instance(external_name, Model)
+        except Model.DoesNotExist:
+            return cls.create_instance(external_name, Model)

@@ -99,8 +99,8 @@ class DocumentDataController(ModelDataController["Document"]):
     _model_name = "Document"
 
     @classmethod
-    def initialize_instance(cls, external_name: str) -> "Document":
-        return Document.objects.new_document(external_name)
+    def create_instance(cls, external_name: str, Model: type["Document"]) -> "Document":
+        return Model.objects.new_document(external_name)
 
 
 class Document(models.Model):
@@ -186,9 +186,10 @@ class ProgramDataController(ModelDataController["Program"]):
         program = self.instance
         return {
             "fpl": self._fpl(),
-            "legal_status_required": {"statuses": self._legal_statuses()},
+            "legal_status_required": self._legal_statuses(),
             "active": program.active,
             "low_confidence": program.low_confidence,
+            "name_abbreviated": program.name_abbreviated,
             "documents": [d.external_name for d in program.documents.all()],
         }
 
@@ -202,36 +203,38 @@ class ProgramDataController(ModelDataController["Program"]):
 
         # get or create fpl
         fpl = data["fpl"]
-        try:
-            fpl_instance = FederalPoveryLimit.objects.get(year=fpl["name"])
-        except FederalPoveryLimit.DoesNotExist:
-            fpl_instance = FederalPoveryLimit.objects.create(year=fpl["name"], period=fpl["period"])
-
-        program.fpl = fpl_instance
+        if fpl is not None:
+            try:
+                fpl_instance = FederalPoveryLimit.objects.get(year=fpl["year"])
+            except FederalPoveryLimit.DoesNotExist:
+                fpl_instance = FederalPoveryLimit.objects.create(year=fpl["year"], period=fpl["period"])
+            program.fpl = fpl_instance
+        else:
+            program.fpl = None
 
         # get or create legal status required
         legal_status_required = data["legal_status_required"]
         statuses = []
         for status in legal_status_required:
             try:
-                legal_status_instance = LegalStatus.objects.get(name=status["status"])
+                legal_status_instance = LegalStatus.objects.get(status=status["status"])
             except LegalStatus.DoesNotExist:
-                legal_status_instance = LegalStatus.objects.create(name=status["status"])
+                legal_status_instance = LegalStatus.objects.create(status=status["status"])
             statuses.append(legal_status_instance)
-        program.legal_status_required = statuses
+        program.legal_status_required.set(statuses)
 
         # add documents
         documents = []
         for document_name in data["documents"]:
             doc = Document.objects.get(external_name=document_name)
             documents.append(doc)
-        program.documents = documents
+        program.documents.set(documents)
 
         program.save()
 
     @classmethod
-    def initialize_instance(cls, external_name: str) -> "Program":
-        return Program.objects.new_program(external_name)
+    def create_instance(cls, external_name: str, Model: type["Program"]) -> "Program":
+        return Model.objects.new_program(external_name)
 
 
 # This model describes all of the benefit programs available in the screener
@@ -392,10 +395,10 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
     )
 
     def _category(self) -> CategoriesType:
-        return ([t.name for t in self.instance.type_short.all()],)
+        return [{"name": t.name} for t in self.instance.type_short.all()]
 
     def _functions(self) -> NeedFunctionsType:
-        return [f.name for f in self.instance.functions.all()]
+        return [{"name": f.name} for f in self.instance.functions.all()]
 
     def to_model_data(self) -> DataType:
         need = self.instance
@@ -421,7 +424,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             except UrgentNeedCategory.DoesNotExist:
                 cat_instance = UrgentNeedFunction.objects.create(name=category["name"])
             categories.append(cat_instance)
-        need.type_short = categories
+        need.type_short.set(categories)
 
         # get or create functions
         functions = []
@@ -431,13 +434,13 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             except UrgentNeedFunction.DoesNotExist:
                 func_instance = UrgentNeedFunction.objects.create(name=function["name"])
             functions.append(func_instance)
-        need.functions = functions
+        need.functions.set(functions)
 
         need.save()
 
     @classmethod
-    def initialize_instance(cls, external_name: str) -> "UrgentNeed":
-        return UrgentNeed.objects.new_urgent_need(external_name, None)
+    def create_instance(cls, external_name: str, Model: type["UrgentNeed"]) -> "UrgentNeed":
+        return Model.objects.new_urgent_need(external_name, None)
 
 
 class UrgentNeed(models.Model):
@@ -562,7 +565,7 @@ class NavigatorDataController(ModelDataController["Navigator"]):
             except County.DoesNotExist:
                 county_instance = County.objects.create(name=county["name"])
             counties.append(county_instance)
-        navigator.counties = counties
+        navigator.counties.set(counties)
 
         # get or create languages
         langs = []
@@ -572,20 +575,20 @@ class NavigatorDataController(ModelDataController["Navigator"]):
             except NavigatorLanguage.DoesNotExist:
                 lang_instance = NavigatorLanguage.objects.create(code=lang["code"])
             langs.append(lang_instance)
-        navigator.languages = langs
+        navigator.languages.set(langs)
 
         # get programs
         programs = []
         for external_name in data["programs"]:
-            program_instance = Program.objects.get(external_id=external_name)
+            program_instance = Program.objects.get(external_name=external_name)
             programs.append(program_instance)
-        navigator.programs = programs
+        navigator.programs.set(programs)
 
         navigator.save()
 
     @classmethod
-    def initialize_instance(cls, external_name: str) -> "Navigator":
-        return Navigator.objects.new_navigator(external_name, None)
+    def create_instance(cls, external_name: str, Model: type["Navigator"]) -> "Navigator":
+        return Model.objects.new_navigator(external_name, None)
 
 
 class Navigator(models.Model):
@@ -645,7 +648,7 @@ class WarningMessageManager(models.Manager):
 
 class WarningMessageDataController(ModelDataController["WarningMessage"]):
     _model_name = "WarningMessage"
-    dependencies = ["Programs"]
+    dependencies = ["Program"]
 
     CountiesType = list[TypedDict("CountyType", {"name": str})]
     DataType = TypedDict("DataType", {"calculator": str, "counties": CountiesType, "programs": list[str]})
@@ -674,20 +677,20 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
             except County.DoesNotExist:
                 county_instance = County.objects.create(name=county["name"])
             counties.append(county_instance)
-        warning.counties = counties
+        warning.counties.set(counties)
 
         # get programs
         programs = []
         for external_name in data["programs"]:
-            program_instance = Program.objects.get(external_id=external_name)
+            program_instance = Program.objects.get(external_name=external_name)
             programs.append(program_instance)
-        warning.programs = programs
+        warning.programs.set(programs)
 
         warning.save()
 
     @classmethod
-    def initialize_instance(cls, external_name: str) -> "WarningMessage":
-        return WarningMessage.objects.create("_show", external_name)
+    def create_instance(cls, external_name: str, Model: type["WarningMessage"]) -> "WarningMessage":
+        return Model.objects.create("_show", external_name)
 
 
 class WarningMessage(models.Model):

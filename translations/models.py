@@ -69,6 +69,10 @@ class TranslationManager(TranslatableManager):
 
             for relationship in related_instances:
                 instance = relationship.instance
+
+                if instance.external_name is None:
+                    continue
+
                 field_name = relationship.field_name
                 TranslationExportBuilder: type[ModelDataController] = getattr(
                     instance, "TranslationExportBuilder", ModelDataController
@@ -80,7 +84,7 @@ class TranslationManager(TranslatableManager):
                 model_name = export_builder.model_name
                 if model_name not in model_data:
                     model_data[model_name] = {
-                        "meta_data": {"dependencies": TranslationExportBuilder.dependencies},
+                        "meta_data": {"dependencies": TranslationExportBuilder.dependencies, "name": model_name},
                         "instance_data": {},
                     }
                 instance_data = model_data[model_name]["instance_data"]
