@@ -41,7 +41,7 @@ def bulk_add(translations):
         TranslationExportBuilder: type[ModelDataController] = Model.TranslationExportBuilder
 
         model_data = list(translations["model_data"][model_name]["instance_data"].values())
-        for i in trange(len(model_data), desc=model_name.ljust(longest_name, ' ')):
+        for i in trange(len(model_data), desc=model_name.ljust(longest_name, " ")):
             instance_data = model_data[i]
             instance = TranslationExportBuilder.initialize_instance(instance_data["external_name"], Model)
             builder = TranslationExportBuilder(instance)
@@ -52,7 +52,6 @@ def bulk_add(translations):
                 translation = create_translation(label, translations["translations"][label])
                 getattr(translation, field).set([instance])
 
-
     protected_translation_ids = []
 
     for Model in TRANSLATED_MODELS:
@@ -61,7 +60,7 @@ def bulk_add(translations):
     Translation.objects.exclude(id__in=protected_translation_ids).delete()
 
     translations_data = list(translations["translations"].items())
-    for i in trange(len(translations_data), desc=TRANSLATION_PROGRESS_BAR_DESC.ljust(longest_name, ' ')):
+    for i in trange(len(translations_data), desc=TRANSLATION_PROGRESS_BAR_DESC.ljust(longest_name, " ")):
         label, details = translations_data[i]
         create_translation(label, details)
 
