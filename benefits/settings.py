@@ -315,6 +315,7 @@ UNFOLD = {
     },
 }
 
+# generate uml with: ./manage.py graph_models --pydot
 GRAPH_MODELS = {
     "output": "./_mfb_uml.png",
     "group_models": True,
