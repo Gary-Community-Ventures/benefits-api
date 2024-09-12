@@ -284,7 +284,7 @@ UNFOLD = {
                         "link": reverse_lazy("admin:index"),
                     },
                     {
-                        "title": _("Translations API"),
+                        "title": _("Translations Admin"),
                         "icon": "settings",
                         "link": reverse_lazy("translations_api_url"),
                     },
