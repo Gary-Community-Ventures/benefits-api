@@ -4,6 +4,7 @@ venv/
 env/
 *.sqlite3
 .idea/
+_mfb_uml.png
 
 # Secure Files
 .env

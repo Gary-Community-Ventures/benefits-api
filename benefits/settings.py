@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "drf_yasg",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -312,4 +313,10 @@ UNFOLD = {
             },
         ],
     },
+}
+
+GRAPH_MODELS = {
+    "output": "./_mfb_uml.png",
+    "group_models": True,
+    "app_labels": ["screener", "programs", "configuration", "validations", "authentication"],
 }
