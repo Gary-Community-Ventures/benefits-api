@@ -273,11 +273,6 @@ UNFOLD = {
                         "icon": "tune",
                         "link": reverse_lazy("admin:configuration_configuration_changelist"),
                     },
-                    {
-                        "title": _("Translations"),
-                        "icon": "translate",
-                        "link": reverse_lazy("admin:translations_translation_changelist"),
-                    },
                 ],
             },
             {
