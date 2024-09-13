@@ -288,7 +288,7 @@ class Screen(models.Model):
             "oap": self.has_oap,
             "coctc": self.has_coctc,
             "upk": self.has_upk,
-            "ssdi": self.has_ssdi or self.calc_gross_income("yearly", ("sSDisability",)) > 0,
+            "ssdi": self.has_ssdi,
             "pell_grant": self.has_pell_grant,
             "rag": self.has_rag,
             "nfp": self.has_nfp,

@@ -44,6 +44,10 @@ class Ssdi(ProgramCalculator):
             self.screen.household_members.all(),
             [
                 (lambda m: m.has_disability(), messages.has_disability()),
+                (
+                    lambda m: m.calc_gross_income("yearly", ("sSDisability",)) == 0,
+                    messages.must_not_have_benefit("SSDI"),
+                ),
                 (income_condition, None),
                 (lambda m: self._child_eligible(m) or m.age >= Ssdi.min_age, None),
             ],
