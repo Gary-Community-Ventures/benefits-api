@@ -129,6 +129,7 @@ class Command(BaseCommand):
         },
         "dhs": "Denver Human Services",
         "ccig": "Colorado Community Insight Group",
+        "eaglecounty": "Eagle County",
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
             "_default_message": "Test / Prospective Partner",
@@ -2761,6 +2762,7 @@ class Command(BaseCommand):
             "coBenefits": "CO_MFBLogo",
             "dhs": "DHS_MFBLogo",
             "ccig": "CCIG_Logo",
+            "eaglecounty": "EC_MFBLogo",
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
@@ -2795,10 +2797,14 @@ class Command(BaseCommand):
                 "id": "referrerHook.logoAlts.ccig",
                 "defaultMessage": "CCIG and MyFriendBen home page button",
             },
+            "eaglecounty": {
+                "id": "referrerHook.logoAlts.eaglecounty",
+                "defaultMessage": "Eagle County and MyFriendBen home page button",
+            },
         },
         "logoFooterSource": {"default": "MFB_Logo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
-        "logoClass": {"default": "logo"},
+        "logoClass": {"default": "logo", "eaglecounty": "eaglecounty-logo-size"},
         "twoOneOneLink": {
             "default": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id="211mfb"',
             "211co": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=whitelabel&utm_id="211mfb"',
@@ -2807,6 +2813,16 @@ class Command(BaseCommand):
             "default": "https://screener.myfriendben.org",
             "211co": 'https://screener.myfriendben.org?referrer="211co"',
         },
+    }
+
+    footer_data = {
+        "address_one": "1705 17th St.",
+        "address_two": "Suite 200",
+        "city": "Denver",
+        "state": "CO",
+        "zip_code": 80202,
+        "email": "myfriendben@garycommunity.org",
+        "privacy_policy_link": "https://co.myfriendben.org/en/data-privacy-policy",
     }
 
     @transaction.atomic
@@ -2867,3 +2883,6 @@ class Command(BaseCommand):
 
         # Save referrer_data to database
         Configuration.objects.create(name="referrer_data", data=self.referrer_data, active=True)
+
+        # Save footer_data to database
+        Configuration.objects.create(name="footer_data", data=self.footer_data, active=True)

@@ -220,7 +220,12 @@ class CoLegalServices(UrgentNeedFunction):
         fpl = FederalPoveryLimit.objects.get(year="THIS YEAR").as_dict()
         is_income_eligible = self.screen.calc_gross_income("yearly", ["all"]) < fpl[self.screen.household_size]
         is_age_eligible = self.screen.num_adults(age_max=self.max_age) > 0
-        return is_income_eligible or is_age_eligible
+        main_eligibility = is_age_eligible or is_income_eligible
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        # don't apply the rent/mortgage condition to legal services need
+        rent_mortgage_eligible = has_rent_or_mortgage or self.screen.needs_legal_services
+
+        return main_eligibility and rent_mortgage_eligible
 
 
 class CoEmergencyMortgageIncomeLimitCache(GoogleSheetsCache):
@@ -427,6 +432,42 @@ class HasRentOrMortgage(UrgentNeedFunction):
         return has_rent_or_mortgage
 
 
+DIAPER_BANK_COUNTIES = [
+    "Adams County",
+    "Arapahoe County",
+    "Boulder County",
+    "Broomfield County",
+    "Denver County",
+    "Douglas County",
+    "Jefferson County",
+    "Larimer County",
+    "Mesa County",
+    "Weld County",
+]
+
+
+class FamilyResourceCenterAssociation(UrgentNeedFunction):
+    ineligible_counties = DIAPER_BANK_COUNTIES
+
+    def eligible(self):
+        """
+        Return True for users who live in an eligible county
+        """
+
+        return self.screen.county not in self.ineligible_counties
+
+
+class NationalDiaperBank(UrgentNeedFunction):
+    eligible_counties = DIAPER_BANK_COUNTIES
+
+    def eligible(self):
+        """
+        Return True for users who live in an eligible county
+        """
+
+        return self.screen.county in self.eligible_counties
+
+
 urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "denver": LivesInDenver,
     "meal": MealInCounties,
@@ -446,4 +487,6 @@ urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "eic": EarlyIntervention,
     "deap": DenverEmergencyAssistance,
     "has_rent_or_mtg": HasRentOrMortgage,
+    "frca": FamilyResourceCenterAssociation,
+    "diaper_bank": NationalDiaperBank,
 }
