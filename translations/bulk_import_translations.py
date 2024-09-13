@@ -1,3 +1,4 @@
+from translations.model_data import ModelDataController
 from .models import Translation
 from programs.models import Program, Navigator, UrgentNeed, Document, WarningMessage
 from django.db import transaction
@@ -7,75 +8,61 @@ from tqdm import trange
 from decouple import config
 
 
+TRANSLATED_MODEL_MAP = {
+    "Program": Program,
+    "UrgentNeed": UrgentNeed,
+    "Navigator": Navigator,
+    "Document": Document,
+    "WarningMessage": WarningMessage,
+}
+
+TRANSLATED_MODELS = TRANSLATED_MODEL_MAP.values()
+
+
 @transaction.atomic
 def bulk_add(translations):
     if config("ALLOW_TRANSLATION_IMPORT", "False") != "True":
         raise Exception("Translation import not allowed")
 
-    protected_translation_ids = []
+    for Model in TRANSLATED_MODELS:
+        Model.objects.select_for_update().all()
     Translation.objects.select_for_update().all()
-    protected_translation_ids += translation_ids(Program)
-    protected_translation_ids += translation_ids(Navigator)
-    protected_translation_ids += translation_ids(UrgentNeed)
-    protected_translation_ids += translation_ids(Document)
-    protected_translation_ids += translation_ids(WarningMessage)
 
-    Program.objects.select_for_update().all()
-    UrgentNeed.objects.select_for_update().all()
+    order = model_order(translations["model_data"])
 
-    Program.objects.all().update(active=False)
-    UrgentNeed.objects.all().update(active=False)
+    TRANSLATION_PROGRESS_BAR_DESC = "Translations"
+    longest_name = len(TRANSLATION_PROGRESS_BAR_DESC)
+    for model_name in order:
+        if len(model_name) > longest_name:
+            longest_name = len(model_name)
+
+    for model_name in order:
+        Model = TRANSLATED_MODEL_MAP[model_name]
+        TranslationExportBuilder: type[ModelDataController] = Model.TranslationExportBuilder
+
+        model_data = list(translations["model_data"][model_name]["instance_data"].values())
+        for i in trange(len(model_data), desc=model_name.ljust(longest_name, " ")):
+            instance_data = model_data[i]
+            instance = TranslationExportBuilder.initialize_instance(instance_data["external_name"], Model)
+            builder = TranslationExportBuilder(instance)
+
+            builder.from_model_data(instance_data["data"])
+
+            for field, label in instance_data["labels"].items():
+                translation = create_translation(label, translations["translations"][label])
+                getattr(translation, field).set([instance])
+
+    protected_translation_ids = []
+
+    for Model in TRANSLATED_MODELS:
+        protected_translation_ids += translation_ids(Model)
 
     Translation.objects.exclude(id__in=protected_translation_ids).delete()
 
-    translations_data = list(translations.items())
-    for i in trange(len(translations_data), desc="Translations"):
+    translations_data = list(translations["translations"].items())
+    for i in trange(len(translations_data), desc=TRANSLATION_PROGRESS_BAR_DESC.ljust(longest_name, " ")):
         label, details = translations_data[i]
-        translation = Translation.objects.add_translation(
-            label, details["langs"][settings.LANGUAGE_CODE][0], active=details["active"], no_auto=details["no_auto"]
-        )
-        del details["langs"][settings.LANGUAGE_CODE]
-
-        if details["reference"] is not False:
-            ref = details["reference"]
-            if ref[0] == "programs_program":
-                try:
-                    obj = Program.objects.get(external_name=ref[1])
-                except ObjectDoesNotExist:
-                    obj = Program.objects.new_program(ref[1])
-                    obj.external_name = ref[1]
-                obj.active = ref[3] if len(ref) == 4 else False
-                obj.save()
-            elif ref[0] == "programs_navigator":
-                try:
-                    obj = Navigator.objects.get(external_name=ref[1])
-                except ObjectDoesNotExist:
-                    obj = Navigator.objects.new_navigator(ref[1], None)
-                    obj.external_name = ref[1]
-                    obj.save()
-            elif ref[0] == "programs_urgentneed":
-                try:
-                    obj = UrgentNeed.objects.get(external_name=ref[1])
-                except ObjectDoesNotExist:
-                    obj = UrgentNeed.objects.new_urgent_need(ref[1], None)
-                    obj.external_name = ref[1]
-                obj.active = ref[3] if len(ref) == 4 else False
-                obj.save()
-            elif ref[0] == "programs_document":
-                try:
-                    obj = Document.objects.get(external_name=ref[1])
-                except ObjectDoesNotExist:
-                    obj = Document.objects.new_document(ref[1])
-            elif ref[0] == "programs_warningmessage":
-                try:
-                    obj = WarningMessage.objects.get(external_name=ref[1])
-                except ObjectDoesNotExist:
-                    obj = WarningMessage.objects.new_warning(ref[1])
-
-            getattr(translation, ref[2]).set([obj])
-
-        for lang, message in details["langs"].items():
-            Translation.objects.edit_translation_by_id(translation.id, lang, message[0], manual=message[1])
+        create_translation(label, details)
 
 
 def translation_ids(model):
@@ -85,3 +72,54 @@ def translation_ids(model):
             ids.append(getattr(obj, field).id)
 
     return ids
+
+
+def create_translation(label: str, details):
+    translation = Translation.objects.add_translation(
+        label, details["langs"][settings.LANGUAGE_CODE][0], active=details["active"], no_auto=details["no_auto"]
+    )
+
+    for lang, message in details["langs"].items():
+        if lang == settings.LANGUAGE_CODE:
+            continue
+        Translation.objects.edit_translation_by_id(translation.id, lang, message[0], manual=message[1])
+
+    return translation
+
+
+def model_order(model_data):
+    graph = {}
+    for model in model_data.values():
+        graph[model["meta_data"]["name"]] = model["meta_data"]["dependencies"]
+
+    for node in graph:
+        check_cycle(graph, [node])
+
+    order = []
+
+    for name in graph:
+        add_model_to_order(order, graph, name)
+
+    return order
+
+
+def check_cycle(graph: dict[str, list[str]], visited: list[str]):
+    for dependency in graph[visited[-1]]:
+        if dependency not in graph:
+            raise KeyError(f'"{dependency}" in "{visited[-1]}" is not a valid depenendency')
+        if dependency in visited:
+            # if the dependency is in visited, that means that there is a cycle
+            raise Exception("circular dependencies detected")
+
+        check_cycle(graph, [*visited, dependency])
+
+
+def add_model_to_order(order: list[str], graph: dict[str, list[str]], name: str):
+    if name in order:
+        return
+
+    for dependency in graph[name]:
+        # dependencies should be added to the list first
+        add_model_to_order(order, graph, dependency)
+
+    order.append(name)
