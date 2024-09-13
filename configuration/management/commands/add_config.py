@@ -129,6 +129,7 @@ class Command(BaseCommand):
         },
         "dhs": "Denver Human Services",
         "ccig": "Colorado Community Insight Group",
+        "eaglecounty": "Eagle County",
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
             "_default_message": "Test / Prospective Partner",
@@ -2761,6 +2762,7 @@ class Command(BaseCommand):
             "coBenefits": "CO_MFBLogo",
             "dhs": "DHS_MFBLogo",
             "ccig": "CCIG_Logo",
+            "eaglecounty": "EC_MFBLogo",
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
@@ -2794,6 +2796,10 @@ class Command(BaseCommand):
             "ccig": {
                 "id": "referrerHook.logoAlts.ccig",
                 "defaultMessage": "CCIG and MyFriendBen home page button",
+            },
+            "eaglecounty": {
+                "id": "referrerHook.logoAlts.eaglecounty",
+                "defaultMessage": "Eagle County and MyFriendBen home page button",
             },
         },
         "logoFooterSource": {"default": "MFB_Logo"},
