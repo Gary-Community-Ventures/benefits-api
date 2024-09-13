@@ -1,17 +1,38 @@
 from typing import Any
 from django.db import models
+from django.urls import reverse
 from parler.models import TranslatableModel, TranslatedFields, TranslatableManager
 from django.conf import settings
 from tqdm import trange
 from dataclasses import dataclass
+from integrations.util.cache import Cache
 from translations.model_data import ModelDataController
 
 
 BLANK_TRANSLATION_PLACEHOLDER = "[PLACEHOLDER]"
 
 
+class TranslationCache(Cache):
+    expire_time = 24 * 60 * 60
+    default = {}
+
+    def update(self):
+        langs = [lang["code"] for lang in settings.PARLER_LANGUAGES[None]]
+        translations = Translation.objects.prefetch_related("translations")
+        translations_dict = {}
+        for lang in langs:
+            lang_translations = {}
+            for translation in translations:
+                if translation.active:
+                    translation.set_current_language(lang)
+                    lang_translations[translation.label] = translation.text
+            translations_dict[lang] = lang_translations
+        return translations_dict
+
+
 class TranslationManager(TranslatableManager):
     use_in_migrations = True
+    translation_cache = TranslationCache()
 
     def add_translation(self, label, default_message=BLANK_TRANSLATION_PLACEHOLDER, active=True, no_auto=False):
         default_lang = settings.LANGUAGE_CODE
@@ -22,6 +43,7 @@ class TranslationManager(TranslatableManager):
             parent.save()
 
         parent.create_translation(default_lang, text=default_message, edited=True)
+        self.translation_cache.invalid = True
         return parent
 
     def edit_translation(self, label, lang, translation, manual=True):
@@ -33,6 +55,7 @@ class TranslationManager(TranslatableManager):
         parent.text = translation
         parent.edited = manual
         parent.save()
+        self.translation_cache.invalid = True
         return parent
 
     def edit_translation_by_id(self, id, lang, translation, manual=True):
@@ -44,18 +67,14 @@ class TranslationManager(TranslatableManager):
         parent.text = translation
         parent.edited = manual
         parent.save()
+        self.translation_cache.invalid = True
         return parent
 
     def all_translations(self, langs=[lang["code"] for lang in settings.PARLER_LANGUAGES[None]]):
-        translations = self.prefetch_related("translations")
         translations_dict = {}
         for lang in langs:
-            lang_translations = {}
-            for translation in translations:
-                if translation.active:
-                    translation.set_current_language(lang)
-                    lang_translations[translation.label] = translation.text
-            translations_dict[lang] = lang_translations
+            translations_dict[lang] = self.translation_cache.fetch()[lang]
+
         return translations_dict
 
     def export_translations(self):
@@ -175,8 +194,9 @@ class Translation(TranslatableModel):
         an external name or an abbreviated name). If no relationship is found, it returns
         default values indicating the translation is unassigned.
         """
-        reverse = self._get_reverses()[0]
-        if reverse:
+        reverses = self._get_reverses()
+        if len(reverses) >= 1:
+            reverse = reverses[0]
             instance = getattr(self, reverse.get_accessor_name()).first()
             model_name = reverse.related_model._meta.model_name
             field_name = reverse.field.name
