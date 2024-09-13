@@ -14,7 +14,7 @@ class Ssdi(ProgramCalculator):
     amount = 1_537
     min_age = 18
     ineligible_relationships = ["fosterChild", "grandChild"]
-    parent_relationships = ["spouse", "headOfHousehold"]
+    parent_relationships = ["spouse", "domesticPartner" "headOfHousehold"]
     dependencies = ["income_amount", "income_frequency", "household_size"]
 
     def __init__(self, screen: Screen, program: "Program", data):
