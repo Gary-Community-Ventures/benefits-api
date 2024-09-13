@@ -5,7 +5,6 @@ from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
 from django.conf import settings
-from django.db import connection
 
 
 # The screen is the top most container for all information collected in the

@@ -81,6 +81,7 @@ class FamilyAffordabilityTaxCredit(PolicyEngineMembersCalculator):
     ]
     pe_outputs = [dependency.member.FamilyAffordabilityTaxCredit]
 
+
 class CoWic(Wic):
     wic_categories = {
         "NONE": 0,

@@ -6,6 +6,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: rickstaa/action-black@v1
+      - uses: psf/black@stable
         with:
-          black_args: ". --check -l 120"
+          options: --check --verbose --extend-exclude='^.*/migrations/\d{4}.*\.py' -l 120
