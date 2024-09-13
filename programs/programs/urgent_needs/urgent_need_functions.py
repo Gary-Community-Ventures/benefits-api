@@ -427,6 +427,29 @@ class HasRentOrMortgage(UrgentNeedFunction):
         return has_rent_or_mortgage
 
 
+class FamilyResourceCenterAssociation(UrgentNeedFunction):
+    dependencies = ["county"]
+
+    def eligible(self):
+        """
+        Return True for users who live in an eligible county
+        """
+        ineligible_counties = [
+            "Adams County",
+            "Arapahoe County",
+            "Boulder County",
+            "Broomfield County",
+            "Denver County",
+            "Douglas County",
+            "Jefferson County",
+            "Larimer County",
+            "Mesa County",
+            "Weld County",
+        ]
+
+        return self.screen.county not in ineligible_counties
+
+
 urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "denver": LivesInDenver,
     "meal": MealInCounties,
@@ -446,4 +469,5 @@ urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "eic": EarlyIntervention,
     "deap": DenverEmergencyAssistance,
     "has_rent_or_mtg": HasRentOrMortgage,
+    "frca": FamilyResourceCenterAssociation,
 }
