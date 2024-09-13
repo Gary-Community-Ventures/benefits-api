@@ -432,27 +432,40 @@ class HasRentOrMortgage(UrgentNeedFunction):
         return has_rent_or_mortgage
 
 
+DIAPER_BANK_COUNTIES = [
+    "Adams County",
+    "Arapahoe County",
+    "Boulder County",
+    "Broomfield County",
+    "Denver County",
+    "Douglas County",
+    "Jefferson County",
+    "Larimer County",
+    "Mesa County",
+    "Weld County",
+]
+
+
 class FamilyResourceCenterAssociation(UrgentNeedFunction):
-    dependencies = ["county"]
+    ineligible_counties = DIAPER_BANK_COUNTIES
 
     def eligible(self):
         """
         Return True for users who live in an eligible county
         """
-        ineligible_counties = [
-            "Adams County",
-            "Arapahoe County",
-            "Boulder County",
-            "Broomfield County",
-            "Denver County",
-            "Douglas County",
-            "Jefferson County",
-            "Larimer County",
-            "Mesa County",
-            "Weld County",
-        ]
 
-        return self.screen.county not in ineligible_counties
+        return self.screen.county not in self.ineligible_counties
+
+
+class NationalDiaperBank(UrgentNeedFunction):
+    eligible_counties = DIAPER_BANK_COUNTIES
+
+    def eligible(self):
+        """
+        Return True for users who live in an eligible county
+        """
+
+        return self.screen.county in self.eligible_counties
 
 
 urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
@@ -475,4 +488,5 @@ urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "deap": DenverEmergencyAssistance,
     "has_rent_or_mtg": HasRentOrMortgage,
     "frca": FamilyResourceCenterAssociation,
+    "diaper_bank": NationalDiaperBank,
 }
