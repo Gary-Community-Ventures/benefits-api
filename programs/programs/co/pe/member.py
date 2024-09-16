@@ -107,6 +107,6 @@ class EveryDayEats(CommoditySupplementalFoodProgram):
             ede_eligible = self.sim.value(self.pe_category, str(member.id), self.pe_name, self.pe_period) > 0
 
             if ede_eligible:
-                total += self.amount
+                value += self.amount
 
         return value
