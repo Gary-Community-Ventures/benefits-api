@@ -38,36 +38,11 @@
         <td>{{ translation.active }}</td>
         <td>
           <div class="dropdown">
-            <div class="dropdown-trigger">
-              <button
-                class="button"
-                aria-haspopup="true"
-                aria-controls="dropdown-menu{{ forloop.counter }}"
-              >
-                <span>Go to</span>
-                <span class="material-symbols-outlined"> expand_more </span>
-              </button>
-            </div>
-            <div
-              class="dropdown-menu"
-              id="dropdown-menu{{ forloop.counter }}"
-              role="menu"
+            <a
+              href="/api/translations/admin/{{ translation.id }}"
+              class="dropdown-item"
+              >Edit</a
             >
-              <div class="dropdown-content">
-                <a
-                  href="/api/translations/admin/{{ translation.id }}"
-                  class="dropdown-item"
-                  >Edit</a
-                >
-                <hr class="dropdown-divider" />
-                <a
-                  href="/admin/translations/translation/{{translation.id}}/change/"
-                  class="dropdown-item"
-                >
-                  Edit in Main Admin
-                </a>
-              </div>
-            </div>
           </div>
         </td>
       </tr>

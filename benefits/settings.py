@@ -91,6 +91,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "drf_yasg",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -273,11 +274,6 @@ UNFOLD = {
                         "icon": "tune",
                         "link": reverse_lazy("admin:configuration_configuration_changelist"),
                     },
-                    {
-                        "title": _("Translations"),
-                        "icon": "translate",
-                        "link": reverse_lazy("admin:translations_translation_changelist"),
-                    },
                 ],
             },
             {
@@ -289,7 +285,7 @@ UNFOLD = {
                         "link": reverse_lazy("admin:index"),
                     },
                     {
-                        "title": _("Translations API"),
+                        "title": _("Translations Admin"),
                         "icon": "settings",
                         "link": reverse_lazy("translations_api_url"),
                     },
@@ -312,4 +308,11 @@ UNFOLD = {
             },
         ],
     },
+}
+
+# generate uml with: ./manage.py graph_models --pydot
+GRAPH_MODELS = {
+    "output": "./_mfb_uml.png",
+    "group_models": True,
+    "app_labels": ["screener", "programs", "configuration", "validations", "authentication"],
 }

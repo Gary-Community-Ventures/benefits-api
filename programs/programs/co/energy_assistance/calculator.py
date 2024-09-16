@@ -1,24 +1,26 @@
 from integrations.services.sheets.sheets import GoogleSheetsCache
-from integrations.util.cache import Cache
-from integrations.services.sheets import GoogleSheets
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 from programs.co_county_zips import counties_from_zip
 import math
 
 
-class LeapValueCache(Cache):
+class LeapValueCache(GoogleSheetsCache):
     expire_time = 60 * 60 * 24
     default = []
     sheet_id = "1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg"
-    range_name = "'FFY 2024'!A1:G65"
-    county_column = "2023/2024 Season\nUpdated: \n4/30/2024"
-    average_column = "Average Benefit"
+    range_name = "'FFY 2024'!A2:G65"
 
     def update(self):
-        data = GoogleSheets(self.sheet_id, self.range_name).data_by_column(self.county_column, self.average_column)
+        data = super().update()
 
-        return [[row[self.county_column], row[self.average_column]] for row in data if row != []]
+        return [[self._transform_name(row[0]), self._transform_value(row[6])] for row in data if row != []]
+
+    def _transform_name(self, raw_name: str) -> str:
+        return raw_name.strip().replace("Application County: ", "") + " County"
+
+    def _transform_value(self, raw_value: str) -> int:
+        return int(float(raw_value.replace("$", "")))
 
 
 class LeapIncomeLimitCache(GoogleSheetsCache):
@@ -65,9 +67,9 @@ class EnergyAssistance(ProgramCalculator):
 
         values = []
         for row in data:
-            county = row[0].strip().replace("Application County: ", "") + " County"
+            county = row[0]
             if county in counties:
-                values.append(int(float(row[1].replace("$", ""))))
+                values.append(row[1])
 
         value = 362
         lowest = math.inf
