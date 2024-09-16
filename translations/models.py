@@ -63,8 +63,7 @@ class TranslationManager(TranslatableManager):
         translations = self.prefetch_related("translations")
 
         translations_export = {"translations": {}, "model_data": {}}
-        for i in trange(len(translations), desc="Translations"):
-            translation = translations[i]
+        for translation in translations:
             related_instances = translation.get_reverse_instances()
 
             for relationship in related_instances:

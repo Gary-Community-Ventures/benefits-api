@@ -403,7 +403,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
     def to_model_data(self) -> DataType:
         need = self.instance
         return {
-            "phone_number": need.phone_number,
+            "phone_number": str(need.phone_number) if need.phone_number is not None else None,
             "active": need.active,
             "low_confidence": need.low_confidence,
             "categories": self._category(),
@@ -546,7 +546,7 @@ class NavigatorDataController(ModelDataController["Navigator"]):
     def to_model_data(self) -> DataType:
         navigator = self.instance
         return {
-            "phone_number": navigator.phone_number,
+            "phone_number": str(navigator.phone_number) if navigator.phone_number is not None else None,
             "counties": self._counties(),
             "languages": self._languages(),
             "programs": [p.external_name for p in navigator.programs.all()],
