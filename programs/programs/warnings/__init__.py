@@ -9,6 +9,6 @@ general_calculators: dict[str, type[WarningCalculator]] = {
     "_tax_unit": TaxUnit,
 }
 
-specific_caculators: dict[str, type[WarningCalculator]] = {}
+specific_calculators: dict[str, type[WarningCalculator]] = {}
 
-warning_calculators: dict[str, type[WarningCalculator]] = {**general_calculators, **specific_caculators}
+warning_calculators: dict[str, type[WarningCalculator]] = {**general_calculators, **specific_calculators}
