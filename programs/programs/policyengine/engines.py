@@ -24,13 +24,11 @@ class Sim:
 
 class ApiSim(Sim):
     method_name = "Policy Engine API"
-    # pe_url = "https://api.policyengine.org/us/calculate"
-    pe_url = "http://127.0.0.1:5000/us/calculate"
+    pe_url = "https://api.policyengine.org/us/calculate"
 
     def __init__(self, data) -> None:
         response = requests.post(self.pe_url, json=data)
         self.data = response.json()["result"]
-        print(f"~~~!!!data", self.data)
 
     def value(self, unit, sub_unit, variable, period):
         return self.data[unit][sub_unit][variable][period]
