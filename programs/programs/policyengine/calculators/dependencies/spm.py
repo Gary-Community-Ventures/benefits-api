@@ -152,6 +152,8 @@ class SchoolMealTier(SpmUnit):
 class Lifeline(SpmUnit):
     field = "lifeline"
 
+class Tanf(SpmUnit):
+    field = "tanf"
 
 class TanfCountableGrossIncomeDependency(SpmUnit):
     field = "co_tanf_countable_gross_earned_income"
@@ -176,10 +178,27 @@ class TanfCountableGrossUnearnedIncomeDependency(SpmUnit):
     def value(self):
         return int(self.screen.calc_gross_income("yearly", ["unearned"]))
 
+class NcTanfCountableEarnedIncomeDependency(SpmUnit):
+    field = "nc_tanf_countable_earned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
 
-class Tanf(SpmUnit):
-    field = "co_tanf"
+    def value(self):
+        return int(self.screen.calc_gross_income("yearly", ["earned"]))
 
+class NcTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
+    field = "nc_tanf_countable_gross_unearned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
+
+    def value(self):
+        return int(self.screen.calc_gross_income("yearly", ["unearned"]))
 
 class BroadbandCostDependency(SpmUnit):
     field = "broadband_cost"
