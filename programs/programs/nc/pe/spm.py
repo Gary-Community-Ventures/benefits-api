@@ -10,3 +10,5 @@ class NcTanf(Tanf):
         dependency.spm.NcTanfCountableEarnedIncomeDependency,
         dependency.spm.NcTanfCountableGrossUnearnedIncomeDependency,
     ]
+
+    pe_outputs = [dependency.spm.NcTanf]

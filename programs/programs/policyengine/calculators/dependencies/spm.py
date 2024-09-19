@@ -157,6 +157,14 @@ class Tanf(SpmUnit):
     field = "tanf"
 
 
+class CoTanf(SpmUnit):
+    field = "co_tanf"
+
+
+class NcTanf(SpmUnit):
+    field = "nc_tanf"
+
+
 class TanfCountableGrossIncomeDependency(SpmUnit):
     field = "co_tanf_countable_gross_earned_income"
     dependencies = (

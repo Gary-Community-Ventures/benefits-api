@@ -11,3 +11,5 @@ class CoTanf(Tanf):
         dependency.spm.TanfCountableGrossIncomeDependency,
         dependency.spm.TanfCountableGrossUnearnedIncomeDependency,
     ]
+
+    pe_outputs = [dependency.spm.CoTanf]
