@@ -316,6 +316,5 @@ GRAPH_MODELS = {
     "output": "./_mfb_uml.png",
     "group_models": True,
     "app_labels": ["screener", "programs", "configuration", "validations", "authentication"],
-    "no_inheritance": True,
     "exclude_models": ["Translation"],
 }
