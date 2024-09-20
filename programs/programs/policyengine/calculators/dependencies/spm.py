@@ -165,7 +165,7 @@ class NcTanf(SpmUnit):
     field = "nc_tanf"
 
 
-class TanfCountableGrossIncomeDependency(SpmUnit):
+class CoTanfCountableGrossIncomeDependency(SpmUnit):
     field = "co_tanf_countable_gross_earned_income"
     dependencies = (
         "income_type",
@@ -177,7 +177,7 @@ class TanfCountableGrossIncomeDependency(SpmUnit):
         return int(self.screen.calc_gross_income("yearly", ["earned"]))
 
 
-class TanfCountableGrossUnearnedIncomeDependency(SpmUnit):
+class CoTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
     field = "co_tanf_countable_gross_unearned_income"
     dependencies = (
         "income_type",
