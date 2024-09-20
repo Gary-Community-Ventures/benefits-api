@@ -10,7 +10,6 @@ co_member_calculators = {
     "chp": member.Chp,
     "fatc": member.FamilyAffordabilityTaxCredit,
     "co_wic": member.CoWic,
-    "ede": member.EveryDayEats,
 }
 
 co_tax_unit_calculators = {

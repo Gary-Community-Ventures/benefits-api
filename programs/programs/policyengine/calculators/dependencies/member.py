@@ -189,10 +189,6 @@ class ChpEligible(Member):
     field = "co_chp_eligible"
 
 
-class CommoditySupplementalFoodProgram(Member):
-    field = "commodity_supplemental_food_program"
-
-
 class IncomeDependency(Member):
     dependencies = (
         "income_type",
