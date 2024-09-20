@@ -8,8 +8,8 @@ class CoTanf(Tanf):
         *Tanf.pe_inputs,
         dependency.household.CoStateCode,
         dependency.member.PregnancyDependency,
-        dependency.spm.TanfCountableGrossIncomeDependency,
-        dependency.spm.TanfCountableGrossUnearnedIncomeDependency,
+        dependency.spm.CoTanfCountableGrossIncomeDependency,
+        dependency.spm.CoTanfCountableGrossUnearnedIncomeDependency,
     ]
 
     pe_outputs = [dependency.spm.CoTanf]
