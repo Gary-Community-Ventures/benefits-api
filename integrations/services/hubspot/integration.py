@@ -10,10 +10,13 @@ from sentry_sdk import capture_exception, capture_message
 
 
 def upsert_user_hubspot(user, screen=None):
-    hubspot = Hubspot()
-    contact = hubspot.mfb_user_to_hubspot_contact(user, screen)
-    contact_id = hubspot.upsert_contact(contact)
-    return contact_id
+    try:
+        hubspot = Hubspot()
+        contact = hubspot.mfb_user_to_hubspot_contact(user, screen)
+        contact_id = hubspot.upsert_contact(contact)
+        return contact_id
+    except Exception as e:
+        return None
 
 
 def update_send_offers_hubspot(external_id, send_offers, send_updates):

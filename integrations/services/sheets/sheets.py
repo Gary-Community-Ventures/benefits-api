@@ -6,7 +6,7 @@ from integrations.util.cache import Cache
 
 
 class GoogleSheets:
-    info = json.loads(config("GOOGLE_APPLICATION_CREDENTIALS"))
+    info = json.loads(config("GOOGLE_APPLICATION_CREDENTIALS").encode("unicode_escape"))
     creds = service_account.Credentials.from_service_account_info(info)
     service = build("sheets", "v4", credentials=creds)
     sheet = service.spreadsheets()

@@ -60,6 +60,10 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+# Contact Management
+CONTACT_SERVICE = os.getenv("CONTACT_SERVICE", "hubspot")
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+
 # Application definition
 
 INSTALLED_APPS = [
