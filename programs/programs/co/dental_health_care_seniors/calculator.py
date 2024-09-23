@@ -1,28 +1,17 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.calc import ProgramCalculator, Eligibility, MemberEligibility
+from screener.models import HouseholdMember
 import programs.programs.messages as messages
 
 
 class DentalHealthCareSeniors(ProgramCalculator):
-    amount = 80
+    member_amount = 80 * 12
     min_age = 60
     percent_of_fpl = 2.5
+    ineligible_insurance = ["medicaid", "private"]
     dependencies = ["age", "income_amount", "income_frequency", "insurance", "household_size"]
 
-    def eligible(self) -> Eligibility:
+    def household_eligible(self) -> Eligibility:
         e = Eligibility()
-        e.member_eligibility(
-            self.screen.household_members.all(),
-            [
-                (
-                    lambda m: m.insurance.has_insurance_types(("medicaid", "private")),
-                    messages.must_not_have_benefit("Medicaid"),
-                ),
-                (
-                    lambda m: m.age > DentalHealthCareSeniors.min_age,
-                    messages.older_than(DentalHealthCareSeniors.min_age),
-                ),
-            ],
-        )
 
         # Income test
         fpl = self.program.fpl.as_dict()
@@ -32,5 +21,13 @@ class DentalHealthCareSeniors(ProgramCalculator):
 
         return e
 
-    def value(self, eligible_members: int):
-        return DentalHealthCareSeniors.amount * self.screen.num_adults(age_max=DentalHealthCareSeniors.min_age) * 12
+    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
+        e = MemberEligibility(member)
+
+        # insurance
+        e.condition(not member.insurance.has_insurance_types(DentalHealthCareSeniors.eligible_insurance))
+
+        # age
+        e.condition(member.age >= DentalHealthCareSeniors.min_age)
+
+        return e

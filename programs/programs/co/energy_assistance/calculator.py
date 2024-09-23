@@ -1,7 +1,7 @@
 from integrations.services.sheets.sheets import GoogleSheetsCache
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
-from programs.co_county_zips import counties_from_zip
+from programs.co_county_zips import counties_from_screen
 import math
 
 
@@ -35,11 +35,12 @@ class LeapIncomeLimitCache(GoogleSheetsCache):
 
 
 class EnergyAssistance(ProgramCalculator):
-    dependencies = ["income_frequency", "income_amount", "zipcode", "household_size"]
     county_values = LeapValueCache()
     income_bands = LeapIncomeLimitCache()  # monthly
+    expenses = ["rent", "mortgage"]
+    dependencies = ["income_frequency", "income_amount", "zipcode", "household_size"]
 
-    def eligible(self) -> Eligibility:
+    def household_eligible(self) -> Eligibility:
         e = Eligibility()
 
         # income
@@ -51,19 +52,16 @@ class EnergyAssistance(ProgramCalculator):
         e.condition(leap_income <= income_limit, messages.income(leap_income, income_limit))
 
         # has rent or mortgage expense
-        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        has_rent_or_mortgage = self.screen.has_expense(EnergyAssistance.expenses)
         e.condition(has_rent_or_mortgage)
 
         return e
 
-    def value(self, eligible_members: int):
+    def household_value(self):
         data = self.county_values.fetch()
 
         # if there is no county, then we want to estimate based off of zipcode
-        if self.screen.county is not None:
-            counties = [self.screen.county]
-        else:
-            counties = counties_from_zip(self.screen.zipcode)
+        counties = counties_from_screen(self.screen)
 
         values = []
         for row in data:

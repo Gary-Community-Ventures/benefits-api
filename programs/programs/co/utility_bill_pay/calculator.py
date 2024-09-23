@@ -17,7 +17,7 @@ class UtilityBillPay(ProgramCalculator):
     amount = 350
     dependencies = ["household_size", "income_amount", "income_frequency"]
 
-    def eligible(self) -> Eligibility:
+    def household_eligible(self) -> Eligibility:
         e = Eligibility()
 
         # has other programs

@@ -1,6 +1,4 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
-import programs.programs.messages as messages
-import math
+from programs.programs.calc import MemberEligibility, ProgramCalculator
 from screener.models import HouseholdMember, Screen
 from typing import TYPE_CHECKING
 
@@ -21,55 +19,27 @@ class Ssdi(ProgramCalculator):
         self.eligible_members = []
         super().__init__(screen, program, data)
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
+    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
+        e = MemberEligibility(member)
 
-        lowest_income = math.inf
-        cat_eligibile = 0
+        # disability
+        e.condition(member.has_disability())
 
-        def income_condition(member: HouseholdMember):
-            nonlocal lowest_income
-            nonlocal cat_eligibile
+        # no SSDI income
+        e.condition(member.calc_gross_income("yearly", ["sSDisability"]) == 0)
 
-            income_limit = Ssdi.income_limit_blind if member.visually_impaired else Ssdi.income_limit
-            member_income = member.calc_gross_income("monthly", ("all",))
+        # income
+        income_limit = Ssdi.income_limit_blind if member.visually_impaired else Ssdi.income_limit
+        member_income = member.calc_gross_income("monthly", ("all",))
+        e.condition(member_income < income_limit)
 
-            if member_income < lowest_income:
-                lowest_income = member_income
-                cat_eligibile += 1
+        # age
+        e.condition(member.age >= Ssdi.min_age or self._child_eligible(member))
 
-            return member_income < income_limit
-
-        self.eligible_members = e.member_eligibility(
-            self.screen.household_members.all(),
-            [
-                (lambda m: m.has_disability(), messages.has_disability()),
-                (
-                    lambda m: m.calc_gross_income("yearly", ("sSDisability",)) == 0,
-                    messages.must_not_have_benefit("SSDI"),
-                ),
-                (income_condition, None),
-                (lambda m: self._child_eligible(m) or m.age >= Ssdi.min_age, None),
-            ],
-        )
-
-        if cat_eligibile > 0:
-            e.passed(messages.income(lowest_income, Ssdi.income_limit))
+        if e.eligible:
+            self.eligible_members.append(member)
 
         return e
-
-    def value(self, eligible_members: int):
-        child_value = 0
-        adult_value = 0
-        for member in self.eligible_members:
-            if member.age >= Ssdi.min_age:
-                adult_value += Ssdi.amount
-            else:
-                child_value += Ssdi.amount / 2
-
-        total_value = adult_value + min(child_value, Ssdi.amount / 2)
-
-        return total_value * 12
 
     def _is_parent_with_disability(self, member: HouseholdMember):
         # min parent age
@@ -101,3 +71,17 @@ class Ssdi(ProgramCalculator):
                 return True
 
         return False
+
+    def household_value(self):
+        # NOTE: use household value because the total child value has a cap
+        child_value = 0
+        adult_value = 0
+        for member in self.eligible_members:
+            if member.age >= Ssdi.min_age:
+                adult_value += Ssdi.amount
+            else:
+                child_value += Ssdi.amount / 2
+
+        total_value = adult_value + min(child_value, Ssdi.amount / 2)
+
+        return total_value * 12

@@ -1,5 +1,5 @@
 from integrations.services.sheets.sheets import GoogleSheetsCache
-from programs.co_county_zips import counties_from_zip
+from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import Eligibility, ProgramCalculator
 import programs.programs.messages as messages
 
@@ -23,15 +23,11 @@ class NurturingFutures(ProgramCalculator):
     ami_percent = 0.3
     amount = 3_600
 
-    def eligible(self) -> Eligibility:
+    def household_eligible(self) -> Eligibility:
         e = Eligibility()
 
-        # Lives in Boulder
-        if self.screen.county is not None:
-            counties = [self.screen.county]
-        else:
-            counties = counties_from_zip(self.screen.zipcode)
-
+        # location
+        counties = counties_from_screen(self.screen)
         e.condition(NurturingFutures.county in counties, messages.location())
 
         # head is 18+

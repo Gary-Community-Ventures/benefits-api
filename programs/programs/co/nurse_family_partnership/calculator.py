@@ -1,5 +1,4 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
-import programs.programs.messages as messages
+from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from screener.models import HouseholdMember, Insurance
 
 
@@ -15,32 +14,29 @@ class NurseFamilyPartnership(ProgramCalculator):
         "pregnant",
     ]
 
-    def eligible(self) -> Eligibility:
+    def household_eligible(self) -> Eligibility:
         e = Eligibility()
 
         # no other children
         e.condition(self.screen.num_children(child_relationship=NurseFamilyPartnership.child_relationships) == 0)
 
-        def income_eligible(member: HouseholdMember):
-            income_limit = self.program.fpl.as_dict()[2] * NurseFamilyPartnership.fpl_percent
+        return e
 
-            income = member.calc_gross_income("yearly", ["all"])
+    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
+        e = MemberEligibility(member)
 
-            is_income_eligible = income <= income_limit
+        # pregnant
+        e.condition(member.pregnant)
 
-            insurance: Insurance = member.insurance
-            has_medicaid = insurance.medicaid or insurance.emergency_medicaid
+        # income
+        income_limit = self.program.fpl.as_dict()[2] * NurseFamilyPartnership.fpl_percent
+        income = member.calc_gross_income("yearly", ["all"])
+        is_income_eligible = income <= income_limit
 
-            has_wic = self.screen.has_benefit("wic")
+        insurance: Insurance = member.insurance
+        has_medicaid = insurance.medicaid or insurance.emergency_medicaid
+        has_wic = self.screen.has_benefit("wic")
 
-            return is_income_eligible or has_medicaid or has_wic
-
-        e.member_eligibility(
-            self.screen.household_members.all(),
-            [
-                (lambda m: m.pregnant, messages.is_pregnant()),
-                (income_eligible, None),
-            ],
-        )
+        e.condition(is_income_eligible or has_medicaid or has_wic)
 
         return e

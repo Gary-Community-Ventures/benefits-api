@@ -141,9 +141,12 @@ class ProgramCalculator:
         """
         Update the eligibility with household and member values
         """
-        total = 0
-        if eligibility.eligible:
-            total += self.household_value()
+        if not eligibility.eligible:
+            # if the household is not eligible, the program has 0 value
+            eligibility.value = 0
+            return
+
+        total = self.household_value()
 
         for member_eligibility in eligibility.eligible_members:
             if member_eligibility.eligible:
@@ -155,7 +158,7 @@ class ProgramCalculator:
 
     def household_value(self):
         """
-        Return the value of the program
+        Return the value of the program for the household
         """
         return self.amount
 

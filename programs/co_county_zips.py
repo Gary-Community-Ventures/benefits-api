@@ -1,3 +1,6 @@
+from screener.models import Screen
+
+
 def counties_from_zip(lookup_zip):
     matches = []
 
@@ -7,6 +10,13 @@ def counties_from_zip(lookup_zip):
                 matches.append(county)
 
     return matches
+
+
+def counties_from_screen(screen: Screen):
+    if screen.county is not None:
+        return [screen.county]
+
+    return counties_from_zip(screen.zipcode)
 
 
 zipcodes = {

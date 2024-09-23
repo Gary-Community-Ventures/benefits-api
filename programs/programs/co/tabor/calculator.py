@@ -1,21 +1,15 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
-import programs.programs.messages as messages
+from programs.programs.calc import MemberEligibility, ProgramCalculator
+from screener.models import HouseholdMember
 
 
 class Tabor(ProgramCalculator):
     min_age = 18
-    amount = 800
+    member_amount = 800
     dependencies = ["age"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
+    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
+        e = MemberEligibility(member)
 
-        e.member_eligibility(
-            self.screen.household_members.all(),
-            [(lambda m: m.age >= Tabor.min_age, messages.older_than(Tabor.min_age))],
-        )
+        e.condition(member.age >= Tabor.min_age)
 
         return e
-
-    def value(self, eligible_members: int):
-        return Tabor.amount * eligible_members
