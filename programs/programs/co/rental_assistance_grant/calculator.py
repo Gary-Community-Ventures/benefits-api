@@ -24,7 +24,6 @@ class RentalAssistanceGrant(ProgramCalculator):
     def household_eligible(self) -> Eligibility:
         e = Eligibility()
 
-
         # income
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"]))
 
