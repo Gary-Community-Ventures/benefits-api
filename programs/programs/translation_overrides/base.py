@@ -31,4 +31,12 @@ class TranslationOverrideCalculator:
     """
     return not self.missing_dependencies.has(*self.dependencies)
 
-  # TODO: county eligible method after the model is defined
+  def county_eligible(self) -> bool:
+    """
+    Returns True if the override should be applied based on county
+    """
+    county = self.screen.county
+    translation_override_counties = self.translation_override.county_names
+    if len(translation_override_counties) > 0:
+      return county in translation_override_counties
+    return True
