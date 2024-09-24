@@ -741,3 +741,11 @@ class TranslationOverride(models.Model):
     active = models.BooleanField(blank=True, null=False, default=True)
     translation = models.ForeignKey(Translation, related_name="translation_overrides", blank=False, null=False, on_delete=models.PROTECT)
     counties =  models.ManyToManyField(County, related_name="translation_overrides", blank=False)
+
+    @property
+    def county_names(self) -> list[str]:
+        """List of county names"""
+        return [c.name for c in self.counties.all()]
+
+    def __str__(self):
+        return self.external_name if self.external_name is not None else self.calculator
