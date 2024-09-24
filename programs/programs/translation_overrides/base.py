@@ -5,7 +5,7 @@ from screener.models import Screen
 class TranslationOverrideCalculator:
   dependencies = tuple()
 
-  def _init_(self, screen: Screen, translation_override, missing_dependencies: Dependencies):
+  def __init__(self, screen: Screen, translation_override, missing_dependencies: Dependencies):
     self.screen = screen
     self.translation_override = translation_override
     self.missing_dependencies = missing_dependencies
