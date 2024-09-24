@@ -1,11 +1,11 @@
-# TODO: add translation override model
 from programs.util import Dependencies
 from screener.models import Screen
+from programs.models import TranslationOverride
 
 class TranslationOverrideCalculator:
   dependencies = tuple()
 
-  def __init__(self, screen: Screen, translation_override, missing_dependencies: Dependencies):
+  def __init__(self, screen: Screen, translation_override: TranslationOverride, missing_dependencies: Dependencies):
     self.screen = screen
     self.translation_override = translation_override
     self.missing_dependencies = missing_dependencies
@@ -17,7 +17,7 @@ class TranslationOverrideCalculator:
     if not self.can_calc():
       return False
 
-    return self.eligible()
+    return self.eligible() and self.county_eligible()
 
   def eligible(self) -> bool:
     """
