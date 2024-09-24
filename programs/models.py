@@ -740,7 +740,7 @@ class TranslationOverride(models.Model):
     program = models.ForeignKey(Program, related_name="translation_overrides", blank=False, null=False, on_delete=models.CASCADE)
     active = models.BooleanField(blank=True, null=False, default=True)
     translation = models.ForeignKey(Translation, related_name="translation_overrides", blank=False, null=False, on_delete=models.PROTECT)
-    counties =  models.ManyToManyField(County, related_name="translation_overrides", blank=False)
+    counties =  models.ManyToManyField(County, related_name="translation_overrides", blank=True)
 
     @property
     def county_names(self) -> list[str]:
