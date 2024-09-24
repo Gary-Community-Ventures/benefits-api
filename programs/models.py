@@ -732,3 +732,12 @@ class Referrer(models.Model):
 
     def __str__(self):
         return self.referrer_code
+
+class TranslationOverride(models.Model):
+    calculator = models.CharField(max_length=120, blank=False, null=False)
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
+    field = models.CharField(max_length=64, blank=False, null=False)
+    program = models.ForeignKey(Program, related_name="translation_overrides", blank=False, null=False, on_delete=models.CASCADE)
+    active = models.BooleanField(blank=True, null=False, default=True)
+    translation = models.ForeignKey(Translation, related_name="translation_overrides", blank=False, null=False, on_delete=models.PROTECT)
+    counties =  models.ManyToManyField(County, related_name="translation_overrides", blank=False)
