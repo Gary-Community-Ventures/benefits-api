@@ -339,7 +339,7 @@ def eligibility_results(screen: Screen, batch=False):
                     "description": default_message(program.description),
                     "value_type": default_message(program.value_type),
                     "learn_more_link": default_message(program.learn_more_link),
-                    "apply_button_link": default_message(program.apply_button_link),
+                    "apply_button_link": default_message(program.get_translation(screen, missing_dependencies, "apply_button_link")),
                     "legal_status_required": legal_status,
                     "category": default_message(program.category),
                     "estimated_value_override": default_message(program.estimated_value),
@@ -367,7 +367,6 @@ def eligibility_results(screen: Screen, batch=False):
         eligible_programs.append(clean_program)
 
     return eligible_programs, missing_programs
-
 
 def default_message(translation):
     translation.set_current_language(settings.LANGUAGE_CODE)

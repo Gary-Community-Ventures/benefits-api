@@ -1,11 +1,14 @@
 from programs.util import Dependencies
 from screener.models import Screen
-from programs.models import TranslationOverride
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+  from programs.models import TranslationOverride
 
 class TranslationOverrideCalculator:
   dependencies = tuple()
 
-  def __init__(self, screen: Screen, translation_override: TranslationOverride, missing_dependencies: Dependencies):
+  def __init__(self, screen: Screen, translation_override: "TranslationOverride", missing_dependencies: Dependencies):
     self.screen = screen
     self.translation_override = translation_override
     self.missing_dependencies = missing_dependencies

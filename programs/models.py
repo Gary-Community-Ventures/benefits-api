@@ -8,7 +8,7 @@ from programs.util import Dependencies, DependencyError
 import requests
 from integrations.util.cache import Cache
 from typing import Optional, Type, TypedDict
-
+from programs.programs.translation_overrides import warning_calculators
 
 class FplCache(Cache):
     expire_time = 60 * 60 * 24  # 24 hours
@@ -326,6 +326,22 @@ class Program(models.Model):
 
     def __unicode__(self):
         return self.name.text
+
+    def get_translation(self, screen, missing_dependencies: Dependencies, field:str):
+        if field not in Program.objects.translated_fields:
+            raise ValueError(f"translation with name {field} does not exist")
+
+        translation_overrides: list[TranslationOverride] = self.translation_overrides.all()
+        for translation_override in translation_overrides:
+            if translation_override.field != field:
+                continue
+
+            Calculator = warning_calculators[translation_override.calculator]
+            calculator = Calculator(screen, translation_override, missing_dependencies)
+            if calculator.calc() is True:
+                return translation_override.translation
+
+        return getattr(self, field)
 
 
 class UrgentNeedFunction(models.Model):
