@@ -1,8 +1,8 @@
 from programs.models import Program
 from programs.programs.policyengine.calculators.constants import MAIN_TAX_UNIT, SECONDARY_TAX_UNIT
 from programs.util import Dependencies
-from screener.models import Screen
-from programs.programs.calc import Eligibility, ProgramCalculator
+from screener.models import HouseholdMember, Screen
+from programs.programs.calc import Eligibility, MemberEligibility, ProgramCalculator
 from .dependencies.base import PolicyEngineScreenInput
 from typing import List
 from ..engines import Sim
@@ -20,24 +20,37 @@ class PolicyEngineCalulator(ProgramCalculator):
     pe_category = ""
     pe_sub_category = ""
 
-    def __init__(self, screen: Screen, program: Program):
+    def __init__(self, screen: Screen, program: "Program", missing_dependencies: Dependencies):
         self.screen = screen
         self.program = program
+        self.missing_dependencies = missing_dependencies
         self._sim = None
 
     def set_engine(self, sim: Sim):
         self._sim = sim
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
+    def household_eligible(self, e: Eligibility):
+        household_value = self.household_value()
 
-        e.value = self.value()
-        e.eligible = e.value > 0
+        e.value = household_value
 
-        return e
+        e.condition(household_value > 0)
 
-    def value(self):
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
+
+        member_value = self.member_value(member)
+
+        e.value = member_value
+
+        e.condition(member_value > 0)
+
+    def household_value(self):
         return int(self.get_variable())
+
+    def value(self, e: Eligibility):
+        for member_eligibility in e.eligible_members:
+            e.value += member_eligibility.value
 
     @property
     def pe_period(self) -> str:
@@ -62,13 +75,12 @@ class PolicyEngineCalulator(ProgramCalculator):
     def get_tax_variable(self, unit: str):
         return self.sim.value(self.pe_category, unit, self.pe_name, self.pe_period)
 
-    @classmethod
-    def can_calc(cls, missing_dependencies: Dependencies):
-        for input in cls.pe_inputs:
-            if missing_dependencies.has(*input.dependencies):
+    def can_calc(self):
+        for input in self.pe_inputs:
+            if self.missing_dependencies.has(*input.dependencies):
                 return False
 
-        return True
+        return super().can_calc()
 
 
 class PolicyEngineSpmCalulator(PolicyEngineCalulator):
@@ -78,9 +90,8 @@ class PolicyEngineSpmCalulator(PolicyEngineCalulator):
 
 class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
     pe_category = "tax_units"
-    tax_unit_dependent = True
 
-    def value(self):
+    def household_value(self):
         return self.tax_unit_value(MAIN_TAX_UNIT) + self.tax_unit_value(SECONDARY_TAX_UNIT)
 
     def tax_unit_value(self, unit: str):
@@ -91,17 +102,13 @@ class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
 
 
 class PolicyEngineMembersCalculator(PolicyEngineCalulator):
-    tax_unit_dependent = True
     pe_category = "people"
 
-    def value(self):
-        total = 0
-        for member in self.screen.household_members.all():
-            pe_value = self.get_member_variable(member.id)
+    def household_value(self):
+        return 0
 
-            total += pe_value
-
-        return total
+    def member_value(self, member: HouseholdMember):
+        return self.get_member_variable(member.id)
 
     def get_member_variable(self, member_id: int):
         return self.sim.value(self.pe_category, str(member_id), self.pe_name, self.pe_period)

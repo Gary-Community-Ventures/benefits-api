@@ -17,7 +17,6 @@ class RtdLive(ProgramCalculator):
     min_age = 20
     max_age = 64
     percent_of_fpl = 2.5
-    tax_unit_dependent = True
     member_amount = 732
     dependencies = ["age", "income_amount", "income_frequency", "zipcode", "household_size"]
 

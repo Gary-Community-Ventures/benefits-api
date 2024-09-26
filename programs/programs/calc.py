@@ -27,8 +27,6 @@ class Eligibility:
         self.fail_messages = []
         self.eligible_members: list[MemberEligibility] = []
         self.value: int = 0
-        self.eligible_member_count: int = 0
-        self.multiple_tax_units: bool = False
 
     def condition(self, passed: bool, message=None):
         """
@@ -63,36 +61,6 @@ class Eligibility:
         Store a members eligibility
         """
         self.eligible_members.append(member_eligibility)
-
-    def member_eligibility(self, members, conditions):
-        """
-        Filter out members that do not meet the condition and make eligibility messages
-        """
-        if len(conditions) <= 0:
-            self.eligible_member_count = len(members)
-            return members
-
-        [condition, message] = conditions.pop()
-        eligible_members = list(filter(condition, members))
-
-        if message:
-            self.condition(len(eligible_members) >= 1, message)
-        elif len(eligible_members) <= 0:
-            self.eligible = False
-
-        return self.member_eligibility(eligible_members, conditions)
-
-    def to_dict(self):
-        """
-        Return the eligibility as a dictionary
-        """
-        return {
-            "eligible": self.eligible,
-            "passed": self.pass_messages,
-            "failed": self.fail_messages,
-            "estimated_value": self.value if self.eligible else 0,
-            "multiple_tax_units": self.multiple_tax_units,
-        }
 
 
 class ProgramCalculator:
@@ -140,7 +108,7 @@ class ProgramCalculator:
         """
         pass
 
-    def member_eligible(self, e: HouseholdMember):
+    def member_eligible(self, e: MemberEligibility):
         """
         Updates the eligibility object with the member eligibility
         """
@@ -165,19 +133,19 @@ class ProgramCalculator:
 
         e.value = total
 
-    def household_value(self):
+    def household_value(self) -> int:
         """
         Return the value of the program for the household
         """
         return self.amount
 
-    def member_value(self, member: HouseholdMember):
+    def member_value(self, member: HouseholdMember) -> int:
         """
         An eligible household members eligibility
         """
         return self.member_amount
 
-    def calc(self):
+    def calc(self) -> Eligibility:
         """
         Calculate the eligibility and value for a screen
         """

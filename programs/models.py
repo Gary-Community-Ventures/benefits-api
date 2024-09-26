@@ -310,7 +310,7 @@ class Program(models.Model):
 
         eligibility = calculator.calc()
 
-        return eligibility.to_dict()
+        return eligibility
 
     def __str__(self):
         return self.name.text
