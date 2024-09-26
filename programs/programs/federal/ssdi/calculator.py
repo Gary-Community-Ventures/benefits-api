@@ -1,4 +1,5 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator
+from programs.util import Dependencies
 from screener.models import HouseholdMember, Screen
 from typing import TYPE_CHECKING
 
@@ -15,9 +16,9 @@ class Ssdi(ProgramCalculator):
     parent_relationships = ["spouse", "domesticPartner", "headOfHousehold"]
     dependencies = ["income_amount", "income_frequency", "household_size"]
 
-    def __init__(self, screen: Screen, program: "Program", data):
+    def __init__(self, screen: Screen, program: "Program", data, missing_dependencies: Dependencies):
         self.eligible_members = []
-        super().__init__(screen, program, data)
+        super().__init__(screen, program, data, missing_dependencies)
 
     def member_eligible(self, e: MemberEligibility):
         member = e.member
