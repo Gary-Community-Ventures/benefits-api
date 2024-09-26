@@ -44,23 +44,19 @@ class Medicaid(PolicyEngineMembersCalculator):
     adult_medicaid_average = 0
     aged_medicaid_average = 0
 
-    presumptive_amount = 74 * 12
-
     def _value_by_age(self, age: int):
         # here we need to adjust for children as policy engine
         # just uses the average which skews very high for adults and
         # aged adults
 
         if age <= 18:
-            medicaid_estimated_value = self.child_medicaid_average
+            return self.child_medicaid_average
         elif age > 18 and age < 65:
-            medicaid_estimated_value = self.adult_medicaid_average
+            return self.adult_medicaid_average
         elif age >= 65:
-            medicaid_estimated_value = self.aged_medicaid_average
-        else:
-            medicaid_estimated_value = 0
+            return self.aged_medicaid_average
 
-        return medicaid_estimated_value
+        return 0
 
     def member_value(self, member: HouseholdMember):
         if self.get_member_variable(member.id) <= 0:
@@ -69,15 +65,7 @@ class Medicaid(PolicyEngineMembersCalculator):
         # here we need to adjust for children as policy engine
         # just uses the average which skews very high for adults and
         # aged adults
-
-        if self._get_age(member.id) <= 18:
-            return self.child_medicaid_average
-        elif self._get_age(member.id) > 18 and self._get_age(member.id) < 65:
-            return self.adult_medicaid_average
-        elif self._get_age(member.id) >= 65:
-            return self.aged_medicaid_average
-
-        return 0
+        return self._value_by_age(self._get_age(member.id))
 
     def _get_age(self, member_id: int) -> int:
         return self.sim.value(self.pe_category, str(member_id), "age", self.pe_period)
