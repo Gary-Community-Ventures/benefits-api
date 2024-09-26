@@ -36,15 +36,6 @@ class PolicyEngineCalulator(ProgramCalculator):
 
         e.condition(household_value > 0)
 
-    def member_eligible(self, e: MemberEligibility):
-        member = e.member
-
-        member_value = self.member_value(member)
-
-        e.value = member_value
-
-        e.condition(member_value > 0)
-
     def household_value(self):
         return int(self.get_variable())
 
@@ -103,6 +94,15 @@ class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
 
 class PolicyEngineMembersCalculator(PolicyEngineCalulator):
     pe_category = "people"
+
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
+
+        member_value = self.member_value(member)
+
+        e.value = member_value
+
+        e.condition(member_value > 0)
 
     def household_value(self):
         return 0
