@@ -1,6 +1,6 @@
 from programs.models import Program
 from programs.programs.policyengine.calculators.constants import MAIN_TAX_UNIT, SECONDARY_TAX_UNIT
-from programs.util import Dependencies
+from programs.util import Dependencies, DependencyError
 from screener.models import HouseholdMember, Screen
 from programs.programs.calc import Eligibility, MemberEligibility, ProgramCalculator
 from .dependencies.base import PolicyEngineScreenInput
@@ -29,12 +29,27 @@ class PolicyEngineCalulator(ProgramCalculator):
     def set_engine(self, sim: Sim):
         self._sim = sim
 
+    def eligible(self) -> Eligibility:
+        e = super().eligible()
+
+        self.value(e)
+
+        e.eligible = e.value > 0
+
+        return e
+
     def household_eligible(self, e: Eligibility):
         household_value = self.household_value()
 
         e.value = household_value
 
-        e.condition(household_value > 0)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
+
+        member_value = self.member_value(member)
+
+        e.value = member_value
+        e.condition(member_value > 0)
 
     def household_value(self):
         return int(self.get_variable())
@@ -42,6 +57,14 @@ class PolicyEngineCalulator(ProgramCalculator):
     def value(self, e: Eligibility):
         for member_eligibility in e.eligible_members:
             e.value += member_eligibility.value
+
+    def calc(self) -> Eligibility:
+        if not self.can_calc():
+            raise DependencyError()
+
+        eligibility = self.eligible()
+
+        return eligibility
 
     @property
     def pe_period(self) -> str:
@@ -94,15 +117,6 @@ class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
 
 class PolicyEngineMembersCalculator(PolicyEngineCalulator):
     pe_category = "people"
-
-    def member_eligible(self, e: MemberEligibility):
-        member = e.member
-
-        member_value = self.member_value(member)
-
-        e.value = member_value
-
-        e.condition(member_value > 0)
 
     def household_value(self):
         return 0
