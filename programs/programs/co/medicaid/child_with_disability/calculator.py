@@ -1,7 +1,6 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from programs.programs.helpers import medicaid_eligible
 import programs.programs.messages as messages
-from screener.models import HouseholdMember
 
 
 class MedicaidChildWithDisability(ProgramCalculator):
@@ -14,9 +13,7 @@ class MedicaidChildWithDisability(ProgramCalculator):
     dependencies = ["insurance", "age", "household_size", "income_type", "income_amount", "income_frequency"]
     member_amount = 200
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # Does not qualify for Medicaid
         e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
 
@@ -30,10 +27,8 @@ class MedicaidChildWithDisability(ProgramCalculator):
         income = (earned + unearned) * MedicaidChildWithDisability.income_percent
         e.condition(income <= income_limit, messages.income(income, income_limit))
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # age
         e.condition(member.age <= MedicaidChildWithDisability.max_age)
@@ -51,5 +46,3 @@ class MedicaidChildWithDisability(ProgramCalculator):
                 and member.age >= MedicaidChildWithDisability.min_employment_age
             )
         )
-
-        return e

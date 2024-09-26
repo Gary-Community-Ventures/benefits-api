@@ -22,9 +22,7 @@ class DenverTrashRebate(ProgramCalculator):
     expenses = ["rent", "mortgage"]
     dependencies = ["zipcode", "income_amount", "income_frequency", "household_size"]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # county
         counties = counties_from_screen(self.screen)
         e.condition(DenverTrashRebate.county in counties, messages.location())
@@ -38,5 +36,3 @@ class DenverTrashRebate(ProgramCalculator):
         # has rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense([DenverTrashRebate.expenses])
         e.condition(has_rent_or_mortgage)
-
-        return e

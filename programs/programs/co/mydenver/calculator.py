@@ -1,7 +1,6 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from programs.co_county_zips import counties_from_screen
 import programs.programs.messages as messages
-from screener.models import HouseholdMember
 
 
 class MyDenver(ProgramCalculator):
@@ -11,9 +10,7 @@ class MyDenver(ProgramCalculator):
     member_amount = 150
     dependencies = ["age", "zipcode"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def eligible(self, e: Eligibility):
         # location
         county_eligible = False
 
@@ -23,12 +20,8 @@ class MyDenver(ProgramCalculator):
                 county_eligible = True
         e.condition(county_eligible, messages.location())
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility()
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # age
         e.condition(MyDenver.child_age_min <= member.age <= MyDenver.child_age_max)
-
-        return e

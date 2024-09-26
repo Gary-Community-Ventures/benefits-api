@@ -17,9 +17,7 @@ class WeatherizationAssistance(ProgramCalculator):
     amount = 350
     dependencies = ["household_size", "income_amount", "income_frequency"]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # income condition
         income_limit = WeatherizationAssistance.income_limits[self.screen.household_size - 1]
         income = int(self.screen.calc_gross_income("yearly", ["all"]))
@@ -36,5 +34,3 @@ class WeatherizationAssistance(ProgramCalculator):
         # rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
         e.condition(has_rent_or_mortgage)
-
-        return e

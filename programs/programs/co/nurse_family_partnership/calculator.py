@@ -1,5 +1,5 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
-from screener.models import HouseholdMember, Insurance
+from screener.models import Insurance
 
 
 class NurseFamilyPartnership(ProgramCalculator):
@@ -14,16 +14,12 @@ class NurseFamilyPartnership(ProgramCalculator):
         "pregnant",
     ]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # no other children
         e.condition(self.screen.num_children(child_relationship=NurseFamilyPartnership.child_relationships) == 0)
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # pregnant
         e.condition(member.pregnant)
@@ -38,5 +34,3 @@ class NurseFamilyPartnership(ProgramCalculator):
         has_wic = self.screen.has_benefit("wic")
 
         e.condition(is_income_eligible or has_medicaid or has_wic)
-
-        return e

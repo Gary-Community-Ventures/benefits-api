@@ -1,8 +1,7 @@
-from programs.co_county_zips import counties_from_screen, counties_from_zip
+from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from integrations.services.sheets import GoogleSheetsCache
 import programs.programs.messages as messages
-from screener.models import HouseholdMember
 
 
 class DenverAmiCache(GoogleSheetsCache):
@@ -52,9 +51,7 @@ class DenverPropertyTaxRelief(ProgramCalculator):
         "relationship",
     ]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # county
         counties = counties_from_screen(self.screen)
         e.condition(DenverPropertyTaxRelief.county in counties, messages.location())
@@ -82,10 +79,8 @@ class DenverPropertyTaxRelief(ProgramCalculator):
                 total_income += member.calc_gross_income("yearly", DenverPropertyTaxRelief.income_types)
         e.condition(total_income <= limit, messages.income(total_income, limit))
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # head or spouse
         e.condition(member.is_head() or member.is_spouse())
@@ -104,8 +99,6 @@ class DenverPropertyTaxRelief(ProgramCalculator):
             other_condition = True
 
         e.condition(other_condition)
-
-        return e
 
     def household_value(self):
         if self.screen.has_expense(["mortgage"]):

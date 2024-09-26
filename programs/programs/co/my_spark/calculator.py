@@ -1,7 +1,6 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 from programs.co_county_zips import counties_from_screen
-from screener.models import HouseholdMember
 
 
 class MySpark(ProgramCalculator):
@@ -11,9 +10,7 @@ class MySpark(ProgramCalculator):
     county = "Denver County"
     dependencies = ["age", "zipcode"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def eligible(self, e: Eligibility):
         # Qualify for FRL
         is_frl_eligible = False
         for benefit in self.data:
@@ -27,12 +24,8 @@ class MySpark(ProgramCalculator):
         # Denever County
         e.condition(MySpark.county in counties, messages.location())
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # age
         e.condition(MySpark.min_age <= member.age <= MySpark.max_age)
-
-        return e

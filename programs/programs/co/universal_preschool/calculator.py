@@ -9,8 +9,8 @@ class UniversalPreschool(ProgramCalculator):
     amount_by_hours = {"10_hours": 4_837, "15_hours": 6_044, "30_hours": 10_655}
     dependencies = ["age", "income_amount", "income_frequency", "relationship", "household_size"]
 
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # qualifying condition
         qualifying_condition = self._has_qualifying_condition()
@@ -18,8 +18,6 @@ class UniversalPreschool(ProgramCalculator):
         # age
         min_age = UniversalPreschool.qualifying_age if qualifying_condition else UniversalPreschool.age
         e.condition(min_age <= member.age <= UniversalPreschool.age)
-
-        return e
 
     def member_value(self, member: HouseholdMember):
         qualifying_condition = self._has_qualifying_condition()

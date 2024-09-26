@@ -19,8 +19,8 @@ class Ssdi(ProgramCalculator):
         self.eligible_members = []
         super().__init__(screen, program, data)
 
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # disability
         e.condition(member.has_disability())
@@ -38,8 +38,6 @@ class Ssdi(ProgramCalculator):
 
         if e.eligible:
             self.eligible_members.append(member)
-
-        return e
 
     def _is_parent_with_disability(self, member: HouseholdMember):
         # min parent age

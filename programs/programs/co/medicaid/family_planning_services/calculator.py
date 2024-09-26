@@ -1,7 +1,6 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from programs.programs.helpers import medicaid_eligible
 import programs.programs.messages as messages
-from screener.models import HouseholdMember
 
 
 class FamilyPlanningServices(ProgramCalculator):
@@ -10,9 +9,7 @@ class FamilyPlanningServices(ProgramCalculator):
     fpl_percent = 2.65
     dependencies = ["age", "insurance", "income_frequency", "income_amount", "household_size"]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # Does not have insurance
         has_no_insurance = False
         for member in self.screen.household_members.all():
@@ -25,16 +22,14 @@ class FamilyPlanningServices(ProgramCalculator):
         # Income
         fpl = self.program.fpl
         income_limit = int(
-            FamilyPlanningServices.fpl_percent * fpl.get_limit(self.screen.household_size + e.eligible_member_count)
+            FamilyPlanningServices.fpl_percent * fpl.get_limit(self.screen.household_size + len(e.eligible_members))
         )
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"]))
 
         e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # not pregnant
         e.condition(not member.pregnant)
@@ -44,5 +39,3 @@ class FamilyPlanningServices(ProgramCalculator):
 
         # head or spouse
         e.condition(member.is_head() or member.is_spouse())
-
-        return e

@@ -19,9 +19,7 @@ class Trua(ProgramCalculator):
     amount = 6_500
     dependencies = ["income_amount", "income_frequency", "household_size", "zipcode"]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # income
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"]))
         income_limit = int(Trua.income_limit[self.screen.household_size])
@@ -34,5 +32,3 @@ class Trua(ProgramCalculator):
         # rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
         e.condition(has_rent_or_mortgage)
-
-        return e

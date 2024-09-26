@@ -21,9 +21,7 @@ class RtdLive(ProgramCalculator):
     member_amount = 732
     dependencies = ["age", "income_amount", "income_frequency", "zipcode", "household_size"]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # location
         county_eligible = False
         counties = counties_from_screen(self.screen)
@@ -34,10 +32,8 @@ class RtdLive(ProgramCalculator):
 
         e.condition(county_eligible, messages.location())
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # age
         e.condition(RtdLive.min_age <= member.age <= RtdLive.max_age)
@@ -49,8 +45,6 @@ class RtdLive(ProgramCalculator):
             tax_unit = [m for m in self.screen.household_members.all() if not m.is_in_tax_unit()]
 
         e.condition(self._unit_income_eligible(tax_unit))
-
-        return e
 
     def _unit_income_eligible(self, members: list[HouseholdMember]) -> bool:
         gross_income = 0

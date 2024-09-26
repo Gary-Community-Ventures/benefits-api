@@ -2,7 +2,6 @@ from integrations.services.sheets.sheets import GoogleSheetsCache
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 from programs.co_county_zips import counties_from_screen
-from screener.models import HouseholdMember
 
 
 class HeadStartCountyEligibleCache(GoogleSheetsCache):
@@ -26,9 +25,7 @@ class HeadStart(ProgramCalculator):
     adams_county = "Adams County"
     dependencies = ["age", "household_size", "income_frequency", "income_amount", "zipcode"]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # location
         counties = counties_from_screen(self.screen)
 
@@ -55,12 +52,8 @@ class HeadStart(ProgramCalculator):
         else:
             e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # age
         e.condition(HeadStart.min_age >= member.age >= HeadStart.max_age)
-
-        return e

@@ -28,9 +28,7 @@ class ConnectForHealth(ProgramCalculator):
     ineligible_insurance_types = ["va"]
     county_values = CFHCache()
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # Medicade eligibility
         e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
 
@@ -40,18 +38,14 @@ class ConnectForHealth(ProgramCalculator):
         gross_income = int(self.screen.calc_gross_income("yearly", ("all",)))
         e.condition(gross_income < income_band, messages.income(gross_income, income_band))
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # no or private insurance
         e.condition(member.insurance.has_insurance_types(ConnectForHealth.eligible_insurance_types))
 
         # no va insurance
         e.condition(not member.insurance.has_insurance_types(ConnectForHealth.ineligible_insurance_types))
-
-        return e
 
     def member_value(self, member: HouseholdMember):
         values = self.county_values.fetch()

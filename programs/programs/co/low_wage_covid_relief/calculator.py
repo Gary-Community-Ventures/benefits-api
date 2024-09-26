@@ -21,9 +21,7 @@ class LowWageCovidRelief(ProgramCalculator):
     county = "Adams County"
     dependencies = ["zipode", "household_size", "income_amount", "income_frequency"]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # lives in Adams County
         counties = counties_from_screen(self.screen)
 
@@ -44,7 +42,4 @@ class LowWageCovidRelief(ProgramCalculator):
         income = self.screen.calc_gross_income("monthly", ["all"])
         meets_income_limit = income <= income_limit
 
-        if not (meets_income_limit or has_benefit):
-            e.eligible = False
-
-        return e
+        e.condition(meets_income_limit or has_benefit)

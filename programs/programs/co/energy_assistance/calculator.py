@@ -40,9 +40,7 @@ class EnergyAssistance(ProgramCalculator):
     expenses = ["rent", "mortgage"]
     dependencies = ["income_frequency", "income_amount", "zipcode", "household_size"]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # income
         frequency = "monthly"
         income_types = ["all"]
@@ -54,8 +52,6 @@ class EnergyAssistance(ProgramCalculator):
         # has rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense(EnergyAssistance.expenses)
         e.condition(has_rent_or_mortgage)
-
-        return e
 
     def household_value(self):
         data = self.county_values.fetch()

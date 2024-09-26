@@ -114,11 +114,13 @@ class ProgramCalculator:
         """
         Combine the eligibility for the household and the members
         """
-        e = self.household_eligible()
+
+        e = Eligibility()
 
         one_member_eligible = False
         for member in self.screen.household_members.all():
-            member_eligibility = self.member_eligible(member)
+            member_eligibility = MemberEligibility(member)
+            self.member_eligible(member_eligibility)
             e.add_member_eligibility(member_eligibility)
 
             if member_eligibility.eligible:
@@ -126,35 +128,42 @@ class ProgramCalculator:
 
         e.condition(one_member_eligible)
 
+        # calculate the household eligibility last so that,
+        # it has access to the member eligibility
+        self.household_eligible(e)
+
         return e
 
-    def household_eligible(self) -> Eligibility:
+    def household_eligible(self, e: Eligibility):
         """
-        Returns the `Eligibility` object with whether or not the program is eligible
+        Updates the eligibility object with the household eligibility
         """
-        return Eligibility()
+        pass
 
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        return MemberEligibility(member)
+    def member_eligible(self, e: HouseholdMember):
+        """
+        Updates the eligibility object with the member eligibility
+        """
+        pass
 
-    def value(self, eligibility: Eligibility):
+    def value(self, e: Eligibility):
         """
         Update the eligibility with household and member values
         """
-        if not eligibility.eligible:
+        if not e.eligible:
             # if the household is not eligible, the program has 0 value
-            eligibility.value = 0
+            e.value = 0
             return
 
         total = self.household_value()
 
-        for member_eligibility in eligibility.eligible_members:
+        for member_eligibility in e.eligible_members:
             if member_eligibility.eligible:
                 member_value = self.member_value(member_eligibility.member)
                 member_eligibility.value = member_value
                 total += member_value
 
-        eligibility.value = total
+        e.value = total
 
     def household_value(self):
         """

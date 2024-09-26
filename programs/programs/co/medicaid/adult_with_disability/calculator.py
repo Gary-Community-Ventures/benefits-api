@@ -2,7 +2,6 @@ from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibi
 from programs.programs.co.medicaid.child_with_disability.calculator import MedicaidChildWithDisability
 from programs.programs.helpers import medicaid_eligible
 import programs.programs.messages as messages
-from screener.models import HouseholdMember
 
 
 class MedicaidAdultWithDisability(ProgramCalculator):
@@ -16,16 +15,12 @@ class MedicaidAdultWithDisability(ProgramCalculator):
     dependencies = ["insurance", "age", "household_size", "income_type", "income_amount", "income_frequency"]
     member_amount = 310
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # Does not qualify for Medicaid
         e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # age
         e.condition(member.age >= MedicaidChildWithDisability.min_age)
@@ -45,5 +40,3 @@ class MedicaidAdultWithDisability(ProgramCalculator):
         unearned_deduction = MedicaidAdultWithDisability.unearned_deduction
         unearned = int(member.calc_gross_income("yearly", ["unearned"])) - unearned_deduction
         e.condition(earned + unearned <= income_limit)
-
-        return e

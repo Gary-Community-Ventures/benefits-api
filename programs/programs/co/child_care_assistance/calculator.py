@@ -1,7 +1,7 @@
 from screener.models import HouseholdMember
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from integrations.services.sheets import GoogleSheetsCache
-from programs.co_county_zips import counties_from_screen, counties_from_zip
+from programs.co_county_zips import counties_from_screen
 import programs.programs.messages as messages
 
 
@@ -28,9 +28,7 @@ class ChildCareAssistance(ProgramCalculator):
     dependencies = ["age", "income_amount", "income_frequency", "zipcode", "household_size"]
     fpl_limits = CccapFplCache()
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         cccap_county_limits = self.fpl_limits.fetch()
 
         # location
@@ -60,10 +58,8 @@ class ChildCareAssistance(ProgramCalculator):
             messages.assets(ChildCareAssistance.asset_limit),
         )
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # age
         child_eligible = False
@@ -77,8 +73,6 @@ class ChildCareAssistance(ProgramCalculator):
             child_eligible = True
 
         e.condition(child_eligible)
-
-        return e
 
     def member_value(self, member: HouseholdMember):
         if member.age <= ChildCareAssistance.max_age_preschool:

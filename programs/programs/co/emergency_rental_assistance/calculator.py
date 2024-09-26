@@ -21,9 +21,7 @@ class EmergencyRentalAssistance(ProgramCalculator):
     dependencies = ["income_amount", "income_frequency", "household_size", "zipcode"]
     income_cache = EmergencyRentalAssistanceIncomeLimitsCache()
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # Income test
         income_limits = EmergencyRentalAssistance.income_cache.fetch()
 
@@ -42,5 +40,3 @@ class EmergencyRentalAssistance(ProgramCalculator):
         # has rent expense
         has_rent = self.screen.has_expense(EmergencyRentalAssistance.expenses)
         e.condition(has_rent)
-
-        return e

@@ -23,9 +23,7 @@ class NurturingFutures(ProgramCalculator):
     ami_percent = 0.3
     amount = 3_600
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # location
         counties = counties_from_screen(self.screen)
         e.condition(NurturingFutures.county in counties, messages.location())
@@ -40,5 +38,3 @@ class NurturingFutures(ProgramCalculator):
         income_limit = NurturingFutures.ami.fetch()[self.screen.household_size - 1] * NurturingFutures.ami_percent
         income = self.screen.calc_gross_income("yearly", ["all"])
         e.condition(income <= income_limit, messages.income(income, income_limit))
-
-        return e

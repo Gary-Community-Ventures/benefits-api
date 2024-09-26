@@ -1,5 +1,4 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator
-from screener.models import HouseholdMember
 
 
 class MedicareSavings(ProgramCalculator):
@@ -16,8 +15,8 @@ class MedicareSavings(ProgramCalculator):
     member_amount = 175 * 12
     dependencies = ["household_assets", "relationship", "income_frequency", "income_amount", "age"]
 
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # age
         e.condition(member.age >= MedicareSavings.min_age)
@@ -40,5 +39,3 @@ class MedicareSavings(ProgramCalculator):
         max_income = MedicareSavings.income_limit[status]
         income = member.calc_gross_income("monthly", ("all",)) + spouse_income
         e.condition(income < max_income)
-
-        return e

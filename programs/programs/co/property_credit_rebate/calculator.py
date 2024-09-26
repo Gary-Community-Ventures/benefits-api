@@ -1,6 +1,5 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 import programs.programs.messages as messages
-from screener.models import HouseholdMember
 
 
 class PropertyCreditRebate(ProgramCalculator):
@@ -11,9 +10,7 @@ class PropertyCreditRebate(ProgramCalculator):
     income_limit = {"single": 18_026, "married": 23_345}
     dependencies = ["age", "income_frequency", "income_amount", "relationship"]
 
-    def household_eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # Income test
         relationship_status = "single"
         for _, married_to in self.screen.relationship_map().items():
@@ -30,10 +27,8 @@ class PropertyCreditRebate(ProgramCalculator):
         has_rent_or_mortgage = self.screen.has_expense(PropertyCreditRebate.expenses)
         e.condition(has_rent_or_mortgage)
 
-        return e
-
-    def member_eligible(self, member: HouseholdMember) -> MemberEligibility:
-        e = MemberEligibility(member)
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
         # disabled
         someone_disabled = member.has_disability() and member.age > PropertyCreditRebate.disabled_min_age
@@ -42,5 +37,3 @@ class PropertyCreditRebate(ProgramCalculator):
         someone_old_enough = member.age >= PropertyCreditRebate.min_age
 
         e.condition(someone_disabled or someone_old_enough)
-
-        return e
