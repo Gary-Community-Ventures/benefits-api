@@ -20,7 +20,7 @@ class DentalHealthCareSeniors(ProgramCalculator):
         member = e.member
 
         # insurance
-        e.condition(not member.insurance.has_insurance_types(DentalHealthCareSeniors.eligible_insurance))
+        e.condition(not member.insurance.has_insurance_types(DentalHealthCareSeniors.ineligible_insurance))
 
         # age
         e.condition(member.age >= DentalHealthCareSeniors.min_age)

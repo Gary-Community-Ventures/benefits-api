@@ -10,7 +10,7 @@ class MySpark(ProgramCalculator):
     county = "Denver County"
     dependencies = ["age", "zipcode"]
 
-    def eligible(self, e: Eligibility):
+    def household_eligible(self, e: Eligibility):
         # Qualify for FRL
         is_frl_eligible = False
         for benefit in self.data:

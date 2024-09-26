@@ -39,6 +39,15 @@ class Ssdi(ProgramCalculator):
         if e.eligible:
             self.eligible_members.append(member)
 
+    def _parents_with_disability_ssdi_value(self):
+        total = 0
+        for member in self.screen.household_members.all():
+            if not self._is_parent_with_disability(member):
+                continue
+            total += member.calc_gross_income("monthly", ("sSDisability",))
+
+        return total
+
     def _is_parent_with_disability(self, member: HouseholdMember):
         # min parent age
         if member.age < Ssdi.min_age:

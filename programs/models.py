@@ -15,6 +15,9 @@ class FplCache(Cache):
     api_url = "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/api/"
     max_household_size = 8
 
+    class InvalidYear(Exception):
+        pass
+
     def update(self):
         """
         Get FPLs for all relevant years using the official ASPE Poverty Guidelines API
@@ -25,7 +28,11 @@ class FplCache(Cache):
             household_sz_fpl = {}
             # get the FPL for the household sizes 1-8
             for i in range(1, self.max_household_size + 1):
-                data = self._fetch_income_limit(fpl.period, str(i))
+                try:
+                    data = self._fetch_income_limit(fpl.period, str(i))
+                except self.InvalidYear:
+                    break
+
                 household_sz_fpl[i] = data
                 if i == self.max_household_size:
                     income_limit_extra_member = self._fetch_income_limit(fpl.period, str(self.max_household_size + 1))
@@ -39,6 +46,10 @@ class FplCache(Cache):
         """
         response = requests.get(self._fpl_url(year, household_size))
         response.raise_for_status()
+        data = response.json()["data"]
+
+        if data is False:
+            raise self.InvalidYear(f"{year} FPL is not available")
         return int(response.json()["data"]["income"])
 
     def _fpl_url(self, year: str, household_size: str):

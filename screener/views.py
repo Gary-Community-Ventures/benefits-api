@@ -268,7 +268,7 @@ def eligibility_results(screen: Screen, batch=False):
             for previous_snapshot in previous_results:
                 if (
                     previous_snapshot.name_abbreviated == program.name_abbreviated
-                    and eligibility["eligible"] == previous_snapshot.eligible
+                    and eligibility.eligible == previous_snapshot.eligible
                 ):
                     new = False
         else:
@@ -278,7 +278,7 @@ def eligibility_results(screen: Screen, batch=False):
         navigators = []
 
         # don't calculate navigator and warnings for ineligible programs
-        if eligibility["eligible"]:
+        if eligibility.eligible:
             all_navigators = program.navigator.all()
 
             county_navigators = []

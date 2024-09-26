@@ -1,5 +1,4 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
-from programs.programs.co.medicaid.child_with_disability.calculator import MedicaidChildWithDisability
 from programs.programs.helpers import medicaid_eligible
 import programs.programs.messages as messages
 
@@ -23,7 +22,7 @@ class MedicaidAdultWithDisability(ProgramCalculator):
         member = e.member
 
         # age
-        e.condition(member.age >= MedicaidChildWithDisability.min_age)
+        e.condition(member.age >= MedicaidAdultWithDisability.min_age)
 
         # disability
         e.condition(member.long_term_disability or member.visually_impaired)
