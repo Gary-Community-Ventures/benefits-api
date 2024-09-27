@@ -221,6 +221,8 @@ class ProgramDataController(ModelDataController["Program"]):
         if fpl is not None:
             try:
                 fpl_instance = FederalPoveryLimit.objects.get(year=fpl["year"])
+                fpl_instance.period = fpl["period"]
+                fpl_instance.save()
             except FederalPoveryLimit.DoesNotExist:
                 fpl_instance = FederalPoveryLimit.objects.create(year=fpl["year"], period=fpl["period"])
             program.fpl = fpl_instance
