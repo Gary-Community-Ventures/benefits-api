@@ -1,5 +1,6 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineSpmCalulator
 import programs.programs.policyengine.calculators.dependencies as dependency
+from programs.programs.policyengine.calculators.dependencies.base import Member, SpmUnit
 
 
 class Snap(PolicyEngineSpmCalulator):
