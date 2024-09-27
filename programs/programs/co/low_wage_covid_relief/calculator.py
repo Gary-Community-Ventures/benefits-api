@@ -29,12 +29,11 @@ class LowWageCovidRelief(ProgramCalculator):
         e.condition(in_adams_county, messages.location())
 
         # other benefits
-        for benefit in LowWageCovidRelief.auto_eligible_benefits:
-            has_benefit = self.screen.has_benefit(benefit)
+        has_benefit = False
 
-        for benefit in self.data:
-            if benefit["name_abbreviated"] in LowWageCovidRelief.auto_eligible_benefits and benefit["eligible"]:
-                has_benefit = True
+        for benefit in LowWageCovidRelief.auto_eligible_benefits:
+            if self.screen.has_benefit(benefit) or self.data[benefit].eligible:
+                has_benefit = self.screen.has_benefit(benefit)
                 break
 
         # meets income limit

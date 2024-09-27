@@ -72,7 +72,7 @@ class ProgramCalculator:
     amount = 0
     member_amount = 0
 
-    def __init__(self, screen: Screen, program: "Program", data, missing_dependencies: Dependencies):
+    def __init__(self, screen: Screen, program: "Program", data: dict[str, Eligibility], missing_dependencies: Dependencies):
         self.screen = screen
         self.program = program
         self.data = data

@@ -41,6 +41,11 @@ class ConnectForHealth(ProgramCalculator):
     def member_eligible(self, e: MemberEligibility):
         member = e.member
 
+        # not CHP+ eligible
+        for member_eligibility in self.data["chp"].eligible_members:
+            if member_eligibility.member.id == member.id:
+                e.condition(not member_eligibility.eligible)
+
         # no or private insurance
         e.condition(member.insurance.has_insurance_types(ConnectForHealth.eligible_insurance_types))
 

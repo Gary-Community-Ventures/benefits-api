@@ -234,7 +234,7 @@ def eligibility_results(screen: Screen, batch=False):
     pe_programs = pe_calculators.keys()
 
     def sort_first(program):
-        calc_first = ("tanf", "ssi", "nslp", "leap", *STATE_MEDICAID_OPTIONS)
+        calc_first = ("tanf", "ssi", "nslp", "leap", "chp", *STATE_MEDICAID_OPTIONS)
 
         if program.name_abbreviated in calc_first:
             return 0
@@ -248,11 +248,13 @@ def eligibility_results(screen: Screen, batch=False):
 
     program_snapshots = []
 
+    program_eligibility = {}
+
     for program in all_programs:
         skip = False
         if program.name_abbreviated not in pe_programs and program.active:
             try:
-                eligibility = program.eligibility(screen, data, missing_dependencies)
+                eligibility = program.eligibility(screen, program_eligibility, missing_dependencies)
             except DependencyError:
                 missing_programs = True
                 continue
@@ -262,6 +264,8 @@ def eligibility_results(screen: Screen, batch=False):
                 continue
 
             eligibility = pe_eligibility[program.name_abbreviated]
+
+        program_eligibility[program.name_abbreviated] = eligibility
 
         if previous_snapshot is not None:
             new = True
