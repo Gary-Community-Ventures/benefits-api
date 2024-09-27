@@ -77,7 +77,12 @@ class FederalPoveryLimit(models.Model):
         return limits[self.MAX_DEFINED_SIZE] + limits["additional"] * additional_member_count
 
     def as_dict(self):
-        return self.fpl_cache.fetch()[self.period]
+        try:
+            return self.fpl_cache.fetch()[self.period]
+        except KeyError:
+            # the year is not cached, so invalidate the cache
+            self.fpl_cache.invalid = True
+            return self.fpl_cache.fetch()[self.period]
 
     def __str__(self):
         return self.year
