@@ -277,11 +277,6 @@ def eligibility_results(screen: Screen, batch=False):
         warnings = []
         navigators = []
 
-        try:
-            print(program.name.text, eligibility["estimated_value"], eligibility["eligible"])
-        except:
-            print(program.name.text, eligibility.value, eligibility.eligible)
-
         # don't calculate navigator and warnings for ineligible programs
         if eligibility.eligible:
             all_navigators = program.navigator.all()
