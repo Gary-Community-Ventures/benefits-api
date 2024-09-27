@@ -1,5 +1,6 @@
 import programs.programs.co.pe.tax as tax
 import programs.programs.co.pe.member as member
+import programs.programs.co.pe.spm as spm
 from programs.programs.policyengine.calculators.base import PolicyEngineCalulator
 
 
@@ -17,7 +18,12 @@ co_tax_unit_calculators = {
     "coctc": tax.Coctc,
 }
 
+co_spm_calculators = {
+    "co_tanf": spm.CoTanf,
+}
+
 co_pe_calculators: dict[str, type[PolicyEngineCalulator]] = {
     **co_member_calculators,
     **co_tax_unit_calculators,
+    **co_spm_calculators,
 }
