@@ -56,4 +56,4 @@ class HeadStart(ProgramCalculator):
         member = e.member
 
         # age
-        e.condition(HeadStart.min_age >= member.age >= HeadStart.max_age)
+        e.condition(HeadStart.min_age <= member.age <= HeadStart.max_age)

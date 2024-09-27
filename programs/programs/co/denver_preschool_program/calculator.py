@@ -19,4 +19,4 @@ class DenverPreschoolProgram(ProgramCalculator):
         member = e.member
 
         # age
-        e.condition(DenverPreschoolProgram.min_age >= member.age >= DenverPreschoolProgram.max_age)
+        e.condition(DenverPreschoolProgram.min_age <= member.age <= DenverPreschoolProgram.max_age)
