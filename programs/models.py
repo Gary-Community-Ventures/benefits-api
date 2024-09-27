@@ -1,4 +1,3 @@
-from logging import warn
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from translations.model_data import ModelDataController
@@ -7,7 +6,7 @@ from programs.programs import calculators
 from programs.util import Dependencies, DependencyError
 import requests
 from integrations.util.cache import Cache
-from typing import Optional, Type, TypedDict
+from typing import Optional, TypedDict
 
 
 class FplCache(Cache):
@@ -15,6 +14,9 @@ class FplCache(Cache):
     default = {}
     api_url = "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/api/"
     max_household_size = 8
+
+    class InvalidYear(Exception):
+        pass
 
     def update(self):
         """
@@ -26,7 +28,11 @@ class FplCache(Cache):
             household_sz_fpl = {}
             # get the FPL for the household sizes 1-8
             for i in range(1, self.max_household_size + 1):
-                data = self._fetch_income_limit(fpl.period, str(i))
+                try:
+                    data = self._fetch_income_limit(fpl.period, str(i))
+                except self.InvalidYear:
+                    break
+
                 household_sz_fpl[i] = data
                 if i == self.max_household_size:
                     income_limit_extra_member = self._fetch_income_limit(fpl.period, str(self.max_household_size + 1))
@@ -40,6 +46,10 @@ class FplCache(Cache):
         """
         response = requests.get(self._fpl_url(year, household_size))
         response.raise_for_status()
+        data = response.json()["data"]
+
+        if data is False:
+            raise self.InvalidYear(f"{year} FPL is not available")
         return int(response.json()["data"]["income"])
 
     def _fpl_url(self, year: str, household_size: str):
@@ -403,7 +413,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
     def to_model_data(self) -> DataType:
         need = self.instance
         return {
-            "phone_number": need.phone_number,
+            "phone_number": str(need.phone_number) if need.phone_number is not None else None,
             "active": need.active,
             "low_confidence": need.low_confidence,
             "categories": self._category(),
@@ -546,7 +556,7 @@ class NavigatorDataController(ModelDataController["Navigator"]):
     def to_model_data(self) -> DataType:
         navigator = self.instance
         return {
-            "phone_number": navigator.phone_number,
+            "phone_number": str(navigator.phone_number) if navigator.phone_number is not None else None,
             "counties": self._counties(),
             "languages": self._languages(),
             "programs": [p.external_name for p in navigator.programs.all()],
@@ -690,7 +700,7 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["WarningMessage"]) -> "WarningMessage":
-        return Model.objects.create("_show", external_name)
+        return Model.objects.new_warning("_show", external_name)
 
 
 class WarningMessage(models.Model):
