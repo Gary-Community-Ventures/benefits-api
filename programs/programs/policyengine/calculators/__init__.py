@@ -21,8 +21,8 @@ all_member_calculators: dict[str, type[PolicyEngineMembersCalculator]] = {
 
 all_spm_unit_calculators: dict[str, type[PolicyEngineSpmCalulator]] = {
     **federal_spm_unit_calculators,
-    **nc_spm_calculators,
     **co_spm_calculators,
+    **nc_spm_calculators,
 }
 
 all_tax_unit_calculators: dict[str, type[PolicyEngineTaxUnitCalulator]] = {

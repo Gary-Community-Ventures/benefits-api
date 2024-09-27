@@ -160,7 +160,19 @@ class Lifeline(SpmUnit):
     field = "lifeline"
 
 
-class TanfCountableGrossIncomeDependency(SpmUnit):
+class Tanf(SpmUnit):
+    field = "tanf"
+
+
+class CoTanf(SpmUnit):
+    field = "co_tanf"
+
+
+class NcTanf(SpmUnit):
+    field = "nc_tanf"
+
+
+class CoTanfCountableGrossIncomeDependency(SpmUnit):
     field = "co_tanf_countable_gross_earned_income"
     dependencies = (
         "income_type",
@@ -172,7 +184,7 @@ class TanfCountableGrossIncomeDependency(SpmUnit):
         return int(self.screen.calc_gross_income("yearly", ["earned"]))
 
 
-class TanfCountableGrossUnearnedIncomeDependency(SpmUnit):
+class CoTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
     field = "co_tanf_countable_gross_unearned_income"
     dependencies = (
         "income_type",
@@ -184,8 +196,28 @@ class TanfCountableGrossUnearnedIncomeDependency(SpmUnit):
         return int(self.screen.calc_gross_income("yearly", ["unearned"]))
 
 
-class Tanf(SpmUnit):
-    field = "co_tanf"
+class NcTanfCountableEarnedIncomeDependency(SpmUnit):
+    field = "nc_tanf_countable_earned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
+
+    def value(self):
+        return int(self.screen.calc_gross_income("yearly", ["earned"]))
+
+
+class NcTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
+    field = "nc_tanf_countable_gross_unearned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
+
+    def value(self):
+        return int(self.screen.calc_gross_income("yearly", ["unearned"]))
 
 
 class BroadbandCostDependency(SpmUnit):

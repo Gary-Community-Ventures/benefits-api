@@ -1,5 +1,5 @@
 import programs.programs.policyengine.calculators.dependencies as dependency
-from programs.programs.federal.pe.spm import Snap
+from programs.programs.federal.pe.spm import Snap, Tanf
 
 
 class NcSnap(Snap):
@@ -8,3 +8,15 @@ class NcSnap(Snap):
         dependency.spm.WaterExpenseDependency,
         dependency.spm.PhoneExpenseDependency,
     ]
+
+
+class NcTanf(Tanf):
+    pe_name = "nc_tanf"
+    pe_inputs = [
+        *Tanf.pe_inputs,
+        dependency.household.NcStateCode,
+        dependency.spm.NcTanfCountableEarnedIncomeDependency,
+        dependency.spm.NcTanfCountableGrossUnearnedIncomeDependency,
+    ]
+
+    pe_outputs = [dependency.spm.NcTanf]
