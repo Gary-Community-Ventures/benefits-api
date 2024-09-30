@@ -20,7 +20,7 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.MeetsSnapAssetTestDependency,
         dependency.spm.SnapDependentCareDeductionDependency,
         dependency.spm.WaterExpenseDependency,
-        dependency.spm.PhoneExpenseDependency
+        dependency.spm.PhoneExpenseDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
     pe_period_month = "01"
