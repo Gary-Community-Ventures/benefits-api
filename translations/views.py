@@ -8,7 +8,7 @@ from rest_framework import views
 from django import forms
 from django.http import HttpResponse
 from django.db.models import ProtectedError
-from programs.models import Program, Navigator, UrgentNeed, Document, WarningMessage
+from programs.models import Program, Navigator, UrgentNeed, Document, WarningMessage, TranslationOverride
 from phonenumber_field.formfields import PhoneNumberField
 from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from django.contrib.auth.decorators import login_required
@@ -534,3 +534,65 @@ def warning_messages_filter_view(request):
         context = {"page_obj": page_obj}
 
         return render(request, "warning_messages/list.html", context)
+
+
+class NewTranslationOverrideForm(forms.Form):
+    external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    calculator_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    field_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def translation_overrides_view(request):
+    if request.method == "GET":
+        translation_overrides = TranslationOverride.objects.all().order_by("external_name")
+
+        paginator = Paginator(translation_overrides, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+        return render(request, "translation_overrides/main.html", context)
+    if request.method == "POST":
+        form = NewTranslationOverrideForm(request.POST)
+        if form.is_valid():
+            translation_override = TranslationOverride.objects.new_translation_override(form["calculator_name"].value(), form["field_name"].value(), form["external_name"].value())
+            response = HttpResponse()
+            response.headers["HX-Redirect"] = f"/api/translations/admin/translation_overrides/{translation_override.id}"
+            return response
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def create_translation_override_view(request):
+    if request.method == "GET":
+        context = {"form": NewTranslationOverrideForm(), "route": "/api/translations/admin/translation_overrides"}
+
+        return render(request, "util/create_form.html", context)
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def translation_override_view(request, id=0):
+    if request.method == "GET":
+        translation_override = TranslationOverride.objects.get(pk=id)
+        context = {"translation_override": translation_override}
+
+        return render(request, "translation_overrides/translation_override.html", context)
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def translation_override_filter_view(request):
+    if request.method == "GET":
+        query = request.GET.get("name", "")
+        translation_overrides = TranslationOverride.objects.filter(external_name__contains=query).order_by("external_name")
+
+        paginator = Paginator(translation_overrides, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+
+        return render(request, "translation_overrides/list.html", context)
