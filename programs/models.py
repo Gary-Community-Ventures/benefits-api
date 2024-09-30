@@ -656,7 +656,7 @@ class WarningMessageManager(models.Manager):
         )
 
         for [field, translation] in translations.items():
-            translation.label = f"navigator.{calculator}_{warning.id}-{field}"
+            translation.label = f"warning.{calculator}_{warning.id}-{field}"
             translation.save()
 
         return warning
@@ -749,14 +749,45 @@ class Referrer(models.Model):
     def __str__(self):
         return self.referrer_code
 
+class TranslationOverrideManager(models.Manager):
+    translated_fields = ("translation",)
+
+    def new_translation_override(self, calculator:str, program_field:str, external_name: Optional[str]=None):
+        '''Make a new translation override with the calculator, field, and external_name'''
+
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(f"translation_override.{calculator}_temporary_key-{field}")
+
+        if external_name is None:
+            external_name = calculator
+
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=external_name).count() > 0
+
+        translation_override = self.create(
+            external_name=external_name if not external_name_exists else None,
+            calculator=calculator,
+            field=program_field,
+            **translations,
+        )
+
+        for [field, translation] in translations.items():
+            translation.label = f"translation_override.{calculator}_{translation_override.id}-{field}"
+            translation.save()
+
+        return translation_override
+
 class TranslationOverride(models.Model):
-    calculator = models.CharField(max_length=120, blank=False, null=False)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
+    calculator = models.CharField(max_length=120, blank=False, null=False)
     field = models.CharField(max_length=64, blank=False, null=False)
-    program = models.ForeignKey(Program, related_name="translation_overrides", blank=False, null=False, on_delete=models.CASCADE)
+    program = models.ForeignKey(Program, related_name="translation_overrides", blank=False, null=True, on_delete=models.CASCADE)
     active = models.BooleanField(blank=True, null=False, default=True)
-    translation = models.ForeignKey(Translation, related_name="translation_overrides", blank=False, null=False, on_delete=models.PROTECT)
     counties =  models.ManyToManyField(County, related_name="translation_overrides", blank=True)
+    translation = models.ForeignKey(Translation, related_name="translation_overrides", blank=False, null=False, on_delete=models.PROTECT)
+
+    objects = TranslationOverrideManager()
 
     @property
     def county_names(self) -> list[str]:
