@@ -6,6 +6,7 @@ class CoSnap(Snap):
     pe_inputs = [
         *Snap.pe_inputs,
         dependency.spm.ElectricityExpenseDependency,
+        dependency.household.CoStateCode,
     ]
 
 
