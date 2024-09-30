@@ -706,7 +706,7 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["WarningMessage"]) -> "WarningMessage":
-        return Model.objects.create("_show", external_name)
+        return Model.objects.new_warning("_show", external_name)
 
 
 class WarningMessage(models.Model):
@@ -778,6 +778,54 @@ class TranslationOverrideManager(models.Manager):
 
         return translation_override
 
+
+class TranslationOverrideDataController(ModelDataController["TranslationOverride"]):
+    _model_name = "TranslationOverride"
+    dependencies = ["Program"]
+
+    CountiesType = list[TypedDict("CountyType", {"name": str})]
+    DataType = TypedDict("DataType", {"calculator": str, "field": str, "active": bool, "counties": CountiesType, "program": str})
+
+    def _counties(self) -> CountiesType:
+        return [{"name": c.name} for c in self.instance.counties.all()]
+
+    def to_model_data(self) -> DataType:
+        translation_override = self.instance
+        return {
+            "calculator": translation_override.calculator,
+            "field": translation_override.field,
+            "active": translation_override.active,
+            "counties": self._counties(),
+            "program": translation_override.program.external_name,
+        }
+
+    def from_model_data(self, data: DataType):
+        translation_override = self.instance
+
+        translation_override.calculator = data["calculator"]
+        translation_override.field = data["field"]
+        translation_override.active = data["active"]
+
+        # get or create counties
+        counties = []
+        for county in data["counties"]:
+            try:
+                county_instance = County.objects.get(name=county["name"])
+            except County.DoesNotExist:
+                county_instance = County.objects.create(name=county["name"])
+            counties.append(county_instance)
+        translation_override.counties.set(counties)
+
+        # get programs
+        translation_override.program = Program.objects.get(external_name=data["program"])
+
+        translation_override.save()
+
+    @classmethod
+    def create_instance(cls, external_name: str, Model: type["TranslationOverride"]) -> "TranslationOverride":
+        return Model.objects.new_translation_override("_show", "", external_name)
+
+
 class TranslationOverride(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
@@ -788,6 +836,8 @@ class TranslationOverride(models.Model):
     translation = models.ForeignKey(Translation, related_name="translation_overrides", blank=False, null=False, on_delete=models.PROTECT)
 
     objects = TranslationOverrideManager()
+
+    TranslationExportBuilder = TranslationOverrideDataController
 
     @property
     def county_names(self) -> list[str]:
