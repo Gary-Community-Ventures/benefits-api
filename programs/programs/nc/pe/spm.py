@@ -7,6 +7,7 @@ class NcSnap(Snap):
         *Snap.pe_inputs,
         dependency.spm.WaterExpenseDependency,
         dependency.spm.PhoneExpenseDependency,
+        dependency.household.NcStateCode,
     ]
 
 
