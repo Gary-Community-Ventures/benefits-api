@@ -331,7 +331,7 @@ class Program(models.Model):
         if field not in Program.objects.translated_fields:
             raise ValueError(f"translation with name {field} does not exist")
 
-        translation_overrides: list[TranslationOverride] = self.translation_overrides.all()
+        translation_overrides: list[TranslationOverride] = self.translation_overrides.filter(active=True)
         for translation_override in translation_overrides:
             if translation_override.field != field:
                 continue
