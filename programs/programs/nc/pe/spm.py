@@ -5,8 +5,6 @@ from programs.programs.federal.pe.spm import Snap, Tanf
 class NcSnap(Snap):
     pe_inputs = [
         *Snap.pe_inputs,
-        dependency.spm.WaterExpenseDependency,
-        dependency.spm.PhoneExpenseDependency,
         dependency.household.NcStateCode,
     ]
 
