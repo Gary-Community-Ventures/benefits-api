@@ -10,6 +10,7 @@ from integrations.util.cache import Cache
 from typing import Optional, Type, TypedDict
 from programs.programs.translation_overrides import warning_calculators
 
+
 class FplCache(Cache):
     expire_time = 60 * 60 * 24  # 24 hours
     default = {}
@@ -327,7 +328,7 @@ class Program(models.Model):
     def __unicode__(self):
         return self.name.text
 
-    def get_translation(self, screen, missing_dependencies: Dependencies, field:str):
+    def get_translation(self, screen, missing_dependencies: Dependencies, field: str):
         if field not in Program.objects.translated_fields:
             raise ValueError(f"translation with name {field} does not exist")
 
@@ -749,15 +750,18 @@ class Referrer(models.Model):
     def __str__(self):
         return self.referrer_code
 
+
 class TranslationOverrideManager(models.Manager):
     translated_fields = ("translation",)
 
-    def new_translation_override(self, calculator:str, program_field:str, external_name: Optional[str]=None):
-        '''Make a new translation override with the calculator, field, and external_name'''
+    def new_translation_override(self, calculator: str, program_field: str, external_name: Optional[str] = None):
+        """Make a new translation override with the calculator, field, and external_name"""
 
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(f"translation_override.{calculator}_temporary_key-{field}")
+            translations[field] = Translation.objects.add_translation(
+                f"translation_override.{calculator}_temporary_key-{field}"
+            )
 
         if external_name is None:
             external_name = calculator
@@ -784,7 +788,9 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
     dependencies = ["Program"]
 
     CountiesType = list[TypedDict("CountyType", {"name": str})]
-    DataType = TypedDict("DataType", {"calculator": str, "field": str, "active": bool, "counties": CountiesType, "program": str})
+    DataType = TypedDict(
+        "DataType", {"calculator": str, "field": str, "active": bool, "counties": CountiesType, "program": str}
+    )
 
     def _counties(self) -> CountiesType:
         return [{"name": c.name} for c in self.instance.counties.all()]
@@ -830,10 +836,14 @@ class TranslationOverride(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
     field = models.CharField(max_length=64, blank=False, null=False)
-    program = models.ForeignKey(Program, related_name="translation_overrides", blank=False, null=True, on_delete=models.CASCADE)
+    program = models.ForeignKey(
+        Program, related_name="translation_overrides", blank=False, null=True, on_delete=models.CASCADE
+    )
     active = models.BooleanField(blank=True, null=False, default=True)
-    counties =  models.ManyToManyField(County, related_name="translation_overrides", blank=True)
-    translation = models.ForeignKey(Translation, related_name="translation_overrides", blank=False, null=False, on_delete=models.PROTECT)
+    counties = models.ManyToManyField(County, related_name="translation_overrides", blank=True)
+    translation = models.ForeignKey(
+        Translation, related_name="translation_overrides", blank=False, null=False, on_delete=models.PROTECT
+    )
 
     objects = TranslationOverrideManager()
 

@@ -369,6 +369,7 @@ def eligibility_results(screen: Screen, batch=False):
 
     return eligible_programs, missing_programs
 
+
 class GetProgramTranslation:
     def __init__(self, screen: Screen, program: Program, missing_dependencies: Dependencies):
         self.screen = screen
@@ -377,6 +378,8 @@ class GetProgramTranslation:
 
     def get_translation(self, field: str):
         return default_message(self.program.get_translation(self.screen, self.missing_dependencies, field))
+
+
 def default_message(translation):
     translation.set_current_language(settings.LANGUAGE_CODE)
     d = {"default_message": translation.text, "label": translation.label}

@@ -27,17 +27,13 @@ class Migration(migrations.Migration):
                 ("calculator", models.CharField(max_length=120)),
                 (
                     "external_name",
-                    models.CharField(
-                        blank=True, max_length=120, null=True, unique=True
-                    ),
+                    models.CharField(blank=True, max_length=120, null=True, unique=True),
                 ),
                 ("field", models.CharField(max_length=64)),
                 ("active", models.BooleanField(blank=True, default=True)),
                 (
                     "counties",
-                    models.ManyToManyField(
-                        related_name="translation_overrides", to="programs.county"
-                    ),
+                    models.ManyToManyField(related_name="translation_overrides", to="programs.county"),
                 ),
                 (
                     "program",

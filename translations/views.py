@@ -557,7 +557,9 @@ def translation_overrides_view(request):
     if request.method == "POST":
         form = NewTranslationOverrideForm(request.POST)
         if form.is_valid():
-            translation_override = TranslationOverride.objects.new_translation_override(form["calculator_name"].value(), form["field_name"].value(), form["external_name"].value())
+            translation_override = TranslationOverride.objects.new_translation_override(
+                form["calculator_name"].value(), form["field_name"].value(), form["external_name"].value()
+            )
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/translation_overrides/{translation_override.id}"
             return response
@@ -587,7 +589,9 @@ def translation_override_view(request, id=0):
 def translation_override_filter_view(request):
     if request.method == "GET":
         query = request.GET.get("name", "")
-        translation_overrides = TranslationOverride.objects.filter(external_name__contains=query).order_by("external_name")
+        translation_overrides = TranslationOverride.objects.filter(external_name__contains=query).order_by(
+            "external_name"
+        )
 
         paginator = Paginator(translation_overrides, 50)
         page_number = request.GET.get("page")

@@ -14,9 +14,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="translationoverride",
             name="counties",
-            field=models.ManyToManyField(
-                blank=True, related_name="translation_overrides", to="programs.county"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="translation_overrides", to="programs.county"),
         ),
         migrations.AlterField(
             model_name="translationoverride",

@@ -2,8 +2,8 @@ from programs.programs.translation_overrides.base import TranslationOverrideCalc
 
 
 class DontShow(TranslationOverrideCalculator):
-  def eligible(self) -> bool:
-    '''
-    Never use this override
-    '''
-    return False
+    def eligible(self) -> bool:
+        """
+        Never use this override
+        """
+        return False

@@ -270,12 +270,11 @@ class ReferrerAdmin(ModelAdmin):
 class WebHookFunctionsAdmin(ModelAdmin):
     search_fields = ("name",)
 
+
 class TranslationOverrideAdmin(ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "calculator", "action_buttons"]
-    filter_horizontal = (
-        "counties",
-    )
+    filter_horizontal = ("counties",)
 
     def get_str(self, obj):
         return str(obj)
@@ -300,6 +299,7 @@ class TranslationOverrideAdmin(ModelAdmin):
 
     action_buttons.short_description = "Translate:"
     action_buttons.allow_tags = True
+
 
 admin.site.register(LegalStatus, LegalStatusAdmin)
 admin.site.register(Program, ProgramAdmin)
