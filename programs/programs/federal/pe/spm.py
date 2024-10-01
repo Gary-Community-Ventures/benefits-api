@@ -34,7 +34,7 @@ class Snap(PolicyEngineSpmCalulator):
 
 class SchoolLunch(PolicyEngineSpmCalulator):
     pe_name = "school_meal_daily_subsidy"
-    pe_inputs = dependency.school_lunch_income
+    pe_inputs = [dependency.spm.SchoolMealCountableIncomeDependency]
     pe_outputs = [dependency.spm.SchoolMealDailySubsidy, dependency.spm.SchoolMealTier]
 
     amount = 120

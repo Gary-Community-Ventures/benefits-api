@@ -15,7 +15,7 @@ class Wic(PolicyEngineMembersCalculator):
     pe_inputs = [
         dependency.member.PregnancyDependency,
         dependency.member.AgeDependency,
-        *dependency.school_lunch_income,
+        dependency.spm.SchoolMealCountableIncomeDependency,
     ]
     pe_outputs = [dependency.member.Wic, dependency.member.WicCategory]
     tax_unit_dependent = False
