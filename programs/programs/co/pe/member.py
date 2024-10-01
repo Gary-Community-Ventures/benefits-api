@@ -1,5 +1,5 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineMembersCalculator
-from programs.programs.federal.pe.member import Medicaid
+from programs.programs.federal.pe.member import CommoditySupplementalFoodProgram, Medicaid
 from programs.programs.federal.pe.member import Wic
 import programs.programs.policyengine.calculators.dependencies as dependency
 
@@ -95,3 +95,18 @@ class CoWic(Wic):
         *Wic.pe_inputs,
         dependency.household.CoStateCode,
     ]
+
+
+class EveryDayEats(CommoditySupplementalFoodProgram):
+    amount = 600
+
+    def value(self):
+        value = 0
+
+        for member in self.screen.household_members.all():
+            ede_eligible = self.sim.value(self.pe_category, str(member.id), self.pe_name, self.pe_period) > 0
+
+            if ede_eligible:
+                value += self.amount
+
+        return value
