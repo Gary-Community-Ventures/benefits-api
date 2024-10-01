@@ -61,15 +61,25 @@ class Ssdi(ProgramCalculator):
     def value(self, eligible_members: int):
         child_value = 0
         adult_value = 0
+        child_ssdi_value = (self._parents_with_disability_ssdi_value() or Ssdi.amount) / 2
         for member in self.eligible_members:
             if member.age >= Ssdi.min_age:
                 adult_value += Ssdi.amount
             else:
-                child_value += Ssdi.amount / 2
+                child_value += child_ssdi_value
 
         total_value = adult_value + min(child_value, Ssdi.amount / 2)
 
         return total_value * 12
+
+    def _parents_with_disability_ssdi_value(self):
+        total = 0
+        for member in self.screen.household_members.all():
+            if not self._is_parent_with_disability(member):
+                continue
+            total += member.calc_gross_income("monthly", ("sSDisability",))
+
+        return total
 
     def _is_parent_with_disability(self, member: HouseholdMember):
         # min parent age

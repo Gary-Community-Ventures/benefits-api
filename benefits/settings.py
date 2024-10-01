@@ -316,8 +316,10 @@ UNFOLD = {
 }
 
 # generate uml with: ./manage.py graph_models --pydot
+# adding -d will exclude the fields
 GRAPH_MODELS = {
     "output": "./_mfb_uml.png",
     "group_models": True,
     "app_labels": ["screener", "programs", "configuration", "validations", "authentication"],
+    "exclude_models": ["Translation"],
 }

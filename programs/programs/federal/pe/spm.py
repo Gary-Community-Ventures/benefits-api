@@ -1,5 +1,6 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineSpmCalulator
 import programs.programs.policyengine.calculators.dependencies as dependency
+from programs.programs.policyengine.calculators.dependencies.base import Member, SpmUnit
 
 
 class Snap(PolicyEngineSpmCalulator):
@@ -50,13 +51,10 @@ class SchoolLunch(PolicyEngineSpmCalulator):
 
 
 class Tanf(PolicyEngineSpmCalulator):
-    pe_name = "co_tanf"
+    pe_name = "tanf"
     pe_inputs = [
         dependency.member.AgeDependency,
-        dependency.member.PregnancyDependency,
         dependency.member.FullTimeCollegeStudentDependency,
-        dependency.spm.TanfCountableGrossIncomeDependency,
-        dependency.spm.TanfCountableGrossUnearnedIncomeDependency,
     ]
     pe_outputs = [dependency.spm.Tanf]
 
