@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
@@ -48,8 +48,8 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
     birth_month = serializers.IntegerField(required=False)
 
     def validate(self, data):
-        birth_year = data.pop("birth_year")
-        birth_month = data.pop("birth_month")
+        birth_year = data.pop("birth_year", None)
+        birth_month = data.pop("birth_month", None)
 
         if birth_year is None or birth_month is None:
             return data
@@ -65,7 +65,7 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
         if birth_year_month > today:
             raise serializers.ValidationError("Birth year and month are in the future")
 
-        data["birth_year_month"] = birth_year_month
+        data["birth_year_month"] = birth_year_month.date()
 
         if "age" not in data or data["age"] is None:
             data["age"] = HouseholdMember.age_from_date(birth_year_month)
@@ -230,7 +230,6 @@ class ScreenSerializer(serializers.ModelSerializer):
         for member in household_members:
             incomes = member.pop("income_streams")
             insurance = member.pop("insurance")
-            print(member["age"], member["birth_year_month"])
             household_member = HouseholdMember.objects.create(**member, screen=instance)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=instance, household_member=household_member)

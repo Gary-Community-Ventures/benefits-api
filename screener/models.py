@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
@@ -465,6 +466,20 @@ class HouseholdMember(models.Model):
 
     def is_in_tax_unit(self):
         return self.is_head() or self.is_spouse() or self.is_dependent()
+
+    @property
+    def birth_year(self) -> Optional[int]:
+        if self.birth_year_month is None:
+            return None
+
+        return self.birth_year_month.year
+
+    @property
+    def birth_month(self) -> Optional[int]:
+        if self.birth_year_month is None:
+            return None
+
+        return self.birth_year_month.month
 
     @staticmethod
     def age_from_date(birth_year_month: datetime):
