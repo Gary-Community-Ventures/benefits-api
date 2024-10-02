@@ -481,8 +481,14 @@ class HouseholdMember(models.Model):
 
         return self.birth_year_month.month
 
+    def calc_age(self) -> int:
+        if self.birth_year_month is None:
+            return self.age
+
+        return self.age_from_date(self.birth_year_month)
+
     @staticmethod
-    def age_from_date(birth_year_month: datetime):
+    def age_from_date(birth_year_month: datetime) -> int:
         today = datetime.now()
 
         if today.month >= birth_year_month.month:
