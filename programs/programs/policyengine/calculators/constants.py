@@ -1,7 +1,2 @@
-# WARNING: Before changing the year make sure the the following programs use the right years:
-# Medicaid
-# CHP+
-
-YEAR = "2024"
-PREVIOUS_YEAR = "2023"
-SNAP_PERIOD = "2024-01"
+MAIN_TAX_UNIT = "main_tax_unit"
+SECONDARY_TAX_UNIT = "secondary_tax_unit"

@@ -2,6 +2,7 @@ from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Mess
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from translations.serializers import TranslationSerializer
+from validations.serializers import ValidationSerializer
 
 
 class MessageSerializer(serializers.ModelSerializer):
@@ -83,6 +84,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "is_test_data",
             "start_date",
             "submission_date",
+            "frozen",
             "agree_to_tos",
             "is_13_or_older",
             "zipcode",
@@ -91,7 +93,6 @@ class ScreenSerializer(serializers.ModelSerializer):
             "referrer_code",
             "household_size",
             "household_assets",
-            "housing_situation",
             "household_members",
             "last_email_request_date",
             "last_tax_filing_year",
@@ -114,7 +115,6 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_cccap",
             "has_mydenver",
             "has_chp",
-            "has_ccb",
             "has_ssi",
             "has_andcs",
             "has_chs",
@@ -130,7 +130,6 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_ssdi",
             "has_cowap",
             "has_ubp",
-            "has_pell_grant",
             "has_rag",
             "has_nfp",
             "has_fatc",
@@ -156,10 +155,16 @@ class ScreenSerializer(serializers.ModelSerializer):
             "id",
             "uuid",
             "submision_date",
+            "frozen",
             "last_email_request_date",
             "completed",
             "user",
             "is_test_data",
+        )
+        create_only_fields = (
+            "external_id",
+            "is_test",
+            "referrer_code",
         )
 
     def create(self, validated_data):
@@ -179,8 +184,16 @@ class ScreenSerializer(serializers.ModelSerializer):
         return screen
 
     def update(self, instance, validated_data):
+        if instance.frozen:
+            return instance
+
         household_members = validated_data.pop("household_members")
         expenses = validated_data.pop("expenses")
+
+        # don't update create only fields
+        for field in self.Meta.create_only_fields:
+            validated_data.pop(field)
+
         Screen.objects.filter(pk=instance.id).update(**validated_data)
         HouseholdMember.objects.filter(screen=instance).delete()
         Expense.objects.filter(screen=instance).delete()
@@ -204,16 +217,14 @@ class NavigatorSerializer(serializers.Serializer):
     email = TranslationSerializer()
     assistance_link = TranslationSerializer()
     description = TranslationSerializer()
-
-
-class DocumentSerializer(serializers.Serializer):
-    text = TranslationSerializer()
+    languages = serializers.ListField()
 
 
 class EligibilitySerializer(serializers.Serializer):
     description_short = TranslationSerializer()
     name = TranslationSerializer()
     name_abbreviated = serializers.CharField()
+    external_name = serializers.CharField()
     description = TranslationSerializer()
     value_type = TranslationSerializer()
     learn_more_link = TranslationSerializer()
@@ -223,7 +234,6 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_application_time = TranslationSerializer()
     legal_status_required = serializers.ListField()
     category = TranslationSerializer()
-    warning = TranslationSerializer()
     eligible = serializers.BooleanField()
     failed_tests = serializers.ListField()
     passed_tests = serializers.ListField()
@@ -231,9 +241,10 @@ class EligibilitySerializer(serializers.Serializer):
     already_has = serializers.BooleanField()
     new = serializers.BooleanField()
     low_confidence = serializers.BooleanField()
-    documents = DocumentSerializer(many=True)
+    documents = TranslationSerializer(many=True)
     multiple_tax_units = serializers.BooleanField()
     estimated_value_override = TranslationSerializer()
+    warning_messages = TranslationSerializer(many=True)
 
     class Meta:
         fields = "__all__"
@@ -260,3 +271,4 @@ class ResultsSerializer(serializers.Serializer):
     screen_id = serializers.CharField()
     default_language = serializers.CharField()
     missing_programs = serializers.BooleanField()
+    validations = ValidationSerializer(many=True)

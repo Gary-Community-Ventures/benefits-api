@@ -14,13 +14,11 @@ class Ctc(TaxUnit):
     field = "ctc"
 
 
-class JointDependency(TaxUnit):
-    field = "tax_unit_is_joint"
-
-    def value(self):
-        return self.screen.is_joint()
+class Coctc(TaxUnit):
+    field = "co_ctc"
 
 
+# WARN: this does not take into account multiple tax units
 class PellGrantPrimaryIncomeDependency(TaxUnit):
     field = "pell_grant_primary_income"
 
@@ -35,6 +33,7 @@ class PellGrantPrimaryIncomeDependency(TaxUnit):
         return total
 
 
+# WARN: this does not take into account multiple tax units
 class PellGrantDependentsInCollegeDependency(TaxUnit):
     field = "pell_grant_dependents_in_college"
     dependencies = ("student",)

@@ -5,11 +5,11 @@ import programs.programs.policyengine.calculators.dependencies as dependency
 class Wic(PolicyEngineMembersCalculator):
     wic_categories = {
         "NONE": 0,
-        "INFANT": 130,
-        "CHILD": 74,
-        "PREGNANT": 100,
-        "POSTPARTUM": 100,
-        "BREASTFEEDING": 100,
+        "INFANT": 0,
+        "CHILD": 0,
+        "PREGNANT": 0,
+        "POSTPARTUM": 0,
+        "BREASTFEEDING": 0,
     }
     pe_name = "wic"
     pe_inputs = [

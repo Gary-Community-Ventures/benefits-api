@@ -1,13 +1,26 @@
+from integrations.services.sheets.sheets import GoogleSheetsCache
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
-from programs.programs.federal.head_start.eligible_zipcodes import eligible_zipcode
 from programs.co_county_zips import counties_from_zip
+
+
+class HeadStartCountyEligibleCache(GoogleSheetsCache):
+    expire_time = 60 * 60 * 24
+    default = {}
+    sheet_id = "1suOcBpJPJGIXHljypNSCxGDWEvydG-t8erh2rzUtWcE"
+    range_name = "HEAD START COUNTIES FOR MFB!A2:B"
+
+    def update(self):
+        data = super().update()
+
+        return {row[0].strip() + " County": row[1] == "TRUE" for row in data}
 
 
 class HeadStart(ProgramCalculator):
     amount = 10655
     max_age = 5
     min_age = 3
+    counties = HeadStartCountyEligibleCache()
     adams_percent_of_fpl = 1.3  # Adams County uses 130% FPL instead of 100% FPL
     adams_county = "Adams County"
     dependencies = ["age", "household_size", "income_frequency", "income_amount", "zipcode"]
@@ -27,9 +40,10 @@ class HeadStart(ProgramCalculator):
             counties = counties_from_zip(self.screen.zipcode)
 
         in_eligible_county = False
+        eligible_counties = HeadStart.counties.fetch()
         for county in counties:
-            if county in eligible_zipcode:
-                in_eligible_county = True
+            if county in eligible_counties:
+                in_eligible_county = eligible_counties[county]
                 break
 
         e.condition(in_eligible_county, messages.location())

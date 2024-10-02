@@ -1,6 +1,6 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineSpmCalulator
-from programs.programs.policyengine.calculators.constants import SNAP_PERIOD
 import programs.programs.policyengine.calculators.dependencies as dependency
+from programs.programs.policyengine.calculators.dependencies.base import Member, SpmUnit
 
 
 class Snap(PolicyEngineSpmCalulator):
@@ -22,7 +22,11 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.SnapDependentCareDeductionDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
-    pe_output_period = SNAP_PERIOD
+    pe_period_month = "01"
+
+    @property
+    def pe_output_period(self):
+        return self.pe_period + "-" + self.pe_period_month
 
     def value(self):
         return int(self.sim.value(self.pe_category, self.pe_sub_category, self.pe_name, self.pe_output_period)) * 12
@@ -47,13 +51,10 @@ class SchoolLunch(PolicyEngineSpmCalulator):
 
 
 class Tanf(PolicyEngineSpmCalulator):
-    pe_name = "co_tanf"
+    pe_name = "tanf"
     pe_inputs = [
         dependency.member.AgeDependency,
-        dependency.member.PregnancyDependency,
         dependency.member.FullTimeCollegeStudentDependency,
-        dependency.spm.TanfCountableGrossIncomeDependency,
-        dependency.spm.TanfCountableGrossUnearnedIncomeDependency,
     ]
     pe_outputs = [dependency.spm.Tanf]
 

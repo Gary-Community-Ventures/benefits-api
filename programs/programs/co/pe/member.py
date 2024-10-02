@@ -1,5 +1,6 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineMembersCalculator
 from programs.programs.federal.pe.member import Medicaid
+from programs.programs.federal.pe.member import Wic
 import programs.programs.policyengine.calculators.dependencies as dependency
 
 
@@ -62,9 +63,6 @@ class Chp(PolicyEngineMembersCalculator):
         total = 0
 
         for member in self.screen.household_members.all():
-            if not self.in_tax_unit(member.id):
-                continue
-
             chp_eligible = self.sim.value(self.pe_category, str(member.id), "co_chp_eligible", self.pe_period) > 0
             if chp_eligible and self.screen.has_insurance_types(("none",)):
                 total += self.amount
@@ -82,3 +80,18 @@ class FamilyAffordabilityTaxCredit(PolicyEngineMembersCalculator):
         *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.member.FamilyAffordabilityTaxCredit]
+
+
+class CoWic(Wic):
+    wic_categories = {
+        "NONE": 0,
+        "INFANT": 130,
+        "CHILD": 26,
+        "PREGNANT": 47,
+        "POSTPARTUM": 47,
+        "BREASTFEEDING": 52,
+    }
+    pe_inputs = [
+        *Wic.pe_inputs,
+        dependency.household.CoStateCode,
+    ]

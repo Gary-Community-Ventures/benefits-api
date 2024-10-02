@@ -1,13 +1,38 @@
+from typing import Any
 from django.db import models
+from django.urls import reverse
 from parler.models import TranslatableModel, TranslatedFields, TranslatableManager
 from django.conf import settings
+from tqdm import trange
+from dataclasses import dataclass
+from integrations.util.cache import Cache
+from translations.model_data import ModelDataController
 
 
 BLANK_TRANSLATION_PLACEHOLDER = "[PLACEHOLDER]"
 
 
+class TranslationCache(Cache):
+    expire_time = 24 * 60 * 60
+    default = {}
+
+    def update(self):
+        langs = [lang["code"] for lang in settings.PARLER_LANGUAGES[None]]
+        translations = Translation.objects.prefetch_related("translations")
+        translations_dict = {}
+        for lang in langs:
+            lang_translations = {}
+            for translation in translations:
+                if translation.active:
+                    translation.set_current_language(lang)
+                    lang_translations[translation.label] = translation.text
+            translations_dict[lang] = lang_translations
+        return translations_dict
+
+
 class TranslationManager(TranslatableManager):
     use_in_migrations = True
+    translation_cache = TranslationCache()
 
     def add_translation(self, label, default_message=BLANK_TRANSLATION_PLACEHOLDER, active=True, no_auto=False):
         default_lang = settings.LANGUAGE_CODE
@@ -18,6 +43,7 @@ class TranslationManager(TranslatableManager):
             parent.save()
 
         parent.create_translation(default_lang, text=default_message, edited=True)
+        self.translation_cache.invalid = True
         return parent
 
     def edit_translation(self, label, lang, translation, manual=True):
@@ -29,6 +55,7 @@ class TranslationManager(TranslatableManager):
         parent.text = translation
         parent.edited = manual
         parent.save()
+        self.translation_cache.invalid = True
         return parent
 
     def edit_translation_by_id(self, id, lang, translation, manual=True):
@@ -40,41 +67,67 @@ class TranslationManager(TranslatableManager):
         parent.text = translation
         parent.edited = manual
         parent.save()
+        self.translation_cache.invalid = True
         return parent
 
     def all_translations(self, langs=[lang["code"] for lang in settings.PARLER_LANGUAGES[None]]):
-        translations = self.prefetch_related("translations")
         translations_dict = {}
         for lang in langs:
-            lang_translations = {}
-            for translation in translations:
-                if translation.active:
-                    translation.set_current_language(lang)
-                    lang_translations[translation.label] = translation.text
-            translations_dict[lang] = lang_translations
+            translations_dict[lang] = self.translation_cache.fetch()[lang]
+
         return translations_dict
 
     def export_translations(self):
         all_langs = settings.PARLER_LANGUAGES[None]
         translations = self.prefetch_related("translations")
 
-        translations_export = {}
+        translations_export = {"translations": {}, "model_data": {}}
         for translation in translations:
-            reference = translation.in_program()
+            related_instances = translation.get_reverse_instances()
 
-            if reference is True:
-                continue
+            for relationship in related_instances:
+                instance = relationship.instance
 
-            translations_export[translation.label] = {
-                "active": translation.active,
-                "no_auto": translation.no_auto,
+                if instance.external_name is None:
+                    continue
+
+                field_name = relationship.field_name
+                TranslationExportBuilder: type[ModelDataController] = getattr(
+                    instance, "TranslationExportBuilder", ModelDataController
+                )
+
+                export_builder = TranslationExportBuilder(instance)
+
+                model_data = translations_export["model_data"]
+                model_name = export_builder.model_name
+                if model_name not in model_data:
+                    model_data[model_name] = {
+                        "meta_data": {"dependencies": TranslationExportBuilder.dependencies, "name": model_name},
+                        "instance_data": {},
+                    }
+                instance_data = model_data[model_name]["instance_data"]
+
+                if export_builder.external_name not in instance_data:
+                    instance_data[export_builder.external_name] = {
+                        "data": export_builder.to_model_data(),
+                        "labels": {},
+                        "external_name": export_builder.external_name,
+                    }
+
+                instance_data[export_builder.external_name]["labels"][field_name] = translation.label
+
+            translations_export["translations"][translation.label] = {
                 "langs": {},
-                "reference": reference,
+                "no_auto": translation.no_auto,
+                "active": translation.active,
             }
 
             for lang in all_langs:
                 translation.set_current_language(lang["code"])
-                translations_export[translation.label]["langs"][lang["code"]] = (translation.text, translation.edited)
+                translations_export["translations"][translation.label]["langs"][lang["code"]] = (
+                    translation.text,
+                    translation.edited,
+                )
 
         return translations_export
 
@@ -89,17 +142,16 @@ class Translation(TranslatableModel):
 
     objects = TranslationManager()
 
-    """
-    This method checks if the current Translation object is referenced by any related models
-    such as Program, Navigator, UrgentNeed, or Document. It iterates through all reverse 
-    relationships of the Translation model and determines if any related object exists. 
-    If a related object is found and `label_unpack` is True, it returns the reverse relationship. 
-    Otherwise, it returns details of the related object including the table name, external name, 
-    related name, and active status. If no related object is found, it returns False.
-    """
+    def _get_reverses(self):
+        """
+        This method checks if the current Translation object is referenced by any related models
+        such as Program, Navigator, UrgentNeed, or Document. It iterates through all reverse
+        relationships of the Translation model and determines if any related object exists.
+        It returns all of teh reverse relationships
+        """
 
-    def find_used_model(self, label_unpack=False):
-        has_relationship = False
+        relationships = []
+
         # determine if a translation is refrenced by either a program, navigator, urgent_need, or document
         # https://stackoverflow.com/questions/54711671/django-how-to-determine-if-an-object-is-referenced-by-any-other-object
         for reverse in (f for f in self._meta.get_fields() if f.auto_created and not f.concrete):
@@ -107,35 +159,43 @@ class Translation(TranslatableModel):
                 continue
 
             name = reverse.get_accessor_name()
-            has_reverse_other = getattr(self, name).count()
-            if has_reverse_other:
-                if label_unpack:
-                    return reverse
-                try:
-                    active = getattr(self, reverse.related_name).first().active
-                except AttributeError:
-                    active = True
 
-                external_name = getattr(self, reverse.related_name).first().external_name
-                table = getattr(self, reverse.related_name).first()._meta.db_table
-                if external_name:
-                    return (table, external_name, reverse.related_name, active)
-                has_relationship = True
+            reverse_count = getattr(self, name).count()
+            if reverse_count > 0:
+                relationships.append(reverse)
 
-        return has_relationship
+        return relationships
 
-    """
-    This property field stores information about the first model instance that uses
-    this Translation object. It checks for related models and, if a relationship
-    is found, retrieves the instance's ID, model name, field name, and display name (either 
-    an external name or an abbreviated name). If no relationship is found, it returns 
-    default values indicating the translation is unassigned.
-    """
+    @dataclass
+    class ReverseInstance:
+        instance: Any
+        field_name: Any
+
+    def get_reverse_instances(self) -> list[ReverseInstance]:
+        """
+        Get list of instances and their relationship name that refrence this translation
+        """
+        reverses = self._get_reverses()
+
+        instances: list[self.ReverseInstance] = []
+        for reverse in reverses:
+            name = reverse.get_accessor_name()
+            instances.extend([self.ReverseInstance(instance, name) for instance in getattr(self, name).all()])
+
+        return instances
 
     @property
     def used_by(self):
-        reverse = self.find_used_model(label_unpack=True)
-        if reverse:
+        """
+        This property field stores information about the first model instance that uses
+        this Translation object. It checks for related models and, if a relationship
+        is found, retrieves the instance's ID, model name, field name, and display name (either
+        an external name or an abbreviated name). If no relationship is found, it returns
+        default values indicating the translation is unassigned.
+        """
+        reverses = self._get_reverses()
+        if len(reverses) >= 1:
+            reverse = reverses[0]
             instance = getattr(self, reverse.get_accessor_name()).first()
             model_name = reverse.related_model._meta.model_name
             field_name = reverse.field.name
@@ -147,10 +207,6 @@ class Translation(TranslatableModel):
 
     def get_lang(self, lang):
         return self.translations.filter(language_code=lang).first()
-
-    def in_program(self):
-        has_relationship = self.find_used_model()
-        return has_relationship
 
     @property
     def default_message(self):

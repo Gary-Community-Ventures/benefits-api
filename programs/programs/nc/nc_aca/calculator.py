@@ -7,7 +7,7 @@ from integrations.services.sheets import GoogleSheetsCache
 class ACACache(GoogleSheetsCache):
     default = {}
     sheet_id = "1tk8zfO_Ou96UvGrIwZoI3Pv8TvPZZipg7YfzGMT2o3c"
-    range_name = "'2023 report'!A2:B101"
+    range_name = "'current report'!A2:B101"
 
     def update(self):
         data = super().update()
@@ -22,10 +22,6 @@ class ACASubsidiesNC(ProgramCalculator):
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
-        print(">>>>>>>>>>>>>eligible_medicaideligible_medicaideligible_medicaideligible_medicaid<<<<<<<<<<")
-        print(medicaid_eligible(self.data))
-        print("---->>>>SELF")
-        print(self.data)
         # Medicade eligibility
         e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
 

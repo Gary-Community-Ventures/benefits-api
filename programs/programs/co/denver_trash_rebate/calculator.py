@@ -19,7 +19,7 @@ class DenverTrashRebate(ProgramCalculator):
     amount = 252
     county = "Denver County"
     ami = DenverAmiCache()
-    dependencies = ["zipcode", "income_amount", "income_frequency"]
+    dependencies = ["zipcode", "income_amount", "income_frequency", "household_size"]
 
     def eligible(self) -> Eligibility:
         e = Eligibility()
@@ -36,5 +36,9 @@ class DenverTrashRebate(ProgramCalculator):
         limit = ami[self.screen.household_size - 1]
         income = self.screen.calc_gross_income("yearly", ["all"])
         e.condition(income <= limit, messages.income(income, limit))
+
+        # has rent or mortgage expense
+        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        e.condition(has_rent_or_mortgage)
 
         return e

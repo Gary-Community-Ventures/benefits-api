@@ -16,6 +16,8 @@ class NcMedicaid(Medicaid):
     # def value(self):
     #     ...
     #     return 500
+
+
 class NcWic(Wic):
     wic_categories = {
         "NONE": 0,
