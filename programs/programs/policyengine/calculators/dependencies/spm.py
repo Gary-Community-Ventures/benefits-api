@@ -225,3 +225,21 @@ class BroadbandCostDependency(SpmUnit):
 
     def value(self):
         return 500
+
+
+class SchoolMealCountableIncomeDependency(SpmUnit):
+    field = "school_meal_countable_income"
+    income_types = [
+        "wages",
+        "selfEmployment",
+        "rental",
+        "pension",
+        "veteran",
+        "sSDisability",
+        "sSSurvivor",
+        "sSRetirement",
+        "sSDependent",
+    ]
+
+    def value(self):
+        return self.screen.calc_gross_income("yearly", self.income_types)

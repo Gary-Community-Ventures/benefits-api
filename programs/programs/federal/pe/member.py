@@ -16,7 +16,7 @@ class Wic(PolicyEngineMembersCalculator):
     pe_inputs = [
         dependency.member.PregnancyDependency,
         dependency.member.AgeDependency,
-        *dependency.school_lunch_income,
+        dependency.spm.SchoolMealCountableIncomeDependency,
     ]
     pe_outputs = [dependency.member.Wic, dependency.member.WicCategory]
 
@@ -102,3 +102,12 @@ class Ssi(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitDependentDependency,
     ]
     pe_outputs = [dependency.member.Ssi]
+
+
+class CommoditySupplementalFoodProgram(PolicyEngineMembersCalculator):
+    pe_name = "commodity_supplemental_food_program"
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.spm.SchoolMealCountableIncomeDependency,
+    ]
+    pe_outputs = [dependency.member.CommoditySupplementalFoodProgram]
