@@ -9,6 +9,7 @@ from integrations.util.cache import Cache
 from typing import Optional, Type, TypedDict
 from programs.programs.translation_overrides import warning_calculators
 
+
 class FplCache(Cache):
     expire_time = 60 * 60 * 24  # 24 hours
     default = {}
