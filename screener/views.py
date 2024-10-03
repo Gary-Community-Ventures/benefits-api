@@ -28,7 +28,7 @@ from screener.serializers import (
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError, Dependencies
 from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
-from programs.models import Document, Navigator, UrgentNeed, Program, Referrer, WarningMessage
+from programs.models import Document, Navigator, UrgentNeed, Program, Referrer, WarningMessage, TranslationOverride
 from django.core.exceptions import ObjectDoesNotExist
 from programs.programs.warnings import warning_calculators
 from validations.serializers import ValidationSerializer

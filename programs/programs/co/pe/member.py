@@ -99,13 +99,10 @@ class CoWic(Wic):
 class EveryDayEats(CommoditySupplementalFoodProgram):
     amount = 600
 
-    def value(self):
-        value = 0
+    def member_value(self, member: HouseholdMember):
+        ede_eligible = self.sim.value(self.pe_category, str(member.id), self.pe_name, self.pe_period) > 0
 
-        for member in self.screen.household_members.all():
-            ede_eligible = self.sim.value(self.pe_category, str(member.id), self.pe_name, self.pe_period) > 0
+        if ede_eligible:
+            return self.amount
 
-            if ede_eligible:
-                value += self.amount
-
-        return value
+        return 0
