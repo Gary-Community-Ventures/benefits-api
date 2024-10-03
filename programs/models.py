@@ -77,7 +77,12 @@ class FederalPoveryLimit(models.Model):
         return limits[self.MAX_DEFINED_SIZE] + limits["additional"] * additional_member_count
 
     def as_dict(self):
-        return self.fpl_cache.fetch()[self.period]
+        try:
+            return self.fpl_cache.fetch()[self.period]
+        except KeyError:
+            # the year is not cached, so invalidate the cache
+            self.fpl_cache.invalid = True
+            return self.fpl_cache.fetch()[self.period]
 
     def __str__(self):
         return self.year
@@ -216,6 +221,8 @@ class ProgramDataController(ModelDataController["Program"]):
         if fpl is not None:
             try:
                 fpl_instance = FederalPoveryLimit.objects.get(year=fpl["year"])
+                fpl_instance.period = fpl["period"]
+                fpl_instance.save()
             except FederalPoveryLimit.DoesNotExist:
                 fpl_instance = FederalPoveryLimit.objects.create(year=fpl["year"], period=fpl["period"])
             program.fpl = fpl_instance
