@@ -17,9 +17,7 @@ class UtilityBillPay(ProgramCalculator):
     amount = 350
     dependencies = ["household_size", "income_amount", "income_frequency"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # has other programs
         presumptive_eligible = False
         for benefit in UtilityBillPay.presumptive_eligibility:
@@ -35,5 +33,3 @@ class UtilityBillPay(ProgramCalculator):
         # has rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
         e.condition(has_rent_or_mortgage)
-
-        return e

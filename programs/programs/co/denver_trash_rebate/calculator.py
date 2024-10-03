@@ -1,4 +1,4 @@
-from programs.co_county_zips import counties_from_zip
+from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import ProgramCalculator, Eligibility
 from integrations.services.sheets import GoogleSheetsCache
 import programs.programs.messages as messages
@@ -19,16 +19,12 @@ class DenverTrashRebate(ProgramCalculator):
     amount = 252
     county = "Denver County"
     ami = DenverAmiCache()
+    expenses = ["rent", "mortgage"]
     dependencies = ["zipcode", "income_amount", "income_frequency", "household_size"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # county
-        if self.screen.county is not None:
-            counties = [self.screen.county]
-        else:
-            counties = counties_from_zip(self.screen.zipcode)
+        counties = counties_from_screen(self.screen)
         e.condition(DenverTrashRebate.county in counties, messages.location())
 
         # income
@@ -38,7 +34,5 @@ class DenverTrashRebate(ProgramCalculator):
         e.condition(income <= limit, messages.income(income, limit))
 
         # has rent or mortgage expense
-        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        has_rent_or_mortgage = self.screen.has_expense([DenverTrashRebate.expenses])
         e.condition(has_rent_or_mortgage)
-
-        return e

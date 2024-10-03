@@ -3,7 +3,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from translations.model_data import ModelDataController
 from translations.models import Translation
 from programs.programs import calculators
-from programs.util import Dependencies, DependencyError
+from programs.util import Dependencies
 import requests
 from integrations.util.cache import Cache
 from typing import Optional, TypedDict
@@ -317,19 +317,11 @@ class Program(models.Model):
     def eligibility(self, screen, data, missing_dependencies: Dependencies):
         Calculator = calculators[self.name_abbreviated.lower()]
 
-        if not Calculator.can_calc(missing_dependencies):
-            raise DependencyError()
+        calculator = Calculator(screen, self, data, missing_dependencies)
 
-        calculator = Calculator(screen, self, data)
+        eligibility = calculator.calc()
 
-        eligibility = calculator.eligible()
-
-        eligibility.value = calculator.value(eligibility.eligible_member_count)
-
-        if Calculator.tax_unit_dependent and screen.has_members_outside_of_tax_unit():
-            eligibility.multiple_tax_units = True
-
-        return eligibility.to_dict()
+        return eligibility
 
     def __str__(self):
         return self.name.text

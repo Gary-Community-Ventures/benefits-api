@@ -228,13 +228,13 @@ def eligibility_results(screen: Screen, batch=False):
                 program = p
 
         if program is not None:
-            pe_calculators[calculator_name] = Calculator(screen, program)
+            pe_calculators[calculator_name] = Calculator(screen, program, missing_dependencies)
 
-    pe_eligibility = calc_pe_eligibility(screen, missing_dependencies, pe_calculators)
+    pe_eligibility = calc_pe_eligibility(screen, pe_calculators)
     pe_programs = pe_calculators.keys()
 
     def sort_first(program):
-        calc_first = ("tanf", "ssi", "nslp", "leap", *STATE_MEDICAID_OPTIONS)
+        calc_first = ("tanf", "ssi", "nslp", "leap", "chp", *STATE_MEDICAID_OPTIONS)
 
         if program.name_abbreviated in calc_first:
             return 0
@@ -248,11 +248,13 @@ def eligibility_results(screen: Screen, batch=False):
 
     program_snapshots = []
 
+    program_eligibility = {}
+
     for program in all_programs:
         skip = False
         if program.name_abbreviated not in pe_programs and program.active:
             try:
-                eligibility = program.eligibility(screen, data, missing_dependencies)
+                eligibility = program.eligibility(screen, program_eligibility, missing_dependencies)
             except DependencyError:
                 missing_programs = True
                 continue
@@ -263,12 +265,14 @@ def eligibility_results(screen: Screen, batch=False):
 
             eligibility = pe_eligibility[program.name_abbreviated]
 
+        program_eligibility[program.name_abbreviated] = eligibility
+
         if previous_snapshot is not None:
             new = True
             for previous_snapshot in previous_results:
                 if (
                     previous_snapshot.name_abbreviated == program.name_abbreviated
-                    and eligibility["eligible"] == previous_snapshot.eligible
+                    and eligibility.eligible == previous_snapshot.eligible
                 ):
                     new = False
         else:
@@ -278,7 +282,7 @@ def eligibility_results(screen: Screen, batch=False):
         navigators = []
 
         # don't calculate navigator and warnings for ineligible programs
-        if eligibility["eligible"]:
+        if eligibility.eligible:
             all_navigators = program.navigator.all()
 
             county_navigators = []
@@ -316,12 +320,12 @@ def eligibility_results(screen: Screen, batch=False):
                     name=program.name.text,
                     name_abbreviated=program.name_abbreviated,
                     value_type=program.value_type.text,
-                    estimated_value=eligibility["estimated_value"],
+                    estimated_value=eligibility.value,
                     estimated_delivery_time=program.estimated_delivery_time.text,
                     estimated_application_time=program.estimated_application_time.text,
-                    eligible=eligibility["eligible"],
-                    failed_tests=json.dumps(eligibility["failed"]),
-                    passed_tests=json.dumps(eligibility["passed"]),
+                    eligible=eligibility.eligible,
+                    failed_tests=json.dumps(eligibility.fail_messages),
+                    passed_tests=json.dumps(eligibility.pass_messages),
                     new=new,
                 )
             )
@@ -331,7 +335,7 @@ def eligibility_results(screen: Screen, batch=False):
                     "name": default_message(program.name),
                     "name_abbreviated": program.name_abbreviated,
                     "external_name": program.external_name,
-                    "estimated_value": eligibility["estimated_value"],
+                    "estimated_value": eligibility.value,
                     "estimated_delivery_time": default_message(program.estimated_delivery_time),
                     "estimated_application_time": default_message(program.estimated_application_time),
                     "description_short": default_message(program.description_short),
@@ -343,15 +347,14 @@ def eligibility_results(screen: Screen, batch=False):
                     "legal_status_required": legal_status,
                     "category": default_message(program.category),
                     "estimated_value_override": default_message(program.estimated_value),
-                    "eligible": eligibility["eligible"],
-                    "failed_tests": eligibility["failed"],
-                    "passed_tests": eligibility["passed"],
+                    "eligible": eligibility.eligible,
+                    "failed_tests": eligibility.fail_messages,
+                    "passed_tests": eligibility.pass_messages,
                     "navigators": [serialized_navigator(navigator) for navigator in navigators],
                     "already_has": screen.has_benefit(program.name_abbreviated),
                     "new": new,
                     "low_confidence": program.low_confidence,
                     "documents": [default_message(d.text) for d in program.documents.all()],
-                    "multiple_tax_units": eligibility["multiple_tax_units"],
                     "warning_messages": [default_message(w.message) for w in warnings],
                 }
             )
