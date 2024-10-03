@@ -201,6 +201,9 @@ def eligibility_results(screen: Screen, batch=False):
             "warning_messages",
             "warning_messages__counties",
             *translations_prefetch_name("warning_messages__", WarningMessage.objects.translated_fields),
+            "translation_overrides",
+            "translation_overrides__counties",
+            *translations_prefetch_name("translation_overrides__", TranslationOverride.objects.translated_fields),
         )
         .exclude(id__in=excluded_programs)
     )
