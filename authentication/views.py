@@ -47,9 +47,15 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
             else:
                 print("User does not exist")
                 print("CONTACT_SERVICE:", settings.CONTACT_SERVICE)
+                brevo_service = BrevoService()
+
                 if settings.CONTACT_SERVICE == "brevo":
+                    if screen.user.email:
+                        brevo_service.send_email(screen, screen.user.email, screen.get_language_code())
+                    if screen.user.cell:
+                        brevo_service.send_sms(screen, str(screen.user.cell), screen.get_language_code())
+
                     print("upserting user to brevo")
-                    brevo_service = BrevoService()
                     brevo_service.upsert_user(screen, screen.user)
                 else:
                     print("upserting user to hubspot")
