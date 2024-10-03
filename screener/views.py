@@ -26,7 +26,7 @@ from screener.serializers import (
     ResultsSerializer,
 )
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
-from programs.util import DependencyError
+from programs.util import DependencyError, Dependencies
 from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
 from programs.models import Document, Navigator, UrgentNeed, Program, Referrer, WarningMessage
 from django.core.exceptions import ObjectDoesNotExist
@@ -201,6 +201,9 @@ def eligibility_results(screen: Screen, batch=False):
             "warning_messages",
             "warning_messages__counties",
             *translations_prefetch_name("warning_messages__", WarningMessage.objects.translated_fields),
+            "translation_overrides",
+            "translation_overrides__counties",
+            *translations_prefetch_name("translation_overrides__", TranslationOverride.objects.translated_fields),
         )
         .exclude(id__in=excluded_programs)
     )
@@ -329,24 +332,25 @@ def eligibility_results(screen: Screen, batch=False):
                     new=new,
                 )
             )
+            program_translations = GetProgramTranslation(screen, program, missing_dependencies)
             data.append(
                 {
                     "program_id": program.id,
-                    "name": default_message(program.name),
+                    "name": program_translations.get_translation("name"),
                     "name_abbreviated": program.name_abbreviated,
                     "external_name": program.external_name,
                     "estimated_value": eligibility.value,
-                    "estimated_delivery_time": default_message(program.estimated_delivery_time),
-                    "estimated_application_time": default_message(program.estimated_application_time),
-                    "description_short": default_message(program.description_short),
+                    "estimated_delivery_time": program_translations.get_translation("estimated_delivery_time"),
+                    "estimated_application_time": program_translations.get_translation("estimated_application_time"),
+                    "description_short": program_translations.get_translation("description_short"),
                     "short_name": program.name_abbreviated,
-                    "description": default_message(program.description),
-                    "value_type": default_message(program.value_type),
-                    "learn_more_link": default_message(program.learn_more_link),
-                    "apply_button_link": default_message(program.apply_button_link),
+                    "description": program_translations.get_translation("description"),
+                    "value_type": program_translations.get_translation("value_type"),
+                    "learn_more_link": program_translations.get_translation("learn_more_link"),
+                    "apply_button_link": program_translations.get_translation("apply_button_link"),
                     "legal_status_required": legal_status,
-                    "category": default_message(program.category),
-                    "estimated_value_override": default_message(program.estimated_value),
+                    "category": program_translations.get_translation("category"),
+                    "estimated_value_override": program_translations.get_translation("estimated_value"),
                     "eligible": eligibility.eligible,
                     "failed_tests": eligibility.fail_messages,
                     "passed_tests": eligibility.pass_messages,
@@ -370,6 +374,16 @@ def eligibility_results(screen: Screen, batch=False):
         eligible_programs.append(clean_program)
 
     return eligible_programs, missing_programs
+
+
+class GetProgramTranslation:
+    def __init__(self, screen: Screen, program: Program, missing_dependencies: Dependencies):
+        self.screen = screen
+        self.program = program
+        self.missing_dependencies = missing_dependencies
+
+    def get_translation(self, field: str):
+        return default_message(self.program.get_translation(self.screen, self.missing_dependencies, field))
 
 
 def default_message(translation):
