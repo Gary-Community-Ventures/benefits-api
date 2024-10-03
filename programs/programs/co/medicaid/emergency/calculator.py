@@ -1,21 +1,19 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from programs.programs.helpers import medicaid_eligible
 import programs.programs.messages as messages
 
 
 class EmergencyMedicaid(ProgramCalculator):
     amount = 9_540
+    insurance_types = ["none"]
     dependencies = ["insurance"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # Does qualify for Medicaid
         e.condition(medicaid_eligible(self.data), messages.must_have_benefit("Medicaid"))
 
-        e.member_eligibility(
-            self.screen.household_members.all(),
-            [(lambda m: m.insurance.has_insurance_types(("none",)), messages.has_no_insurance())],
-        )
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
-        return e
+        # insurance
+        e.condition(member.insurance.has_insurance_types(EmergencyMedicaid.insurance_types))

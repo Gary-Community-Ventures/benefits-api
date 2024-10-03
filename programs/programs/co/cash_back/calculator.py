@@ -1,20 +1,13 @@
-import programs.programs.messages as messages
-from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.calc import MemberEligibility, ProgramCalculator
 
 
 class CashBack(ProgramCalculator):
-    amount = 750
+    member_amount = 750
+    min_age = 18
     dependencies = ["age"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
-        adults = self.screen.num_adults(age_max=18)
-        e.condition(adults > 0, messages.older_than(18))
-
-        return e
-
-    def value(self, eligible_members: int):
-        adults = self.screen.num_adults(age_max=18)
-        value = adults * 750
-        return value
+        # age
+        e.condition(member.age >= CashBack.min_age)

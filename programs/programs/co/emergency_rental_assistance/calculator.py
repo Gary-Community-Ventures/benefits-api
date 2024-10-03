@@ -1,7 +1,7 @@
 from programs.programs.calc import Eligibility, ProgramCalculator
 import programs.programs.messages as messages
 from integrations.services.sheets import GoogleSheetsCache
-from programs.co_county_zips import counties_from_zip
+from programs.co_county_zips import counties_from_screen
 
 
 class EmergencyRentalAssistanceIncomeLimitsCache(GoogleSheetsCache):
@@ -17,24 +17,26 @@ class EmergencyRentalAssistanceIncomeLimitsCache(GoogleSheetsCache):
 
 class EmergencyRentalAssistance(ProgramCalculator):
     amount = 13_848
+    expenses = ["rent"]
     dependencies = ["income_amount", "income_frequency", "household_size", "zipcode"]
     income_cache = EmergencyRentalAssistanceIncomeLimitsCache()
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # Income test
-        counties = counties_from_zip(self.screen.zipcode)
-        county_name = self.screen.county if self.screen.county is not None else counties[0]
+        income_limits = EmergencyRentalAssistance.income_cache.fetch()
+
+        counties = counties_from_screen(self.screen)
+        county_name = counties[0]
+        for county in counties:
+            if county in income_limits:
+                county_name = county
+                break
 
         income = self.screen.calc_gross_income("yearly", ["all"])
-        income_limits = EmergencyRentalAssistance.income_cache.fetch()
         # NOTE: 80% to income is already applied in the sheet.
         income_limit = income_limits[county_name][self.screen.household_size - 1]
         e.condition(income < income_limit, messages.income(income, income_limit))
 
         # has rent expense
-        has_rent = self.screen.has_expense(["rent"])
+        has_rent = self.screen.has_expense(EmergencyRentalAssistance.expenses)
         e.condition(has_rent)
-
-        return e

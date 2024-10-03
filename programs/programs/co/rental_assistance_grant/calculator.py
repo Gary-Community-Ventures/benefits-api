@@ -1,7 +1,8 @@
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
-from programs.co_county_zips import counties_from_zip
+from programs.co_county_zips import counties_from_screen
 from integrations.services.sheets import GoogleSheetsCache
+import math
 
 
 class RAGCache(GoogleSheetsCache):
@@ -20,23 +21,23 @@ class RentalAssistanceGrant(ProgramCalculator):
     dependencies = ["income_amount", "income_frequency", "household_size", "zipcode"]
     income_limits = RAGCache()
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
-        # location
-        counties = counties_from_zip(self.screen.zipcode)
-        county_name = self.screen.county if self.screen.county is not None else counties[0]
-
+    def household_eligible(self, e: Eligibility):
         # income
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"]))
 
         limits = self.income_limits.fetch()
 
-        if county_name not in limits:
-            return e
+        counties = counties_from_screen(self.screen)
+        county_name = counties[0]
 
-        income_limit = limits[county_name][self.screen.household_size - 1]
+        for county in counties:
+            if county in limits:
+                county_name = county
+                break
+
+        if county_name in limits:
+            income_limit = limits[county_name][self.screen.household_size - 1]
+        else:
+            income_limit = -math.inf
 
         e.condition(gross_income <= income_limit, messages.income(gross_income, income_limit))
-
-        return e

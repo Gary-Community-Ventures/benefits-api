@@ -1,3 +1,4 @@
+from programs.programs.co.pe import spm
 import programs.programs.co.pe.tax as tax
 import programs.programs.co.pe.member as member
 import programs.programs.co.pe.spm as spm
@@ -19,6 +20,7 @@ co_tax_unit_calculators = {
 }
 
 co_spm_calculators = {
+    "co_snap": spm.CoSnap,
     "co_tanf": spm.CoTanf,
 }
 
