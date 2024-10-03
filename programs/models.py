@@ -3,10 +3,11 @@ from phonenumber_field.modelfields import PhoneNumberField
 from translations.model_data import ModelDataController
 from translations.models import Translation
 from programs.programs import calculators
-from programs.util import Dependencies, DependencyError
+from programs.util import Dependencies
 import requests
 from integrations.util.cache import Cache
-from typing import Optional, TypedDict
+from typing import Optional, Type, TypedDict
+from programs.programs.translation_overrides import warning_calculators
 
 
 class FplCache(Cache):
@@ -77,7 +78,12 @@ class FederalPoveryLimit(models.Model):
         return limits[self.MAX_DEFINED_SIZE] + limits["additional"] * additional_member_count
 
     def as_dict(self):
-        return self.fpl_cache.fetch()[self.period]
+        try:
+            return self.fpl_cache.fetch()[self.period]
+        except KeyError:
+            # the year is not cached, so invalidate the cache
+            self.fpl_cache.invalid = True
+            return self.fpl_cache.fetch()[self.period]
 
     def __str__(self):
         return self.year
@@ -216,6 +222,8 @@ class ProgramDataController(ModelDataController["Program"]):
         if fpl is not None:
             try:
                 fpl_instance = FederalPoveryLimit.objects.get(year=fpl["year"])
+                fpl_instance.period = fpl["period"]
+                fpl_instance.save()
             except FederalPoveryLimit.DoesNotExist:
                 fpl_instance = FederalPoveryLimit.objects.create(year=fpl["year"], period=fpl["period"])
             program.fpl = fpl_instance
@@ -317,25 +325,33 @@ class Program(models.Model):
     def eligibility(self, screen, data, missing_dependencies: Dependencies):
         Calculator = calculators[self.name_abbreviated.lower()]
 
-        if not Calculator.can_calc(missing_dependencies):
-            raise DependencyError()
+        calculator = Calculator(screen, self, data, missing_dependencies)
 
-        calculator = Calculator(screen, self, data)
+        eligibility = calculator.calc()
 
-        eligibility = calculator.eligible()
-
-        eligibility.value = calculator.value(eligibility.eligible_member_count)
-
-        if Calculator.tax_unit_dependent and screen.has_members_outside_of_tax_unit():
-            eligibility.multiple_tax_units = True
-
-        return eligibility.to_dict()
+        return eligibility
 
     def __str__(self):
         return self.name.text
 
     def __unicode__(self):
         return self.name.text
+
+    def get_translation(self, screen, missing_dependencies: Dependencies, field: str):
+        if field not in Program.objects.translated_fields:
+            raise ValueError(f"translation with name {field} does not exist")
+
+        translation_overrides: list[TranslationOverride] = self.translation_overrides.filter(active=True)
+        for translation_override in translation_overrides:
+            if translation_override.field != field:
+                continue
+
+            Calculator = warning_calculators[translation_override.calculator]
+            calculator = Calculator(screen, translation_override, missing_dependencies)
+            if calculator.calc() is True:
+                return translation_override.translation
+
+        return getattr(self, field)
 
 
 class UrgentNeedFunction(models.Model):
@@ -650,7 +666,7 @@ class WarningMessageManager(models.Manager):
         )
 
         for [field, translation] in translations.items():
-            translation.label = f"navigator.{calculator}_{warning.id}-{field}"
+            translation.label = f"warning.{calculator}_{warning.id}-{field}"
             translation.save()
 
         return warning
@@ -742,3 +758,110 @@ class Referrer(models.Model):
 
     def __str__(self):
         return self.referrer_code
+
+
+class TranslationOverrideManager(models.Manager):
+    translated_fields = ("translation",)
+
+    def new_translation_override(self, calculator: str, program_field: str, external_name: Optional[str] = None):
+        """Make a new translation override with the calculator, field, and external_name"""
+
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(
+                f"translation_override.{calculator}_temporary_key-{field}"
+            )
+
+        if external_name is None:
+            external_name = calculator
+
+        # try to set the external_name to the name
+        external_name_exists = self.filter(external_name=external_name).count() > 0
+
+        translation_override = self.create(
+            external_name=external_name if not external_name_exists else None,
+            calculator=calculator,
+            field=program_field,
+            **translations,
+        )
+
+        for [field, translation] in translations.items():
+            translation.label = f"translation_override.{calculator}_{translation_override.id}-{field}"
+            translation.save()
+
+        return translation_override
+
+
+class TranslationOverrideDataController(ModelDataController["TranslationOverride"]):
+    _model_name = "TranslationOverride"
+    dependencies = ["Program"]
+
+    CountiesType = list[TypedDict("CountyType", {"name": str})]
+    DataType = TypedDict(
+        "DataType", {"calculator": str, "field": str, "active": bool, "counties": CountiesType, "program": str}
+    )
+
+    def _counties(self) -> CountiesType:
+        return [{"name": c.name} for c in self.instance.counties.all()]
+
+    def to_model_data(self) -> DataType:
+        translation_override = self.instance
+        return {
+            "calculator": translation_override.calculator,
+            "field": translation_override.field,
+            "active": translation_override.active,
+            "counties": self._counties(),
+            "program": translation_override.program.external_name,
+        }
+
+    def from_model_data(self, data: DataType):
+        translation_override = self.instance
+
+        translation_override.calculator = data["calculator"]
+        translation_override.field = data["field"]
+        translation_override.active = data["active"]
+
+        # get or create counties
+        counties = []
+        for county in data["counties"]:
+            try:
+                county_instance = County.objects.get(name=county["name"])
+            except County.DoesNotExist:
+                county_instance = County.objects.create(name=county["name"])
+            counties.append(county_instance)
+        translation_override.counties.set(counties)
+
+        # get programs
+        translation_override.program = Program.objects.get(external_name=data["program"])
+
+        translation_override.save()
+
+    @classmethod
+    def create_instance(cls, external_name: str, Model: type["TranslationOverride"]) -> "TranslationOverride":
+        return Model.objects.new_translation_override("_show", "", external_name)
+
+
+class TranslationOverride(models.Model):
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
+    calculator = models.CharField(max_length=120, blank=False, null=False)
+    field = models.CharField(max_length=64, blank=False, null=False)
+    program = models.ForeignKey(
+        Program, related_name="translation_overrides", blank=False, null=True, on_delete=models.CASCADE
+    )
+    active = models.BooleanField(blank=True, null=False, default=True)
+    counties = models.ManyToManyField(County, related_name="translation_overrides", blank=True)
+    translation = models.ForeignKey(
+        Translation, related_name="translation_overrides", blank=False, null=False, on_delete=models.PROTECT
+    )
+
+    objects = TranslationOverrideManager()
+
+    TranslationExportBuilder = TranslationOverrideDataController
+
+    @property
+    def county_names(self) -> list[str]:
+        """List of county names"""
+        return [c.name for c in self.counties.all()]
+
+    def __str__(self):
+        return self.external_name if self.external_name is not None else self.calculator

@@ -1,6 +1,6 @@
 from translations.model_data import ModelDataController
 from .models import Translation
-from programs.models import Program, Navigator, UrgentNeed, Document, WarningMessage
+from programs.models import Program, Navigator, UrgentNeed, Document, WarningMessage, TranslationOverride
 from django.db import transaction
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -14,6 +14,7 @@ TRANSLATED_MODEL_MAP = {
     "Navigator": Navigator,
     "Document": Document,
     "WarningMessage": WarningMessage,
+    "TranslationOverride": TranslationOverride,
 }
 
 TRANSLATED_MODELS = TRANSLATED_MODEL_MAP.values()

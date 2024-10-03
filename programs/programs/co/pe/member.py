@@ -2,6 +2,7 @@ from programs.programs.policyengine.calculators.base import PolicyEngineMembersC
 from programs.programs.federal.pe.member import CommoditySupplementalFoodProgram, Medicaid
 from programs.programs.federal.pe.member import Wic
 import programs.programs.policyengine.calculators.dependencies as dependency
+from screener.models import HouseholdMember
 
 
 class CoMedicaid(Medicaid):
@@ -59,15 +60,13 @@ class Chp(PolicyEngineMembersCalculator):
 
     amount = 200 * 12
 
-    def value(self):
-        total = 0
+    def member_value(self, member: HouseholdMember):
+        chp_eligible = self.sim.value(self.pe_category, str(member.id), "co_chp_eligible", self.pe_period) > 0
 
-        for member in self.screen.household_members.all():
-            chp_eligible = self.sim.value(self.pe_category, str(member.id), "co_chp_eligible", self.pe_period) > 0
-            if chp_eligible and self.screen.has_insurance_types(("none",)):
-                total += self.amount
+        if chp_eligible and self.screen.has_insurance_types(("none",)):
+            return self.amount
 
-        return total
+        return 0
 
 
 class FamilyAffordabilityTaxCredit(PolicyEngineMembersCalculator):

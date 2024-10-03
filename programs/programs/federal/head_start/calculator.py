@@ -1,7 +1,7 @@
 from integrations.services.sheets.sheets import GoogleSheetsCache
-from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 import programs.programs.messages as messages
-from programs.co_county_zips import counties_from_zip
+from programs.co_county_zips import counties_from_screen
 
 
 class HeadStartCountyEligibleCache(GoogleSheetsCache):
@@ -17,7 +17,7 @@ class HeadStartCountyEligibleCache(GoogleSheetsCache):
 
 
 class HeadStart(ProgramCalculator):
-    amount = 10655
+    member_amount = 10655
     max_age = 5
     min_age = 3
     counties = HeadStartCountyEligibleCache()
@@ -25,19 +25,9 @@ class HeadStart(ProgramCalculator):
     adams_county = "Adams County"
     dependencies = ["age", "household_size", "income_frequency", "income_amount", "zipcode"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
-        # has young child
-        num_children = self.screen.num_children(age_min=HeadStart.min_age, age_max=HeadStart.max_age)
-
-        e.condition(num_children >= 1, messages.child(HeadStart.min_age, HeadStart.max_age))
-
+    def household_eligible(self, e: Eligibility):
         # location
-        if self.screen.county is not None:
-            counties = [self.screen.county]
-        else:
-            counties = counties_from_zip(self.screen.zipcode)
+        counties = counties_from_screen(self.screen)
 
         in_eligible_county = False
         eligible_counties = HeadStart.counties.fetch()
@@ -48,14 +38,13 @@ class HeadStart(ProgramCalculator):
 
         e.condition(in_eligible_county, messages.location())
 
-        in_adams = HeadStart.adams_county in counties
-
         # income
         fpl = self.program.fpl.as_dict()
         income_limit = int(fpl[self.screen.household_size] / 12)
         income_limit_adams_county = int(fpl[self.screen.household_size] / 12 * HeadStart.adams_percent_of_fpl)
         gross_income = int(self.screen.calc_gross_income("monthly", ["all"]))
 
+        in_adams = HeadStart.adams_county in counties
         if in_adams:
             e.condition(
                 gross_income < income_limit_adams_county, messages.income(gross_income, income_limit_adams_county)
@@ -63,4 +52,8 @@ class HeadStart(ProgramCalculator):
         else:
             e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
-        return e
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
+
+        # age
+        e.condition(HeadStart.min_age <= member.age <= HeadStart.max_age)

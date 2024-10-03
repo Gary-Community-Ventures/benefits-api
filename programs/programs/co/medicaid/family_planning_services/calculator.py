@@ -1,17 +1,15 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from programs.programs.helpers import medicaid_eligible
 import programs.programs.messages as messages
 
 
 class FamilyPlanningServices(ProgramCalculator):
-    amount = 404
+    member_amount = 404
     min_age = 12
     fpl_percent = 2.65
     dependencies = ["age", "insurance", "income_frequency", "income_amount", "household_size"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # Does not have insurance
         has_no_insurance = False
         for member in self.screen.household_members.all():
@@ -21,22 +19,23 @@ class FamilyPlanningServices(ProgramCalculator):
         # Not Medicaid eligible
         e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
 
-        e.member_eligibility(
-            self.screen.household_members.all(),
-            [
-                (lambda m: not m.pregnant, None),
-                (lambda m: m.age >= FamilyPlanningServices.min_age, None),
-                (lambda m: m.is_head() or m.is_spouse(), None),
-            ],
-        )
-
         # Income
         fpl = self.program.fpl
         income_limit = int(
-            FamilyPlanningServices.fpl_percent * fpl.get_limit(self.screen.household_size + e.eligible_member_count)
+            FamilyPlanningServices.fpl_percent * fpl.get_limit(self.screen.household_size + len(e.eligible_members))
         )
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"]))
 
         e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
-        return e
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
+
+        # not pregnant
+        e.condition(not member.pregnant)
+
+        # age
+        e.condition(member.age >= FamilyPlanningServices.min_age)
+
+        # head or spouse
+        e.condition(member.is_head() or member.is_spouse())

@@ -1,4 +1,4 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 
 
@@ -6,29 +6,14 @@ class PropertyCreditRebate(ProgramCalculator):
     amount = 1044
     min_age = 65
     disabled_min_age = 18
+    expenses = ["rent", "mortgage"]
     income_limit = {"single": 18_026, "married": 23_345}
     dependencies = ["age", "income_frequency", "income_amount", "relationship"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
-        # Someone is disabled
-        someone_disabled = False
-        for member in self.screen.household_members.all():
-            someone_disabled = someone_disabled or (
-                member.has_disability() and member.age > PropertyCreditRebate.disabled_min_age
-            )
-
-        # Someone is old enough
-        someone_old_enough = self.screen.num_adults(age_max=PropertyCreditRebate.min_age) >= 1
-
-        e.condition(someone_disabled or someone_old_enough, messages.has_disability())
-
-        e.condition(someone_disabled or someone_old_enough, messages.older_than(PropertyCreditRebate.min_age))
-
+    def household_eligible(self, e: Eligibility):
         # Income test
         relationship_status = "single"
-        for member_id, married_to in self.screen.relationship_map().items():
+        for _, married_to in self.screen.relationship_map().items():
             if married_to is not None:
                 relationship_status = "married"
 
@@ -39,7 +24,16 @@ class PropertyCreditRebate(ProgramCalculator):
         )
 
         # has rent or mortgage expense
-        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        has_rent_or_mortgage = self.screen.has_expense(PropertyCreditRebate.expenses)
         e.condition(has_rent_or_mortgage)
 
-        return e
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
+
+        # disabled
+        someone_disabled = member.has_disability() and member.age > PropertyCreditRebate.disabled_min_age
+
+        # age
+        someone_old_enough = member.age >= PropertyCreditRebate.min_age
+
+        e.condition(someone_disabled or someone_old_enough)
