@@ -12,7 +12,7 @@ class MedicaidAdultWithDisability(ProgramCalculator):
     min_age = 16
     insurance_types = ("employer", "private", "none")
     dependencies = ["insurance", "age", "household_size", "income_type", "income_amount", "income_frequency"]
-    member_amount = 310
+    member_amount = 310 * 12
 
     def household_eligible(self, e: Eligibility):
         # Does not qualify for Medicaid

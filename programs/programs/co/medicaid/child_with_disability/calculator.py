@@ -11,7 +11,7 @@ class MedicaidChildWithDisability(ProgramCalculator):
     income_percent = 1 - 0.33
     insurance_types = ("employer", "private", "none")
     dependencies = ["insurance", "age", "household_size", "income_type", "income_amount", "income_frequency"]
-    member_amount = 200
+    member_amount = 200 * 12
 
     def household_eligible(self, e: Eligibility):
         # Does not qualify for Medicaid
