@@ -1,5 +1,12 @@
 import programs.programs.policyengine.calculators.dependencies as dependency
-from programs.programs.federal.pe.spm import Tanf
+from programs.programs.federal.pe.spm import Snap, Tanf
+
+
+class CoSnap(Snap):
+    pe_inputs = [
+        *Snap.pe_inputs,
+        dependency.household.CoStateCode,
+    ]
 
 
 class CoTanf(Tanf):

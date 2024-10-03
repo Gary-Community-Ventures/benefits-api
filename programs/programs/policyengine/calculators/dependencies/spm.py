@@ -126,6 +126,13 @@ class ElectricityExpenseDependency(SpmUnit):
         return self.screen.calc_expenses("yearly", ["otherUtilities"])
 
 
+class WaterExpenseDependency(SpmUnit):
+    field = "water_expense"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["otherUtilities"])
+
+
 class SnapEmergencyAllotmentDependency(SpmUnit):
     field = "snap_emergency_allotment"
 

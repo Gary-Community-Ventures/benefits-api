@@ -1,7 +1,6 @@
 from screener.models import HouseholdMember, Screen
 from .calculators import PolicyEngineCalulator
 from programs.programs.calc import Eligibility
-from programs.util import Dependencies
 from .calculators.dependencies.base import DependencyError, Member, TaxUnit
 from typing import List
 from sentry_sdk import capture_exception, capture_message
@@ -11,13 +10,12 @@ from .calculators.constants import MAIN_TAX_UNIT, SECONDARY_TAX_UNIT
 
 def calc_pe_eligibility(
     screen: Screen,
-    missing_fields: Dependencies,
     calculators: dict[str, PolicyEngineCalulator],
 ) -> dict[str, Eligibility]:
     valid_programs: dict[str, PolicyEngineCalulator] = {}
 
     for name_abbr, calculator in calculators.items():
-        if not calculator.can_calc(missing_fields):
+        if not calculator.can_calc():
             continue
 
         valid_programs[name_abbr] = calculator
@@ -29,7 +27,7 @@ def calc_pe_eligibility(
 
     for Method in pe_engines:
         try:
-            return all_eligibility(Method(input_data), valid_programs, screen)
+            return all_eligibility(Method(input_data), valid_programs)
         except Exception as e:
             capture_exception(e, level="warning", message="")
             capture_message(f"Failed to calculate eligibility with the {Method.method_name} method", level="warning")
@@ -37,18 +35,14 @@ def calc_pe_eligibility(
     raise Exception("Failed to calculate Policy Engine eligibility")
 
 
-def all_eligibility(method: Sim, valid_programs: dict[str, PolicyEngineCalulator], screen: Screen):
+def all_eligibility(method: Sim, valid_programs: dict[str, PolicyEngineCalulator]):
     all_eligibility: dict[str, Eligibility] = {}
-    has_non_tax_unit_members = screen.has_members_outside_of_tax_unit()
     for name_abbr, calculator in valid_programs.items():
         calculator.set_engine(method)
 
-        e = calculator.eligible()
+        e = calculator.calc()
 
-        if calculator.tax_unit_dependent and has_non_tax_unit_members:
-            e.multiple_tax_units = True
-
-        all_eligibility[name_abbr] = e.to_dict()
+        all_eligibility[name_abbr] = e
 
     return all_eligibility
 
