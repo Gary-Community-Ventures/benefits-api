@@ -98,6 +98,16 @@ class HasPhoneExpenseDependency(SpmUnit):
         return self.screen.has_expense(["telephone"])
 
 
+class HasUsdaElderlyDisabledDependency(SpmUnit):
+    field = "has_usda_elderly_disabled"
+
+    def value(self):
+        return any(
+            member.is_elderly() or member.has_disability()
+            for member in self.members
+        )
+        
+
 class UtilityExpenseDependency(SpmUnit):
     field = "utility_expense"
 
