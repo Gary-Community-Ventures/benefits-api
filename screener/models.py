@@ -448,7 +448,7 @@ class HouseholdMember(models.Model):
 
     def is_elderly(self):
         return self.age >= 60
-    
+
     def is_head(self):
         return self.relationship == "headOfHousehold"
 
