@@ -71,6 +71,8 @@ class TranslationManager(TranslatableManager):
         return parent
 
     def all_translations(self, langs=[lang["code"] for lang in settings.PARLER_LANGUAGES[None]]):
+        print("Fetching translations")
+        print("langs: \n", langs)
         translations_dict = {}
         for lang in langs:
             translations_dict[lang] = self.translation_cache.fetch()[lang]
