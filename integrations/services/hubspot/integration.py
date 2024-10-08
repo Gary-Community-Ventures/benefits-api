@@ -63,7 +63,7 @@ class Hubspot:
     def create_contact(self, user):
         simple_public_object_input = SimplePublicObjectInput(properties=user)
         api_response = self.api_client.crm.contacts.basic_api.create(
-            simple_public_object_input=simple_public_object_input
+            simple_public_object_input_for_create=simple_public_object_input
         )
         return api_response
 
