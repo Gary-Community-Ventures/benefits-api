@@ -102,7 +102,7 @@ class HasUsdaElderlyDisabledDependency(SpmUnit):
     field = "has_usda_elderly_disabled"
 
     def value(self):
-        return any(member.is_elderly() or member.has_disability() for member in self.members)
+        return any(member.age >= 60 or member.has_disability() for member in self.members)
 
 
 class UtilityExpenseDependency(SpmUnit):

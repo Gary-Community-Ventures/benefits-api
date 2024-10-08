@@ -100,20 +100,6 @@ class IsDisabledDependency(Member):
         return self.member.disabled or self.member.long_term_disability
 
 
-class IsUSDADisabledDependency(Member):
-    field = "is_usda_disabled"
-
-    def value(self):
-        return self.member.has_disability()
-
-
-class IsUSDAElderlyDependency(Member):
-    field = "is_usda_elderly"
-
-    def value(self):
-        return self.member.is_elderly()
-
-
 # In this class a dynamic attribute called '_medical_expense_assigned_member_id' is used
 # to ensure that medical expenses are only counted once per household, even when multiple
 # elderly or disabled members are in the same household. This is done because the Member
@@ -123,7 +109,7 @@ class MedicalExpenseDependency(Member):
     field = "medical_out_of_pocket_expenses"
 
     def value(self):
-        if self.member.is_elderly() or self.member.has_disability():
+        if self.member.age >= 60 or self.member.has_disability():
             assigned_member_id = getattr(self.screen, "_medical_expense_assigned_member_id", None)
             if assigned_member_id is None:
                 self.screen._medical_expense_assigned_member_id = self.member.id

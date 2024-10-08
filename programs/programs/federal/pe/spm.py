@@ -23,8 +23,7 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.PhoneExpenseDependency,
         dependency.spm.HasUsdaElderlyDisabledDependency,
         dependency.member.MedicalExpenseDependency,
-        dependency.member.IsUSDADisabledDependency,
-        dependency.member.IsUSDAElderlyDependency,
+        dependency.member.IsDisabledDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
     pe_period_month = "01"
