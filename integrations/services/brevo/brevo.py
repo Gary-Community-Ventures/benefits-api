@@ -18,30 +18,23 @@ class BrevoService:
         self.front_end_domain = settings.FRONTEND_DOMAIN
 
     def upsert_user(self, screen, user):
-        print("BrevoService.upsert_user()")
-        # if settings.DEBUG:
-        #     print("DEBUG set to True")
-        #     return
-        # if user is None or screen.is_test_data is None:
-        #     return
+        if settings.DEBUG:
+            return
+        if user is None or screen.is_test_data is None:
+            return
         should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
-        print("should_upsert_user:", should_upsert_user)
         if not should_upsert_user or screen.is_test_data:
             return
 
         if user.external_id:
-            print("user.external_id:", user.external_id)
             self.update_contact(user)
         else:
-            print("user.external_id:", user.external_id)
             self.create_contact(user)
-            self.send_welcome_message(screen, user)
 
     def create_contact(self, user):
-        print("BrevoService.create_contact()")
         attr = {
-            "firstname": user.first_name,
-            "lastname": user.last_name,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
             "sms": str(user.cell),
             "benefits_screener_id": user.id,
             "send_updates": user.send_updates,
@@ -52,14 +45,11 @@ class BrevoService:
             "full_name": f"{user.first_name} {user.last_name}",
         }
 
-        create_contact = sib_api_v3_sdk.CreateContact(email=user.email, attributes=attr, list_ids=[8])
+        create_contact = sib_api_v3_sdk.CreateContact(email=user.email, attributes=attr, list_ids=[6])
         try:
-            print("creating contact")
             brevo_id = self.api_instance.create_contact(create_contact)
-            print("Brevo response:", brevo_id)
             pprint(brevo_id)
 
-            # TO-DO: Is this the best place to run the DB logic?
             if brevo_id:
                 random_id = str(uuid.uuid4()).replace("-", "")
                 user.external_id = brevo_id
@@ -74,7 +64,6 @@ class BrevoService:
             print("Exception when calling ContactsApi->create_contact: %s\n" % e)
 
     def update_contact(self, user):
-        print("update_contract() ran")
         update_contact = sib_api_v3_sdk.UpdateContact(attributes={"EMAIL": user.email, "FIRSTNAME": user.first_name})
         try:
             self.api_instance.update_contact(user.email, update_contact)
