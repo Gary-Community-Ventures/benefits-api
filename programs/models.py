@@ -101,6 +101,7 @@ class LegalStatus(models.Model):
 class ProgramCategory(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=True, null=True)
+    icon = models.CharField(max_length=120, blank=False, null=False)
     name = models.ForeignKey(
         Translation, related_name="program_category_name", blank=False, null=False, on_delete=models.PROTECT
     )
