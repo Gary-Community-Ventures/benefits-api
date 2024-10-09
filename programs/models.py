@@ -101,8 +101,12 @@ class LegalStatus(models.Model):
 class ProgramCategory(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=True, null=True)
-    name = models.ForeignKey(Translation, related_name="program_category_name", blank=False, null=False, on_delete=models.PROTECT)
-    description = models.ForeignKey(Translation, related_name="program_category_description", blank=False, null=False, on_delete=models.PROTECT)
+    name = models.ForeignKey(
+        Translation, related_name="program_category_name", blank=False, null=False, on_delete=models.PROTECT
+    )
+    description = models.ForeignKey(
+        Translation, related_name="program_category_description", blank=False, null=False, on_delete=models.PROTECT
+    )
 
     def __str__(self):
         return self.name.text
@@ -277,7 +281,9 @@ class Program(models.Model):
     active = models.BooleanField(blank=True, default=True)
     low_confidence = models.BooleanField(blank=True, null=False, default=False)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name="fpl", blank=True, null=True, on_delete=models.SET_NULL)
-    category_v2 = models.ForeignKey(ProgramCategory, related_name="programs", blank=True, null=True, on_delete=models.SET_NULL)
+    category_v2 = models.ForeignKey(
+        ProgramCategory, related_name="programs", blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     description_short = models.ForeignKey(
         Translation, related_name="program_description_short", blank=False, null=False, on_delete=models.PROTECT

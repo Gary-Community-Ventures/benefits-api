@@ -26,9 +26,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "external_name",
-                    models.CharField(
-                        blank=True, max_length=120, null=True, unique=True
-                    ),
+                    models.CharField(blank=True, max_length=120, null=True, unique=True),
                 ),
                 ("calculator", models.CharField(blank=True, max_length=120, null=True)),
                 (
