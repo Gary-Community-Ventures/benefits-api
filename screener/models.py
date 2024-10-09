@@ -1,3 +1,5 @@
+from datetime import datetime
+from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
@@ -380,7 +382,8 @@ class Message(models.Model):
 class HouseholdMember(models.Model):
     screen = models.ForeignKey(Screen, related_name="household_members", on_delete=models.CASCADE)
     relationship = models.CharField(max_length=30, blank=True, null=True)
-    age = models.IntegerField(blank=True, null=True)
+    age = models.PositiveIntegerField(blank=True, null=True)
+    birth_year_month = models.DateField(blank=True, null=True)
     student = models.BooleanField(blank=True, null=True)
     student_full_time = models.BooleanField(blank=True, null=True)
     pregnant = models.BooleanField(blank=True, null=True)
@@ -465,6 +468,35 @@ class HouseholdMember(models.Model):
 
     def is_in_tax_unit(self):
         return self.is_head() or self.is_spouse() or self.is_dependent()
+
+    @property
+    def birth_year(self) -> Optional[int]:
+        if self.birth_year_month is None:
+            return None
+
+        return self.birth_year_month.year
+
+    @property
+    def birth_month(self) -> Optional[int]:
+        if self.birth_year_month is None:
+            return None
+
+        return self.birth_year_month.month
+
+    def calc_age(self) -> int:
+        if self.birth_year_month is None:
+            return self.age
+
+        return self.age_from_date(self.birth_year_month)
+
+    @staticmethod
+    def age_from_date(birth_year_month: datetime) -> int:
+        today = datetime.now()
+
+        if today.month >= birth_year_month.month:
+            return today.year - birth_year_month.year
+
+        return today.year - birth_year_month.year - 1
 
     def missing_fields(self):
         member_fields = (
