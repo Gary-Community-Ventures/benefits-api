@@ -1,4 +1,3 @@
-from enum import unique
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from translations.model_data import ModelDataController
@@ -7,7 +6,7 @@ from programs.programs import calculators
 from programs.util import Dependencies
 import requests
 from integrations.util.cache import Cache
-from typing import Optional, Type, TypedDict
+from typing import Optional, TypedDict
 from programs.programs.translation_overrides import warning_calculators
 
 
@@ -98,6 +97,51 @@ class LegalStatus(models.Model):
         return self.status
 
 
+class ProgramCategoryManager(models.Manager):
+    translated_fields = ("name", "description")
+
+    def new_program_category(self, external_name: str, icon: str):
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(
+                f"program_category.{external_name}_temporary_key-{field}"
+            )
+
+        program_category = self.create(external_name=external_name, icon=icon, **translations)
+
+        for [field, translation] in translations.items():
+            translation.label = f"program_category.{external_name}_{program_category.id}-{field}"
+            translation.save()
+
+        return program_category
+
+
+class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
+    _model_name = "ProgramCategory"
+
+    DataType = TypedDict(
+        "DataType",
+        {
+            "calculator": str,
+            "icon": str,
+        },
+    )
+
+    def to_model_data(self) -> DataType:
+        program_category = self.instance
+        return {"calculator": program_category.calculator, "icon": program_category.icon}
+
+    def from_model_data(self, data: DataType):
+        program_category = self.instance
+
+        program_category.calculator = data["calculator"]
+        program_category.icon = data["icon"]
+
+    @classmethod
+    def create_instance(cls, external_name: str, Model: type["ProgramCategory"]) -> "ProgramCategory":
+        return Model.objects.new_program_category(external_name, "housing")
+
+
 class ProgramCategory(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=True, null=True)
@@ -108,6 +152,10 @@ class ProgramCategory(models.Model):
     description = models.ForeignKey(
         Translation, related_name="program_category_description", blank=False, null=False, on_delete=models.PROTECT
     )
+
+    objects = ProgramCategoryManager()
+
+    TranslationExportBuilder = ProgramCategoryDataController
 
     def __str__(self):
         return self.name.text
@@ -190,7 +238,7 @@ class ProgramManager(models.Manager):
 
 class ProgramDataController(ModelDataController["Program"]):
     _model_name = "Program"
-    dependencies = ["Document"]
+    dependencies = ["Document", "ProgramCategory"]
 
     FplDataType = TypedDict("FplDataType", {"year": str, "period": str})
     LegalStatusesDataType = list[TypedDict("LegalStatusDataType", {"status": str})]
@@ -203,6 +251,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "active": bool,
             "low_confidence": bool,
             "documents": list[str],
+            "category": str,
         },
     )
 
@@ -223,6 +272,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "low_confidence": program.low_confidence,
             "name_abbreviated": program.name_abbreviated,
             "documents": [d.external_name for d in program.documents.all()],
+            "category": program.category_v2.external_name,
         }
 
     def from_model_data(self, data: DataType):
@@ -263,6 +313,10 @@ class ProgramDataController(ModelDataController["Program"]):
             doc = Document.objects.get(external_name=document_name)
             documents.append(doc)
         program.documents.set(documents)
+
+        # get program category
+        program_category = ProgramCategory.objects.get(external_name=data["category"])
+        program.category_v2 = program_category
 
         program.save()
 
