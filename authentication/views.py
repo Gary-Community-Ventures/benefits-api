@@ -1,6 +1,7 @@
 from django.conf import settings
 from authentication.models import User
 from integrations.services.communications import MessageUser
+from integrations.services.brevo import BrevoService
 from screener.models import Screen
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
@@ -35,18 +36,27 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
             if user and user.external_id and not screen.is_test_data and not settings.DEBUG:
                 update_send_offers_hubspot(user.external_id, user.send_offers, user.send_updates)
             else:
-                message = MessageUser(screen, screen.get_language_code())
-                if screen.user.email is not None:
-                    message.email(screen.user.email)
-                if screen.user.cell is not None:
-                    message.text(str(screen.user.cell))
+                brevo_service = BrevoService()
 
-                try:
-                    upsert_user_to_hubspot(screen, screen.user)
-                except Exception as e:
-                    capture_exception(e, level="warning")
-                    return Response("Invalid Email", status=400)
+                if settings.CONTACT_SERVICE == "brevo":
+                    if screen.user.email:
+                        brevo_service.send_email(screen, screen.user.email, screen.get_language_code())
+                    if screen.user.cell:
+                        brevo_service.send_sms(screen, str(screen.user.cell), screen.get_language_code())
 
+                    brevo_service.upsert_user(screen, screen.user)
+                else:
+                    message = MessageUser(screen, screen.get_language_code())
+                    if screen.user.email is not None:
+                        message.email(screen.user.email)
+                    if screen.user.cell is not None:
+                        message.text(str(screen.user.cell))
+
+                    try:
+                        upsert_user_to_hubspot(screen, screen.user)
+                    except Exception as e:
+                        capture_exception(e, level="warning")
+                        return Response("Invalid Email", status=400)
             return Response(status=204)
         return Response(serializer.errors, status=400)
 
