@@ -21,6 +21,8 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.SnapDependentCareDeductionDependency,
         dependency.spm.WaterExpenseDependency,
         dependency.spm.PhoneExpenseDependency,
+        # WARN: if you remove check that SNAP is still showing up
+        dependency.spm.TakesUpSnapIfEligibleDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
     pe_period_month = "01"
