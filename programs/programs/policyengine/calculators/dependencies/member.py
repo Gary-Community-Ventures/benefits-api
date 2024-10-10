@@ -100,24 +100,21 @@ class IsDisabledDependency(Member):
         return self.member.disabled or self.member.long_term_disability
 
 
-# In this class a dynamic attribute called '_medical_expense_assigned_member_id' is used
-# to ensure that medical expenses are only counted once per household, even when multiple
-# elderly or disabled members are in the same household. This is done because the Member
-# class runs once per each household member and makes it so that the PolicyEngine aggregate
-# the medical expenses across all members when calculating SNAP benefits.
+# The Member class runs once per each household member, to ensure that the medical expenses
+# are only counted once and only if a member is elderly or disabled; the medical expense is divided
+# by the total number of elderly or disabled members.
 class MedicalExpenseDependency(Member):
     field = "medical_out_of_pocket_expenses"
 
     def value(self):
+        elderly_or_disabled_members = [
+            member for member in self.screen.household_members.all()
+            if member.age >= 60 or member.has_disability()
+        ]
+        count_of_elderly_or_disabled_members = len(elderly_or_disabled_members)
+
         if self.member.age >= 60 or self.member.has_disability():
-            assigned_member_id = getattr(self.screen, "_medical_expense_assigned_member_id", None)
-            if assigned_member_id is None:
-                self.screen._medical_expense_assigned_member_id = self.member.id
-                return self.screen.calc_expenses("yearly", ["medical"])
-            elif assigned_member_id == self.member.id:
-                return self.screen.calc_expenses("yearly", ["medical"])
-            else:
-                return 0
+            return self.screen.calc_expenses("yearly", ["medical"]) / count_of_elderly_or_disabled_members
         else:
             return 0
 
