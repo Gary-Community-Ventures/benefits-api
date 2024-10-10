@@ -15,8 +15,9 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-
+    print("IN UserViewSet")
     queryset = User.objects.all().order_by("-email_or_cell")
+    print("QUERYSET",queryset)
     serializer_class = UserSerializer
     permission_classes = [permissions.DjangoModelPermissions]
     print("IN UserViewSet")
