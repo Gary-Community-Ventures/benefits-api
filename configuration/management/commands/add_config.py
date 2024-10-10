@@ -316,7 +316,10 @@ class Command(BaseCommand):
         "mortgage": {"_label": "expenseOptions.mortgage", "_default_message": "Mortgage"},
         "propertyTax": {"_label": "expenseOptions.propertyTax", "_default_message": "Property Taxes"},
         "hoa": {"_label": "expenseOptions.hoa", "_default_message": "Homeowners or Condo Association Fees and Dues"},
-        "homeownersInsurance": {"_label": "expenseOptions.homeownersInsurance", "_default_message": "Homeowners Insurance"},
+        "homeownersInsurance": {
+            "_label": "expenseOptions.homeownersInsurance",
+            "_default_message": "Homeowners Insurance",
+        },
         "medical": {"_label": "expenseOptions.medical", "_default_message": "Medical Insurance Premium &/or Bills"},
         "personalLoan": {"_label": "expenseOptions.personalLoan", "_default_message": "Personal Loan"},
         "studentLoans": {"_label": "expenseOptions.studentLoans", "_default_message": "Student Loans"},
