@@ -70,6 +70,13 @@ class MeetsSnapGrossIncomeTestDependency(SpmUnit):
         return snap_gross_income < snap_gross_limit
 
 
+class TakesUpSnapIfEligibleDependency(SpmUnit):
+    field = "takes_up_snap_if_eligible"
+
+    def value(self):
+        return True
+
+
 class MeetsSnapAssetTestDependency(SpmUnit):
     field = "meets_snap_asset_test"
 
