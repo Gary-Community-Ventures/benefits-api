@@ -15,7 +15,7 @@ class BrevoService:
 
     def __init__(self):
         configuration = sib_api_v3_sdk.Configuration()
-        configuration.debug = True  # Enable debugging
+        # configuration.debug = True  # Enable debugging
         configuration.api_key["api-key"] = settings.BREVO_API_KEY
         self.api_instance = sib_api_v3_sdk.ContactsApi(sib_api_v3_sdk.ApiClient(configuration))
         self.sms_instance = sib_api_v3_sdk.TransactionalSMSApi(sib_api_v3_sdk.ApiClient(configuration))
