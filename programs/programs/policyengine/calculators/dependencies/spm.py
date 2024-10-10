@@ -140,6 +140,27 @@ class WaterExpenseDependency(SpmUnit):
         return self.screen.calc_expenses("yearly", ["otherUtilities"])
 
 
+class PropertyTaxExpenseDependency(SpmUnit):
+    field = "real_estate_taxes"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["propertyTax"])
+
+
+class HoaFeesExpenseDependency(SpmUnit):
+    field = "homeowners_association_fees"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["hoa"])
+
+
+class HomeownersInsuranceExpenseDependency(SpmUnit):
+    field = "homeowners_insurance"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["homeownersInsurance"])
+
+
 class SnapEmergencyAllotmentDependency(SpmUnit):
     field = "snap_emergency_allotment"
 
