@@ -16,7 +16,7 @@ class BrevoService:
         self.api_instance = sib_api_v3_sdk.ContactsApi(sib_api_v3_sdk.ApiClient(configuration))
         self.sms_instance = sib_api_v3_sdk.TransactionalSMSApi(sib_api_v3_sdk.ApiClient(configuration))
         self.email_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-        self.front_end_domain = settings.FRONTEND_DOMAIN
+        self.front_end_domain ="https://stingray-app-8z7io.ondigitalocean.app"
 
     def upsert_user(self, screen, user):
         print("upserting user")
