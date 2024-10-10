@@ -39,20 +39,19 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
             print("IN SERIALIZER - is valid")
             screen.user = serializer.save()
             screen.save()
-            if user and user.external_id and not screen.is_test_data and not settings.DEBUG:
-                print("IN USER AND EXTERNAL ID")
-                update_send_offers_hubspot(user.external_id, user.send_offers, user.send_updates)
-            else:
-                print("IN ELSE SERIALIZER")
-                brevo_service = BrevoService()
 
+            if user and user.external_id:
                 if settings.CONTACT_SERVICE == "brevo":
-                    print("IN CONTACT SERVICE = BREVO")
+                    update_brevo(user.external_id, user.send_offers, user.send_updates)
+                else:
+                    update_send_offers_hubspot(user.external_id, user.send_offers, user.send_updates)
+            else:
+                if settings.CONTACT_SERVICE == "brevo":
+                    brevo_service = BrevoService()
                     if screen.user.email:
                         brevo_service.send_email(screen, screen.user.email, screen.get_language_code())
                     if screen.user.cell:
                         brevo_service.send_sms(screen, str(screen.user.cell), screen.get_language_code())
-
                     brevo_service.upsert_user(screen, screen.user)
                 else:
                     print("IN ELSE CONTACT SERVICE")
@@ -61,14 +60,19 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
                         message.email(screen.user.email)
                     if screen.user.cell is not None:
                         message.text(str(screen.user.cell))
-
                     try:
                         upsert_user_to_hubspot(screen, screen.user)
                     except Exception as e:
                         capture_exception(e, level="warning")
                         return Response("Invalid Email", status=400)
+
             return Response(status=204)
         return Response(serializer.errors, status=400)
+
+
+def update_brevo(external_id, send_offers, send_updates):
+    brevo_service = BrevoService()
+    brevo_service.update_contact(external_id, {"send_offers": send_offers, "send_updates": send_updates})
 
 
 def upsert_user_to_hubspot(screen, user):

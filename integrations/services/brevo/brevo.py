@@ -5,10 +5,14 @@ from django.utils import timezone
 from screener.models import Message, Screen
 from translations.models import Translation
 import uuid
+import json
 from pprint import pprint
+from sentry_sdk import capture_message
 
 
 class BrevoService:
+    MAX_HOUSEHOLD_SIZE = 8
+
     def __init__(self):
         configuration = sib_api_v3_sdk.Configuration()
         configuration.debug = True  # Enable debugging
@@ -16,11 +20,12 @@ class BrevoService:
         self.api_instance = sib_api_v3_sdk.ContactsApi(sib_api_v3_sdk.ApiClient(configuration))
         self.sms_instance = sib_api_v3_sdk.TransactionalSMSApi(sib_api_v3_sdk.ApiClient(configuration))
         self.email_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-        self.front_end_domain ="https://stingray-app-8z7io.ondigitalocean.app"
+        self.front_end_domain = settings.FRONTEND_DOMAIN
 
     def upsert_user(self, screen, user):
         print("upserting user")
         if settings.DEBUG:
+            print("DEBUG set to True")
             return
         if user is None or screen.is_test_data is None:
             return
@@ -31,11 +36,10 @@ class BrevoService:
         if user.external_id:
             self.update_contact(user)
         else:
-            self.create_contact(user)
+            self.create_contact(user, screen)
 
-    def create_contact(self, user):
-        print("creating contact")
-        attr = {
+    def create_contact(self, user, screen):
+        contact = {
             "first_name": user.first_name,
             "last_name": user.last_name,
             "sms": str(user.cell),
@@ -48,7 +52,24 @@ class BrevoService:
             "full_name": f"{user.first_name} {user.last_name}",
         }
 
-        create_contact = sib_api_v3_sdk.CreateContact(email=user.email, attributes=attr, list_ids=[6])
+        if screen:
+            contact["screener_id"] = screen.id
+            contact["uuid"] = str(screen.uuid)
+            contact["county"] = screen.county
+            contact["number_of_household_members"] = screen.household_size
+            contact["mfb_annual_income"] = int(screen.calc_gross_income("yearly", ["all"]))
+
+            members = screen.household_members.all()
+            if len(members) > self.MAX_HOUSEHOLD_SIZE:
+                capture_message(f"screen has more than {self.MAX_HOUSEHOLD_SIZE} household members", level="error")
+
+            for i, member in enumerate(members):
+                if i >= self.MAX_HOUSEHOLD_SIZE:
+                    break
+
+                contact[f"hhm{i + 1}_age"] = member.age
+
+        create_contact = sib_api_v3_sdk.CreateContact(email=user.email, attributes=contact, list_ids=[6])
         try:
             print("IN TRY")
             brevo_id = self.api_instance.create_contact(create_contact)
@@ -67,12 +88,14 @@ class BrevoService:
         except ApiException as e:
             print(f"Exception when calling ContactsApi->create_contact: Status Code: {e.status}, Reason: {e.reason}, Body: {e.body}")
 
-    def update_contact(self, user):
-        update_contact = sib_api_v3_sdk.UpdateContact(attributes={"EMAIL": user.email, "FIRSTNAME": user.first_name})
+    def update_contact(self, ext_id, data):
+        ext_id_dict = json.loads(ext_id.replace("'", '"'))
+        id_value = ext_id_dict["id"]
         try:
-            self.api_instance.update_contact(user.email, update_contact)
+            update_attributes = sib_api_v3_sdk.UpdateContact(attributes=data)
+            self.api_instance.update_contact(id_value, update_attributes)
         except ApiException as e:
-            print("Exception when calling ContactsApi->update_contact: %s\n" % e)
+            print(f"Exception when calling ContactsApi->update_contact: {e}")
 
     def should_send(self, screen: Screen) -> bool:
         if settings.DEBUG:
