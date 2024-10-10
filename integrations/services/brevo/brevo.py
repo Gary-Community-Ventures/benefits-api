@@ -21,7 +21,7 @@ class BrevoService:
         self.sms_instance = sib_api_v3_sdk.TransactionalSMSApi(sib_api_v3_sdk.ApiClient(configuration))
         self.email_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
         self.front_end_domain = settings.FRONTEND_DOMAIN
-
+        print("FRONT END DOMAIN",self.front_end_domain)
     def upsert_user(self, screen, user):
         print("upserting user")
         if settings.DEBUG:
