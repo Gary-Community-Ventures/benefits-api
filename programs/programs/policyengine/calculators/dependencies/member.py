@@ -108,8 +108,7 @@ class MedicalExpenseDependency(Member):
 
     def value(self):
         elderly_or_disabled_members = [
-            member for member in self.screen.household_members.all()
-            if member.age >= 60 or member.has_disability()
+            member for member in self.screen.household_members.all() if member.age >= 60 or member.has_disability()
         ]
         count_of_elderly_or_disabled_members = len(elderly_or_disabled_members)
 
