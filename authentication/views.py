@@ -19,26 +19,34 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all().order_by("-email_or_cell")
     serializer_class = UserSerializer
     permission_classes = [permissions.DjangoModelPermissions]
-
+    print("IN UserViewSet")
     def update(self, request, pk=None):
+        print("IN UPDATE",pk)
         if pk is None:
             return Response("Must have an associated screen", status=400)
         screen = Screen.objects.get(uuid=pk)
         user = screen.user
+        print("USER",user)
         if user:
+            print("IN USER")
             serializer = UserOffersSerializer(user, data=request.data)
         else:
+            print("IN ELSE")
             serializer = UserSerializer(data=request.data)
 
         if serializer.is_valid():
+            print("IN SERIALIZER - is valid")
             screen.user = serializer.save()
             screen.save()
             if user and user.external_id and not screen.is_test_data and not settings.DEBUG:
+                print("IN USER AND EXTERNAL ID")
                 update_send_offers_hubspot(user.external_id, user.send_offers, user.send_updates)
             else:
+                print("IN ELSE SERIALIZER")
                 brevo_service = BrevoService()
 
                 if settings.CONTACT_SERVICE == "brevo":
+                    print("IN CONTACT SERVICE = BREVO")
                     if screen.user.email:
                         brevo_service.send_email(screen, screen.user.email, screen.get_language_code())
                     if screen.user.cell:
@@ -46,6 +54,7 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 
                     brevo_service.upsert_user(screen, screen.user)
                 else:
+                    print("IN ELSE CONTACT SERVICE")
                     message = MessageUser(screen, screen.get_language_code())
                     if screen.user.email is not None:
                         message.email(screen.user.email)
