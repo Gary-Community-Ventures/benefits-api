@@ -24,14 +24,14 @@ class BrevoService:
         print("FRONT END DOMAIN",self.front_end_domain)
     def upsert_user(self, screen, user):
         print("upserting user")
-        if settings.DEBUG:
-            print("DEBUG set to True")
-            return
-        if user is None or screen.is_test_data is None:
-            return
-        should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
-        if not should_upsert_user or screen.is_test_data:
-            return
+        # if settings.DEBUG:
+        #     print("DEBUG set to True")
+        #     return
+        # if user is None or screen.is_test_data is None:
+        #     return
+        # should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
+        # if not should_upsert_user or screen.is_test_data:
+        #     return
 
         if user.external_id:
             self.update_contact(user)
@@ -98,10 +98,10 @@ class BrevoService:
             print(f"Exception when calling ContactsApi->update_contact: {e}")
 
     def should_send(self, screen: Screen) -> bool:
-        if settings.DEBUG:
-            return False
-        if screen.is_test_data:
-            return False
+        # if settings.DEBUG:
+        #     return False
+        # if screen.is_test_data:
+        #     return False
         return True
 
     def send_email(self, screen: Screen, email: str, lang: str, send_tests=False):

@@ -76,13 +76,13 @@ def update_brevo(external_id, send_offers, send_updates):
 
 
 def upsert_user_to_hubspot(screen, user):
-    if settings.DEBUG:
-        return
-    if user is None or screen.is_test_data is None:
-        return
-    should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
-    if not should_upsert_user or screen.is_test_data:
-        return
+    # if settings.DEBUG:
+    #     return
+    # if user is None or screen.is_test_data is None:
+    #     return
+    # should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
+    # if not should_upsert_user or screen.is_test_data:
+    #     return
 
     hubspot_id = upsert_user_hubspot(user, screen=screen)
     if hubspot_id:
