@@ -8,6 +8,7 @@ federal_member_calculators = {
     "wic": member.Wic,
     "pell_grant": member.PellGrant,
     "ssi": member.Ssi,
+    "csfp": member.CommoditySupplementalFoodProgram,
 }
 
 federal_spm_unit_calculators = {

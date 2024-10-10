@@ -263,9 +263,13 @@ class Screen(models.Model):
     def has_benefit(self, name_abbreviated):
         name_map = {
             "tanf": self.has_tanf,
+            "nc_tanf": self.has_tanf,
+            "co_tanf": self.has_tanf,
             "wic": self.has_wic,
             "nc_wic": self.has_wic,
             "snap": self.has_snap,
+            "co_snap": self.has_snap,
+            "nc_snap": self.has_snap,
             "lifeline": self.has_lifeline,
             "acp": self.has_acp,
             "eitc": self.has_eitc,

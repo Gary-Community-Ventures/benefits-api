@@ -26,9 +26,9 @@ from screener.serializers import (
     ResultsSerializer,
 )
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
-from programs.util import DependencyError
+from programs.util import DependencyError, Dependencies
 from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
-from programs.models import Document, Navigator, UrgentNeed, Program, Referrer, WarningMessage
+from programs.models import Document, Navigator, UrgentNeed, Program, Referrer, WarningMessage, TranslationOverride
 from django.core.exceptions import ObjectDoesNotExist
 from programs.programs.warnings import warning_calculators
 from validations.serializers import ValidationSerializer
@@ -201,6 +201,9 @@ def eligibility_results(screen: Screen, batch=False):
             "warning_messages",
             "warning_messages__counties",
             *translations_prefetch_name("warning_messages__", WarningMessage.objects.translated_fields),
+            "translation_overrides",
+            "translation_overrides__counties",
+            *translations_prefetch_name("translation_overrides__", TranslationOverride.objects.translated_fields),
         )
         .exclude(id__in=excluded_programs)
     )
@@ -228,13 +231,13 @@ def eligibility_results(screen: Screen, batch=False):
                 program = p
 
         if program is not None:
-            pe_calculators[calculator_name] = Calculator(screen, program)
+            pe_calculators[calculator_name] = Calculator(screen, program, missing_dependencies)
 
-    pe_eligibility = calc_pe_eligibility(screen, missing_dependencies, pe_calculators)
+    pe_eligibility = calc_pe_eligibility(screen, pe_calculators)
     pe_programs = pe_calculators.keys()
 
     def sort_first(program):
-        calc_first = ("tanf", "ssi", "nslp", "leap", *STATE_MEDICAID_OPTIONS)
+        calc_first = ("tanf", "ssi", "nslp", "leap", "chp", *STATE_MEDICAID_OPTIONS)
 
         if program.name_abbreviated in calc_first:
             return 0
@@ -248,11 +251,13 @@ def eligibility_results(screen: Screen, batch=False):
 
     program_snapshots = []
 
+    program_eligibility = {}
+
     for program in all_programs:
         skip = False
         if program.name_abbreviated not in pe_programs and program.active:
             try:
-                eligibility = program.eligibility(screen, data, missing_dependencies)
+                eligibility = program.eligibility(screen, program_eligibility, missing_dependencies)
             except DependencyError:
                 missing_programs = True
                 continue
@@ -263,12 +268,14 @@ def eligibility_results(screen: Screen, batch=False):
 
             eligibility = pe_eligibility[program.name_abbreviated]
 
+        program_eligibility[program.name_abbreviated] = eligibility
+
         if previous_snapshot is not None:
             new = True
             for previous_snapshot in previous_results:
                 if (
                     previous_snapshot.name_abbreviated == program.name_abbreviated
-                    and eligibility["eligible"] == previous_snapshot.eligible
+                    and eligibility.eligible == previous_snapshot.eligible
                 ):
                     new = False
         else:
@@ -278,7 +285,7 @@ def eligibility_results(screen: Screen, batch=False):
         navigators = []
 
         # don't calculate navigator and warnings for ineligible programs
-        if eligibility["eligible"]:
+        if eligibility.eligible:
             all_navigators = program.navigator.all()
 
             county_navigators = []
@@ -316,42 +323,42 @@ def eligibility_results(screen: Screen, batch=False):
                     name=program.name.text,
                     name_abbreviated=program.name_abbreviated,
                     value_type=program.value_type.text,
-                    estimated_value=eligibility["estimated_value"],
+                    estimated_value=eligibility.value,
                     estimated_delivery_time=program.estimated_delivery_time.text,
                     estimated_application_time=program.estimated_application_time.text,
-                    eligible=eligibility["eligible"],
-                    failed_tests=json.dumps(eligibility["failed"]),
-                    passed_tests=json.dumps(eligibility["passed"]),
+                    eligible=eligibility.eligible,
+                    failed_tests=json.dumps(eligibility.fail_messages),
+                    passed_tests=json.dumps(eligibility.pass_messages),
                     new=new,
                 )
             )
+            program_translations = GetProgramTranslation(screen, program, missing_dependencies)
             data.append(
                 {
                     "program_id": program.id,
-                    "name": default_message(program.name),
+                    "name": program_translations.get_translation("name"),
                     "name_abbreviated": program.name_abbreviated,
                     "external_name": program.external_name,
-                    "estimated_value": eligibility["estimated_value"],
-                    "estimated_delivery_time": default_message(program.estimated_delivery_time),
-                    "estimated_application_time": default_message(program.estimated_application_time),
-                    "description_short": default_message(program.description_short),
+                    "estimated_value": eligibility.value,
+                    "estimated_delivery_time": program_translations.get_translation("estimated_delivery_time"),
+                    "estimated_application_time": program_translations.get_translation("estimated_application_time"),
+                    "description_short": program_translations.get_translation("description_short"),
                     "short_name": program.name_abbreviated,
-                    "description": default_message(program.description),
-                    "value_type": default_message(program.value_type),
-                    "learn_more_link": default_message(program.learn_more_link),
-                    "apply_button_link": default_message(program.apply_button_link),
+                    "description": program_translations.get_translation("description"),
+                    "value_type": program_translations.get_translation("value_type"),
+                    "learn_more_link": program_translations.get_translation("learn_more_link"),
+                    "apply_button_link": program_translations.get_translation("apply_button_link"),
                     "legal_status_required": legal_status,
-                    "category": default_message(program.category),
-                    "estimated_value_override": default_message(program.estimated_value),
-                    "eligible": eligibility["eligible"],
-                    "failed_tests": eligibility["failed"],
-                    "passed_tests": eligibility["passed"],
+                    "category": program_translations.get_translation("category"),
+                    "estimated_value_override": program_translations.get_translation("estimated_value"),
+                    "eligible": eligibility.eligible,
+                    "failed_tests": eligibility.fail_messages,
+                    "passed_tests": eligibility.pass_messages,
                     "navigators": [serialized_navigator(navigator) for navigator in navigators],
                     "already_has": screen.has_benefit(program.name_abbreviated),
                     "new": new,
                     "low_confidence": program.low_confidence,
                     "documents": [default_message(d.text) for d in program.documents.all()],
-                    "multiple_tax_units": eligibility["multiple_tax_units"],
                     "warning_messages": [default_message(w.message) for w in warnings],
                 }
             )
@@ -367,6 +374,16 @@ def eligibility_results(screen: Screen, batch=False):
         eligible_programs.append(clean_program)
 
     return eligible_programs, missing_programs
+
+
+class GetProgramTranslation:
+    def __init__(self, screen: Screen, program: Program, missing_dependencies: Dependencies):
+        self.screen = screen
+        self.program = program
+        self.missing_dependencies = missing_dependencies
+
+    def get_translation(self, field: str):
+        return default_message(self.program.get_translation(self.screen, self.missing_dependencies, field))
 
 
 def default_message(translation):
