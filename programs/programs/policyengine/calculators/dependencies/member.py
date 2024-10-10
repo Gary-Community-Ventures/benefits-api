@@ -114,8 +114,8 @@ class MedicalExpenseDependency(Member):
 
         if self.member.age >= 60 or self.member.has_disability():
             return self.screen.calc_expenses("yearly", ["medical"]) / count_of_elderly_or_disabled_members
-        else:
-            return 0
+
+        return 0
 
 
 class IsBlindDependency(Member):
