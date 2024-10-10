@@ -11,6 +11,7 @@ from pprint import pprint
 class BrevoService:
     def __init__(self):
         configuration = sib_api_v3_sdk.Configuration()
+        configuration.debug = True  # Enable debugging
         configuration.api_key["api-key"] = settings.BREVO_API_KEY
         self.api_instance = sib_api_v3_sdk.ContactsApi(sib_api_v3_sdk.ApiClient(configuration))
         self.sms_instance = sib_api_v3_sdk.TransactionalSMSApi(sib_api_v3_sdk.ApiClient(configuration))
@@ -18,6 +19,7 @@ class BrevoService:
         self.front_end_domain = settings.FRONTEND_DOMAIN
 
     def upsert_user(self, screen, user):
+        print("upserting user")
         if settings.DEBUG:
             return
         if user is None or screen.is_test_data is None:
@@ -32,6 +34,7 @@ class BrevoService:
             self.create_contact(user)
 
     def create_contact(self, user):
+        print("creating contact")
         attr = {
             "first_name": user.first_name,
             "last_name": user.last_name,
@@ -47,6 +50,7 @@ class BrevoService:
 
         create_contact = sib_api_v3_sdk.CreateContact(email=user.email, attributes=attr, list_ids=[6])
         try:
+            print("IN TRY")
             brevo_id = self.api_instance.create_contact(create_contact)
             pprint(brevo_id)
 
@@ -61,7 +65,7 @@ class BrevoService:
                 user.save()
                 print("saved user")
         except ApiException as e:
-            print("Exception when calling ContactsApi->create_contact: %s\n" % e)
+            print(f"Exception when calling ContactsApi->create_contact: Status Code: {e.status}, Reason: {e.reason}, Body: {e.body}")
 
     def update_contact(self, user):
         update_contact = sib_api_v3_sdk.UpdateContact(attributes={"EMAIL": user.email, "FIRSTNAME": user.first_name})
