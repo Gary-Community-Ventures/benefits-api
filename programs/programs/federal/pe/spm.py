@@ -27,8 +27,8 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.member.AgeDependency,
         dependency.member.MedicalExpenseDependency,
         dependency.member.IsDisabledDependency,
-        # WARN: if you remove check that SNAP is still showing up
-        dependency.spm.TakesUpSnapIfEligibleDependency,
+        # NOTE: remove this to always use the SUA in CO.
+        dependency.spm.SnapAlwaysUseSuaDependency,
     ]
     pe_outputs = [dependency.spm.Snap]
     pe_period_month = "01"

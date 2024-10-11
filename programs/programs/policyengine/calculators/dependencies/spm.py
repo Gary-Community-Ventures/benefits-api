@@ -70,6 +70,12 @@ class MeetsSnapGrossIncomeTestDependency(SpmUnit):
         return snap_gross_income < snap_gross_limit
 
 
+class SnapAlwaysUseSuaDependency(SpmUnit):
+    field = "snap_state_using_standard_utility_allowance"
+
+    def value(self):
+        return False
+
 class TakesUpSnapIfEligibleDependency(SpmUnit):
     field = "takes_up_snap_if_eligible"
 
