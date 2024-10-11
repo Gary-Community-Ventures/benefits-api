@@ -76,6 +76,7 @@ class SnapAlwaysUseSuaDependency(SpmUnit):
     def value(self):
         return False
 
+
 class TakesUpSnapIfEligibleDependency(SpmUnit):
     field = "takes_up_snap_if_eligible"
 
