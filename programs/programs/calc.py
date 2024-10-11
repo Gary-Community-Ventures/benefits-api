@@ -10,7 +10,7 @@ class MemberEligibility:
     def __init__(self, member: HouseholdMember) -> None:
         self.member = member
         self.eligible = True
-        self.value = 0
+        self.value: int = 0
 
     def condition(self, passed: bool):
         """
