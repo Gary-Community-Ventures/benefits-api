@@ -23,7 +23,7 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.PhoneExpenseDependency,
         dependency.spm.PropertyTaxExpenseDependency,
         dependency.spm.HoaFeesExpenseDependency,
-        dependency.spm.HomeownersInsuranceExpenseDependency
+        dependency.spm.HomeownersInsuranceExpenseDependency,
         # WARN: if you remove check that SNAP is still showing up
         dependency.spm.TakesUpSnapIfEligibleDependency,
     ]
