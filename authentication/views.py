@@ -26,6 +26,7 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
         if pk is None:
             return Response("Must have an associated screen", status=400)
         screen = Screen.objects.get(uuid=pk)
+        print("SCREEN",screen)
         user = screen.user
         print("USER",user)
         if user:
