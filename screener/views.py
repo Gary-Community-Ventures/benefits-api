@@ -73,7 +73,7 @@ class ScreenViewSet(
         user = get_object_or_404(queryset, uuid=pk)
         body = json.loads(request.body.decode())
         serializer = ScreenSerializer(user, data=body)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
