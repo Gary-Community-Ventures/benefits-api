@@ -85,7 +85,7 @@ class CoWic(Wic):
     wic_categories = {
         "NONE": 0,
         "INFANT": 130,
-        "CHILD": 78,
+        "CHILD": 79,
         "PREGNANT": 104,
         "POSTPARTUM": 88,
         "BREASTFEEDING": 121,
