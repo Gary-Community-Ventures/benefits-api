@@ -1,4 +1,3 @@
-import re
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.conf import settings
@@ -8,9 +7,8 @@ from rest_framework import views
 from django import forms
 from django.http import HttpResponse
 from django.db.models import ProtectedError
-from programs.models import Program, Navigator, UrgentNeed, Document, WarningMessage, TranslationOverride
+from programs.models import Program, Navigator, ProgramCategory, UrgentNeed, Document, WarningMessage, TranslationOverride
 from phonenumber_field.formfields import PhoneNumberField
-from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from integrations.services.google_translate.integration import Translate
@@ -600,3 +598,68 @@ def translation_override_filter_view(request):
         context = {"page_obj": page_obj}
 
         return render(request, "translation_overrides/list.html", context)
+
+
+class NewProgramCategoryForm(forms.Form):
+    external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    icon = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def program_categories_view(request):
+    if request.method == "GET":
+        program_categories = ProgramCategory.objects.all().order_by("external_name")
+
+        paginator = Paginator(program_categories, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+        return render(request, "program_categories/main.html", context)
+    if request.method == "POST":
+        form = NewProgramCategoryForm(request.POST)
+        if form.is_valid():
+            program_category = ProgramCategory.objects.new_program_category(
+                form["external_name"].value(), form["icon"].value()
+            )
+            response = HttpResponse()
+            response.headers["HX-Redirect"] = f"/api/translations/admin/program_categories/{program_category.id}"
+            return response
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def create_program_category_view(request):
+    if request.method == "GET":
+        context = {"form": NewProgramCategoryForm(), "route": "/api/translations/admin/program_categories"}
+
+        return render(request, "util/create_form.html", context)
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def program_category_view(request, id=0):
+    if request.method == "GET":
+        program_category = ProgramCategory.objects.get(pk=id)
+        context = {"program_category": program_category}
+
+        return render(request, "program_categories/program_category.html", context)
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def program_category_filter_view(request):
+    if request.method == "GET":
+        query = request.GET.get("name", "")
+        program_categories = ProgramCategory.objects.filter(external_name__contains=query).order_by(
+            "external_name"
+        )
+
+        paginator = Paginator(program_categories, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+
+        return render(request, "program_categories/list.html", context)
