@@ -41,11 +41,13 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
             screen.save()
 
             if user and user.external_id:
+                print("IN USER AND USER EXTERNAL ID")
                 if settings.CONTACT_SERVICE == "brevo":
                     update_brevo(user.external_id, user.send_offers, user.send_updates)
                 else:
                     update_send_offers_hubspot(user.external_id, user.send_offers, user.send_updates)
             else:
+                print("IN ELSE, SHOULD SEND MESSAGE")
                 # if settings.CONTACT_SERVICE == "brevo":
                     # brevo_service = BrevoService()
                 #     if screen.user.email:
@@ -54,11 +56,13 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
                 #         brevo_service.send_sms(screen, str(screen.user.cell), screen.get_language_code())
                 #     brevo_service.upsert_user(screen, screen.user)
                 # else:
-                    # print("IN ELSE CONTACT SERVICE")
+                        # print("IN ELSE CONTACT SERVICE")
                 message = MessageUser(screen, screen.get_language_code())
                 if screen.user.email is not None:
+                    print("SENDING EMAIL")
                     message.email(screen.user.email)
                 if screen.user.cell is not None:
+                    print("SENDING TEXT")
                     message.text(str(screen.user.cell))
                 try:
                     if settings.CONTACT_SERVICE == "brevo":

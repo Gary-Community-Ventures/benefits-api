@@ -33,8 +33,8 @@ class MessageUser:
         return True
 
     def email(self, email: str, send_tests=False):
-        if not self.should_send() and not send_tests:
-            return
+        # if not self.should_send() and not send_tests:
+        #     return
 
         sg = self._email_client()
         from_email = Email(self.email_from)  # Change to your verified sender
@@ -60,8 +60,8 @@ class MessageUser:
         return words + f' <a href="{url}">{url}</a>'
 
     def text(self, cell: str, send_tests=False):
-        if not self.should_send() and not send_tests:
-            return
+        # if not self.should_send() and not send_tests:
+        #     return
 
         self._cell_client().messages.create(
             from_=self.cell_from_phone_number,
