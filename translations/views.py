@@ -7,7 +7,15 @@ from rest_framework import views
 from django import forms
 from django.http import HttpResponse
 from django.db.models import ProtectedError
-from programs.models import Program, Navigator, ProgramCategory, UrgentNeed, Document, WarningMessage, TranslationOverride
+from programs.models import (
+    Program,
+    Navigator,
+    ProgramCategory,
+    UrgentNeed,
+    Document,
+    WarningMessage,
+    TranslationOverride,
+)
 from phonenumber_field.formfields import PhoneNumberField
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
@@ -652,9 +660,7 @@ def program_category_view(request, id=0):
 def program_category_filter_view(request):
     if request.method == "GET":
         query = request.GET.get("name", "")
-        program_categories = ProgramCategory.objects.filter(external_name__contains=query).order_by(
-            "external_name"
-        )
+        program_categories = ProgramCategory.objects.filter(external_name__contains=query).order_by("external_name")
 
         paginator = Paginator(program_categories, 50)
         page_number = request.GET.get("page")
