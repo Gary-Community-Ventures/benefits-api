@@ -70,6 +70,20 @@ class MeetsSnapGrossIncomeTestDependency(SpmUnit):
         return snap_gross_income < snap_gross_limit
 
 
+class SnapAlwaysUseSuaDependency(SpmUnit):
+    field = "snap_state_using_standard_utility_allowance"
+
+    def value(self):
+        return False
+
+
+class TakesUpSnapIfEligibleDependency(SpmUnit):
+    field = "takes_up_snap_if_eligible"
+
+    def value(self):
+        return True
+
+
 class MeetsSnapAssetTestDependency(SpmUnit):
     field = "meets_snap_asset_test"
 
@@ -131,6 +145,20 @@ class WaterExpenseDependency(SpmUnit):
 
     def value(self):
         return self.screen.calc_expenses("yearly", ["otherUtilities"])
+
+
+class HoaFeesExpenseDependency(SpmUnit):
+    field = "homeowners_association_fees"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["hoa"])
+
+
+class HomeownersInsuranceExpenseDependency(SpmUnit):
+    field = "homeowners_insurance"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["homeownersInsurance"])
 
 
 class SnapEmergencyAllotmentDependency(SpmUnit):
