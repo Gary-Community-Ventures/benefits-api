@@ -287,6 +287,18 @@ class EligibilityTranslationSerializer(serializers.Serializer):
         fields = ("translations",)
 
 
+class ProgramCategoryCapSerializer(serializers.Serializer):
+    programs = serializers.ListSerializer(child=serializers.CharField())
+    cap = serializers.IntegerField()
+
+
+class ProgramCategorySerializer(serializers.Serializer):
+    icon = serializers.CharField()
+    name = TranslationSerializer()
+    description = TranslationSerializer()
+    caps = ProgramCategoryCapSerializer(many=True)
+
+
 class UrgentNeedSerializer(serializers.Serializer):
     name = TranslationSerializer()
     description = TranslationSerializer()
@@ -302,3 +314,4 @@ class ResultsSerializer(serializers.Serializer):
     default_language = serializers.CharField()
     missing_programs = serializers.BooleanField()
     validations = ValidationSerializer(many=True)
+    program_categories = serializers.DictField(child=ProgramCategorySerializer())
