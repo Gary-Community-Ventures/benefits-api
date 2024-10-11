@@ -123,7 +123,7 @@ class PropertyTaxExpenseDependency(Member):
 
     def value(self):
         if self.member.age >= 18:
-            return self.screen.calc_expenses("yearly", ["propertyTax"]) / self.screen.num_adults()
+            return self.screen.calc_expenses("yearly", ["propertyTax"]) / self.screen.num_adults(18)
 
         return 0
 

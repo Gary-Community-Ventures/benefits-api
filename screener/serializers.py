@@ -44,8 +44,8 @@ class ExpenseSerializer(serializers.ModelSerializer):
 class HouseholdMemberSerializer(serializers.ModelSerializer):
     income_streams = IncomeStreamSerializer(many=True)
     insurance = InsuranceSerializer()
-    birth_year = serializers.IntegerField(required=False)
-    birth_month = serializers.IntegerField(required=False)
+    birth_year = serializers.IntegerField(required=False, allow_null=True)
+    birth_month = serializers.IntegerField(required=False, allow_null=True)
 
     def validate(self, data):
         birth_year = data.pop("birth_year", None)
