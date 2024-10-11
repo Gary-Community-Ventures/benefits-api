@@ -85,10 +85,10 @@ class CoWic(Wic):
     wic_categories = {
         "NONE": 0,
         "INFANT": 130,
-        "CHILD": 26,
-        "PREGNANT": 47,
-        "POSTPARTUM": 47,
-        "BREASTFEEDING": 52,
+        "CHILD": 78,
+        "PREGNANT": 104,
+        "POSTPARTUM": 88,
+        "BREASTFEEDING": 121,
     }
     pe_inputs = [
         *Wic.pe_inputs,
