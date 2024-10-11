@@ -374,6 +374,7 @@ def eligibility_results(screen: Screen, batch=False):
                     "low_confidence": program.low_confidence,
                     "documents": [default_message(d.text) for d in program.documents.all()],
                     "warning_messages": [default_message(w.message) for w in warnings],
+                    "category_id": str(program.category_v2.id),
                 }
             )
 
