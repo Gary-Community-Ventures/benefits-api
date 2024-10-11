@@ -118,6 +118,16 @@ class MedicalExpenseDependency(Member):
         return 0
 
 
+class PropertyTaxExpenseDependency(Member):
+    field = "real_estate_taxes"
+
+    def value(self):
+        if self.member.age >= 18:
+            return self.screen.calc_expenses("yearly", ["propertyTax"]) / self.screen.num_adults()
+
+        return 0
+
+
 class IsBlindDependency(Member):
     field = "is_blind"
 

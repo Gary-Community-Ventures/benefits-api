@@ -147,13 +147,6 @@ class WaterExpenseDependency(SpmUnit):
         return self.screen.calc_expenses("yearly", ["otherUtilities"])
 
 
-class PropertyTaxExpenseDependency(SpmUnit):
-    field = "real_estate_taxes"
-
-    def value(self):
-        return self.screen.calc_expenses("yearly", ["propertyTax"])
-
-
 class HoaFeesExpenseDependency(SpmUnit):
     field = "homeowners_association_fees"
 
