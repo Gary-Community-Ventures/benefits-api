@@ -198,7 +198,9 @@ def eligibility_results(screen: Screen, batch=False):
         excluded_programs = [p.id for p in referrer.remove_programs.all()]
 
     all_programs = (
-        Program.objects.filter(active=True, category_v2__isnull=False)
+        Program.objects.filter(active=True)
+        # NOTE: uncomment when categories are ready
+        # .filter(active=True, category_v2__isnull=False)
         .prefetch_related(
             "legal_status_required",
             "fpl",
@@ -218,8 +220,7 @@ def eligibility_results(screen: Screen, batch=False):
             *translations_prefetch_name("translation_overrides__", TranslationOverride.objects.translated_fields),
             "category_v2",
             *translations_prefetch_name("category_v2__", ProgramCategory.objects.translated_fields),
-        )
-        .exclude(id__in=excluded_programs)
+        ).exclude(id__in=excluded_programs)
     )
     data = []
 
@@ -374,32 +375,33 @@ def eligibility_results(screen: Screen, batch=False):
                     "low_confidence": program.low_confidence,
                     "documents": [default_message(d.text) for d in program.documents.all()],
                     "warning_messages": [default_message(w.message) for w in warnings],
-                    "category_id": str(program.category_v2.id),
+                    "category_id": None if program.category_v2 is None else str(program.category_v2.id),
                 }
             )
 
     categories = {}
-    for program in all_programs:
-        category = program.category_v2
-        if category.id in categories:
-            continue
-
-        CategoryCalculator = ProgramCategoryCapCalculator
-        if category.calculator is not None and category.calculator != "":
-            CategoryCalculator = category_cap_calculators[category.calculator]
-
-        calculator = CategoryCalculator(program_eligibility)
-
-        caps = []
-        for cap in calculator.caps():
-            caps.append({"programs": cap.programs, "cap": cap.cap})
-
-        categories[category.id] = {
-            "icon": category.icon,
-            "name": default_message(category.name),
-            "description": default_message(category.description),
-            "cap": caps,
-        }
+    # NOTE: uncomment when categories are ready
+    # for program in all_programs:
+    #     category = program.category_v2
+    #     if category.id in categories:
+    #         continue
+    #
+    #     CategoryCalculator = ProgramCategoryCapCalculator
+    #     if category.calculator is not None and category.calculator != "":
+    #         CategoryCalculator = category_cap_calculators[category.calculator]
+    #
+    #     calculator = CategoryCalculator(program_eligibility)
+    #
+    #     caps = []
+    #     for cap in calculator.caps():
+    #         caps.append({"programs": cap.programs, "cap": cap.cap})
+    #
+    #     categories[category.id] = {
+    #         "icon": category.icon,
+    #         "name": default_message(category.name),
+    #         "description": default_message(category.description),
+    #         "cap": caps,
+    #     }
 
     ProgramEligibilitySnapshot.objects.bulk_create(program_snapshots)
     snapshot.had_error = False
