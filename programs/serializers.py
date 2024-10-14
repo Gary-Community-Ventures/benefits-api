@@ -35,7 +35,7 @@ class ProgramCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProgramCategory
-        fields = ("id", "name", "programs")
+        fields = ("id", "name", "icon", "programs")
 
 
 class UrgentNeedAPISerializer(serializers.ModelSerializer):
