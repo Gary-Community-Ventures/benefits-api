@@ -26,7 +26,7 @@ from screener.serializers import (
     MessageSerializer,
     ResultsSerializer,
 )
-from programs.programs.policyengine.policy_engine import all_eligibility, calc_pe_eligibility
+from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError, Dependencies
 from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
 from programs.models import (
@@ -363,7 +363,6 @@ def eligibility_results(screen: Screen, batch=False):
                     "learn_more_link": program_translations.get_translation("learn_more_link"),
                     "apply_button_link": program_translations.get_translation("apply_button_link"),
                     "legal_status_required": legal_status,
-                    "category": program_translations.get_translation("category"),
                     "estimated_value_override": program_translations.get_translation("estimated_value"),
                     "eligible": eligibility.eligible,
                     "failed_tests": eligibility.fail_messages,
