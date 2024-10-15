@@ -198,7 +198,7 @@ def eligibility_results(screen: Screen, batch=False):
         excluded_programs = [p.id for p in referrer.remove_programs.all()]
 
     all_programs = (
-        Program.objects.filter(active=True, category_v2__isnull=False)
+        Program.objects.filter(active=True, category__isnull=False)
         .prefetch_related(
             "legal_status_required",
             "fpl",
@@ -216,8 +216,8 @@ def eligibility_results(screen: Screen, batch=False):
             "translation_overrides",
             "translation_overrides__counties",
             *translations_prefetch_name("translation_overrides__", TranslationOverride.objects.translated_fields),
-            "category_v2",
-            *translations_prefetch_name("category_v2__", ProgramCategory.objects.translated_fields),
+            "category",
+            *translations_prefetch_name("category__", ProgramCategory.objects.translated_fields),
         )
         .exclude(id__in=excluded_programs)
     )
@@ -378,7 +378,7 @@ def eligibility_results(screen: Screen, batch=False):
 
     category_map = {}
     for program in all_programs:
-        category = program.category_v2
+        category = program.category
         if category.id in category_map:
             category_map[category.id]["programs"].append(program.id)
             continue

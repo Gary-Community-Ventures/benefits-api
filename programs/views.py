@@ -10,7 +10,7 @@ from programs.serializers import (
 
 
 class ProgramViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-    queryset = Program.objects.filter(active=True, category_v2__isnull=False)
+    queryset = Program.objects.filter(active=True, category__isnull=False)
     serializer_class = ProgramSerializerWithCategory
     permission_classes = [permissions.IsAuthenticated]
 

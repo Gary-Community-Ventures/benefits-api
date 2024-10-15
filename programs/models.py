@@ -271,7 +271,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "low_confidence": program.low_confidence,
             "name_abbreviated": program.name_abbreviated,
             "documents": [d.external_name for d in program.documents.all()],
-            "category": program.category_v2.external_name,
+            "category": program.category.external_name,
         }
 
     def from_model_data(self, data: DataType):
@@ -315,7 +315,7 @@ class ProgramDataController(ModelDataController["Program"]):
 
         # get program category
         program_category = ProgramCategory.objects.get(external_name=data["category"])
-        program.category_v2 = program_category
+        program.category = program_category
 
         program.save()
 
@@ -335,7 +335,7 @@ class Program(models.Model):
     active = models.BooleanField(blank=True, default=True)
     low_confidence = models.BooleanField(blank=True, null=False, default=False)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name="fpl", blank=True, null=True, on_delete=models.SET_NULL)
-    category_v2 = models.ForeignKey(
+    category = models.ForeignKey(
         ProgramCategory, related_name="programs", blank=True, null=True, on_delete=models.SET_NULL
     )
 

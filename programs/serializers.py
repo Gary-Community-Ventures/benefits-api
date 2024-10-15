@@ -23,7 +23,7 @@ class ProgramSerializer(serializers.ModelSerializer):
 
 
 class ProgramSerializerWithCategory(ProgramSerializer):
-    category = ModelTranslationSerializer(source="category_v2.name")
+    category = ModelTranslationSerializer(source="category.name")
 
     class Meta(ProgramSerializerMeta):
         fields = ("id", "name", "website_description", "category")
