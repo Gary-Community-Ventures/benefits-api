@@ -274,7 +274,6 @@ class EligibilitySerializer(serializers.Serializer):
     multiple_tax_units = serializers.BooleanField()
     estimated_value_override = TranslationSerializer()
     warning_messages = TranslationSerializer(many=True)
-    category_id = serializers.CharField()
 
     class Meta:
         fields = "__all__"
@@ -293,10 +292,12 @@ class ProgramCategoryCapSerializer(serializers.Serializer):
 
 
 class ProgramCategorySerializer(serializers.Serializer):
+    external_name = serializers.CharField()
     icon = serializers.CharField()
     name = TranslationSerializer()
     description = TranslationSerializer()
     caps = ProgramCategoryCapSerializer(many=True)
+    programs = serializers.ListField(child=serializers.IntegerField())
 
 
 class UrgentNeedSerializer(serializers.Serializer):
@@ -314,4 +315,4 @@ class ResultsSerializer(serializers.Serializer):
     default_language = serializers.CharField()
     missing_programs = serializers.BooleanField()
     validations = ValidationSerializer(many=True)
-    program_categories = serializers.DictField(child=ProgramCategorySerializer())
+    program_categories = ProgramCategorySerializer(many=True)

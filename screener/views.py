@@ -373,14 +373,14 @@ def eligibility_results(screen: Screen, batch=False):
                     "low_confidence": program.low_confidence,
                     "documents": [default_message(d.text) for d in program.documents.all()],
                     "warning_messages": [default_message(w.message) for w in warnings],
-                    "category_id": None if program.category_v2 is None else str(program.category_v2.id),
                 }
             )
 
-    categories = {}
+    category_map = {}
     for program in all_programs:
         category = program.category_v2
-        if category.id in categories:
+        if category.id in category_map:
+            category_map[category.id]["programs"].append(program.id)
             continue
 
         CategoryCalculator = ProgramCategoryCapCalculator
@@ -393,12 +393,15 @@ def eligibility_results(screen: Screen, batch=False):
         for cap in calculator.caps():
             caps.append({"programs": cap.programs, "cap": cap.cap})
 
-        categories[category.id] = {
+        category_map[category.id] = {
+            "id": category.external_name,
             "icon": category.icon,
             "name": default_message(category.name),
             "description": default_message(category.description),
-            "cap": caps,
+            "caps": caps,
+            "programs": [program.id],
         }
+    categories = list(category_map.values())
 
     ProgramEligibilitySnapshot.objects.bulk_create(program_snapshots)
     snapshot.had_error = False
