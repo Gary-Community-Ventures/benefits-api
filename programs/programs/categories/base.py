@@ -49,7 +49,7 @@ class ProgramCategoryCapCalculator:
         non_0_values = [v for v in values if v > 0]
 
         if len(non_0_values) == 0:
-                return 0
+            return 0
 
         return sum(non_0_values) / len(non_0_values)
 
