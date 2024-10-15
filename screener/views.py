@@ -2,6 +2,7 @@ from typing import Optional
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from integrations.services.communications import MessageUser
+from programs.programs import categories
 from programs.programs.helpers import STATE_MEDICAID_OPTIONS
 from programs.programs.policyengine.calculators import all_calculators
 from screener.models import (
@@ -28,7 +29,17 @@ from screener.serializers import (
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError, Dependencies
 from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
-from programs.models import Document, Navigator, UrgentNeed, Program, Referrer, WarningMessage, TranslationOverride
+from programs.models import (
+    Document,
+    Navigator,
+    ProgramCategory,
+    UrgentNeed,
+    Program,
+    Referrer,
+    WarningMessage,
+    TranslationOverride,
+)
+from programs.programs.categories import ProgramCategoryCapCalculator, category_cap_calculators
 from django.core.exceptions import ObjectDoesNotExist
 from programs.programs.warnings import warning_calculators
 from validations.serializers import ValidationSerializer
@@ -124,7 +135,7 @@ class EligibilityTranslationView(views.APIView):
         screen = Screen.objects.prefetch_related(
             "household_members", "household_members__income_streams", "household_members__insurance", "expenses"
         ).get(uuid=id)
-        eligibility, missing_programs = eligibility_results(screen)
+        eligibility, missing_programs, categories = eligibility_results(screen)
         urgent_needs = urgent_need_results(screen, eligibility)
         validations = ValidationSerializer(screen.validations.all(), many=True).data
 
@@ -135,6 +146,7 @@ class EligibilityTranslationView(views.APIView):
             "default_language": screen.request_language_code,
             "missing_programs": missing_programs,
             "validations": validations,
+            "program_categories": categories,
         }
         hooks = eligibility_hooks()
         if screen.submission_date is None:
@@ -186,7 +198,7 @@ def eligibility_results(screen: Screen, batch=False):
         excluded_programs = [p.id for p in referrer.remove_programs.all()]
 
     all_programs = (
-        Program.objects.filter(active=True)
+        Program.objects.filter(active=True, category__isnull=False)
         .prefetch_related(
             "legal_status_required",
             "fpl",
@@ -204,6 +216,8 @@ def eligibility_results(screen: Screen, batch=False):
             "translation_overrides",
             "translation_overrides__counties",
             *translations_prefetch_name("translation_overrides__", TranslationOverride.objects.translated_fields),
+            "category",
+            *translations_prefetch_name("category__", ProgramCategory.objects.translated_fields),
         )
         .exclude(id__in=excluded_programs)
     )
@@ -349,7 +363,6 @@ def eligibility_results(screen: Screen, batch=False):
                     "learn_more_link": program_translations.get_translation("learn_more_link"),
                     "apply_button_link": program_translations.get_translation("apply_button_link"),
                     "legal_status_required": legal_status,
-                    "category": program_translations.get_translation("category"),
                     "estimated_value_override": program_translations.get_translation("estimated_value"),
                     "eligible": eligibility.eligible,
                     "failed_tests": eligibility.fail_messages,
@@ -363,6 +376,33 @@ def eligibility_results(screen: Screen, batch=False):
                 }
             )
 
+    category_map = {}
+    for program in all_programs:
+        category = program.category
+        if category.id in category_map:
+            category_map[category.id]["programs"].append(program.id)
+            continue
+
+        CategoryCalculator = ProgramCategoryCapCalculator
+        if category.calculator is not None and category.calculator != "":
+            CategoryCalculator = category_cap_calculators[category.calculator]
+
+        calculator = CategoryCalculator(program_eligibility)
+
+        caps = []
+        for cap in calculator.caps():
+            caps.append({"programs": cap.programs, "cap": cap.cap})
+
+        category_map[category.id] = {
+            "id": category.external_name,
+            "icon": category.icon,
+            "name": default_message(category.name),
+            "description": default_message(category.description),
+            "caps": caps,
+            "programs": [program.id],
+        }
+    categories = list(category_map.values())
+
     ProgramEligibilitySnapshot.objects.bulk_create(program_snapshots)
     snapshot.had_error = False
     snapshot.save()
@@ -373,7 +413,7 @@ def eligibility_results(screen: Screen, batch=False):
         clean_program["estimated_value"] = math.trunc(clean_program["estimated_value"])
         eligible_programs.append(clean_program)
 
-    return eligible_programs, missing_programs
+    return eligible_programs, missing_programs, categories
 
 
 class GetProgramTranslation:

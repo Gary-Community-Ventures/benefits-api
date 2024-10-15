@@ -263,7 +263,6 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_delivery_time = TranslationSerializer()
     estimated_application_time = TranslationSerializer()
     legal_status_required = serializers.ListField()
-    category = TranslationSerializer()
     eligible = serializers.BooleanField()
     failed_tests = serializers.ListField()
     passed_tests = serializers.ListField()
@@ -287,6 +286,20 @@ class EligibilityTranslationSerializer(serializers.Serializer):
         fields = ("translations",)
 
 
+class ProgramCategoryCapSerializer(serializers.Serializer):
+    programs = serializers.ListSerializer(child=serializers.CharField())
+    cap = serializers.IntegerField()
+
+
+class ProgramCategorySerializer(serializers.Serializer):
+    external_name = serializers.CharField()
+    icon = serializers.CharField()
+    name = TranslationSerializer()
+    description = TranslationSerializer()
+    caps = ProgramCategoryCapSerializer(many=True)
+    programs = serializers.ListField(child=serializers.IntegerField())
+
+
 class UrgentNeedSerializer(serializers.Serializer):
     name = TranslationSerializer()
     description = TranslationSerializer()
@@ -302,3 +315,4 @@ class ResultsSerializer(serializers.Serializer):
     default_language = serializers.CharField()
     missing_programs = serializers.BooleanField()
     validations = ValidationSerializer(many=True)
+    program_categories = ProgramCategorySerializer(many=True)
