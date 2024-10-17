@@ -449,10 +449,10 @@ class HouseholdMember(models.Model):
     def has_disability(self):
         return self.disabled or self.visually_impaired or self.long_term_disability
 
-    def is_head(self):
+    def is_head(self) -> bool:
         return self.relationship == "headOfHousehold"
 
-    def is_spouse(self):
+    def is_spouse(self) -> bool:
         return self.screen.relationship_map()[self.screen.get_head().id] == self.id
 
     def is_dependent(self):

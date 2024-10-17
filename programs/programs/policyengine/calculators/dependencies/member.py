@@ -1,3 +1,4 @@
+from programs.programs.helpers import snap_ineligible_student
 from .base import Member
 
 
@@ -219,6 +220,16 @@ class ChpEligible(Member):
 
 class CommoditySupplementalFoodProgram(Member):
     field = "commodity_supplemental_food_program"
+
+
+class SnapIneligibleStudentDependency(Member):
+    field = "is_snap_ineligible_student"
+
+    dependencies = ("age",)
+
+    # PE does not take the age of the children into acount, so we calculate this ourselves
+    def value(self):
+        return snap_ineligible_student(self.screen, self.member)
 
 
 class IncomeDependency(Member):

@@ -27,6 +27,7 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.member.AgeDependency,
         dependency.member.MedicalExpenseDependency,
         dependency.member.IsDisabledDependency,
+        dependency.member.SnapIneligibleStudentDependency,
         # NOTE: remove this to always use the SUA in CO.
         dependency.spm.SnapAlwaysUseSuaDependency,
     ]
