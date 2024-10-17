@@ -3,7 +3,9 @@ from programs.programs.warnings.base import WarningCalculator
 
 
 class SnapStudentWarning(WarningCalculator):
-    dependencies = ['age', ]
+    dependencies = [
+        "age",
+    ]
 
     def eligible(self) -> bool:
         for member in self.screen.household_members.all():
