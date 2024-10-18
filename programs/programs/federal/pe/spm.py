@@ -1,6 +1,5 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineSpmCalulator
 import programs.programs.policyengine.calculators.dependencies as dependency
-from programs.programs.policyengine.calculators.dependencies.base import Member, SpmUnit
 
 
 class Snap(PolicyEngineSpmCalulator):
@@ -27,6 +26,7 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.member.AgeDependency,
         dependency.member.MedicalExpenseDependency,
         dependency.member.IsDisabledDependency,
+        dependency.member.SnapIneligibleStudentDependency,
         # NOTE: remove this to always use the SUA in CO.
         dependency.spm.SnapAlwaysUseSuaDependency,
     ]
