@@ -10,21 +10,20 @@ class NcMedicaid(Medicaid):
         dependency.household.NcStateCode,
     ]
 
-    medicaid_subcategory_values = {
+    subcategory_values = {
         'MAD': 18227,  # Medicaid for the Disabled
         'MAA': 13035,  # Medicaid for the Aged
-        'MIC': 4464,   # Medicaid for Children
         'MPW': 12536,  # Medicaid for Pregnant Women
-        'EM': 6268,    # Emergency Medicaid for Labor and Delivery
         'MXP': 6146,   # Medicaid Expansion Adults
+        'MIC': 4464,   # Medicaid for Children
     }
 
-    medicaid_subcategory_fpl_percentages = {
+    subcategory_fpl_percentages = {
+        'MIC': 211,
+        'MPW': 196,
+        'MXP': 133,
         'MAD': 100,
         'MAA': 100,
-        'MPW': 196,
-        'MXP': 138,
-        'MIC': 211,
     }
 
     def determine_subcategory(self, member: HouseholdMember):
@@ -62,27 +61,24 @@ class NcMedicaid(Medicaid):
         return member.age <= 18 and self.is_income_within_limit(member, 'MIC')
 
     def is_income_within_limit(self, member: HouseholdMember, subcategory: str):
-        fpl_percentage = self.medicaid_subcategory_fpl_percentages.get(subcategory, 0)
+        fpl_percentage = self.subcategory_fpl_percentages.get(subcategory, 0)
         household_size = self.screen.household_size
 
+        if member.pregnant:
+            household_size += 1
+
         fpl = self.program.fpl
-        print(f"fpl limit {fpl.get_limit(household_size)}")
         income_limit = int(
             fpl_percentage * fpl.get_limit(household_size) / 100
         )
 
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"]))
-
-        print(f"income limit {income_limit}")
-        print(f"Gross income {gross_income}")
         return gross_income <= income_limit
 
     def member_value(self, member: HouseholdMember):
         subcategory = self.determine_subcategory(member)
-        print(f"subcat {subcategory}")
         if subcategory:
-            estimated_value = self.medicaid_subcategory_values[subcategory]
-            print(f"subcat e value {estimated_value}")
+            estimated_value = self.subcategory_values[subcategory]
             return estimated_value
         else:
             return 0
