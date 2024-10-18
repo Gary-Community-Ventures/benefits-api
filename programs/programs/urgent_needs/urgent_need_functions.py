@@ -206,7 +206,6 @@ class Eoc(UrgentNeedFunction):
         # has rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
 
-        print('done')
         return income < income_limit and has_rent_or_mortgage
 
 
