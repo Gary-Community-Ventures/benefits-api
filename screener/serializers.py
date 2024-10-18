@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta, date
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
@@ -43,6 +44,33 @@ class ExpenseSerializer(serializers.ModelSerializer):
 class HouseholdMemberSerializer(serializers.ModelSerializer):
     income_streams = IncomeStreamSerializer(many=True)
     insurance = InsuranceSerializer()
+    birth_year = serializers.IntegerField(required=False, allow_null=True)
+    birth_month = serializers.IntegerField(required=False, allow_null=True)
+
+    def validate(self, data):
+        birth_year = data.pop("birth_year", None)
+        birth_month = data.pop("birth_month", None)
+
+        if birth_year is None or birth_month is None:
+            return data
+
+        if birth_month < 1 or birth_month > 12:
+            raise serializers.ValidationError("Birth month must be between 1 and 12")
+
+        birth_year_month = datetime(year=birth_year, month=birth_month, day=1)
+
+        # add a day for timezones
+        today = datetime.now() + timedelta(days=1)
+
+        if birth_year_month > today:
+            raise serializers.ValidationError("Birth year and month are in the future")
+
+        data["birth_year_month"] = birth_year_month.date()
+
+        if "age" not in data or data["age"] is None:
+            data["age"] = HouseholdMember.age_from_date(birth_year_month)
+
+        return data
 
     class Meta:
         model = HouseholdMember
@@ -65,6 +93,8 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
             "has_income",
             "income_streams",
             "insurance",
+            "birth_year",
+            "birth_month",
         )
         read_only_fields = ("screen", "id")
 
