@@ -177,7 +177,7 @@ class ForeclosureFinAssistProgram(UrgentNeedFunction):
 class EocIncomeLimitCache(GoogleSheetsCache):
     default = {}
     sheet_id = "1T4RSc9jXRV5kzdhbK5uCQXqgtLDWt-wdh2R4JVsK33o"
-    range_name = "'2023'!A2:I65"
+    range_name = "'current'!A2:I65"
 
     def update(self):
         data = super().update()
@@ -206,6 +206,7 @@ class Eoc(UrgentNeedFunction):
         # has rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
 
+        print('done')
         return income < income_limit and has_rent_or_mortgage
 
 
