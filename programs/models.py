@@ -250,7 +250,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "active": bool,
             "low_confidence": bool,
             "documents": list[str],
-            "category": str,
+            "category": Optional[str],
         },
     )
 
@@ -271,7 +271,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "low_confidence": program.low_confidence,
             "name_abbreviated": program.name_abbreviated,
             "documents": [d.external_name for d in program.documents.all()],
-            "category": program.category.external_name,
+            "category": program.category.external_name if program.category is not None else None,
         }
 
     def from_model_data(self, data: DataType):
@@ -314,7 +314,9 @@ class ProgramDataController(ModelDataController["Program"]):
         program.documents.set(documents)
 
         # get program category
-        program_category = ProgramCategory.objects.get(external_name=data["category"])
+        program_category = None
+        if data["category"] is not None:
+            program_category = ProgramCategory.objects.get(external_name=data["category"])
         program.category = program_category
 
         program.save()
