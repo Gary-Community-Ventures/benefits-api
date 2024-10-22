@@ -43,7 +43,10 @@ class MessageUser:
         content = Content("text/html", self._email_body())
         mail = Mail(from_email, to_email, subject, content)
 
-        sg.client.mail.send.post(request_body=mail.get())
+        try:
+            sg.client.mail.send.post(request_body=mail.get())
+        except Exception as e:
+            print("e:", e)
 
         self.log("emailScreen")
 

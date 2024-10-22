@@ -23,7 +23,6 @@ class BrevoService:
 
     def upsert_user(self, screen, user):
         if settings.DEBUG:
-            print("DEBUG set to True")
             return
         if user is None or screen.is_test_data is None:
             return
@@ -81,7 +80,6 @@ class BrevoService:
                 user.cell = None
                 user.email = None
                 user.save()
-                print("saved user")
         except ApiException as e:
             print("Exception when calling ContactsApi->create_contact: %s\n" % e)
 
@@ -100,61 +98,3 @@ class BrevoService:
         if screen.is_test_data:
             return False
         return True
-
-    def send_email(self, screen: Screen, email: str, lang: str, send_tests=False):
-        if not self.should_send(screen) and not send_tests:
-            return
-
-        subject = self._get_email_subject(lang)
-        html_content = self._get_email_body(screen, lang)
-
-        sender = {"name": "My Friend Ben", "email": "screener@myfriendben.org"}
-        to = [{"email": email}]
-        send_smtp_email = sib_api_v3_sdk.SendSmtpEmail(to=to, sender=sender, subject=subject, html_content=html_content)
-
-        try:
-            api_response = self.email_instance.send_transac_email(send_smtp_email)
-            pprint(api_response)
-            self.log(screen, "emailScreen")
-        except ApiException as e:
-            print("Exception when calling SMTPApi->send_transac_email: %s\n" % e)
-
-    def send_sms(self, screen: Screen, cell: str, lang: str, send_tests=False):
-        if not self.should_send(screen) and not send_tests:
-            return
-
-        content = self._get_text_body(screen, lang)
-
-        send_transac_sms = sib_api_v3_sdk.SendTransacSms(sender="MFB", recipient=str(cell), content=content)
-
-        try:
-            api_response = self.sms_instance.send_transac_sms(send_transac_sms)
-            pprint(api_response)
-            self.log(screen, "textScreen")
-        except ApiException as e:
-            print("Exception when calling TransactionalSMSApi->send_transac_sms: %s\n" % e)
-
-    def _get_email_subject(self, lang: str):
-        return Translation.objects.get(label="sendResults.email-subject").get_lang(lang).text
-
-    def _get_email_body(self, screen: Screen, lang: str):
-        words = Translation.objects.get(label="sendResults.email").get_lang(lang).text
-        url = self._generate_link(screen)
-        return f"{words} <a href='{url}'>{url}</a>"
-
-    def _get_text_body(self, screen: Screen, lang: str):
-        words = Translation.objects.get(label="sendResults.email").get_lang(lang).text
-        url = self._generate_link(screen)
-        return f"{words} {url}"
-
-    def _generate_link(self, screen: Screen):
-        return f"{self.front_end_domain}/{screen.uuid}/results"
-
-    def log(self, screen: Screen, type: str):
-        screen.last_email_request_date = timezone.now()
-        screen.save()
-
-        Message.objects.create(
-            type=type,
-            screen=screen,
-        )
