@@ -1,6 +1,8 @@
 from django.conf import settings
 from authentication.models import User
+from integrations.services.cms_integration import get_cms_integration
 from integrations.services.communications import MessageUser
+from integrations.services.brevo import BrevoService
 from screener.models import Screen
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
@@ -24,31 +26,43 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
             return Response("Must have an associated screen", status=400)
         screen = Screen.objects.get(uuid=pk)
         user = screen.user
-        if user:
-            serializer = UserOffersSerializer(user, data=request.data)
-        else:
-            serializer = UserSerializer(data=request.data)
+        serializer = UserOffersSerializer(user, data=request.data) if user else UserSerializer(data=request.data)
 
         if serializer.is_valid():
             screen.user = serializer.save()
             screen.save()
-            if user and user.external_id and not screen.is_test_data and not settings.DEBUG:
-                update_send_offers_hubspot(user.external_id, user.send_offers, user.send_updates)
-            else:
-                message = MessageUser(screen, screen.get_language_code())
-                if screen.user.email is not None:
-                    message.email(screen.user.email)
-                if screen.user.cell is not None:
-                    message.text(str(screen.user.cell))
 
-                try:
-                    upsert_user_to_hubspot(screen, screen.user)
-                except Exception as e:
-                    capture_exception(e, level="warning")
-                    return Response("Invalid Email", status=400)
+            Integration = get_cms_integration()
+            integration = Integration(user, screen)
+            message = MessageUser(screen, screen.get_language_code())
 
-            return Response(status=204)
+            if screen.user.email is not None:
+                message.email(screen.user.email)
+            if screen.user.cell is not None:
+                message.text(str(screen.user.cell))
+
+            if serializer.is_valid():
+                screen.user = serializer.save()
+                screen.save()
+
+                Integration = get_cms_integration()
+                integration = Integration(user, screen)
+
+                if not integration.should_add():
+                    return Response(status=204)
+
+                if user and user.external_id:
+                    integration.update()
+                else:
+                    integration.add()
+
+                return Response(status=204)
         return Response(serializer.errors, status=400)
+
+
+def update_brevo(external_id, send_offers, send_updates):
+    brevo_service = BrevoService()
+    brevo_service.update_contact(external_id, {"send_offers": send_offers, "send_updates": send_updates})
 
 
 def upsert_user_to_hubspot(screen, user):
