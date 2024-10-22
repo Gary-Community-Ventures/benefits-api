@@ -1,6 +1,7 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
+from screener.models import HouseholdMember
+from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from integrations.services.sheets import GoogleSheetsCache
-from programs.co_county_zips import counties_from_zip
+from programs.co_county_zips import counties_from_screen
 import programs.programs.messages as messages
 
 
@@ -27,20 +28,18 @@ class ChildCareAssistance(ProgramCalculator):
     dependencies = ["age", "income_amount", "income_frequency", "zipcode", "household_size"]
     fpl_limits = CccapFplCache()
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
-        # age
-        cccap_children = self._num_cccap_children()
-
-        e.condition(cccap_children > 0, messages.child(max_age=ChildCareAssistance.max_age_afterschool))
-
+    def household_eligible(self, e: Eligibility):
         cccap_county_limits = self.fpl_limits.fetch()
 
         # location
-        counties = counties_from_zip(self.screen.zipcode)
-        county_name = self.screen.county if self.screen.county is not None else counties[0]
-        e.condition(county_name in cccap_county_limits, messages.location())
+        counties = counties_from_screen(self.screen)
+        in_county_limits = False
+        county_name = counties[0]
+        for county in counties:
+            if county in cccap_county_limits:
+                in_county_limits = True
+                county_name = county
+        e.condition(in_county_limits, messages.location())
 
         # income
         frequency = "yearly"
@@ -59,38 +58,32 @@ class ChildCareAssistance(ProgramCalculator):
             messages.assets(ChildCareAssistance.asset_limit),
         )
 
-        return e
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
-    def value(self, eligible_members: int):
-        value = 0
+        # age
+        child_eligible = False
+        if member.age < ChildCareAssistance.max_age_afterschool:
+            child_eligible = True
+        elif (
+            member.age >= ChildCareAssistance.max_age_afterschool
+            and member.age <= ChildCareAssistance.max_age_afterschool_disabled
+            and member.has_disability()
+        ):
+            child_eligible = True
 
-        household_members = self.screen.household_members.all()
-        for household_member in household_members:
-            if household_member.age <= ChildCareAssistance.max_age_preschool:
-                value += ChildCareAssistance.preschool_value
-            elif household_member.age < ChildCareAssistance.max_age_afterschool:
-                value += ChildCareAssistance.afterschool_value
-            elif (
-                household_member.age >= ChildCareAssistance.max_age_afterschool
-                and household_member.age <= ChildCareAssistance.max_age_afterschool_disabled
-                and household_member.has_disability()
-            ):
-                value += ChildCareAssistance.afterschool_value
+        e.condition(child_eligible)
 
-        return value
+    def member_value(self, member: HouseholdMember):
+        if member.age <= ChildCareAssistance.max_age_preschool:
+            return ChildCareAssistance.preschool_value
+        elif member.age < ChildCareAssistance.max_age_afterschool:
+            return ChildCareAssistance.afterschool_value
+        elif (
+            member.age >= ChildCareAssistance.max_age_afterschool
+            and member.age <= ChildCareAssistance.max_age_afterschool_disabled
+            and member.has_disability()
+        ):
+            return ChildCareAssistance.afterschool_value
 
-    def _num_cccap_children(self):
-        children = 0
-
-        household_members = self.screen.household_members.all()
-        for household_member in household_members:
-            if household_member.age < ChildCareAssistance.max_age_afterschool:
-                children += 1
-            elif (
-                household_member.age >= ChildCareAssistance.max_age_afterschool
-                and household_member.age <= ChildCareAssistance.max_age_afterschool_disabled
-                and household_member.has_disability()
-            ):
-                children += 1
-
-        return children
+        return 0

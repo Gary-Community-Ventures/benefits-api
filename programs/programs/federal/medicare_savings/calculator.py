@@ -1,9 +1,8 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
-import programs.programs.messages as messages
+from programs.programs.calc import MemberEligibility, ProgramCalculator
 
 
 class MedicareSavings(ProgramCalculator):
-    valid_insurance = ("none", "employer", "private", "medicare")
+    eligible_insurance_types = ("none", "employer", "private", "medicare")
     asset_limit = {
         "single": 10_930,
         "married": 17_130,
@@ -13,44 +12,30 @@ class MedicareSavings(ProgramCalculator):
         "married": 2_320,
     }
     min_age = 65
-    amount = 175
+    member_amount = 175 * 12
     dependencies = ["household_assets", "relationship", "income_frequency", "income_amount", "age"]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
-        members = self.screen.household_members.all()
+        # age
+        e.condition(member.age >= MedicareSavings.min_age)
 
-        def asset_limit(member):
-            status = "married" if member.is_married()["is_married"] else "single"
-            return self.screen.household_assets < MedicareSavings.asset_limit[status]
+        # insurance
+        e.condition(member.insurance.has_insurance_types(MedicareSavings.eligible_insurance_types))
 
-        def income_limit(member):
-            is_married = member.is_married()
-            if not is_married["is_married"]:
-                status = "single"
-                spouse_income = 0
-            else:
-                status = "married"
-                spouse_income = is_married["married_to"].calc_gross_income("monthly", ("all",))
-            max_income = MedicareSavings.income_limit[status]
-            income = member.calc_gross_income("monthly", ("all",)) + spouse_income
-            return income < max_income
+        # assets
+        status = "married" if member.is_married()["is_married"] else "single"
+        e.condition(self.screen.household_assets < MedicareSavings.asset_limit[status])
 
-        e.member_eligibility(
-            members,
-            [
-                (lambda m: m.age >= MedicareSavings.min_age, messages.older_than(MedicareSavings.min_age)),
-                (
-                    lambda m: m.insurance.has_insurance_types(MedicareSavings.valid_insurance),
-                    messages.has_no_insurance(),
-                ),
-                (asset_limit, None),
-                (income_limit, None),
-            ],
-        )
-
-        return e
-
-    def value(self, eligible_members: int):
-        return MedicareSavings.amount * eligible_members * 12
+        # income
+        is_married = member.is_married()
+        if not is_married["is_married"]:
+            status = "single"
+            spouse_income = 0
+        else:
+            status = "married"
+            spouse_income = is_married["married_to"].calc_gross_income("monthly", ("all",))
+        max_income = MedicareSavings.income_limit[status]
+        income = member.calc_gross_income("monthly", ("all",)) + spouse_income
+        e.condition(income < max_income)

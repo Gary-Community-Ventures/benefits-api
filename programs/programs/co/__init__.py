@@ -11,7 +11,6 @@ from .reproductive_health_care.calculator import ReproductiveHealthCare
 from .connect_for_health.calculator import ConnectForHealth
 from .medicaid.family_planning_services.calculator import FamilyPlanningServices
 from .denver_preschool_program.calculator import DenverPreschoolProgram
-from .every_day_eats.calculator import EveryDayEats
 from .property_credit_rebate.calculator import PropertyCreditRebate
 from .universal_preschool.calculator import UniversalPreschool
 from .my_spark.calculator import MySpark
@@ -45,7 +44,6 @@ co_calculators: dict[str, type[ProgramCalculator]] = {
     "cfhc": ConnectForHealth,
     "fps": FamilyPlanningServices,
     "dpp": DenverPreschoolProgram,
-    "ede": EveryDayEats,
     "cpcr": PropertyCreditRebate,
     "upk": UniversalPreschool,
     "myspark": MySpark,

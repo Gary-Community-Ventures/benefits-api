@@ -11,11 +11,3 @@ irs_gross_income = [
     member.PensionIncomeDependency,
     member.SocialSecurityIncomeDependency,
 ]
-
-school_lunch_income = [
-    member.EmploymentIncomeDependency,
-    member.SelfEmploymentIncomeDependency,
-    member.RentalIncomeDependency,
-    member.PensionIncomeDependency,
-    member.SocialSecurityIncomeDependency,
-]

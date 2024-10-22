@@ -3,8 +3,8 @@ from programs.programs.federal.pe import (
     federal_spm_unit_calculators,
     federal_tax_unit_calculators,
 )
-from programs.programs.co.pe import co_member_calculators, co_tax_unit_calculators
-from programs.programs.nc.pe import nc_member_calculators
+from programs.programs.co.pe import co_member_calculators, co_tax_unit_calculators, co_spm_calculators
+from programs.programs.nc.pe import nc_member_calculators, nc_spm_calculators
 from .base import (
     PolicyEngineMembersCalculator,
     PolicyEngineSpmCalulator,
@@ -21,6 +21,8 @@ all_member_calculators: dict[str, type[PolicyEngineMembersCalculator]] = {
 
 all_spm_unit_calculators: dict[str, type[PolicyEngineSpmCalulator]] = {
     **federal_spm_unit_calculators,
+    **co_spm_calculators,
+    **nc_spm_calculators,
 }
 
 all_tax_unit_calculators: dict[str, type[PolicyEngineTaxUnitCalulator]] = {
