@@ -273,7 +273,6 @@ def eligibility_results(screen: Screen, batch=False):
 
     # make certain benifits calculate first so that they can be used in other benefits
     all_programs = sorted(all_programs, key=sort_first)
-    print(all_programs)
 
     program_snapshots = []
 
