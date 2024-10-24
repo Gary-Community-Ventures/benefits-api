@@ -10,6 +10,8 @@ def medicaid_eligible(data: dict[str, Eligibility]):
         if name in data:
             return data[name].eligible
 
+    return False
+
 
 def snap_ineligible_student(screen: Screen, member: HouseholdMember):
     if not member.student:

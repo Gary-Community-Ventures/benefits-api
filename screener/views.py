@@ -1,6 +1,7 @@
 from typing import Optional
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from rest_framework.relations import reverse
 from integrations.services.communications import MessageUser
 from programs.programs import categories
 from programs.programs.helpers import STATE_MEDICAID_OPTIONS
@@ -251,17 +252,28 @@ def eligibility_results(screen: Screen, batch=False):
     pe_programs = pe_calculators.keys()
 
     def sort_first(program):
-        calc_first = ("tanf", "ssi", "nslp", "leap", "chp", *STATE_MEDICAID_OPTIONS)
+        calc_order = (
+            "tanf",
+            "ssi",
+            "nslp",
+            "leap",
+            "chp",
+            *STATE_MEDICAID_OPTIONS,
+            "emergency_medicaid",
+            "wic",
+            "andcs",
+        )
 
-        if program.name_abbreviated in calc_first:
-            return 0
-        else:
-            return 1
+        if program.name_abbreviated not in calc_order:
+            return len(calc_order)
+
+        return calc_order.index(program.name_abbreviated)
 
     missing_programs = False
 
     # make certain benifits calculate first so that they can be used in other benefits
     all_programs = sorted(all_programs, key=sort_first)
+    print(all_programs)
 
     program_snapshots = []
 
