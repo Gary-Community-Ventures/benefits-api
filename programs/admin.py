@@ -41,7 +41,6 @@ class ProgramAdmin(ModelAdmin):
         description_short = obj.description_short
         learn_more_link = obj.learn_more_link
         apply_button_link = obj.apply_button_link
-        category = obj.category
         estimated_delivery_time = obj.estimated_delivery_time
         estimated_application_time = obj.estimated_application_time
         value_type = obj.value_type
@@ -56,7 +55,6 @@ class ProgramAdmin(ModelAdmin):
                     <a href="{}">Name</a>
                     <a href="{}">Description</a>
                     <a href="{}">Short Description</a>
-                    <a href="{}">Category</a>
                     <a href="{}">Learn More Link</a>
                     <a href="{}">Apply Button Link</a>
                     <a href="{}">Estimated Delivery Time</a>
@@ -70,7 +68,6 @@ class ProgramAdmin(ModelAdmin):
             reverse("translation_admin_url", args=[name.id]),
             reverse("translation_admin_url", args=[description.id]),
             reverse("translation_admin_url", args=[description_short.id]),
-            reverse("translation_admin_url", args=[category.id]),
             reverse("translation_admin_url", args=[learn_more_link.id]),
             reverse("translation_admin_url", args=[apply_button_link.id]),
             reverse("translation_admin_url", args=[estimated_delivery_time.id]),

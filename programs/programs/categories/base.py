@@ -46,7 +46,12 @@ class ProgramCategoryCapCalculator:
         return max(*values)
 
     def calc_average_cap(self, cap: CategoryCap, values: list[int]):
-        return sum(values) / len(values)
+        non_0_values = [v for v in values if v > 0]
+
+        if len(non_0_values) == 0:
+            return 0
+
+        return sum(non_0_values) / len(non_0_values)
 
     def _handle_caps(self, caps: list[CategoryCap], func: Callable[[CategoryCap, list[int]], int]) -> list[CategoryCap]:
         """

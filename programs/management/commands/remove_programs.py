@@ -19,7 +19,6 @@ class Command(BaseCommand):
             "value_type",
             "estimated_delivery_time",
             "estimated_application_time",
-            "category",
             "warning",
         )
 
