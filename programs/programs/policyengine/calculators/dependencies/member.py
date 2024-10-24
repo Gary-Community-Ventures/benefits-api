@@ -17,6 +17,13 @@ class PregnancyDependency(Member):
         return self.member.pregnant or False
 
 
+class ExpectedChilrenPregnancyDependency(Member):
+    field = "current_pregnancies"
+
+    def value(self):
+        return 1 if self.member.pregnant else 0
+
+
 class FullTimeCollegeStudentDependency(Member):
     field = "is_full_time_college_student"
 
