@@ -13,11 +13,11 @@ class NcMedicaid(Medicaid):
         "INFANT": 372,  # * 12 = 4464,  Medicaid for Children
         "YOUNG_CHILD": 372,  # * 12 = 4464,  Medicaid for Children
         "OLDER_CHILD": 372,  # * 12 = 4464,  Medicaid for Children
-        "PREGNANT": 1044,  # * 12 = 12536, Medicaid for Pregnant Women
+        "PREGNANT": 1045,  # * 12 = 12536, Medicaid for Pregnant Women
         "YOUNG_ADULT": 512,  # * 12 = 6146,  Medicaid Expansion Adults
         "PARENT": 0,
         "SSI_RECIPIENT": 0,
-        "AGED": 1518,  # * 12 = 13035, Medicaid for the Aged
+        "AGED": 1519,  # * 12 = 13035, Medicaid for the Aged
         "DISABLED": 1086,  # * 12 = 18227, Medicaid for the Disabled
     }
 
