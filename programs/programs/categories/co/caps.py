@@ -6,4 +6,4 @@ class PreschoolCategoryCap(ProgramCategoryCapCalculator):
 
 
 class HealthCareCategoryCap(ProgramCategoryCapCalculator):
-    average_caps = [CategoryCap(["cfhc", "awd_medicaid", "cwd_medicaid"], member_cap=True)]
+    max_caps = [CategoryCap(["cfhc", "awd_medicaid", "cwd_medicaid"], member_cap=True)]
