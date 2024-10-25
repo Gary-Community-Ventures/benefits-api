@@ -16,7 +16,7 @@ class ProgramViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.
 
 
 class ProgramCategoryViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
-    queryset = ProgramCategory.objects.filter(programs__isnull=False).distinct()
+    queryset = ProgramCategory.objects.filter(programs__isnull=False, programs__active=True).distinct()
     serializer_class = ProgramCategorySerializer
     permission_classes = [permissions.IsAuthenticated]
 

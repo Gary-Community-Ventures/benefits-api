@@ -30,12 +30,15 @@ class ProgramSerializerWithCategory(ProgramSerializer):
 
 
 class ProgramCategorySerializer(serializers.ModelSerializer):
-    programs = ProgramSerializer(many=True)
+    programs = serializers.SerializerMethodField()
     name = ModelTranslationSerializer()
 
     class Meta:
         model = ProgramCategory
         fields = ("id", "name", "icon", "programs")
+
+    def get_programs(self, obj: ProgramCategory):
+        return ProgramSerializer(obj.programs.filter(active=True), many=True).data
 
 
 class UrgentNeedAPISerializer(serializers.ModelSerializer):
