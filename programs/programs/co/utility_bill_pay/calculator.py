@@ -3,7 +3,7 @@ from programs.programs.calc import Eligibility, ProgramCalculator
 
 class UtilityBillPay(ProgramCalculator):
     presumptive_eligibility = ("snap", "ssi", "andcs", "tanf", "wic", "co_medicaid", "emergency_medicaid", "chp")
-    amount = 350
+    amount = 400
 
     def household_eligible(self, e: Eligibility):
         # has other programs
