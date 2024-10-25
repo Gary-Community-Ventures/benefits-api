@@ -1,6 +1,7 @@
 from typing import Optional
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from rest_framework.relations import reverse
 from integrations.services.communications import MessageUser
 from programs.programs import categories
 from programs.programs.helpers import STATE_MEDICAID_OPTIONS
@@ -26,7 +27,7 @@ from screener.serializers import (
     MessageSerializer,
     ResultsSerializer,
 )
-from programs.programs.policyengine.policy_engine import all_eligibility, calc_pe_eligibility
+from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError, Dependencies
 from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
 from programs.models import (
@@ -198,9 +199,7 @@ def eligibility_results(screen: Screen, batch=False):
         excluded_programs = [p.id for p in referrer.remove_programs.all()]
 
     all_programs = (
-        Program.objects.filter(active=True)
-        # NOTE: uncomment when categories are ready
-        # .filter(active=True, category_v2__isnull=False)
+        Program.objects.filter(active=True, category__isnull=False)
         .prefetch_related(
             "legal_status_required",
             "fpl",
@@ -218,9 +217,10 @@ def eligibility_results(screen: Screen, batch=False):
             "translation_overrides",
             "translation_overrides__counties",
             *translations_prefetch_name("translation_overrides__", TranslationOverride.objects.translated_fields),
-            "category_v2",
-            *translations_prefetch_name("category_v2__", ProgramCategory.objects.translated_fields),
-        ).exclude(id__in=excluded_programs)
+            "category",
+            *translations_prefetch_name("category__", ProgramCategory.objects.translated_fields),
+        )
+        .exclude(id__in=excluded_programs)
     )
     data = []
 
@@ -252,12 +252,22 @@ def eligibility_results(screen: Screen, batch=False):
     pe_programs = pe_calculators.keys()
 
     def sort_first(program):
-        calc_first = ("tanf", "ssi", "nslp", "leap", "chp", *STATE_MEDICAID_OPTIONS)
+        calc_order = (
+            "tanf",
+            "ssi",
+            "nslp",
+            "leap",
+            "chp",
+            *STATE_MEDICAID_OPTIONS,
+            "emergency_medicaid",
+            "wic",
+            "andcs",
+        )
 
-        if program.name_abbreviated in calc_first:
-            return 0
-        else:
-            return 1
+        if program.name_abbreviated not in calc_order:
+            return len(calc_order)
+
+        return calc_order.index(program.name_abbreviated)
 
     missing_programs = False
 
@@ -364,7 +374,6 @@ def eligibility_results(screen: Screen, batch=False):
                     "learn_more_link": program_translations.get_translation("learn_more_link"),
                     "apply_button_link": program_translations.get_translation("apply_button_link"),
                     "legal_status_required": legal_status,
-                    "category": program_translations.get_translation("category"),
                     "estimated_value_override": program_translations.get_translation("estimated_value"),
                     "eligible": eligibility.eligible,
                     "failed_tests": eligibility.fail_messages,
@@ -375,33 +384,35 @@ def eligibility_results(screen: Screen, batch=False):
                     "low_confidence": program.low_confidence,
                     "documents": [default_message(d.text) for d in program.documents.all()],
                     "warning_messages": [default_message(w.message) for w in warnings],
-                    "category_id": None if program.category_v2 is None else str(program.category_v2.id),
                 }
             )
 
-    categories = {}
-    # NOTE: uncomment when categories are ready
-    # for program in all_programs:
-    #     category = program.category_v2
-    #     if category.id in categories:
-    #         continue
-    #
-    #     CategoryCalculator = ProgramCategoryCapCalculator
-    #     if category.calculator is not None and category.calculator != "":
-    #         CategoryCalculator = category_cap_calculators[category.calculator]
-    #
-    #     calculator = CategoryCalculator(program_eligibility)
-    #
-    #     caps = []
-    #     for cap in calculator.caps():
-    #         caps.append({"programs": cap.programs, "cap": cap.cap})
-    #
-    #     categories[category.id] = {
-    #         "icon": category.icon,
-    #         "name": default_message(category.name),
-    #         "description": default_message(category.description),
-    #         "cap": caps,
-    #     }
+    category_map = {}
+    for program in all_programs:
+        category = program.category
+        if category.id in category_map:
+            category_map[category.id]["programs"].append(program.id)
+            continue
+
+        CategoryCalculator = ProgramCategoryCapCalculator
+        if category.calculator is not None and category.calculator != "":
+            CategoryCalculator = category_cap_calculators[category.calculator]
+
+        calculator = CategoryCalculator(program_eligibility)
+
+        caps = []
+        for cap in calculator.caps():
+            caps.append({"programs": cap.programs, "cap": cap.cap})
+
+        category_map[category.id] = {
+            "id": category.external_name,
+            "icon": category.icon,
+            "name": default_message(category.name),
+            "description": default_message(category.description),
+            "caps": caps,
+            "programs": [program.id],
+        }
+    categories = list(category_map.values())
 
     ProgramEligibilitySnapshot.objects.bulk_create(program_snapshots)
     snapshot.had_error = False

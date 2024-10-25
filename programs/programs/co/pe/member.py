@@ -53,6 +53,7 @@ class Chp(PolicyEngineMembersCalculator):
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
+        dependency.member.ExpectedChildrenPregnancyDependency,
         dependency.household.CoStateCode,
         *dependency.irs_gross_income,
     ]

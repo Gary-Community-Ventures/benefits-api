@@ -4,6 +4,7 @@ from . import views
 
 router = routers.DefaultRouter()
 router.register(r"programs", views.ProgramViewSet)
+router.register(r"program_categories", views.ProgramCategoryViewSet)
 router.register(r"navigators", views.NavigatorViewSet)
 router.register(r"urgent-needs", views.UrgentNeedViewSet)
 

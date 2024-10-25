@@ -15,6 +15,7 @@ class Wic(PolicyEngineMembersCalculator):
     pe_name = "wic"
     pe_inputs = [
         dependency.member.PregnancyDependency,
+        dependency.member.ExpectedChildrenPregnancyDependency,
         dependency.member.AgeDependency,
         dependency.spm.SchoolMealCountableIncomeDependency,
     ]
