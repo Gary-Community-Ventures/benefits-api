@@ -17,7 +17,7 @@ class PregnancyDependency(Member):
         return self.member.pregnant or False
 
 
-class ExpectedChilrenPregnancyDependency(Member):
+class ExpectedChildrenPregnancyDependency(Member):
     field = "current_pregnancies"
 
     def value(self):
