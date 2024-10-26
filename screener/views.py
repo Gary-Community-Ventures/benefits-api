@@ -405,7 +405,7 @@ def eligibility_results(screen: Screen, batch=False):
             caps.append({"programs": cap.programs, "cap": cap.cap})
 
         category_map[category.id] = {
-            "id": category.external_name,
+            "external_name": category.external_name,
             "icon": category.icon,
             "name": default_message(category.name),
             "description": default_message(category.description),
