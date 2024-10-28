@@ -2747,10 +2747,7 @@ class Command(BaseCommand):
     }
 
     privacy_policy = {
-        "en-us": "https://co.myfriendben.org/en/data-privacy-policy",
-        "es": "https://co.myfriendben.org/es/data-privacy-policy",
-        "fr": "https://co.myfriendben.org/fr/data-privacy-policy",
-        "vi": "https://co.myfriendben.org/vi/data-privacy-policy",
+        "en-us": "https://co.myfriendben.org/privacy-policy/",
     }
 
     referrer_data = {
@@ -2828,7 +2825,7 @@ class Command(BaseCommand):
         "state": "CO",
         "zip_code": 80202,
         "email": "myfriendben@garycommunity.org",
-        "privacy_policy_link": "https://co.myfriendben.org/en/data-privacy-policy",
+        "privacy_policy_link": "https://co.myfriendben.org/privacy-policy/",
     }
 
     @transaction.atomic
