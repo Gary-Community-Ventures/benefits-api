@@ -33,9 +33,7 @@ class Migration(migrations.Migration):
                 ("validated", models.BooleanField(default=False)),
                 (
                     "hash",
-                    models.CharField(
-                        blank=True, default=None, max_length=2048, null=True
-                    ),
+                    models.CharField(blank=True, default=None, max_length=2048, null=True),
                 ),
             ],
         ),
