@@ -6,9 +6,11 @@ from hubspot.crm.contacts.exceptions import ForbiddenException
 from django.db.models import Q
 from authentication.models import User
 from integrations.models import Link
-from programs.models import Navigator, Program, UrgentNeed
+from programs.models import Navigator, Program, TranslationOverride, UrgentNeed
 from translations.models import BLANK_TRANSLATION_PLACEHOLDER, Translation
+from configuration.models import Configuration
 import argparse
+import json
 
 
 class Command(BaseCommand):
@@ -89,14 +91,33 @@ class Command(BaseCommand):
         program_links = [p.apply_button_link for p in Program.objects.filter(active=True)]
         urgent_need_links = [u.link for u in UrgentNeed.objects.filter(active=True)]
         navigator_links = [n.assistance_link for n in Navigator.objects.filter(programs__isnull=False)]
+        translation_override_links = [
+            o.translation
+            for o in TranslationOverride.objects.filter(field__in=["apply_button_link", "learn_more_link"])
+        ]
+        config_links = [
+            json.loads(Configuration.objects.get(name="public_charge_rule").data)["link"],
+            *[
+                o["link"]
+                for o in json.loads(Configuration.objects.get(name="more_help_options").data)["moreHelpOptions"]
+                if "link" in o
+            ],
+            *json.loads(Configuration.objects.get(name="privacy_policy").data).values(),
+            *json.loads(Configuration.objects.get(name="consent_to_contact").data).values(),
+        ]
 
         links = {
             *self._get_translation_links(program_links),
             *self._get_translation_links(urgent_need_links),
             *self._get_translation_links(navigator_links),
+            *self._get_translation_links(translation_override_links),
+            *config_links,
         }
 
-        return list(links)
+        links = list(links)
+        links.sort()
+
+        return links
 
     def _get_translation_links(self, translations: list[Translation]) -> list[str]:
         links = set()
