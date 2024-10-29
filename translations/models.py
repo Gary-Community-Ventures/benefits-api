@@ -33,23 +33,30 @@ class TranslationCache(Cache):
 class TranslationManager(TranslatableManager):
     use_in_migrations = True
     translation_cache = TranslationCache()
+    all_langs = [lang["code"] for lang in settings.PARLER_LANGUAGES[None]]
 
     def add_translation(self, label, default_message=BLANK_TRANSLATION_PLACEHOLDER, active=True, no_auto=False):
         default_lang = settings.LANGUAGE_CODE
         parent = self.get_or_create(label=label, defaults={"active": active, "no_auto": no_auto})[0]
-        if parent.active != active or parent.active != no_auto:
+        if parent.active != active or parent.no_auto != no_auto:
             parent.active = active
             parent.no_auto = no_auto
             parent.save()
 
         parent.create_translation(default_lang, text=default_message, edited=True)
+
+        for lang in self.all_langs:
+            if lang == default_lang:
+                continue
+
+            parent.create_translation(lang, text="", edited=False)
         self.translation_cache.invalid = True
         return parent
 
     def edit_translation(self, label, lang, translation, manual=True):
         parent = self.language(lang).get(label=label)
 
-        if manual is False and parent.no_auto:
+        if manual is False and parent.no_auto and parent.edited:
             return parent
 
         parent.text = translation
@@ -61,7 +68,8 @@ class TranslationManager(TranslatableManager):
     def edit_translation_by_id(self, id, lang, translation, manual=True):
         parent = self.prefetch_related("translations").language(lang).get(pk=id)
 
-        if manual is False and parent.no_auto:
+        print(parent.edited)
+        if manual is False and parent.no_auto and parent.edited:
             return parent
 
         parent.text = translation
@@ -70,7 +78,7 @@ class TranslationManager(TranslatableManager):
         self.translation_cache.invalid = True
         return parent
 
-    def all_translations(self, langs=[lang["code"] for lang in settings.PARLER_LANGUAGES[None]]):
+    def all_translations(self, langs=all_langs):
         translations_dict = {}
         for lang in langs:
             translations_dict[lang] = self.translation_cache.fetch()[lang]
