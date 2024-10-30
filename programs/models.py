@@ -186,13 +186,19 @@ class DocumentDataController(ModelDataController["Document"]):
 class Document(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     text = models.ForeignKey(Translation, related_name="documents", blank=False, null=False, on_delete=models.PROTECT)
+    link_url = models.ForeignKey(
+        Translation, related_name="document_link_url", blank=True, null=True, on_delete=models.PROTECT
+    )
+    link_text = models.ForeignKey(
+        Translation, related_name="document_link_text", blank=True, null=True, on_delete=models.PROTECT
+    )
 
     objects = DocumentManager()
 
     TranslationExportBuilder = DocumentDataController
 
     def __str__(self) -> str:
-        return self.text.text
+        return self.external_name if self.external_name is not None else self.text
 
 
 class ProgramManager(models.Manager):
