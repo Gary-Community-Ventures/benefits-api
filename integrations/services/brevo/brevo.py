@@ -23,6 +23,7 @@ class BrevoService:
 
     def upsert_user(self, screen, user):
         if settings.DEBUG:
+            print("DEBUG set to True")
             return
         if user is None or screen.is_test_data is None:
             return
@@ -80,6 +81,7 @@ class BrevoService:
                 user.cell = None
                 user.email = None
                 user.save()
+                print("saved user")
         except ApiException as e:
             print("Exception when calling ContactsApi->create_contact: %s\n" % e)
 

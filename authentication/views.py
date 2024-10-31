@@ -41,28 +41,19 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
             if screen.user.cell is not None:
                 message.text(str(screen.user.cell))
 
-            if serializer.is_valid():
-                screen.user = serializer.save()
-                screen.save()
+            Integration = get_cms_integration()
+            integration = Integration(user, screen)
 
-                Integration = get_cms_integration()
-                integration = Integration(user, screen)
-
-                if not integration.should_add():
-                    return Response(status=204)
-
-                if user and user.external_id:
-                    integration.update()
-                else:
-                    integration.add()
-
+            if not integration.should_add():
                 return Response(status=204)
+
+            if user and user.external_id:
+                integration.update()
+            else:
+                integration.add()
+
+            return Response(status=204)
         return Response(serializer.errors, status=400)
-
-
-def update_brevo(external_id, send_offers, send_updates):
-    brevo_service = BrevoService()
-    brevo_service.update_contact(external_id, {"send_offers": send_offers, "send_updates": send_updates})
 
 
 def upsert_user_to_hubspot(screen, user):
