@@ -54,22 +54,6 @@ class SnapGrossIncomeDependency(SpmUnit):
         return int(self.screen.calc_gross_income("yearly", ["all"]))
 
 
-class MeetsSnapGrossIncomeTestDependency(SpmUnit):
-    field = "meets_snap_gross_income_test"
-    dependencies = (
-        "income_amount",
-        "income_frequency",
-        "household_size",
-    )
-
-    def value(self):
-        fpl = FederalPoveryLimit.objects.get(year="THIS YEAR").as_dict()
-        snap_gross_income = self.screen.calc_gross_income("yearly", ["all"])
-        snap_gross_limit = 2 * fpl[self.screen.household_size]
-
-        return snap_gross_income < snap_gross_limit
-
-
 class SnapAlwaysUseSuaDependency(SpmUnit):
     field = "snap_state_using_standard_utility_allowance"
 
