@@ -24,7 +24,7 @@ class Command(BaseCommand):
             "-s",
             "--strict",
             action=argparse.BooleanOptionalAction,
-            help="Should the he website hashes should be compared to the old hashes",
+            help="Compare the website hashes to the stored hashes",
         )
 
     def handle(self, *args, **options):
