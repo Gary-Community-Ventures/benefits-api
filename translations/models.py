@@ -68,7 +68,6 @@ class TranslationManager(TranslatableManager):
     def edit_translation_by_id(self, id, lang, translation, manual=True):
         parent = self.prefetch_related("translations").language(lang).get(pk=id)
 
-        print(parent.edited)
         if manual is False and parent.no_auto and parent.edited:
             return parent
 
