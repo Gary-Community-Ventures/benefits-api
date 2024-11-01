@@ -120,6 +120,7 @@ class Command(BaseCommand):
         "cch": "Colorado Coalition for the Homeless",
         "frca": "Family Resource Center Association",
         "jeffcoHS": "Jeffco Human Services",
+        "dhs": "Denver Human Services",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
         "arapahoectypublichealth": "Arapahoe County Public Health",
@@ -127,16 +128,15 @@ class Command(BaseCommand):
             "_label": "referralOptions.fircsummitresourcecenter",
             "_default_message": "FIRC Summit Resource Center",
         },
-        "dhs": "Denver Human Services",
         "ccig": "Colorado Community Insight Group",
         "eaglecounty": "Eagle County",
+        "searchEngine": {"_label": "referralOptions.searchEngine", "_default_message": "Google or other search engine"},
+        "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
+        "other": {"_label": "referralOptions.other", "_default_message": "Other"},
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
             "_default_message": "Test / Prospective Partner",
         },
-        "searchEngine": {"_label": "referralOptions.searchEngine", "_default_message": "Google or other search engine"},
-        "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
-        "other": {"_label": "referralOptions.other", "_default_message": "Other"},
     }
 
     language_options = {

@@ -1,4 +1,4 @@
-from programs.models import Program, UrgentNeed, Navigator
+from programs.models import Program, ProgramCategory, UrgentNeed, Navigator
 from rest_framework import serializers
 from translations.serializers import ModelTranslationSerializer
 
@@ -9,14 +9,36 @@ class NavigatorAPISerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ProgramSerializerMeta:
+    model = Program
+    fields = ("id", "name", "website_description")
+
+
 class ProgramSerializer(serializers.ModelSerializer):
     name = ModelTranslationSerializer()
     website_description = ModelTranslationSerializer()
-    category = ModelTranslationSerializer()
+
+    class Meta(ProgramSerializerMeta):
+        pass
+
+
+class ProgramSerializerWithCategory(ProgramSerializer):
+    category = ModelTranslationSerializer(source="category.name")
+
+    class Meta(ProgramSerializerMeta):
+        fields = ("id", "name", "website_description", "category")
+
+
+class ProgramCategorySerializer(serializers.ModelSerializer):
+    programs = serializers.SerializerMethodField()
+    name = ModelTranslationSerializer()
 
     class Meta:
-        model = Program
-        fields = ("id", "name", "website_description", "category")
+        model = ProgramCategory
+        fields = ("id", "name", "icon", "programs")
+
+    def get_programs(self, obj: ProgramCategory):
+        return ProgramSerializer(obj.programs.filter(active=True), many=True).data
 
 
 class UrgentNeedAPISerializer(serializers.ModelSerializer):

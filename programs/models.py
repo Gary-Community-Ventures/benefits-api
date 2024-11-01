@@ -205,7 +205,6 @@ class ProgramManager(models.Manager):
         "value_type",
         "estimated_delivery_time",
         "estimated_application_time",
-        "category",
         "estimated_value",
         "website_description",
     )
@@ -251,7 +250,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "active": bool,
             "low_confidence": bool,
             "documents": list[str],
-            "category": str,
+            "category": Optional[str],
         },
     )
 
@@ -272,7 +271,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "low_confidence": program.low_confidence,
             "name_abbreviated": program.name_abbreviated,
             "documents": [d.external_name for d in program.documents.all()],
-            "category": program.category_v2.external_name,
+            "category": program.category.external_name if program.category is not None else None,
         }
 
     def from_model_data(self, data: DataType):
@@ -315,8 +314,10 @@ class ProgramDataController(ModelDataController["Program"]):
         program.documents.set(documents)
 
         # get program category
-        program_category = ProgramCategory.objects.get(external_name=data["category"])
-        program.category_v2 = program_category
+        program_category = None
+        if data["category"] is not None:
+            program_category = ProgramCategory.objects.get(external_name=data["category"])
+        program.category = program_category
 
         program.save()
 
@@ -336,7 +337,7 @@ class Program(models.Model):
     active = models.BooleanField(blank=True, default=True)
     low_confidence = models.BooleanField(blank=True, null=False, default=False)
     fpl = models.ForeignKey(FederalPoveryLimit, related_name="fpl", blank=True, null=True, on_delete=models.SET_NULL)
-    category_v2 = models.ForeignKey(
+    category = models.ForeignKey(
         ProgramCategory, related_name="programs", blank=True, null=True, on_delete=models.SET_NULL
     )
 
@@ -367,9 +368,6 @@ class Program(models.Model):
         blank=False,
         null=False,
         on_delete=models.PROTECT,
-    )
-    category = models.ForeignKey(
-        Translation, related_name="program_category", blank=False, null=False, on_delete=models.PROTECT
     )
     estimated_value = models.ForeignKey(
         Translation,

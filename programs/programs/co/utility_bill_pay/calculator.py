@@ -1,21 +1,9 @@
 from programs.programs.calc import Eligibility, ProgramCalculator
-import programs.programs.messages as messages
 
 
 class UtilityBillPay(ProgramCalculator):
-    income_limits = (
-        36_983,
-        48_362,
-        59_742,
-        71_122,
-        82_501,
-        93_881,
-        96_014,
-        101_120,
-    )
-    presumptive_eligibility = ("snap", "ssi", "andcs", "tanf", "wic")
-    amount = 350
-    dependencies = ["household_size", "income_amount", "income_frequency"]
+    presumptive_eligibility = ("snap", "ssi", "andcs", "tanf", "wic", "co_medicaid", "emergency_medicaid", "chp")
+    amount = 400
 
     def household_eligible(self, e: Eligibility):
         # has other programs
@@ -23,12 +11,10 @@ class UtilityBillPay(ProgramCalculator):
         for benefit in UtilityBillPay.presumptive_eligibility:
             if self.screen.has_benefit(benefit):
                 presumptive_eligible = True
+            elif benefit in self.data and self.data[benefit].eligible:
+                presumptive_eligible = True
 
-        # income
-        income = int(self.screen.calc_gross_income("yearly", ["all"]))
-        income_limit = UtilityBillPay.income_limits[self.screen.household_size - 1]
-
-        e.condition(income < income_limit or presumptive_eligible, messages.income(income, income_limit))
+        e.condition(presumptive_eligible)
 
         # has rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
