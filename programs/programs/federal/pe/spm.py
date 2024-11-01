@@ -8,7 +8,6 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.SnapChildSupportDeductionDependency,
         dependency.spm.SnapGrossIncomeDependency,
         dependency.spm.SnapAssetsDependency,
-        dependency.spm.MeetsSnapCategoricalEligibilityDependency,
         dependency.spm.SnapEmergencyAllotmentDependency,
         dependency.spm.HousingCostDependency,
         dependency.spm.MeetsSnapGrossIncomeTestDependency,
