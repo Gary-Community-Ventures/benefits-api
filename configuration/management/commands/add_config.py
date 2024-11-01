@@ -169,7 +169,10 @@ class Command(BaseCommand):
         },
         "sSI": {"_label": "incomeOptions.sSI", "_default_message": "Supplemental Security Income (SSI)"},
         "childSupport": {"_label": "incomeOptions.childSupport", "_default_message": "Child Support (Received)"},
-        "pension": {"_label": "incomeOptions.pension", "_default_message": "Military, Government, or Private Pension"},
+        "pension": {
+            "_label": "incomeOptions.pension",
+            "_default_message": "Military, Government, or Private Pension (including PERA)",
+        },
         "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
