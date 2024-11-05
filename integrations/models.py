@@ -1,3 +1,4 @@
+from screener.models import WhiteLabel
 from django.db import models
 import hashlib
 import requests
@@ -14,6 +15,7 @@ class LinkManager(models.Manager):
 
 
 class Link(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="links", null=False, blank=False, on_delete=models.CASCADE)
     link = models.URLField(max_length=2_048, unique=True)
     in_use = models.BooleanField(default=False)
     validated = models.BooleanField(default=False)

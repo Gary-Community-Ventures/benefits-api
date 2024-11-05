@@ -1,5 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from screener.models import WhiteLabel
 from translations.model_data import ModelDataController
 from translations.models import Translation
 from programs.programs import calculators
@@ -143,6 +144,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
 
 
 class ProgramCategory(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="program_categories", null=False, blank=False, on_delete=models.CASCADE)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=True, null=True)
     icon = models.CharField(max_length=120, blank=False, null=False)
@@ -184,6 +186,7 @@ class DocumentDataController(ModelDataController["Document"]):
 
 
 class Document(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="documents", null=False, blank=False, on_delete=models.CASCADE)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     text = models.ForeignKey(Translation, related_name="documents", blank=False, null=False, on_delete=models.PROTECT)
 
@@ -331,6 +334,7 @@ class ProgramDataController(ModelDataController["Program"]):
 # results. Each program has a specific folder in /programs where the specific
 # logic for eligibility and value is stored.
 class Program(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="programs", null=False, blank=False, on_delete=models.CASCADE)
     name_abbreviated = models.CharField(max_length=120)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     legal_status_required = models.ManyToManyField(LegalStatus, related_name="programs", blank=True)
@@ -434,6 +438,7 @@ class UrgentNeedFunction(models.Model):
 
 
 class UrgentNeedCategory(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="urgent_need_categories", null=False, blank=False, on_delete=models.CASCADE)
     name = models.CharField(max_length=120)
 
     class Meta:
@@ -545,6 +550,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
 
 
 class UrgentNeed(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="urgent_needs", null=False, blank=False, on_delete=models.CASCADE)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
     type_short = models.ManyToManyField(UrgentNeedCategory, related_name="urgent_needs")
@@ -580,6 +586,7 @@ class UrgentNeed(models.Model):
 
 
 class County(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="counties", null=False, blank=False, on_delete=models.CASCADE)
     name = models.CharField(max_length=64)
 
     def __str__(self) -> str:
@@ -696,6 +703,7 @@ class NavigatorDataController(ModelDataController["Navigator"]):
 
 
 class Navigator(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="navigators", null=False, blank=False, on_delete=models.CASCADE)
     programs = models.ManyToManyField(Program, related_name="navigator", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
@@ -798,6 +806,7 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
 
 
 class WarningMessage(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="warning_messages", null=False, blank=False, on_delete=models.CASCADE)
     programs = models.ManyToManyField(Program, related_name="warning_messages", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
@@ -828,6 +837,7 @@ class WebHookFunction(models.Model):
 
 
 class Referrer(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="referrers", null=False, blank=False, on_delete=models.CASCADE)
     referrer_code = models.CharField(max_length=64, unique=True)
     webhook_url = models.CharField(max_length=320, blank=True, null=True)
     webhook_functions = models.ManyToManyField(WebHookFunction, related_name="web_hook", blank=True)
@@ -921,6 +931,7 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
 
 
 class TranslationOverride(models.Model):
+    white_label = models.ForeignKey(WhiteLabel, related_name="translation_overrides", null=False, blank=False, on_delete=models.CASCADE)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
     field = models.CharField(max_length=64, blank=False, null=False)
