@@ -5,10 +5,15 @@ from .models import (
     Message,
     Screen,
     IncomeStream,
+    WhiteLabel,
 )
 
 
-class screenAdmin(ModelAdmin):
+class WhiteLabelAdmin(ModelAdmin):
+    search_fields = ("name",)
+
+
+class ScreenAdmin(ModelAdmin):
     search_fields = ("id",)
 
 
@@ -20,6 +25,7 @@ class CustomIncomeStreamAdmin(ModelAdmin):
     pass
 
 
-admin.site.register(Screen, screenAdmin)
+admin.site.register(WhiteLabel, WhiteLabelAdmin)
+admin.site.register(Screen, ScreenAdmin)
 admin.site.register(Message, CustomMessageAdmin)
 admin.site.register(IncomeStream, CustomIncomeStreamAdmin)
