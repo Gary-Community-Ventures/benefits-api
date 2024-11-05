@@ -34,5 +34,5 @@ class DenverTrashRebate(ProgramCalculator):
         e.condition(income <= limit, messages.income(income, limit))
 
         # has rent or mortgage expense
-        has_rent_or_mortgage = self.screen.has_expense([DenverTrashRebate.expenses])
+        has_rent_or_mortgage = self.screen.has_expense(DenverTrashRebate.expenses)
         e.condition(has_rent_or_mortgage)
