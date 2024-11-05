@@ -16,7 +16,7 @@ class MessageUser:
     cell_auth_token = config("TWILIO_TOKEN")
     cell_from_phone_number = config("TWILIO_PHONE_NUMBER")
 
-    email_from = "myfriendben@codethedream.org"
+    email_from = settings.EMAIL_FROM
     email_api_key = config("SENDGRID")
 
     def __init__(self, screen: Screen, lang: str) -> None:
@@ -24,19 +24,17 @@ class MessageUser:
         self.lang = lang
 
     def should_send(self) -> bool:
-        print("should_send() running.")
-        # if settings.DEBUG:
-        #     return False
+        if settings.DEBUG:
+            return False
 
-        # if self.screen.is_test_data:
-        #     return False
+        if self.screen.is_test_data:
+            return False
 
         return True
 
     def email(self, email: str, send_tests=False):
-        print("email() running")
-        # if not self.should_send() and not send_tests:
-        #     return
+        if not self.should_send() and not send_tests:
+            return
 
         sg = self._email_client()
         from_email = Email(self.email_from)  # Change to your verified sender
@@ -46,7 +44,6 @@ class MessageUser:
         mail = Mail(from_email, to_email, subject, content)
 
         try:
-            print("attempting to send email.")
             sg.client.mail.send.post(request_body=mail.get())
         except Exception as e:
             print("e:", e)
@@ -66,7 +63,6 @@ class MessageUser:
         return words + f' <a href="{url}">{url}</a>'
 
     def text(self, cell: str, send_tests=False):
-        print("text() running.")
         if not self.should_send() and not send_tests:
             print("should not sent is true. returning")
             return
