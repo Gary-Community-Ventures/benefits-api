@@ -103,12 +103,14 @@ class ScreenSerializer(serializers.ModelSerializer):
     household_members = HouseholdMemberSerializer(many=True)
     expenses = ExpenseSerializer(many=True)
     user = UserOffersSerializer(read_only=True)
+    white_label = serializers.CharField(source="white_label.code", read_only=True)
 
     class Meta:
         model = Screen
         fields = (
             "id",
             "uuid",
+            "white_label",
             "completed",
             "is_test",
             "is_test_data",
@@ -190,6 +192,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "completed",
             "user",
             "is_test_data",
+            "white_label",
         )
         create_only_fields = (
             "external_id",
