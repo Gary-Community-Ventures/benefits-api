@@ -64,7 +64,6 @@ class MessageUser:
 
     def text(self, cell: str, send_tests=False):
         if not self.should_send() and not send_tests:
-            print("should not sent is true. returning")
             return
 
         self._cell_client().messages.create(
