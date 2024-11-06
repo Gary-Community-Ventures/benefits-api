@@ -163,12 +163,15 @@ class ProgramCategory(models.Model):
 
 class DocumentManager(models.Manager):
     translated_fields = ("text", "link_url", "link_text")
+    no_auto_fields = "link_url"
 
     def new_document(self, external_name):
 
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(f"document.{external_name}_temporary_key-{field}")
+            translations[field] = Translation.objects.add_translation(
+                f"document.{external_name}_temporary_key-{field}", no_auto=(field in self.no_auto_fields)
+            )
 
         document = self.create(external_name=external_name, **translations)
 
