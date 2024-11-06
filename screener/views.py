@@ -438,8 +438,6 @@ class GetProgramTranslation:
 
 
 def default_message(translation):
-    if translation == None:
-        return None
     translation.set_current_language(settings.LANGUAGE_CODE)
     d = {"default_message": translation.text, "label": translation.label}
     return d

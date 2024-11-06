@@ -162,15 +162,19 @@ class ProgramCategory(models.Model):
 
 
 class DocumentManager(models.Manager):
-    translated_fields = ("text",)
+    translated_fields = ("text", "link_url", "link_text")
 
     def new_document(self, external_name):
-        translation = Translation.objects.add_translation(f"document.{external_name}_temporary_key")
 
-        document = self.create(external_name=external_name, text=translation)
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(f"document.{external_name}_temporary_key-{field}")
 
-        translation.label = f"document.{external_name}_{document.id}"
-        translation.save()
+        document = self.create(external_name=external_name, **translations)
+
+        for [field, translation] in translations.items():
+            translation.label = f"document.{external_name}_{document.id}-{field}"
+            translation.save()
 
         return document
 
