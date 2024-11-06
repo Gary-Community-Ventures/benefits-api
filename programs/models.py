@@ -170,7 +170,9 @@ class DocumentManager(models.Manager):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
-                f"document.{external_name}_temporary_key-{field}", no_auto=(field in self.no_auto_fields)
+                f"document.{external_name}_temporary_key-{field}",
+                "",
+                no_auto=(field in self.no_auto_fields),
             )
 
         document = self.create(external_name=external_name, **translations)

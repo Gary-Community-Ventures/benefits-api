@@ -9,8 +9,7 @@ def add_document_links(apps, schema_editor):
 
     for document in Document.objects.all():
         translation_link_url = Translation.objects.add_translation(
-            f"document.{document.external_name or uuid.uuid4()}-{document.id}_link_url",
-            "",
+            f"document.{document.external_name or uuid.uuid4()}-{document.id}_link_url", "", no_auto=True
         )
         translation_link_text = Translation.objects.add_translation(
             f"document.{document.external_name or uuid.uuid4()}-{document.id}_link_text",
