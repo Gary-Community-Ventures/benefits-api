@@ -218,12 +218,13 @@ class ProgramManager(models.Manager):
         "estimated_value",
         "website_description",
     )
+    no_auto_fields = ("apply_button_link", "learn_more_link")
 
     def new_program(self, name_abbreviated):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
-                f"program.{name_abbreviated}_temporary_key-{field}"
+                f"program.{name_abbreviated}_temporary_key-{field}", no_auto=(field in self.no_auto_fields)
             )
 
         # try to set the external_name to the name_abbreviated
@@ -461,11 +462,14 @@ class UrgentNeedManager(models.Manager):
         "warning",
         "website_description",
     )
+    no_auto_fields = ("link",)
 
     def new_urgent_need(self, name, phone_number):
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(f"urgent_need.{name}_temporary_key-{field}")
+            translations[field] = Translation.objects.add_translation(
+                f"urgent_need.{name}_temporary_key-{field}", no_auto=(field in self.no_auto_fields)
+            )
 
         # try to set the external_name to the name
         external_name_exists = self.filter(external_name=name).count() > 0
@@ -606,11 +610,14 @@ class NavigatorManager(models.Manager):
         "assistance_link",
         "description",
     )
+    no_auto_fields = ("assistance_link",)
 
     def new_navigator(self, name, phone_number):
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(f"navigator.{name}_temporary_key-{field}")
+            translations[field] = Translation.objects.add_translation(
+                f"navigator.{name}_temporary_key-{field}", no_auto=(field in self.no_auto_fields)
+            )
 
         # try to set the external_name to the name
         external_name_exists = self.filter(external_name=name).count() > 0
@@ -850,7 +857,8 @@ class TranslationOverrideManager(models.Manager):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
-                f"translation_override.{calculator}_temporary_key-{field}"
+                f"translation_override.{calculator}_temporary_key-{field}",
+                no_auto=(program_field in ProgramManager.no_auto_fields),
             )
 
         if external_name is None:

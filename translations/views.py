@@ -185,10 +185,12 @@ def edit_translation(request, id=0, lang="en-us"):
             translation = Translation.objects.edit_translation_by_id(id, lang, text)
 
             if lang == settings.LANGUAGE_CODE:
-                translations = Translate().bulk_translate(["__all__"], [text])[text]
+                if not translation.no_auto:
+                    translations = Translate().bulk_translate(["__all__"], [text])[text]
 
-                for [language, translation] in translations.items():
-                    Translation.objects.edit_translation_by_id(id, language, translation, False)
+                for language in Translate.languages:
+                    translated_text = text if translation.no_auto else translations[language]
+                    Translation.objects.edit_translation_by_id(id, language, translated_text, False)
 
             parent = Translation.objects.get(pk=id)
             forms = {t.language_code: TranslationForm({"text": t.text}) for t in parent.translations.all()}

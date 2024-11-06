@@ -169,7 +169,10 @@ class Command(BaseCommand):
         },
         "sSI": {"_label": "incomeOptions.sSI", "_default_message": "Supplemental Security Income (SSI)"},
         "childSupport": {"_label": "incomeOptions.childSupport", "_default_message": "Child Support (Received)"},
-        "pension": {"_label": "incomeOptions.pension", "_default_message": "Military, Government, or Private Pension"},
+        "pension": {
+            "_label": "incomeOptions.pension",
+            "_default_message": "Military, Government, or Private Pension (including PERA)",
+        },
         "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
@@ -2747,10 +2750,7 @@ class Command(BaseCommand):
     }
 
     privacy_policy = {
-        "en-us": "https://co.myfriendben.org/en/data-privacy-policy",
-        "es": "https://co.myfriendben.org/es/data-privacy-policy",
-        "fr": "https://co.myfriendben.org/fr/data-privacy-policy",
-        "vi": "https://co.myfriendben.org/vi/data-privacy-policy",
+        "en-us": "https://co.myfriendben.org/privacy-policy/",
     }
 
     referrer_data = {
@@ -2828,7 +2828,7 @@ class Command(BaseCommand):
         "state": "CO",
         "zip_code": 80202,
         "email": "myfriendben@garycommunity.org",
-        "privacy_policy_link": "https://co.myfriendben.org/en/data-privacy-policy",
+        "privacy_policy_link": "https://co.myfriendben.org/privacy-policy/",
     }
 
     @transaction.atomic
