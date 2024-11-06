@@ -10,11 +10,11 @@ def add_document_links(apps, schema_editor):
     for document in Document.objects.all():
         translation_link_url = Translation.objects.add_translation(
             f"document.{document.external_name or uuid.uuid4()}-{document.id}_link_url",
-            "[PLACEHOLDER]",
+            "",
         )
         translation_link_text = Translation.objects.add_translation(
             f"document.{document.external_name or uuid.uuid4()}-{document.id}_link_text",
-            "[PLACEHOLDER]",
+            "",
         )
         Document.objects.filter(pk=document.id).update(
             link_url=translation_link_url.id, link_text=translation_link_text.id
