@@ -56,8 +56,6 @@ class HubSpotIntegration(CmsIntegration):
         self._update_contact(self.user.external_id, data)
 
     def should_add(self):
-        # TODO: REMOVE
-        return True
         if settings.DEBUG:
             return False
         if self.user is None or self.screen.is_test_data is None:
