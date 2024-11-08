@@ -241,18 +241,21 @@ class DocumentAdmin(ModelAdmin):
     get_str.short_description = "Document"
 
     def action_buttons(self, obj):
-        text = obj.text
 
         return format_html(
             """
             <div class="dropdown">
                 <span class="dropdown-btn material-symbols-outlined"> menu </span>
                 <div class="dropdown-content">
-                    <a href="{}">Document Text</a>
+                    <a href="{}">Text</a>
+                    <a href="{}">Link Url</a>
+                    <a href="{}">Link Text</a>
                 </div>
             </div>
             """,
-            reverse("translation_admin_url", args=[text.id]),
+            reverse("translation_admin_url", args=[obj.text.id]),
+            reverse("translation_admin_url", args=[obj.link_url.id]),
+            reverse("translation_admin_url", args=[obj.link_text.id]),
         )
 
     action_buttons.short_description = "Translate:"

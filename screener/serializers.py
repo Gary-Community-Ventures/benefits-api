@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta, date
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance
+from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance, WhiteLabel
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from translations.serializers import TranslationSerializer
@@ -103,12 +103,14 @@ class ScreenSerializer(serializers.ModelSerializer):
     household_members = HouseholdMemberSerializer(many=True)
     expenses = ExpenseSerializer(many=True)
     user = UserOffersSerializer(read_only=True)
+    white_label = serializers.CharField(source="white_label.code", read_only=True)
 
     class Meta:
         model = Screen
         fields = (
             "id",
             "uuid",
+            "white_label",
             "completed",
             "is_test",
             "is_test_data",
@@ -190,6 +192,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "completed",
             "user",
             "is_test_data",
+            "white_label",
         )
         create_only_fields = (
             "external_id",
@@ -200,7 +203,9 @@ class ScreenSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         household_members = validated_data.pop("household_members")
         expenses = validated_data.pop("expenses")
-        screen = Screen.objects.create(**validated_data, completed=False)
+        # set white label
+        white_label = WhiteLabel.objects.all().first()
+        screen = Screen.objects.create(**validated_data, completed=False, white_label=white_label)
         screen.set_screen_is_test()
         for member in household_members:
             incomes = member.pop("income_streams")

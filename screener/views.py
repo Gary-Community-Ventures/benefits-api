@@ -383,7 +383,7 @@ def eligibility_results(screen: Screen, batch=False):
                     "already_has": screen.has_benefit(program.name_abbreviated),
                     "new": new,
                     "low_confidence": program.low_confidence,
-                    "documents": [default_message(d.text) for d in program.documents.all()],
+                    "documents": [serialized_document(document) for document in program.documents.all()],
                     "warning_messages": [default_message(w.message) for w in warnings],
                 }
             )
@@ -455,6 +455,14 @@ def serialized_navigator(navigator):
         "assistance_link": default_message(navigator.assistance_link),
         "description": default_message(navigator.description),
         "languages": langs,
+    }
+
+
+def serialized_document(document):
+    return {
+        "text": default_message(document.text),
+        "link_url": default_message(document.link_url),
+        "link_text": default_message(document.link_text),
     }
 
 
