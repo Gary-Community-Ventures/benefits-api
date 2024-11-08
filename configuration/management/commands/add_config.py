@@ -121,6 +121,7 @@ class Command(BaseCommand):
         "frca": "Family Resource Center Association",
         "jeffcoHS": "Jeffco Human Services",
         "dhs": "Denver Human Services",
+        "achs": "Adams County Human Services",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
         "arapahoectypublichealth": "Arapahoe County Public Health",
@@ -2769,6 +2770,7 @@ class Command(BaseCommand):
             "dhs": "DHS_MFBLogo",
             "ccig": "CCIG_Logo",
             "eaglecounty": "EC_MFBLogo",
+            "achs": "ACHS_MFBLogo",
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
@@ -2806,6 +2808,10 @@ class Command(BaseCommand):
             "eaglecounty": {
                 "id": "referrerHook.logoAlts.eaglecounty",
                 "defaultMessage": "Eagle County and MyFriendBen home page button",
+            },
+            "achs": {
+                "id": "referrerHook.logoAlts.adamscountyhumanservices",
+                "defaultMessage": "Adams County and MyFriendBen home page button",
             },
         },
         "logoFooterSource": {"default": "MFB_Logo"},

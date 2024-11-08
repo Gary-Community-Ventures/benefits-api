@@ -9,12 +9,23 @@ from programs.util import Dependencies
 from django.conf import settings
 
 
+class WhiteLabel(models.Model):
+    name = models.CharField(max_length=120, blank=False, null=False)
+    code = models.CharField(max_length=32, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
 # The screen is the top most container for all information collected in the
 # app and is synonymous with a household model. In addition to general
 # application fields like submission_date, it also contains non-individual
 # household fields. Screen -> HouseholdMember -> IncomeStream & Expense & Insurance
 class Screen(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="screens", null=False, blank=False, on_delete=models.CASCADE
+    )
     completed = models.BooleanField(null=False, blank=False)
     submission_date = models.DateTimeField(blank=True, null=True)
     start_date = models.DateTimeField(blank=True, null=True)

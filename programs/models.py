@@ -1,5 +1,6 @@
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
+from screener.models import WhiteLabel
 from translations.model_data import ModelDataController
 from translations.models import Translation
 from programs.programs import calculators
@@ -107,7 +108,9 @@ class ProgramCategoryManager(models.Manager):
                 f"program_category.{external_name}_temporary_key-{field}"
             )
 
-        program_category = self.create(external_name=external_name, icon=icon, **translations)
+        # set white label
+        white_label = WhiteLabel.objects.all().first()
+        program_category = self.create(external_name=external_name, icon=icon, white_label=white_label, **translations)
 
         for [field, translation] in translations.items():
             translation.label = f"program_category.{external_name}_{program_category.id}-{field}"
@@ -143,6 +146,9 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
 
 
 class ProgramCategory(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="program_categories", null=False, blank=False, on_delete=models.CASCADE
+    )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=True, null=True)
     icon = models.CharField(max_length=120, blank=False, null=False)
@@ -166,7 +172,6 @@ class DocumentManager(models.Manager):
     no_auto_fields = ("link_url",)
 
     def new_document(self, external_name):
-
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
@@ -175,7 +180,9 @@ class DocumentManager(models.Manager):
                 no_auto=(field in self.no_auto_fields),
             )
 
-        document = self.create(external_name=external_name, **translations)
+        # set white label
+        white_label = WhiteLabel.objects.all().first()
+        document = self.create(external_name=external_name, white_label=white_label, **translation)
 
         for [field, translation] in translations.items():
             translation.label = f"document.{external_name}_{document.id}-{field}"
@@ -193,6 +200,9 @@ class DocumentDataController(ModelDataController["Document"]):
 
 
 class Document(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="documents", null=False, blank=False, on_delete=models.CASCADE
+    )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     text = models.ForeignKey(Translation, related_name="documents", blank=False, null=False, on_delete=models.PROTECT)
     link_url = models.ForeignKey(
@@ -235,12 +245,15 @@ class ProgramManager(models.Manager):
         # try to set the external_name to the name_abbreviated
         external_name_exists = self.filter(external_name=name_abbreviated).count() > 0
 
+        # set white label
+        white_label = WhiteLabel.objects.all().first()
         program = self.create(
             name_abbreviated=name_abbreviated,
             external_name=name_abbreviated if not external_name_exists else None,
             fpl=None,
             active=False,
             low_confidence=False,
+            white_label=white_label,
             **translations,
         )
 
@@ -346,6 +359,9 @@ class ProgramDataController(ModelDataController["Program"]):
 # results. Each program has a specific folder in /programs where the specific
 # logic for eligibility and value is stored.
 class Program(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="programs", null=False, blank=False, on_delete=models.CASCADE
+    )
     name_abbreviated = models.CharField(max_length=120)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     legal_status_required = models.ManyToManyField(LegalStatus, related_name="programs", blank=True)
@@ -449,6 +465,9 @@ class UrgentNeedFunction(models.Model):
 
 
 class UrgentNeedCategory(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="urgent_need_categories", null=False, blank=False, on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=120)
 
     class Meta:
@@ -479,11 +498,14 @@ class UrgentNeedManager(models.Manager):
         # try to set the external_name to the name
         external_name_exists = self.filter(external_name=name).count() > 0
 
+        # set white label
+        white_label = WhiteLabel.objects.all().first()
         urgent_need = self.create(
             phone_number=phone_number,
             external_name=name if not external_name_exists else None,
             active=False,
             low_confidence=False,
+            white_label=white_label,
             **translations,
         )
 
@@ -560,6 +582,9 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
 
 
 class UrgentNeed(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="urgent_needs", null=False, blank=False, on_delete=models.CASCADE
+    )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
     type_short = models.ManyToManyField(UrgentNeedCategory, related_name="urgent_needs")
@@ -595,6 +620,9 @@ class UrgentNeed(models.Model):
 
 
 class County(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="counties", null=False, blank=False, on_delete=models.CASCADE
+    )
     name = models.CharField(max_length=64)
 
     def __str__(self) -> str:
@@ -627,9 +655,12 @@ class NavigatorManager(models.Manager):
         # try to set the external_name to the name
         external_name_exists = self.filter(external_name=name).count() > 0
 
+        # set white label
+        white_label = WhiteLabel.objects.all().first()
         navigator = self.create(
             phone_number=phone_number,
             external_name=name if not external_name_exists else None,
+            white_label=white_label,
             **translations,
         )
 
@@ -711,6 +742,9 @@ class NavigatorDataController(ModelDataController["Navigator"]):
 
 
 class Navigator(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="navigators", null=False, blank=False, on_delete=models.CASCADE
+    )
     programs = models.ManyToManyField(Program, related_name="navigator", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
@@ -752,9 +786,12 @@ class WarningMessageManager(models.Manager):
         # try to set the external_name to the name
         external_name_exists = self.filter(external_name=external_name).count() > 0
 
+        # set white label
+        white_label = WhiteLabel.objects.all().first()
         warning = self.create(
             external_name=external_name if not external_name_exists else None,
             calculator=calculator,
+            white_label=white_label,
             **translations,
         )
 
@@ -813,6 +850,9 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
 
 
 class WarningMessage(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="warning_messages", null=False, blank=False, on_delete=models.CASCADE
+    )
     programs = models.ManyToManyField(Program, related_name="warning_messages", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
@@ -843,6 +883,9 @@ class WebHookFunction(models.Model):
 
 
 class Referrer(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="referrers", null=False, blank=False, on_delete=models.CASCADE
+    )
     referrer_code = models.CharField(max_length=64, unique=True)
     webhook_url = models.CharField(max_length=320, blank=True, null=True)
     webhook_functions = models.ManyToManyField(WebHookFunction, related_name="web_hook", blank=True)
@@ -872,10 +915,13 @@ class TranslationOverrideManager(models.Manager):
         # try to set the external_name to the name
         external_name_exists = self.filter(external_name=external_name).count() > 0
 
+        # set white label
+        white_label = WhiteLabel.objects.all().first()
         translation_override = self.create(
             external_name=external_name if not external_name_exists else None,
             calculator=calculator,
             field=program_field,
+            white_label=white_label,
             **translations,
         )
 
@@ -936,6 +982,9 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
 
 
 class TranslationOverride(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="translation_overrides", null=False, blank=False, on_delete=models.CASCADE
+    )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
     field = models.CharField(max_length=64, blank=False, null=False)
