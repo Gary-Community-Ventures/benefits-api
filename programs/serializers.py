@@ -34,6 +34,7 @@ class ProgramCategorySerializer(serializers.ModelSerializer):
     name = ModelTranslationSerializer()
 
     class Meta:
+        ref_name = "Program Category List"
         model = ProgramCategory
         fields = ("id", "name", "icon", "programs")
 
