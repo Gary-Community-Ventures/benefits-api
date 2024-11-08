@@ -121,7 +121,6 @@ class Command(BaseCommand):
         "frca": "Family Resource Center Association",
         "jeffcoHS": "Jeffco Human Services",
         "dhs": "Denver Human Services",
-        "achs": "Adams County Human Services",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
         "arapahoectypublichealth": "Arapahoe County Public Health",
