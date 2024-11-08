@@ -163,7 +163,7 @@ class ProgramCategory(models.Model):
 
 class DocumentManager(models.Manager):
     translated_fields = ("text", "link_url", "link_text")
-    no_auto_fields = "link_url"
+    no_auto_fields = ("link_url",)
 
     def new_document(self, external_name):
 
