@@ -89,6 +89,14 @@ class WicCategory(Member):
     field = "wic_category"
 
 
+class MedicaidCategory(Member):
+    field = "medicaid_category"
+
+
+class MedicaidSeniorOrDisabled(Member):
+    field = "is_optional_senior_or_disabled_for_medicaid"
+
+
 class Wic(Member):
     field = "wic"
 
