@@ -8,7 +8,6 @@
       <tr>
         <th>ID</th>
         <th>External Name</th>
-        <th>Text Label</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -17,7 +16,6 @@
       <tr>
         <td>{{ document.id }}</td>
         <td>{{ document.external_name }}</td>
-        <td>{{ document.text }}</td>
         <td>
           <div class="dropdown">
             <div class="dropdown-trigger">
@@ -39,7 +37,17 @@
                 <a
                   href="/api/translations/admin/{{ document.text.id }}"
                   class="dropdown-item"
-                  >Edit</a
+                  >Text</a
+                >
+                <a
+                  href="/api/translations/admin/{{ document.link_url.id }}"
+                  class="dropdown-item"
+                  >Link Url</a
+                >
+                <a
+                  href="/api/translations/admin/{{ document.link_text.id }}"
+                  class="dropdown-item"
+                  >Link Text</a
                 >
                 <hr class="dropdown-divider" />
                 <a
