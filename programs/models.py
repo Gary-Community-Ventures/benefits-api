@@ -202,6 +202,7 @@ class ProgramManager(models.Manager):
         "description",
         "learn_more_link",
         "apply_button_link",
+        "apply_button_description",
         "value_type",
         "estimated_delivery_time",
         "estimated_application_time",
@@ -356,6 +357,9 @@ class Program(models.Model):
     )
     apply_button_link = models.ForeignKey(
         Translation, related_name="program_apply_button_link", null=False, on_delete=models.PROTECT
+    )
+    apply_button_description = models.ForeignKey(
+        Translation, related_name="program_apply_button_description", blank=False, null=False, on_delete=models.PROTECT
     )
     value_type = models.ForeignKey(
         Translation, related_name="program_value_type", blank=False, null=False, on_delete=models.PROTECT
