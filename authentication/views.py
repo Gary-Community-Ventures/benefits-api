@@ -1,15 +1,10 @@
-from django.conf import settings
 from authentication.models import User
 from integrations.services.cms_integration import get_cms_integration
 from integrations.services.communications import MessageUser
-from integrations.services.brevo import BrevoService
 from screener.models import Screen
 from rest_framework import viewsets, permissions, mixins
 from rest_framework.response import Response
 from authentication.serializers import UserSerializer, UserOffersSerializer
-from sentry_sdk import capture_exception
-from integrations.services.hubspot.integration import update_send_offers_hubspot, upsert_user_hubspot
-import uuid
 
 
 class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -24,56 +19,40 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     def update(self, request, pk=None):
         if pk is None:
             return Response("Must have an associated screen", status=400)
-        screen = Screen.objects.get(uuid=pk)
+
+        screen: Screen = Screen.objects.get(uuid=pk)
         user = screen.user
         serializer = UserOffersSerializer(user, data=request.data) if user else UserSerializer(data=request.data)
 
         if serializer.is_valid():
             screen.user = serializer.save()
             screen.save()
+            user: User = screen.user
 
-            Integration = get_cms_integration()
-            integration = Integration(user, screen)
-            message = MessageUser(screen, screen.get_language_code())
+            try:
+                Integration = get_cms_integration()
+                integration = Integration(user, screen)
+                message = MessageUser(screen, screen.get_language_code())
 
-            if screen.user.email is not None:
-                message.email(screen.user.email)
-            if screen.user.cell is not None:
-                message.text(str(screen.user.cell))
+                if screen.user.email is not None:
+                    message.email(screen.user.email)
+                if screen.user.cell is not None:
+                    message.text(str(screen.user.cell))
 
-            Integration = get_cms_integration()
-            integration = Integration(user, screen)
+                Integration = get_cms_integration()
+                integration = Integration(user, screen)
 
-            if not integration.should_add():
-                return Response(status=204)
+                if not integration.should_add():
+                    return Response(status=204)
 
-            if user and user.external_id:
-                integration.update()
-            else:
-                integration.add()
+                if user and user.external_id:
+                    integration.update()
+                else:
+                    external_id = integration.add()
+                    user.anonomize(external_id)
+            except Exception as e:
+                user.delete()
+                raise e
 
             return Response(status=204)
         return Response(serializer.errors, status=400)
-
-
-def upsert_user_to_hubspot(screen, user):
-    if settings.DEBUG:
-        return
-    if user is None or screen.is_test_data is None:
-        return
-    should_upsert_user = (user.send_offers or user.send_updates) and user.external_id is None and user.tcpa_consent
-    if not should_upsert_user or screen.is_test_data:
-        return
-
-    hubspot_id = upsert_user_hubspot(user, screen=screen)
-    if hubspot_id:
-        random_id = str(uuid.uuid4()).replace("-", "")
-        user.external_id = hubspot_id
-        user.email_or_cell = f"{hubspot_id}+{random_id}@myfriendben.org"
-        user.first_name = None
-        user.last_name = None
-        user.cell = None
-        user.email = None
-        user.save()
-    else:
-        raise Exception("Failed to upsert user")

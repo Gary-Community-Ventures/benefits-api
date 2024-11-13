@@ -16,7 +16,7 @@ class MessageUser:
     cell_auth_token = config("TWILIO_TOKEN")
     cell_from_phone_number = config("TWILIO_PHONE_NUMBER")
 
-    email_from = settings.EMAIL_FROM
+    email_from = config("EMAIL_FROM")
     email_api_key = config("SENDGRID")
 
     def __init__(self, screen: Screen, lang: str) -> None:

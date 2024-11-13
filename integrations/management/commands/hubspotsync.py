@@ -1,10 +1,9 @@
 from django.core.management.base import BaseCommand
 from authentication.models import User
+from integrations.services.cms_integration import HubSpotIntegration
 from screener.models import Screen
 from django.db.models import Q
-from integrations.services.hubspot.integration import upsert_user_hubspot
 import time
-import uuid
 
 
 class Command(BaseCommand):
@@ -54,25 +53,16 @@ class Command(BaseCommand):
                     screen = user_screens.first()
                 else:
                     continue
-                hubspot_id = upsert_user_hubspot(user, screen)
-                if hubspot_id:
-                    self.replace_pii_with_hubspot_id(hubspot_id, user)
+
+                try:
+                    hubspot = HubSpotIntegration(user, screen)
+                    hubspot_id = hubspot.add()
+                    user.anonomize(hubspot_id)
                     status["completed"].append((user.id, hubspot_id))
-                else:
+                except Exception:
                     status["failed"].append((user.id, hubspot_id))
+
             # Delay to prevent hitting rate limit of 100 req per 10 seconds
             time.sleep(0.2)
             processed += 1
         return status
-
-    # stores an external id from hubspot and then clears all of the PII
-    def replace_pii_with_hubspot_id(self, hubspot_id, user):
-        random_id = str(uuid.uuid4()).replace("-", "")
-        user.external_id = hubspot_id
-        user.email_or_cell = f"{hubspot_id}+{random_id}@myfriendben.org"
-        user.first_name = None
-        user.last_name = None
-        user.cell = None
-        user.email = None
-        user.save()
-        return user

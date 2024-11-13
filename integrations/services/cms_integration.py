@@ -1,23 +1,24 @@
+import re
 from django.conf import settings
-from integrations.services.brevo import BrevoService
+from hubspot import HubSpot
+from decouple import config
+from hubspot.crm.contacts import BatchInputSimplePublicObjectBatchInput, SimplePublicObjectInput
 import sib_api_v3_sdk
-from sib_api_v3_sdk.rest import ApiException
+from hubspot.crm.contacts.exceptions import ApiException as HubSpotApiException
 from django.conf import settings
-from django.utils import timezone
-from screener.models import Message, Screen
-from translations.models import Translation
-import uuid
 import json
-from pprint import pprint
 from sentry_sdk import capture_message
+
+from authentication.models import User
+from screener.models import Screen
 
 
 class CmsIntegration:
-    def __init__(self, user, screen):
+    def __init__(self, user: User, screen: Screen):
         self.user = user
         self.screen = screen
 
-    def add(self):
+    def add(self) -> str:
         raise NotImplementedError("")
 
     def update(self):
@@ -30,13 +31,123 @@ class CmsIntegration:
 
 
 class HubSpotIntegration(CmsIntegration):
-    def add(self):
-        # Implement the logic for adding a user to HubSpot
-        pass
+    MAX_HOUSEHOLD_SIZE = 8
+    api_client = HubSpot(access_token=config("HUBSPOT"))
+
+    def add(self) -> str:
+        data = self._hubspot_contact_data()
+
+        try:
+            api_response = self._create_contact(data)
+            contact_id = api_response.id
+        except HubSpotApiException as e:
+            http_body = json.loads(e.body)
+            if http_body["category"] == "CONFLICT":
+                contact_id = self._get_conflict_contact_id(e)
+                self._update_contact(contact_id, data)
+            else:
+                raise e
+
+        return contact_id
 
     def update(self):
-        # Implement the logic for updating a user in HubSpot
-        pass
+        data = self._hubspot_send_offers_data()
+
+        self._update_contact(self.user.external_id, data)
+
+    def should_add(self):
+        if settings.DEBUG:
+            return False
+        if self.user is None or self.screen.is_test_data is None:
+            return False
+        should_upsert_user = (
+            (self.user.send_offers or self.user.send_updates)
+            and self.user.external_id is None
+            and self.user.tcpa_consent
+        )
+        if not should_upsert_user or self.screen.is_test_data:
+            return False
+        return True
+
+    def _hubspot_contact_data(self):
+        contact = {
+            "email": self.user.email,
+            "firstname": self.user.first_name,
+            "lastname": self.user.last_name,
+            "phone": str(self.user.cell),
+            "benefits_screener_id": self.user.id,
+            "ab01___send_offers": self.user.send_offers,
+            "ab01___send_updates": self.user.send_updates,
+            "ab01___tcpa_consent_to_contact": self.user.tcpa_consent,
+            "hs_language": self.user.language_code,
+            "ab01___1st_mfb_completion_date": self.user.date_joined.date().isoformat(),
+            "full_name": f"{self.user.first_name} {self.user.last_name}",
+        }
+
+        if self.screen:
+            contact["ab01___screener_id"] = self.screen.id
+            contact["ab01___uuid"] = str(self.screen.uuid)
+            contact["ab01___county"] = self.screen.county
+            contact["ab01___number_of_household_members"] = self.screen.household_size
+            contact["ab01___mfb_annual_income"] = int(self.screen.calc_gross_income("yearly", ["all"]))
+
+            members = self.screen.household_members.all()
+            if len(members) > self.MAX_HOUSEHOLD_SIZE:
+                capture_message(f"screen has more than {self.MAX_HOUSEHOLD_SIZE} household members", level="error")
+
+            for i, member in enumerate(members):
+                if i >= self.MAX_HOUSEHOLD_SIZE:
+                    break
+
+                contact[f"ab01___hhm{i + 1}_age"] = member.age
+
+        return contact
+
+    def _hubspot_send_offers_data(self):
+        return {
+            "ab01___send_offers": self.user.send_offers,
+            "ab01___send_updates": self.user.send_updates,
+        }
+
+    def _get_conflict_contact_id(self, e):
+        http_body = json.loads(e.body)
+        # strip everything out of the error message except the contact id
+        # https://community.hubspot.com/t5/APIs-Integrations/Contacts-v3-contact-exists-error/m-p/364629
+        contact_id = re.sub("[^0-9]", "", http_body["message"])
+        return contact_id
+
+    def _create_contact(self, data):
+        simple_public_object_input = SimplePublicObjectInput(properties=data)
+        api_response = self.api_client.crm.contacts.basic_api.create(
+            simple_public_object_input_for_create=simple_public_object_input
+        )
+        return api_response
+
+    def _update_contact(self, contact_id, data):
+        simple_public_object_input = SimplePublicObjectInput(properties=data)
+        api_response = self.api_client.crm.contacts.basic_api.update(
+            contact_id, simple_public_object_input=simple_public_object_input
+        )
+        return api_response
+
+    @classmethod
+    def format_email_new_benefit(cls, external_id: str, num_benefits: int, value_benefits: int):
+        contact = {
+            "id": external_id,
+            "properties": {
+                "ab01___number_of_new_benefits": num_benefits,
+                "ab01___new_benefit_total_value": value_benefits,
+            },
+        }
+
+        return contact
+
+    @classmethod
+    def bulk_update(cls, data):
+        batch_input_simple_public_object_batch_input = BatchInputSimplePublicObjectBatchInput(data)
+        cls.api_client.crm.contacts.batch_api.update(
+            batch_input_simple_public_object_batch_input=batch_input_simple_public_object_batch_input
+        )
 
 
 class BrevoIntegration(CmsIntegration):
@@ -51,7 +162,7 @@ class BrevoIntegration(CmsIntegration):
         self.email_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
         self.front_end_domain = settings.FRONTEND_DOMAIN
 
-    def add(self):
+    def add(self) -> str:
         contact = {
             "first_name": self.user.first_name,
             "last_name": self.user.last_name,
@@ -83,36 +194,17 @@ class BrevoIntegration(CmsIntegration):
                 contact[f"hhm{i + 1}_age"] = member.age
 
         create_contact = sib_api_v3_sdk.CreateContact(email=self.user.email, attributes=contact, list_ids=[6])
-        try:
-            brevo_id = self.api_instance.create_contact(create_contact)
-            pprint(brevo_id)
-
-            if brevo_id:
-                random_id = str(uuid.uuid4()).replace("-", "")
-                self.user.external_id = brevo_id
-                self.user.email_or_cell = f"{brevo_id}+{random_id}@myfriendben.org"
-                self.user.first_name = None
-                self.user.last_name = None
-                self.user.cell = None
-                self.user.email = None
-                self.user.save()
-                print("saved user")
-        except ApiException as e:
-            print("Exception when calling ContactsApi->create_contact: %s\n" % e)
+        return self.api_instance.create_contact(create_contact)
 
     def update(self):
         ext_id_dict = json.loads(self.user.external_id.replace("'", '"'))
         data = {"send_offers": self.user.send_offers, "send_updates": self.user.send_updates}
         id_value = ext_id_dict["id"]
-        try:
-            update_attributes = sib_api_v3_sdk.UpdateContact(attributes=data)
-            self.api_instance.update_contact(id_value, update_attributes)
-        except ApiException as e:
-            print(f"Exception when calling ContactsApi->update_contact: {e}")
+        update_attributes = sib_api_v3_sdk.UpdateContact(attributes=data)
+        self.api_instance.update_contact(id_value, update_attributes)
 
     def should_add(self):
         if settings.DEBUG:
-            print("DEBUG set to True")
             return False
         if self.user is None or self.screen.is_test_data is None:
             return False
