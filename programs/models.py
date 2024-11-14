@@ -243,7 +243,7 @@ class ProgramManager(models.Manager):
             translations[field] = Translation.objects.add_translation(
                 f"program.{name_abbreviated}_temporary_key-{field}",
                 default_message=default_message,
-                no_auto=(field in self.no_auto_fields)
+                no_auto=(field in self.no_auto_fields),
             )
 
         # try to set the external_name to the name_abbreviated
