@@ -1,3 +1,4 @@
+from programs.programs.helpers import snap_ineligible_student
 from .base import Member
 
 
@@ -14,6 +15,13 @@ class PregnancyDependency(Member):
 
     def value(self):
         return self.member.pregnant or False
+
+
+class ExpectedChildrenPregnancyDependency(Member):
+    field = "current_pregnancies"
+
+    def value(self):
+        return 1 if self.member.pregnant else 0
 
 
 class FullTimeCollegeStudentDependency(Member):
@@ -81,6 +89,14 @@ class WicCategory(Member):
     field = "wic_category"
 
 
+class MedicaidCategory(Member):
+    field = "medicaid_category"
+
+
+class MedicaidSeniorOrDisabled(Member):
+    field = "is_optional_senior_or_disabled_for_medicaid"
+
+
 class Wic(Member):
     field = "wic"
 
@@ -98,6 +114,34 @@ class IsDisabledDependency(Member):
 
     def value(self):
         return self.member.disabled or self.member.long_term_disability
+
+
+# The Member class runs once per each household member, to ensure that the medical expenses
+# are only counted once and only if a member is elderly or disabled; the medical expense is divided
+# by the total number of elderly or disabled members.
+class MedicalExpenseDependency(Member):
+    field = "medical_out_of_pocket_expenses"
+
+    def value(self):
+        elderly_or_disabled_members = [
+            member for member in self.screen.household_members.all() if member.age >= 60 or member.has_disability()
+        ]
+        count_of_elderly_or_disabled_members = len(elderly_or_disabled_members)
+
+        if self.member.age >= 60 or self.member.has_disability():
+            return self.screen.calc_expenses("yearly", ["medical"]) / count_of_elderly_or_disabled_members
+
+        return 0
+
+
+class PropertyTaxExpenseDependency(Member):
+    field = "real_estate_taxes"
+
+    def value(self):
+        if self.member.age >= 18:
+            return self.screen.calc_expenses("yearly", ["propertyTax"]) / self.screen.num_adults(18)
+
+        return 0
 
 
 class IsBlindDependency(Member):
@@ -187,6 +231,20 @@ class PellGrantMonthsInSchoolDependency(Member):
 
 class ChpEligible(Member):
     field = "co_chp_eligible"
+
+
+class CommoditySupplementalFoodProgram(Member):
+    field = "commodity_supplemental_food_program"
+
+
+class SnapIneligibleStudentDependency(Member):
+    field = "is_snap_ineligible_student"
+
+    dependencies = ("age",)
+
+    # PE does not take the age of the children into acount, so we calculate this ourselves
+    def value(self):
+        return snap_ineligible_student(self.screen, self.member)
 
 
 class IncomeDependency(Member):

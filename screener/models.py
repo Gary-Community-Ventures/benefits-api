@@ -1,3 +1,5 @@
+from datetime import datetime
+from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
@@ -7,12 +9,23 @@ from programs.util import Dependencies
 from django.conf import settings
 
 
+class WhiteLabel(models.Model):
+    name = models.CharField(max_length=120, blank=False, null=False)
+    code = models.CharField(max_length=32, blank=False, null=False)
+
+    def __str__(self):
+        return self.name
+
+
 # The screen is the top most container for all information collected in the
 # app and is synonymous with a household model. In addition to general
 # application fields like submission_date, it also contains non-individual
 # household fields. Screen -> HouseholdMember -> IncomeStream & Expense & Insurance
 class Screen(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
+    white_label = models.ForeignKey(
+        WhiteLabel, related_name="screens", null=False, blank=False, on_delete=models.CASCADE
+    )
     completed = models.BooleanField(null=False, blank=False)
     submission_date = models.DateTimeField(blank=True, null=True)
     start_date = models.DateTimeField(blank=True, null=True)
@@ -268,6 +281,8 @@ class Screen(models.Model):
             "wic": self.has_wic,
             "nc_wic": self.has_wic,
             "snap": self.has_snap,
+            "co_snap": self.has_snap,
+            "nc_snap": self.has_snap,
             "lifeline": self.has_lifeline,
             "acp": self.has_acp,
             "eitc": self.has_eitc,
@@ -378,7 +393,8 @@ class Message(models.Model):
 class HouseholdMember(models.Model):
     screen = models.ForeignKey(Screen, related_name="household_members", on_delete=models.CASCADE)
     relationship = models.CharField(max_length=30, blank=True, null=True)
-    age = models.IntegerField(blank=True, null=True)
+    age = models.PositiveIntegerField(blank=True, null=True)
+    birth_year_month = models.DateField(blank=True, null=True)
     student = models.BooleanField(blank=True, null=True)
     student_full_time = models.BooleanField(blank=True, null=True)
     pregnant = models.BooleanField(blank=True, null=True)
@@ -444,10 +460,10 @@ class HouseholdMember(models.Model):
     def has_disability(self):
         return self.disabled or self.visually_impaired or self.long_term_disability
 
-    def is_head(self):
+    def is_head(self) -> bool:
         return self.relationship == "headOfHousehold"
 
-    def is_spouse(self):
+    def is_spouse(self) -> bool:
         return self.screen.relationship_map()[self.screen.get_head().id] == self.id
 
     def is_dependent(self):
@@ -463,6 +479,35 @@ class HouseholdMember(models.Model):
 
     def is_in_tax_unit(self):
         return self.is_head() or self.is_spouse() or self.is_dependent()
+
+    @property
+    def birth_year(self) -> Optional[int]:
+        if self.birth_year_month is None:
+            return None
+
+        return self.birth_year_month.year
+
+    @property
+    def birth_month(self) -> Optional[int]:
+        if self.birth_year_month is None:
+            return None
+
+        return self.birth_year_month.month
+
+    def calc_age(self) -> int:
+        if self.birth_year_month is None:
+            return self.age
+
+        return self.age_from_date(self.birth_year_month)
+
+    @staticmethod
+    def age_from_date(birth_year_month: datetime) -> int:
+        today = datetime.now()
+
+        if today.month >= birth_year_month.month:
+            return today.year - birth_year_month.year
+
+        return today.year - birth_year_month.year - 1
 
     def missing_fields(self):
         member_fields = (

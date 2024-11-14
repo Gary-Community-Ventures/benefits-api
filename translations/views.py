@@ -1,4 +1,3 @@
-import re
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.conf import settings
@@ -8,9 +7,16 @@ from rest_framework import views
 from django import forms
 from django.http import HttpResponse
 from django.db.models import ProtectedError
-from programs.models import Program, Navigator, UrgentNeed, Document, WarningMessage
+from programs.models import (
+    Program,
+    Navigator,
+    ProgramCategory,
+    UrgentNeed,
+    Document,
+    WarningMessage,
+    TranslationOverride,
+)
 from phonenumber_field.formfields import PhoneNumberField
-from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from integrations.services.google_translate.integration import Translate
@@ -179,10 +185,12 @@ def edit_translation(request, id=0, lang="en-us"):
             translation = Translation.objects.edit_translation_by_id(id, lang, text)
 
             if lang == settings.LANGUAGE_CODE:
-                translations = Translate().bulk_translate(["__all__"], [text])[text]
+                if not translation.no_auto:
+                    translations = Translate().bulk_translate(["__all__"], [text])[text]
 
-                for [language, translation] in translations.items():
-                    Translation.objects.edit_translation_by_id(id, language, translation, False)
+                for language in Translate.languages:
+                    translated_text = text if translation.no_auto else translations[language]
+                    Translation.objects.edit_translation_by_id(id, language, translated_text, False)
 
             parent = Translation.objects.get(pk=id)
             forms = {t.language_code: TranslationForm({"text": t.text}) for t in parent.translations.all()}
@@ -534,3 +542,132 @@ def warning_messages_filter_view(request):
         context = {"page_obj": page_obj}
 
         return render(request, "warning_messages/list.html", context)
+
+
+class NewTranslationOverrideForm(forms.Form):
+    external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    calculator_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    field_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def translation_overrides_view(request):
+    if request.method == "GET":
+        translation_overrides = TranslationOverride.objects.all().order_by("external_name")
+
+        paginator = Paginator(translation_overrides, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+        return render(request, "translation_overrides/main.html", context)
+    if request.method == "POST":
+        form = NewTranslationOverrideForm(request.POST)
+        if form.is_valid():
+            translation_override = TranslationOverride.objects.new_translation_override(
+                form["calculator_name"].value(), form["field_name"].value(), form["external_name"].value()
+            )
+            response = HttpResponse()
+            response.headers["HX-Redirect"] = f"/api/translations/admin/translation_overrides/{translation_override.id}"
+            return response
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def create_translation_override_view(request):
+    if request.method == "GET":
+        context = {"form": NewTranslationOverrideForm(), "route": "/api/translations/admin/translation_overrides"}
+
+        return render(request, "util/create_form.html", context)
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def translation_override_view(request, id=0):
+    if request.method == "GET":
+        translation_override = TranslationOverride.objects.get(pk=id)
+        context = {"translation_override": translation_override}
+
+        return render(request, "translation_overrides/translation_override.html", context)
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def translation_override_filter_view(request):
+    if request.method == "GET":
+        query = request.GET.get("name", "")
+        translation_overrides = TranslationOverride.objects.filter(external_name__contains=query).order_by(
+            "external_name"
+        )
+
+        paginator = Paginator(translation_overrides, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+
+        return render(request, "translation_overrides/list.html", context)
+
+
+class NewProgramCategoryForm(forms.Form):
+    external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    icon = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def program_categories_view(request):
+    if request.method == "GET":
+        program_categories = ProgramCategory.objects.all().order_by("external_name")
+
+        paginator = Paginator(program_categories, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+        return render(request, "program_categories/main.html", context)
+    if request.method == "POST":
+        form = NewProgramCategoryForm(request.POST)
+        if form.is_valid():
+            program_category = ProgramCategory.objects.new_program_category(
+                form["external_name"].value(), form["icon"].value()
+            )
+            response = HttpResponse()
+            response.headers["HX-Redirect"] = f"/api/translations/admin/program_categories/{program_category.id}"
+            return response
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def create_program_category_view(request):
+    if request.method == "GET":
+        context = {"form": NewProgramCategoryForm(), "route": "/api/translations/admin/program_categories"}
+
+        return render(request, "util/create_form.html", context)
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def program_category_view(request, id=0):
+    if request.method == "GET":
+        program_category = ProgramCategory.objects.get(pk=id)
+        context = {"program_category": program_category}
+
+        return render(request, "program_categories/program_category.html", context)
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def program_category_filter_view(request):
+    if request.method == "GET":
+        query = request.GET.get("name", "")
+        program_categories = ProgramCategory.objects.filter(external_name__contains=query).order_by("external_name")
+
+        paginator = Paginator(program_categories, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+
+        return render(request, "program_categories/list.html", context)

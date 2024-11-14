@@ -1,8 +1,7 @@
-from programs.co_county_zips import counties_from_zip
-from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.co_county_zips import counties_from_screen
+from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from integrations.services.sheets import GoogleSheetsCache
 import programs.programs.messages as messages
-from screener.models import HouseholdMember
 
 
 class DenverAmiCache(GoogleSheetsCache):
@@ -52,37 +51,15 @@ class DenverPropertyTaxRelief(ProgramCalculator):
         "relationship",
     ]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # county
-        if self.screen.county is not None:
-            counties = [self.screen.county]
-        else:
-            counties = counties_from_zip(self.screen.zipcode)
+        counties = counties_from_screen(self.screen)
         e.condition(DenverPropertyTaxRelief.county in counties, messages.location())
 
         # has rent or mortgage expense
         has_rent = self.screen.has_expense(["rent"])
         has_mortgage = self.screen.has_expense(["mortgage"])
         e.condition(has_rent or has_mortgage)
-
-        has_child = self.screen.num_children(age_max=DenverPropertyTaxRelief.child_max_age) > 0
-
-        def meets_one_condition(member: HouseholdMember):
-            if has_mortgage and has_child:
-                return True
-
-            if member.age >= DenverPropertyTaxRelief.age_eligible:
-                return True
-
-            if member.disabled or self.screen.has_benefit("ssi") or self.screen.has_benefit("ssdi"):
-                return True
-
-            return False
-
-        members: list[HouseholdMember] = self.screen.household_members.all()
-        e.member_eligibility(members, [(lambda m: m.is_head() or m.is_spouse(), None), (meets_one_condition, None)])
 
         # income
         multiple_adults = self.screen.num_adults(DenverPropertyTaxRelief.child_max_age + 1) >= 2
@@ -97,16 +74,36 @@ class DenverPropertyTaxRelief(ProgramCalculator):
         ami = DenverPropertyTaxRelief.ami.fetch()
         limit = ami[self.screen.household_size - 1] * ami_percent
         total_income = 0
-        for member in members:
+        for member in self.screen.household_members.all():
             if member.is_head() or member.is_spouse():
                 total_income += member.calc_gross_income("yearly", DenverPropertyTaxRelief.income_types)
         e.condition(total_income <= limit, messages.income(total_income, limit))
 
-        return e
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
-    def value(self, eligible_members: int):
+        # head or spouse
+        e.condition(member.is_head() or member.is_spouse())
+
+        has_child = self.screen.num_children(age_max=DenverPropertyTaxRelief.child_max_age) > 0
+
+        # other condition
+        other_condition = False
+        if self.screen.has_expense(["mortgage"]) and has_child:
+            other_condition = True
+
+        if member.age >= DenverPropertyTaxRelief.age_eligible:
+            other_condition = True
+
+        if member.disabled or self.screen.has_benefit("ssi") or self.screen.has_benefit("ssdi"):
+            other_condition = True
+
+        e.condition(other_condition)
+
+    def household_value(self):
         if self.screen.has_expense(["mortgage"]):
             return DenverPropertyTaxRelief.mortgage_amount
         elif self.screen.has_expense(["rent"]):
             return DenverPropertyTaxRelief.rent_amount
+
         return 0

@@ -1,6 +1,5 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
-import programs.programs.messages as messages
-from screener.models import HouseholdMember, Insurance
+from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
+from screener.models import Insurance
 
 
 class NurseFamilyPartnership(ProgramCalculator):
@@ -15,32 +14,23 @@ class NurseFamilyPartnership(ProgramCalculator):
         "pregnant",
     ]
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # no other children
         e.condition(self.screen.num_children(child_relationship=NurseFamilyPartnership.child_relationships) == 0)
 
-        def income_eligible(member: HouseholdMember):
-            income_limit = self.program.fpl.as_dict()[2] * NurseFamilyPartnership.fpl_percent
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
 
-            income = member.calc_gross_income("yearly", ["all"])
+        # pregnant
+        e.condition(member.pregnant)
 
-            is_income_eligible = income <= income_limit
+        # income
+        income_limit = self.program.fpl.as_dict()[2] * NurseFamilyPartnership.fpl_percent
+        income = member.calc_gross_income("yearly", ["all"])
+        is_income_eligible = income <= income_limit
 
-            insurance: Insurance = member.insurance
-            has_medicaid = insurance.medicaid or insurance.emergency_medicaid
+        insurance: Insurance = member.insurance
+        has_medicaid = insurance.medicaid or insurance.emergency_medicaid
+        has_wic = self.screen.has_benefit("wic")
 
-            has_wic = self.screen.has_benefit("wic")
-
-            return is_income_eligible or has_medicaid or has_wic
-
-        e.member_eligibility(
-            self.screen.household_members.all(),
-            [
-                (lambda m: m.pregnant, messages.is_pregnant()),
-                (income_eligible, None),
-            ],
-        )
-
-        return e
+        e.condition(is_income_eligible or has_medicaid or has_wic)

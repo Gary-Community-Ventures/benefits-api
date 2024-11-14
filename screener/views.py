@@ -1,7 +1,9 @@
 from typing import Optional
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from rest_framework.relations import reverse
 from integrations.services.communications import MessageUser
+from programs.programs import categories
 from programs.programs.helpers import STATE_MEDICAID_OPTIONS
 from programs.programs.policyengine.calculators import all_calculators
 from screener.models import (
@@ -26,9 +28,19 @@ from screener.serializers import (
     ResultsSerializer,
 )
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
-from programs.util import DependencyError
+from programs.util import DependencyError, Dependencies
 from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
-from programs.models import Document, Navigator, UrgentNeed, Program, Referrer, WarningMessage
+from programs.models import (
+    Document,
+    Navigator,
+    ProgramCategory,
+    UrgentNeed,
+    Program,
+    Referrer,
+    WarningMessage,
+    TranslationOverride,
+)
+from programs.programs.categories import ProgramCategoryCapCalculator, category_cap_calculators
 from django.core.exceptions import ObjectDoesNotExist
 from programs.programs.warnings import warning_calculators
 from validations.serializers import ValidationSerializer
@@ -73,7 +85,7 @@ class ScreenViewSet(
         user = get_object_or_404(queryset, uuid=pk)
         body = json.loads(request.body.decode())
         serializer = ScreenSerializer(user, data=body)
-        serializer.is_valid()
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
@@ -124,7 +136,7 @@ class EligibilityTranslationView(views.APIView):
         screen = Screen.objects.prefetch_related(
             "household_members", "household_members__income_streams", "household_members__insurance", "expenses"
         ).get(uuid=id)
-        eligibility, missing_programs = eligibility_results(screen)
+        eligibility, missing_programs, categories = eligibility_results(screen)
         urgent_needs = urgent_need_results(screen, eligibility)
         validations = ValidationSerializer(screen.validations.all(), many=True).data
 
@@ -135,6 +147,7 @@ class EligibilityTranslationView(views.APIView):
             "default_language": screen.request_language_code,
             "missing_programs": missing_programs,
             "validations": validations,
+            "program_categories": categories,
         }
         hooks = eligibility_hooks()
         if screen.submission_date is None:
@@ -186,7 +199,7 @@ def eligibility_results(screen: Screen, batch=False):
         excluded_programs = [p.id for p in referrer.remove_programs.all()]
 
     all_programs = (
-        Program.objects.filter(active=True)
+        Program.objects.filter(active=True, category__isnull=False)
         .prefetch_related(
             "legal_status_required",
             "fpl",
@@ -201,6 +214,11 @@ def eligibility_results(screen: Screen, batch=False):
             "warning_messages",
             "warning_messages__counties",
             *translations_prefetch_name("warning_messages__", WarningMessage.objects.translated_fields),
+            "translation_overrides",
+            "translation_overrides__counties",
+            *translations_prefetch_name("translation_overrides__", TranslationOverride.objects.translated_fields),
+            "category",
+            *translations_prefetch_name("category__", ProgramCategory.objects.translated_fields),
         )
         .exclude(id__in=excluded_programs)
     )
@@ -228,19 +246,28 @@ def eligibility_results(screen: Screen, batch=False):
                 program = p
 
         if program is not None:
-            pe_calculators[calculator_name] = Calculator(screen, program)
+            pe_calculators[calculator_name] = Calculator(screen, program, missing_dependencies)
 
-    pe_eligibility = calc_pe_eligibility(screen, missing_dependencies, pe_calculators)
+    pe_eligibility = calc_pe_eligibility(screen, pe_calculators)
     pe_programs = pe_calculators.keys()
 
     def sort_first(program):
-        calc_first = ("tanf", "ssi", "nslp", "leap", *STATE_MEDICAID_OPTIONS)
-        if program.name_abbreviated in calc_first:
-            print(program.name_abbreviated, "-0")
-            return 0
-        else:
-            print(program.name_abbreviated, "-1")
-            return 1
+        calc_order = (
+            "tanf",
+            "ssi",
+            "nslp",
+            "leap",
+            "chp",
+            *STATE_MEDICAID_OPTIONS,
+            "emergency_medicaid",
+            "wic",
+            "andcs",
+        )
+
+        if program.name_abbreviated not in calc_order:
+            return len(calc_order)
+
+        return calc_order.index(program.name_abbreviated)
 
     missing_programs = False
 
@@ -249,16 +276,13 @@ def eligibility_results(screen: Screen, batch=False):
 
     program_snapshots = []
 
-    print("-SORTED-SORTED-")
-    print(all_programs)
+    program_eligibility = {}
 
     for program in all_programs:
         skip = False
         if program.name_abbreviated not in pe_programs and program.active:
             try:
-                print("------PROGRAM-------")
-                print(program.name_abbreviated)
-                eligibility = program.eligibility(screen, data, missing_dependencies)
+                eligibility = program.eligibility(screen, program_eligibility, missing_dependencies)
             except DependencyError:
                 missing_programs = True
                 continue
@@ -269,13 +293,15 @@ def eligibility_results(screen: Screen, batch=False):
 
             eligibility = pe_eligibility[program.name_abbreviated]
 
+        program_eligibility[program.name_abbreviated] = eligibility
+
         if previous_snapshot is not None:
             print("SOME_SNAP- PREVIOUS SNAP", program.name_abbreviated)
             new = True
             for previous_snapshot in previous_results:
                 if (
                     previous_snapshot.name_abbreviated == program.name_abbreviated
-                    and eligibility["eligible"] == previous_snapshot.eligible
+                    and eligibility.eligible == previous_snapshot.eligible
                 ):
                     new = False
         else:
@@ -285,7 +311,7 @@ def eligibility_results(screen: Screen, batch=False):
         navigators = []
 
         # don't calculate navigator and warnings for ineligible programs
-        if eligibility["eligible"]:
+        if eligibility.eligible:
             all_navigators = program.navigator.all()
 
             county_navigators = []
@@ -324,47 +350,71 @@ def eligibility_results(screen: Screen, batch=False):
                     name=program.name.text,
                     name_abbreviated=program.name_abbreviated,
                     value_type=program.value_type.text,
-                    estimated_value=eligibility["estimated_value"],
+                    estimated_value=eligibility.value,
                     estimated_delivery_time=program.estimated_delivery_time.text,
                     estimated_application_time=program.estimated_application_time.text,
-                    eligible=eligibility["eligible"],
-                    failed_tests=json.dumps(eligibility["failed"]),
-                    passed_tests=json.dumps(eligibility["passed"]),
+                    eligible=eligibility.eligible,
+                    failed_tests=json.dumps(eligibility.fail_messages),
+                    passed_tests=json.dumps(eligibility.pass_messages),
                     new=new,
                 )
             )
-            print("----------APPENDING-----------")
-            print(program.name_abbreviated)
+            program_translations = GetProgramTranslation(screen, program, missing_dependencies)
             data.append(
                 {
                     "program_id": program.id,
-                    "name": default_message(program.name),
+                    "name": program_translations.get_translation("name"),
                     "name_abbreviated": program.name_abbreviated,
                     "external_name": program.external_name,
-                    "estimated_value": eligibility["estimated_value"],
-                    "estimated_delivery_time": default_message(program.estimated_delivery_time),
-                    "estimated_application_time": default_message(program.estimated_application_time),
-                    "description_short": default_message(program.description_short),
+                    "estimated_value": eligibility.value,
+                    "estimated_delivery_time": program_translations.get_translation("estimated_delivery_time"),
+                    "estimated_application_time": program_translations.get_translation("estimated_application_time"),
+                    "description_short": program_translations.get_translation("description_short"),
                     "short_name": program.name_abbreviated,
-                    "description": default_message(program.description),
-                    "value_type": default_message(program.value_type),
-                    "learn_more_link": default_message(program.learn_more_link),
-                    "apply_button_link": default_message(program.apply_button_link),
+                    "description": program_translations.get_translation("description"),
+                    "value_type": program_translations.get_translation("value_type"),
+                    "learn_more_link": program_translations.get_translation("learn_more_link"),
+                    "apply_button_link": program_translations.get_translation("apply_button_link"),
                     "legal_status_required": legal_status,
-                    "category": default_message(program.category),
-                    "estimated_value_override": default_message(program.estimated_value),
-                    "eligible": eligibility["eligible"],
-                    "failed_tests": eligibility["failed"],
-                    "passed_tests": eligibility["passed"],
+                    "estimated_value_override": program_translations.get_translation("estimated_value"),
+                    "eligible": eligibility.eligible,
+                    "failed_tests": eligibility.fail_messages,
+                    "passed_tests": eligibility.pass_messages,
                     "navigators": [serialized_navigator(navigator) for navigator in navigators],
                     "already_has": screen.has_benefit(program.name_abbreviated),
                     "new": new,
                     "low_confidence": program.low_confidence,
-                    "documents": [default_message(d.text) for d in program.documents.all()],
-                    "multiple_tax_units": eligibility["multiple_tax_units"],
+                    "documents": [serialized_document(document) for document in program.documents.all()],
                     "warning_messages": [default_message(w.message) for w in warnings],
                 }
             )
+
+    category_map = {}
+    for program in all_programs:
+        category = program.category
+        if category.id in category_map:
+            category_map[category.id]["programs"].append(program.id)
+            continue
+
+        CategoryCalculator = ProgramCategoryCapCalculator
+        if category.calculator is not None and category.calculator != "":
+            CategoryCalculator = category_cap_calculators[category.calculator]
+
+        calculator = CategoryCalculator(program_eligibility)
+
+        caps = []
+        for cap in calculator.caps():
+            caps.append({"programs": cap.programs, "cap": cap.cap})
+
+        category_map[category.id] = {
+            "external_name": category.external_name,
+            "icon": category.icon,
+            "name": default_message(category.name),
+            "description": default_message(category.description),
+            "caps": caps,
+            "programs": [program.id],
+        }
+    categories = list(category_map.values())
 
     ProgramEligibilitySnapshot.objects.bulk_create(program_snapshots)
     snapshot.had_error = False
@@ -376,7 +426,17 @@ def eligibility_results(screen: Screen, batch=False):
         clean_program["estimated_value"] = math.trunc(clean_program["estimated_value"])
         eligible_programs.append(clean_program)
 
-    return eligible_programs, missing_programs
+    return eligible_programs, missing_programs, categories
+
+
+class GetProgramTranslation:
+    def __init__(self, screen: Screen, program: Program, missing_dependencies: Dependencies):
+        self.screen = screen
+        self.program = program
+        self.missing_dependencies = missing_dependencies
+
+    def get_translation(self, field: str):
+        return default_message(self.program.get_translation(self.screen, self.missing_dependencies, field))
 
 
 def default_message(translation):
@@ -396,6 +456,14 @@ def serialized_navigator(navigator):
         "assistance_link": default_message(navigator.assistance_link),
         "description": default_message(navigator.description),
         "languages": langs,
+    }
+
+
+def serialized_document(document):
+    return {
+        "text": default_message(document.text),
+        "link_url": default_message(document.link_url),
+        "link_text": default_message(document.link_text),
     }
 
 
