@@ -34,22 +34,20 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
                 integration = Integration(user, screen)
                 message = MessageUser(screen, screen.get_language_code())
 
-                if screen.user.email is not None:
-                    message.email(screen.user.email)
-                if screen.user.cell is not None:
-                    message.text(str(screen.user.cell))
-
-                Integration = get_cms_integration()
-                integration = Integration(user, screen)
-
-                if not integration.should_add():
-                    return Response(status=204)
-
                 if user and user.external_id:
                     integration.update()
                 else:
                     external_id = integration.add()
                     user.anonomize(external_id)
+
+                if screen.user.email is not None:
+                    message.email(screen.user.email)
+                if screen.user.cell is not None:
+                    message.text(str(screen.user.cell))
+
+                if not integration.should_add():
+                    return Response(status=204)
+
             except Exception as e:
                 user.delete()
                 raise e
