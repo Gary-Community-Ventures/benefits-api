@@ -264,6 +264,7 @@ class EligibilitySerializer(serializers.Serializer):
     value_type = TranslationSerializer()
     learn_more_link = TranslationSerializer()
     apply_button_link = TranslationSerializer()
+    apply_button_description = TranslationSerializer()
     estimated_value = serializers.IntegerField()
     estimated_delivery_time = TranslationSerializer()
     estimated_application_time = TranslationSerializer()

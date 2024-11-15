@@ -2,7 +2,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from screener.models import WhiteLabel
 from translations.model_data import ModelDataController
-from translations.models import Translation
+from translations.models import BLANK_TRANSLATION_PLACEHOLDER, Translation
 from programs.programs import calculators
 from programs.util import Dependencies
 import requests
@@ -227,6 +227,7 @@ class ProgramManager(models.Manager):
         "description",
         "learn_more_link",
         "apply_button_link",
+        "apply_button_description",
         "value_type",
         "estimated_delivery_time",
         "estimated_application_time",
@@ -238,8 +239,11 @@ class ProgramManager(models.Manager):
     def new_program(self, name_abbreviated):
         translations = {}
         for field in self.translated_fields:
+            default_message = "" if field == "apply_button_description" else BLANK_TRANSLATION_PLACEHOLDER
             translations[field] = Translation.objects.add_translation(
-                f"program.{name_abbreviated}_temporary_key-{field}", no_auto=(field in self.no_auto_fields)
+                f"program.{name_abbreviated}_temporary_key-{field}",
+                default_message=default_message,
+                no_auto=(field in self.no_auto_fields),
             )
 
         # try to set the external_name to the name_abbreviated
@@ -387,6 +391,9 @@ class Program(models.Model):
     )
     apply_button_link = models.ForeignKey(
         Translation, related_name="program_apply_button_link", null=False, on_delete=models.PROTECT
+    )
+    apply_button_description = models.ForeignKey(
+        Translation, related_name="program_apply_button_description", blank=False, null=False, on_delete=models.PROTECT
     )
     value_type = models.ForeignKey(
         Translation, related_name="program_value_type", blank=False, null=False, on_delete=models.PROTECT

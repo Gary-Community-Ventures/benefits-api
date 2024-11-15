@@ -373,6 +373,7 @@ def eligibility_results(screen: Screen, batch=False):
                     "value_type": program_translations.get_translation("value_type"),
                     "learn_more_link": program_translations.get_translation("learn_more_link"),
                     "apply_button_link": program_translations.get_translation("apply_button_link"),
+                    "apply_button_description": program_translations.get_translation("apply_button_description"),
                     "legal_status_required": legal_status,
                     "estimated_value_override": program_translations.get_translation("estimated_value"),
                     "eligible": eligibility.eligible,
