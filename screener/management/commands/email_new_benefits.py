@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
+from integrations.services.cms_integration import HubSpotIntegration
 from screener.models import Screen, EligibilitySnapshot
-from integrations.services.hubspot.integration import Hubspot
 
 
 class Command(BaseCommand):
@@ -26,7 +26,6 @@ class Command(BaseCommand):
                 continue
             latest_snapshots.append(previous_snapshot)
 
-        hubspot = Hubspot()
         existing_users = []
         for snapshot in latest_snapshots:
             if limit == 0:
@@ -41,7 +40,9 @@ class Command(BaseCommand):
                     num_eligible += 1
                     value += program.estimated_value
 
-            existing_users.append(hubspot.format_email_new_benefit(snapshot.screen.user, num_eligible, value))
+            existing_users.append(
+                HubSpotIntegration.format_email_new_benefit(snapshot.screen.user.external_id, num_eligible, value)
+            )
 
             limit -= 1
 
@@ -49,4 +50,4 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING("No users in HubSpot. Make sure that you add users to HubSpot first"))
             return
 
-        hubspot.bulk_update(existing_users)
+        HubSpotIntegration.bulk_update(existing_users)

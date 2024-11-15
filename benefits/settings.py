@@ -60,6 +60,12 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+# Contact Management
+CONTACT_SERVICE = os.getenv("CONTACT_SERVICE", "hubspot")
+BREVO_API_KEY = os.getenv("BREVO_API_KEY")
+FRONTEND_DOMAIN = config("FRONTEND_DOMAIN", default="http://localhost:3000")
+EMAIL_FROM = os.getenv("EMAIL_FROM")
+
 # Application definition
 
 INSTALLED_APPS = [
