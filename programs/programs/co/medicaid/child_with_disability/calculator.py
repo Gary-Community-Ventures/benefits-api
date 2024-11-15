@@ -1,23 +1,23 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 from programs.programs.helpers import medicaid_eligible
 import programs.programs.messages as messages
 
 
 class MedicaidChildWithDisability(ProgramCalculator):
     max_age = 18
+    min_employment_age = 16
     max_income_percent = 3
     earned_deduction = 90
     income_percent = 1 - 0.33
     insurance_types = ("employer", "private", "none")
-    amount = 200
     dependencies = ["insurance", "age", "household_size", "income_type", "income_amount", "income_frequency"]
+    member_amount = 200 * 12
 
-    def eligible(self) -> Eligibility:
-        e = Eligibility()
-
+    def household_eligible(self, e: Eligibility):
         # Does not qualify for Medicaid
         e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
 
+        # income
         fpl = self.program.fpl.as_dict()
         income_limit = fpl[self.screen.household_size] * MedicaidChildWithDisability.max_income_percent
         earned = max(
@@ -27,17 +27,22 @@ class MedicaidChildWithDisability(ProgramCalculator):
         income = (earned + unearned) * MedicaidChildWithDisability.income_percent
         e.condition(income <= income_limit, messages.income(income, income_limit))
 
-        e.member_eligibility(
-            self.screen.household_members.all(),
-            [
-                (lambda m: m.age <= MedicaidChildWithDisability.max_age, messages.child()),
-                (lambda m: m.long_term_disability or m.visually_impaired, messages.has_disability()),
-                (lambda m: m.insurance.has_insurance_types(MedicaidChildWithDisability.insurance_types), None),
-                (lambda m: not (m.calc_gross_income("yearly", ["earned"]) >= 0 and m.age >= 16), None),
-            ],
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
+
+        # age
+        e.condition(member.age <= MedicaidChildWithDisability.max_age)
+
+        # disability
+        e.condition(member.long_term_disability or member.visually_impaired)
+
+        # insurance
+        e.condition(member.insurance.has_insurance_types(MedicaidChildWithDisability.insurance_types))
+
+        # no income
+        e.condition(
+            not (
+                member.calc_gross_income("yearly", ["earned"]) >= 0
+                and member.age >= MedicaidChildWithDisability.min_employment_age
+            )
         )
-
-        return e
-
-    def value(self, eligible_members: int):
-        return MedicaidChildWithDisability.amount * eligible_members * 12

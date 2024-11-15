@@ -1,0 +1,77 @@
+{% load static %}
+<div id="program-category-container">
+  <table
+    id="program-category-table"
+    class="program-category-table table is-striped is-fullwidth is-bordered"
+  >
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>External Name</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for program_category in page_obj %}
+      <tr>
+        <td>{{ program_category.id }}</td>
+        <td>{{ program_category.external_name }}</td>
+        <td>
+          <div class="dropdown">
+            <div class="dropdown-trigger">
+              <button
+                class="button"
+                aria-haspopup="true"
+                aria-controls="dropdown-menu{{ forloop.counter }}"
+              >
+                <span>Go to</span>
+                <span class="material-symbols-outlined"> expand_more </span>
+              </button>
+            </div>
+            <div
+              class="dropdown-menu"
+              id="dropdown-menu{{ forloop.counter }}"
+              role="menu"
+            >
+              <div class="dropdown-content">
+                <a
+                  href="/api/translations/admin/{{ program_category.name.id }}"
+                  class="dropdown-item"
+                  >Edit Name</a
+                >
+                <a
+                  href="/api/translations/admin/{{ program_category.description.id }}"
+                  class="dropdown-item"
+                  >Edit Description</a
+                >
+                <hr class="dropdown-divider" />
+                <a
+                  href="/admin/programs/programcategory/{{program_category.id}}/change/"
+                  class="dropdown-item"
+                >
+                  Edit in Main Admin
+                </a>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4">No results</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4">Total: {{ page_obj.paginator.count }}</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  {% include "../pagination.html" %}
+
+  <script>
+    var tableId = "program-category-table";
+  </script>
+</div>

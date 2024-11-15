@@ -1,5 +1,6 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineMembersCalculator
 import programs.programs.policyengine.calculators.dependencies as dependency
+from screener.models import HouseholdMember
 
 
 class Wic(PolicyEngineMembersCalculator):
@@ -14,21 +15,18 @@ class Wic(PolicyEngineMembersCalculator):
     pe_name = "wic"
     pe_inputs = [
         dependency.member.PregnancyDependency,
+        dependency.member.ExpectedChildrenPregnancyDependency,
         dependency.member.AgeDependency,
-        *dependency.school_lunch_income,
+        dependency.spm.SchoolMealCountableIncomeDependency,
     ]
     pe_outputs = [dependency.member.Wic, dependency.member.WicCategory]
-    tax_unit_dependent = False
 
-    def value(self):
-        total = 0
+    def member_value(self, member: HouseholdMember):
+        if self.get_member_variable(member.id) <= 0:
+            return 0
 
-        for member in self.screen.household_members.all():
-            if self.get_member_variable(member.id) > 0:
-                wic_category = self.sim.value("people", str(member.id), "wic_category", self.pe_period)
-                total += self.wic_categories[wic_category] * 12
-
-        return total
+        wic_category = self.sim.value("people", str(member.id), "wic_category", self.pe_period)
+        return self.wic_categories[wic_category] * 12
 
 
 class Medicaid(PolicyEngineMembersCalculator):
@@ -36,18 +34,19 @@ class Medicaid(PolicyEngineMembersCalculator):
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
+        dependency.member.SsiCountableResourcesDependency,
         *dependency.irs_gross_income,
     ]
     pe_outputs = [
         dependency.member.AgeDependency,
         dependency.member.Medicaid,
+        dependency.member.MedicaidCategory,
+        dependency.member.MedicaidSeniorOrDisabled,
     ]
 
     child_medicaid_average = 0
     adult_medicaid_average = 0
     aged_medicaid_average = 0
-
-    presumptive_amount = 74 * 12
 
     def _value_by_age(self, age: int):
         # here we need to adjust for children as policy engine
@@ -55,53 +54,22 @@ class Medicaid(PolicyEngineMembersCalculator):
         # aged adults
 
         if age <= 18:
-            medicaid_estimated_value = self.child_medicaid_average
+            return self.child_medicaid_average
         elif age > 18 and age < 65:
-            medicaid_estimated_value = self.adult_medicaid_average
+            return self.adult_medicaid_average
         elif age >= 65:
-            medicaid_estimated_value = self.aged_medicaid_average
-        else:
-            medicaid_estimated_value = 0
+            return self.aged_medicaid_average
 
-        return medicaid_estimated_value
+        return 0
 
-    def value(self):
-        total = 0
+    def member_value(self, member: HouseholdMember):
+        if self.get_member_variable(member.id) <= 0:
+            return 0
 
-        members = self.screen.household_members.all()
-
-        for member in members:
-            if self.get_member_variable(member.id) <= 0:
-                continue
-
-            # here we need to adjust for children as policy engine
-            # just uses the average which skews very high for adults and
-            # aged adults
-
-            if self._get_age(member.id) <= 18:
-                medicaid_estimated_value = self.child_medicaid_average
-            elif self._get_age(member.id) > 18 and self._get_age(member.id) < 65:
-                medicaid_estimated_value = self.adult_medicaid_average
-            elif self._get_age(member.id) >= 65:
-                medicaid_estimated_value = self.aged_medicaid_average
-            else:
-                medicaid_estimated_value = 0
-
-            total += medicaid_estimated_value
-
-        in_wic_demographic = False
-        for member in members:
-            if member.pregnant is True or member.age <= 5:
-                in_wic_demographic = True
-        if total == 0 and in_wic_demographic:
-            if (
-                self.screen.has_benefit("medicaid") is True
-                or self.screen.has_benefit("tanf") is True
-                or self.screen.has_benefit("snap") is True
-            ):
-                total = self.presumptive_amount
-
-        return total
+        # here we need to adjust for children as policy engine
+        # just uses the average which skews very high for adults and
+        # aged adults
+        return self._value_by_age(self._get_age(member.id))
 
     def _get_age(self, member_id: int) -> int:
         return self.sim.value(self.pe_category, str(member_id), "age", self.pe_period)
@@ -138,3 +106,12 @@ class Ssi(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitDependentDependency,
     ]
     pe_outputs = [dependency.member.Ssi]
+
+
+class CommoditySupplementalFoodProgram(PolicyEngineMembersCalculator):
+    pe_name = "commodity_supplemental_food_program"
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.spm.SchoolMealCountableIncomeDependency,
+    ]
+    pe_outputs = [dependency.member.CommoditySupplementalFoodProgram]

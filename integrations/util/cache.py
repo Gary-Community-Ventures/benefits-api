@@ -1,3 +1,4 @@
+from typing import Any
 from sentry_sdk import capture_exception
 import datetime
 
@@ -31,7 +32,7 @@ class Cache:
 
         return datetime.datetime.now() > self.last_update + datetime.timedelta(seconds=self.expire_time)
 
-    def fetch(self):
+    def fetch(self) -> Any:
         if self.should_update():
             self._update_cache()
 

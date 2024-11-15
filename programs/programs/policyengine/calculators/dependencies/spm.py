@@ -54,20 +54,18 @@ class SnapGrossIncomeDependency(SpmUnit):
         return int(self.screen.calc_gross_income("yearly", ["all"]))
 
 
-class MeetsSnapGrossIncomeTestDependency(SpmUnit):
-    field = "meets_snap_gross_income_test"
-    dependencies = (
-        "income_amount",
-        "income_frequency",
-        "household_size",
-    )
+class SnapAlwaysUseSuaDependency(SpmUnit):
+    field = "snap_state_using_standard_utility_allowance"
 
     def value(self):
-        fpl = FederalPoveryLimit.objects.get(year="THIS YEAR").as_dict()
-        snap_gross_income = self.screen.calc_gross_income("yearly", ["all"])
-        snap_gross_limit = 2 * fpl[self.screen.household_size]
+        return False
 
-        return snap_gross_income < snap_gross_limit
+
+class TakesUpSnapIfEligibleDependency(SpmUnit):
+    field = "takes_up_snap_if_eligible"
+
+    def value(self):
+        return True
 
 
 class MeetsSnapAssetTestDependency(SpmUnit):
@@ -75,13 +73,6 @@ class MeetsSnapAssetTestDependency(SpmUnit):
 
     def value(self):
         return True
-
-
-class MeetsSnapCategoricalEligibilityDependency(SpmUnit):
-    field = "meets_snap_categorical_eligibility"
-
-    def value(self):
-        return False
 
 
 class HasHeatingCoolingExpenseDependency(SpmUnit):
@@ -124,6 +115,27 @@ class ElectricityExpenseDependency(SpmUnit):
 
     def value(self):
         return self.screen.calc_expenses("yearly", ["otherUtilities"])
+
+
+class WaterExpenseDependency(SpmUnit):
+    field = "water_expense"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["otherUtilities"])
+
+
+class HoaFeesExpenseDependency(SpmUnit):
+    field = "homeowners_association_fees"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["hoa"])
+
+
+class HomeownersInsuranceExpenseDependency(SpmUnit):
+    field = "homeowners_insurance"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["homeownersInsurance"])
 
 
 class SnapEmergencyAllotmentDependency(SpmUnit):
@@ -218,3 +230,21 @@ class BroadbandCostDependency(SpmUnit):
 
     def value(self):
         return 500
+
+
+class SchoolMealCountableIncomeDependency(SpmUnit):
+    field = "school_meal_countable_income"
+    income_types = [
+        "wages",
+        "selfEmployment",
+        "rental",
+        "pension",
+        "veteran",
+        "sSDisability",
+        "sSSurvivor",
+        "sSRetirement",
+        "sSDependent",
+    ]
+
+    def value(self):
+        return self.screen.calc_gross_income("yearly", self.income_types)

@@ -120,6 +120,8 @@ class Command(BaseCommand):
         "cch": "Colorado Coalition for the Homeless",
         "frca": "Family Resource Center Association",
         "jeffcoHS": "Jeffco Human Services",
+        "dhs": "Denver Human Services",
+        "achs": "Adams County Human Services",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
         "arapahoectypublichealth": "Arapahoe County Public Health",
@@ -127,16 +129,15 @@ class Command(BaseCommand):
             "_label": "referralOptions.fircsummitresourcecenter",
             "_default_message": "FIRC Summit Resource Center",
         },
-        "dhs": "Denver Human Services",
         "ccig": "Colorado Community Insight Group",
         "eaglecounty": "Eagle County",
+        "searchEngine": {"_label": "referralOptions.searchEngine", "_default_message": "Google or other search engine"},
+        "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
+        "other": {"_label": "referralOptions.other", "_default_message": "Other"},
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
             "_default_message": "Test / Prospective Partner",
         },
-        "searchEngine": {"_label": "referralOptions.searchEngine", "_default_message": "Google or other search engine"},
-        "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
-        "other": {"_label": "referralOptions.other", "_default_message": "Other"},
     }
 
     language_options = {
@@ -169,7 +170,10 @@ class Command(BaseCommand):
         },
         "sSI": {"_label": "incomeOptions.sSI", "_default_message": "Supplemental Security Income (SSI)"},
         "childSupport": {"_label": "incomeOptions.childSupport", "_default_message": "Child Support (Received)"},
-        "pension": {"_label": "incomeOptions.pension", "_default_message": "Military, Government, or Private Pension"},
+        "pension": {
+            "_label": "incomeOptions.pension",
+            "_default_message": "Military, Government, or Private Pension (including PERA)",
+        },
         "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
@@ -314,6 +318,12 @@ class Command(BaseCommand):
         "heating": {"_label": "expenseOptions.heating", "_default_message": "Heating"},
         "creditCard": {"_label": "expenseOptions.creditCard", "_default_message": "Credit Card Debt"},
         "mortgage": {"_label": "expenseOptions.mortgage", "_default_message": "Mortgage"},
+        "propertyTax": {"_label": "expenseOptions.propertyTax", "_default_message": "Property Taxes"},
+        "hoa": {"_label": "expenseOptions.hoa", "_default_message": "Homeowners or Condo Association Fees and Dues"},
+        "homeownersInsurance": {
+            "_label": "expenseOptions.homeownersInsurance",
+            "_default_message": "Homeowners Insurance",
+        },
         "medical": {"_label": "expenseOptions.medical", "_default_message": "Medical Insurance Premium &/or Bills"},
         "personalLoan": {"_label": "expenseOptions.personalLoan", "_default_message": "Personal Loan"},
         "studentLoans": {"_label": "expenseOptions.studentLoans", "_default_message": "Student Loans"},
@@ -2741,10 +2751,7 @@ class Command(BaseCommand):
     }
 
     privacy_policy = {
-        "en-us": "https://co.myfriendben.org/en/data-privacy-policy",
-        "es": "https://co.myfriendben.org/es/data-privacy-policy",
-        "fr": "https://co.myfriendben.org/fr/data-privacy-policy",
-        "vi": "https://co.myfriendben.org/vi/data-privacy-policy",
+        "en-us": "https://co.myfriendben.org/privacy-policy/",
     }
 
     referrer_data = {
@@ -2763,6 +2770,7 @@ class Command(BaseCommand):
             "dhs": "DHS_MFBLogo",
             "ccig": "CCIG_Logo",
             "eaglecounty": "EC_MFBLogo",
+            "achs": "ACHS_MFBLogo",
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
@@ -2801,6 +2809,10 @@ class Command(BaseCommand):
                 "id": "referrerHook.logoAlts.eaglecounty",
                 "defaultMessage": "Eagle County and MyFriendBen home page button",
             },
+            "achs": {
+                "id": "referrerHook.logoAlts.adamscountyhumanservices",
+                "defaultMessage": "Adams County and MyFriendBen home page button",
+            },
         },
         "logoFooterSource": {"default": "MFB_Logo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
@@ -2822,67 +2834,98 @@ class Command(BaseCommand):
         "state": "CO",
         "zip_code": 80202,
         "email": "myfriendben@garycommunity.org",
-        "privacy_policy_link": "https://co.myfriendben.org/en/data-privacy-policy",
+        "privacy_policy_link": "https://co.myfriendben.org/privacy-policy/",
     }
 
     @transaction.atomic
     def handle(self, *args, **options):
-        # clear existing config
-        Configuration.objects.all().delete()
+        # Save acute_condition_options to database
+        Configuration.objects.update_or_create(
+            name="public_charge_rule", defaults={"data": self.public_charge_rule, "active": True}
+        )
 
         # Save acute_condition_options to database
-        Configuration.objects.create(name="public_charge_rule", data=self.public_charge_rule, active=True)
+        Configuration.objects.update_or_create(
+            name="more_help_options", defaults={"data": self.more_help_options, "active": True}
+        )
 
         # Save acute_condition_options to database
-        Configuration.objects.create(name="more_help_options", data=self.more_help_options, active=True)
-
-        # Save acute_condition_options to database
-        Configuration.objects.create(name="acute_condition_options", data=self.acute_condition_options, active=True)
+        Configuration.objects.update_or_create(
+            name="acute_condition_options", defaults={"data": self.acute_condition_options, "active": True}
+        )
 
         # Save sign_up_options to database
-        Configuration.objects.create(name="sign_up_options", data=self.sign_up_options, active=True)
+        Configuration.objects.update_or_create(
+            name="sign_up_options", defaults={"data": self.sign_up_options, "active": True}
+        )
 
         # Save relationship_options to database
-        Configuration.objects.create(name="relationship_options", data=self.relationship_options, active=True)
+        Configuration.objects.update_or_create(
+            name="relationship_options", defaults={"data": self.relationship_options, "active": True}
+        )
 
         # Save referral_options to database
-        Configuration.objects.create(name="referral_options", data=self.referral_options, active=True)
+        Configuration.objects.update_or_create(
+            name="referral_options", defaults={"data": self.referral_options, "active": True}
+        )
 
         # Save language_options to database
-        Configuration.objects.create(name="language_options", data=self.language_options, active=True)
+        Configuration.objects.update_or_create(
+            name="language_options", defaults={"data": self.language_options, "active": True}
+        )
 
         # Save income_options to database
-        Configuration.objects.create(name="income_options", data=self.income_options, active=True)
+        Configuration.objects.update_or_create(
+            name="income_options", defaults={"data": self.income_options, "active": True}
+        )
 
         # Save health_insurance_options to database
-        Configuration.objects.create(name="health_insurance_options", data=self.health_insurance_options, active=True)
+        Configuration.objects.update_or_create(
+            name="health_insurance_options", defaults={"data": self.health_insurance_options, "active": True}
+        )
 
         # Save frequency_options to database
-        Configuration.objects.create(name="frequency_options", data=self.frequency_options, active=True)
+        Configuration.objects.update_or_create(
+            name="frequency_options", defaults={"data": self.frequency_options, "active": True}
+        )
 
         # Save expense_options to database
-        Configuration.objects.create(name="expense_options", data=self.expense_options, active=True)
+        Configuration.objects.update_or_create(
+            name="expense_options", defaults={"data": self.expense_options, "active": True}
+        )
 
         # Save condition_options to database
-        Configuration.objects.create(name="condition_options", data=self.condition_options, active=True)
+        Configuration.objects.update_or_create(
+            name="condition_options", defaults={"data": self.condition_options, "active": True}
+        )
 
         # Save co_zipcodes to database
-        Configuration.objects.create(name="co_zipcodes", data=self.co_zipcodes, active=True)
+        Configuration.objects.update_or_create(name="co_zipcodes", defaults={"data": self.co_zipcodes, "active": True})
 
         # Save counties_by_zipcode to database
-        Configuration.objects.create(name="counties_by_zipcode", data=self.counties_by_zipcode, active=True)
+        Configuration.objects.update_or_create(
+            name="counties_by_zipcode", defaults={"data": self.counties_by_zipcode, "active": True}
+        )
 
         # Save category_benefits to database
-        Configuration.objects.create(name="category_benefits", data=self.category_benefits, active=True)
+        Configuration.objects.update_or_create(
+            name="category_benefits", defaults={"data": self.category_benefits, "active": True}
+        )
 
         # Save consent_to_contact to database
-        Configuration.objects.create(name="consent_to_contact", data=self.consent_to_contact, active=True)
+        Configuration.objects.update_or_create(
+            name="consent_to_contact", defaults={"data": self.consent_to_contact, "active": True}
+        )
 
         # Save privacy_policy to database
-        Configuration.objects.create(name="privacy_policy", data=self.privacy_policy, active=True)
+        Configuration.objects.update_or_create(
+            name="privacy_policy", defaults={"data": self.privacy_policy, "active": True}
+        )
 
         # Save referrer_data to database
-        Configuration.objects.create(name="referrer_data", data=self.referrer_data, active=True)
+        Configuration.objects.update_or_create(
+            name="referrer_data", defaults={"data": self.referrer_data, "active": True}
+        )
 
         # Save footer_data to database
-        Configuration.objects.create(name="footer_data", data=self.footer_data, active=True)
+        Configuration.objects.update_or_create(name="footer_data", defaults={"data": self.footer_data, "active": True})
