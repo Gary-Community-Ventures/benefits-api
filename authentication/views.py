@@ -38,12 +38,13 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
                     integration.update()
                 else:
                     external_id = integration.add()
-                    user.anonomize(external_id)
 
-                if screen.user.email is not None:
-                    message.email(screen.user.email)
-                if screen.user.cell is not None:
-                    message.text(str(screen.user.cell))
+                    if screen.user.email is not None:
+                        message.email(screen.user.email)
+                    if screen.user.cell is not None:
+                        message.text(str(screen.user.cell))
+
+                    user.anonomize(external_id)
 
                 if not integration.should_add():
                     return Response(status=204)
