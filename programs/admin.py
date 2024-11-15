@@ -41,6 +41,7 @@ class ProgramAdmin(ModelAdmin):
         description_short = obj.description_short
         learn_more_link = obj.learn_more_link
         apply_button_link = obj.apply_button_link
+        apply_button_description = obj.apply_button_description
         estimated_delivery_time = obj.estimated_delivery_time
         estimated_application_time = obj.estimated_application_time
         value_type = obj.value_type
@@ -57,6 +58,7 @@ class ProgramAdmin(ModelAdmin):
                     <a href="{}">Short Description</a>
                     <a href="{}">Learn More Link</a>
                     <a href="{}">Apply Button Link</a>
+                    <a href="{}">Apply Button Description</a>
                     <a href="{}">Estimated Delivery Time</a>
                     <a href="{}">Estimated Application Time</a>
                     <a href="{}">Value Type</a>
@@ -70,6 +72,7 @@ class ProgramAdmin(ModelAdmin):
             reverse("translation_admin_url", args=[description_short.id]),
             reverse("translation_admin_url", args=[learn_more_link.id]),
             reverse("translation_admin_url", args=[apply_button_link.id]),
+            reverse("translation_admin_url", args=[apply_button_description.id]),
             reverse("translation_admin_url", args=[estimated_delivery_time.id]),
             reverse("translation_admin_url", args=[estimated_application_time.id]),
             reverse("translation_admin_url", args=[value_type.id]),
@@ -238,18 +241,21 @@ class DocumentAdmin(ModelAdmin):
     get_str.short_description = "Document"
 
     def action_buttons(self, obj):
-        text = obj.text
 
         return format_html(
             """
             <div class="dropdown">
                 <span class="dropdown-btn material-symbols-outlined"> menu </span>
                 <div class="dropdown-content">
-                    <a href="{}">Document Text</a>
+                    <a href="{}">Text</a>
+                    <a href="{}">Link Url</a>
+                    <a href="{}">Link Text</a>
                 </div>
             </div>
             """,
-            reverse("translation_admin_url", args=[text.id]),
+            reverse("translation_admin_url", args=[obj.text.id]),
+            reverse("translation_admin_url", args=[obj.link_url.id]),
+            reverse("translation_admin_url", args=[obj.link_text.id]),
         )
 
     action_buttons.short_description = "Translate:"

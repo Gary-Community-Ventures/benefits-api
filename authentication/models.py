@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
@@ -51,6 +52,16 @@ class User(AbstractUser):
 
     USERNAME_FIELD = "email_or_cell"
     REQUIRED_FIELDS = ["tcpa_consent"]
+
+    def anonomize(self, external_id: str):
+        random_id = str(uuid.uuid4()).replace("-", "")
+        self.external_id = external_id
+        self.email_or_cell = f"{external_id}+{random_id}@myfriendben.org"
+        self.first_name = None
+        self.last_name = None
+        self.cell = None
+        self.email = None
+        self.save()
 
     def save(self, **kwargs):
         self.cell = self.cell or None

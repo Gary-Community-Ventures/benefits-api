@@ -2,7 +2,7 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from screener.models import WhiteLabel
 from translations.model_data import ModelDataController
-from translations.models import Translation
+from translations.models import BLANK_TRANSLATION_PLACEHOLDER, Translation
 from programs.programs import calculators
 from programs.util import Dependencies
 import requests
@@ -168,17 +168,25 @@ class ProgramCategory(models.Model):
 
 
 class DocumentManager(models.Manager):
-    translated_fields = ("text",)
+    translated_fields = ("text", "link_url", "link_text")
+    no_auto_fields = ("link_url",)
 
     def new_document(self, external_name):
-        translation = Translation.objects.add_translation(f"document.{external_name}_temporary_key")
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(
+                f"document.{external_name}_temporary_key-{field}",
+                "",
+                no_auto=(field in self.no_auto_fields),
+            )
 
         # set white label
         white_label = WhiteLabel.objects.all().first()
-        document = self.create(external_name=external_name, white_label=white_label, text=translation)
+        document = self.create(external_name=external_name, white_label=white_label, **translation)
 
-        translation.label = f"document.{external_name}_{document.id}"
-        translation.save()
+        for [field, translation] in translations.items():
+            translation.label = f"document.{external_name}_{document.id}-{field}"
+            translation.save()
 
         return document
 
@@ -197,13 +205,19 @@ class Document(models.Model):
     )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     text = models.ForeignKey(Translation, related_name="documents", blank=False, null=False, on_delete=models.PROTECT)
+    link_url = models.ForeignKey(
+        Translation, related_name="document_link_url", blank=False, null=False, on_delete=models.PROTECT
+    )
+    link_text = models.ForeignKey(
+        Translation, related_name="document_link_text", blank=False, null=False, on_delete=models.PROTECT
+    )
 
     objects = DocumentManager()
 
     TranslationExportBuilder = DocumentDataController
 
     def __str__(self) -> str:
-        return self.text.text
+        return self.external_name if self.external_name is not None else self.text
 
 
 class ProgramManager(models.Manager):
@@ -213,6 +227,7 @@ class ProgramManager(models.Manager):
         "description",
         "learn_more_link",
         "apply_button_link",
+        "apply_button_description",
         "value_type",
         "estimated_delivery_time",
         "estimated_application_time",
@@ -224,8 +239,11 @@ class ProgramManager(models.Manager):
     def new_program(self, name_abbreviated):
         translations = {}
         for field in self.translated_fields:
+            default_message = "" if field == "apply_button_description" else BLANK_TRANSLATION_PLACEHOLDER
             translations[field] = Translation.objects.add_translation(
-                f"program.{name_abbreviated}_temporary_key-{field}", no_auto=(field in self.no_auto_fields)
+                f"program.{name_abbreviated}_temporary_key-{field}",
+                default_message=default_message,
+                no_auto=(field in self.no_auto_fields),
             )
 
         # try to set the external_name to the name_abbreviated
@@ -373,6 +391,9 @@ class Program(models.Model):
     )
     apply_button_link = models.ForeignKey(
         Translation, related_name="program_apply_button_link", null=False, on_delete=models.PROTECT
+    )
+    apply_button_description = models.ForeignKey(
+        Translation, related_name="program_apply_button_description", blank=False, null=False, on_delete=models.PROTECT
     )
     value_type = models.ForeignKey(
         Translation, related_name="program_value_type", blank=False, null=False, on_delete=models.PROTECT
