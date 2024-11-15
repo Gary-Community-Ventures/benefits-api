@@ -16,7 +16,7 @@ class MessageUser:
     cell_auth_token = config("TWILIO_TOKEN")
     cell_from_phone_number = config("TWILIO_PHONE_NUMBER")
 
-    email_from = "screener@myfriendben.org"
+    email_from = config("EMAIL_FROM")
     email_api_key = config("SENDGRID")
 
     def __init__(self, screen: Screen, lang: str) -> None:
@@ -43,7 +43,10 @@ class MessageUser:
         content = Content("text/html", self._email_body())
         mail = Mail(from_email, to_email, subject, content)
 
-        sg.client.mail.send.post(request_body=mail.get())
+        try:
+            sg.client.mail.send.post(request_body=mail.get())
+        except Exception as e:
+            print("e:", e)
 
         self.log("emailScreen")
 
