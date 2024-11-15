@@ -13,6 +13,7 @@ def add_apply_button_description(apps, schema_editor):
         )
         Program.objects.filter(pk=program.id).update(apply_button_description=translation.id)
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
