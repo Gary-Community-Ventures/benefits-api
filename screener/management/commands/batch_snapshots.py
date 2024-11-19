@@ -16,6 +16,7 @@ class Command(BaseCommand):
         parser.add_argument("--limit", default=1, type=int)
         parser.add_argument("--all", default=False, type=bool)
         parser.add_argument("--new", default=False, type=bool)
+        parser.add_argument("--white-label", default="co", type=str)
 
     def handle(self, *args, **options):
         # Get the screens
@@ -26,6 +27,9 @@ class Command(BaseCommand):
 
         if options["new"]:
             screens = screens.filter(eligibility_snapshots__isnull=True)
+
+        if options["white_label"]:
+            screens = screens.filter(white_label__code=options["white_label"])
 
         # List[:None] is everything in the list
         limit = None if options["limit"] == -1 else options["limit"]
