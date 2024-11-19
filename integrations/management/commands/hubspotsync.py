@@ -48,7 +48,9 @@ class Command(BaseCommand):
 
         for user in unsynced:
             if processed < limit:
-                user_screens = Screen.objects.filter(user_id=user.id).order_by("-submission_date")
+                user_screens = Screen.objects.filter(user_id=user.id, white_labels__code="co").order_by(
+                    "-submission_date"
+                )
                 if user_screens:
                     screen = user_screens.first()
                 else:
