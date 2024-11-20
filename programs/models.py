@@ -101,7 +101,7 @@ class LegalStatus(models.Model):
 class ProgramCategoryManager(models.Manager):
     translated_fields = ("name", "description")
 
-    def new_program_category(self, external_name: str, icon: str):
+    def new_program_category(self, white_label: str, external_name: str, icon: str):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
@@ -109,7 +109,7 @@ class ProgramCategoryManager(models.Manager):
             )
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         program_category = self.create(external_name=external_name, icon=icon, white_label=white_label, **translations)
 
         for [field, translation] in translations.items():
@@ -182,7 +182,7 @@ class DocumentManager(models.Manager):
     translated_fields = ("text", "link_url", "link_text")
     no_auto_fields = ("link_url",)
 
-    def new_document(self, external_name):
+    def new_document(self, white_label: str, external_name: str):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
@@ -192,8 +192,8 @@ class DocumentManager(models.Manager):
             )
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
-        document = self.create(external_name=external_name, white_label=white_label, **translation)
+        white_label = WhiteLabel.objects.get(code=white_label)
+        document = self.create(external_name=external_name, white_label=white_label, **translations)
 
         for [field, translation] in translations.items():
             translation.label = f"document.{external_name}_{document.id}-{field}"
@@ -269,7 +269,7 @@ class ProgramManager(models.Manager):
     )
     no_auto_fields = ("apply_button_link", "learn_more_link")
 
-    def new_program(self, name_abbreviated):
+    def new_program(self, white_label: str, name_abbreviated: str):
         translations = {}
         for field in self.translated_fields:
             default_message = "" if field == "apply_button_description" else BLANK_TRANSLATION_PLACEHOLDER
@@ -283,7 +283,7 @@ class ProgramManager(models.Manager):
         external_name_exists = self.filter(external_name=name_abbreviated).count() > 0
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         program = self.create(
             name_abbreviated=name_abbreviated,
             external_name=name_abbreviated if not external_name_exists else None,
@@ -536,7 +536,7 @@ class UrgentNeedManager(models.Manager):
     )
     no_auto_fields = ("link",)
 
-    def new_urgent_need(self, name, phone_number):
+    def new_urgent_need(self, white_label: str, name: str, phone_number: str):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
@@ -547,7 +547,7 @@ class UrgentNeedManager(models.Manager):
         external_name_exists = self.filter(external_name=name).count() > 0
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         urgent_need = self.create(
             phone_number=phone_number,
             external_name=name if not external_name_exists else None,
@@ -704,7 +704,7 @@ class NavigatorManager(models.Manager):
     )
     no_auto_fields = ("assistance_link",)
 
-    def new_navigator(self, name, phone_number):
+    def new_navigator(self, white_label: str, name: str, phone_number: str):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
@@ -715,7 +715,7 @@ class NavigatorManager(models.Manager):
         external_name_exists = self.filter(external_name=name).count() > 0
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         navigator = self.create(
             phone_number=phone_number,
             external_name=name if not external_name_exists else None,
@@ -845,7 +845,7 @@ class Navigator(models.Model):
 class WarningMessageManager(models.Manager):
     translated_fields = ("message",)
 
-    def new_warning(self, calculator, external_name=None):
+    def new_warning(self, white_label: str, calculator: str, external_name: Optional[str] = None):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(f"warning.{calculator}_temporary_key-{field}")
@@ -857,7 +857,7 @@ class WarningMessageManager(models.Manager):
         external_name_exists = self.filter(external_name=external_name).count() > 0
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         warning = self.create(
             external_name=external_name if not external_name_exists else None,
             calculator=calculator,
@@ -978,7 +978,9 @@ class Referrer(models.Model):
 class TranslationOverrideManager(models.Manager):
     translated_fields = ("translation",)
 
-    def new_translation_override(self, calculator: str, program_field: str, external_name: Optional[str] = None):
+    def new_translation_override(
+        self, white_label: str, calculator: str, program_field: str, external_name: Optional[str] = None
+    ):
         """Make a new translation override with the calculator, field, and external_name"""
 
         translations = {}
@@ -995,7 +997,7 @@ class TranslationOverrideManager(models.Manager):
         external_name_exists = self.filter(external_name=external_name).count() > 0
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         translation_override = self.create(
             external_name=external_name if not external_name_exists else None,
             calculator=calculator,
