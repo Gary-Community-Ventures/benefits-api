@@ -1,9 +1,7 @@
 from typing import Optional
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from rest_framework.relations import reverse
 from integrations.services.communications import MessageUser
-from programs.programs import categories
 from programs.programs.helpers import STATE_MEDICAID_OPTIONS
 from programs.programs.policyengine.calculators import all_calculators
 from screener.models import (
@@ -240,7 +238,6 @@ def eligibility_results(screen: Screen, batch=False):
 
     missing_dependencies = screen.missing_fields()
 
-    # pe_eligibility = eligibility_policy_engine(screen)
     pe_calculators = {}
     for calculator_name, Calculator in all_calculators.items():
         program: Optional[Program] = None
