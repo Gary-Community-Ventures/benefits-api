@@ -30,7 +30,7 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
             user: User = screen.user
 
             try:
-                Integration = get_cms_integration()
+                Integration = get_cms_integration(screen.white_label)
                 integration = Integration(user, screen)
                 message = MessageUser(screen, screen.get_language_code())
 
