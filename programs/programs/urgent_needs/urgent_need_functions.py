@@ -394,7 +394,7 @@ class SnapEmployment(UrgentNeedFunction):
 
             if program["eligible"]:
                 snap_eligible = True
-            break
+                break
 
         return county_eligible and snap_eligible
 
