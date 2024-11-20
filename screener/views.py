@@ -44,7 +44,7 @@ from programs.programs.categories import ProgramCategoryCapCalculator, category_
 from django.core.exceptions import ObjectDoesNotExist
 from programs.programs.warnings import warning_calculators
 from validations.serializers import ValidationSerializer
-from .webhooks import eligibility_hooks
+from .webhooks import get_web_hook
 from drf_yasg.utils import swagger_auto_schema
 import math
 import json
@@ -149,11 +149,14 @@ class EligibilityTranslationView(views.APIView):
             "validations": validations,
             "program_categories": categories,
         }
-        hooks = eligibility_hooks()
+
         if screen.submission_date is None:
             screen.submission_date = datetime.now(timezone.utc)
-        if screen.referrer_code in hooks:
-            hooks[screen.referrer_code].send(screen, results)
+
+        hook = get_web_hook(screen)
+        if hook is not None:
+            hook.send(screen, results)
+
         screen.completed = True
         screen.save()
 
@@ -199,7 +202,7 @@ def eligibility_results(screen: Screen, batch=False):
         excluded_programs = [p.id for p in referrer.remove_programs.all()]
 
     all_programs = (
-        Program.objects.filter(active=True, category__isnull=False)
+        Program.objects.filter(active=True, category__isnull=False, white_label=screen.white_label)
         .prefetch_related(
             "legal_status_required",
             "fpl",
@@ -466,7 +469,7 @@ def serialized_document(document):
     }
 
 
-def urgent_need_results(screen, data):
+def urgent_need_results(screen: Screen, data):
     possible_needs = {
         "food": screen.needs_food,
         "baby supplies": screen.needs_baby_supplies,
@@ -491,7 +494,7 @@ def urgent_need_results(screen, data):
         UrgentNeed.objects.prefetch_related(
             "functions", *translations_prefetch_name("", UrgentNeed.objects.translated_fields)
         )
-        .filter(type_short__name__in=list_of_needs, active=True)
+        .filter(type_short__name__in=list_of_needs, active=True, white_label=screen.white_label)
         .distinct()
     )
 
