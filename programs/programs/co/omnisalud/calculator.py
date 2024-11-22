@@ -3,17 +3,16 @@ import programs.programs.messages as messages
 
 
 class OmniSalud(ProgramCalculator):
-    individual_limit = 1699
-    family_4_limit = 3469
+    income_percent = 1.5
     insurance = ["none"]
     member_amount = 610 * 12
     dependencies = ["income_amount", "income_frequency", "household_size", "age", "insurance"]
 
     def household_eligible(self, e: Eligibility):
         # Income test
-        gross_income = self.screen.calc_gross_income("monthly", ["all"])
-        income_band = OmniSalud.family_4_limit if self.screen.household_size >= 4 else OmniSalud.individual_limit
-        e.condition(gross_income <= income_band, messages.income(gross_income, income_band))
+        gross_income = self.screen.calc_gross_income("yearly", ["all"])
+        income_limit = self.program.fpl.as_dict()[self.screen.household_size] * OmniSalud.income_percent
+        e.condition(gross_income <= income_limit, messages.income(gross_income, income_limit))
 
     def member_eligible(self, e: MemberEligibility):
         member = e.member
