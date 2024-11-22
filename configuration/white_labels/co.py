@@ -2159,6 +2159,30 @@ class CoConfiguarationData(ConfigurationData):
             "default": "https://screener.myfriendben.org",
             "211co": "https://screener.myfriendben.org?referrer=211co",
         },
+        "stepDirectory": {
+            "default": [
+                "zipcode",
+                # the hhSize and hhData have to be consecutive
+                "householdSize",
+                "householdData",
+                "hasExpenses",
+                "householdAssets",
+                "hasBenefits",
+                "acuteHHConditions",
+                "referralSource",
+                "signUpInfo",
+            ],
+            "ccig": [
+                "zipcode",
+                "householdSize",
+                "householdData",
+                "hasExpenses",
+                "householdAssets",
+                "hasBenefits",
+                "acuteHHConditions",
+                "referralSource",
+            ],
+        },
     }
 
     footer_data = {
