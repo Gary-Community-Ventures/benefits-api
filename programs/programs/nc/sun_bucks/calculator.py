@@ -1,5 +1,5 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
-from programs.programs.helpers import medicaid_eligible, snap_eligible
+from programs.programs.helpers import medicaid_eligible, snap_eligible, tanf_eligible
 import programs.programs.messages as messages
 
 
@@ -16,6 +16,9 @@ class SunBucks(ProgramCalculator):
 
         # Must not have SNAP
         e.condition(not snap_eligible(self.data), messages.must_not_have_benefit("SNAP"))
+        
+        # Must not have TANF
+        e.condition(not tanf_eligible(self.data), messages.must_not_have_benefit("TANF"))
 
         # Income
         fpl = self.program.fpl

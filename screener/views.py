@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.relations import reverse
 from integrations.services.communications import MessageUser
 from programs.programs import categories
-from programs.programs.helpers import STATE_MEDICAID_OPTIONS
+from programs.programs.helpers import STATE_MEDICAID_OPTIONS, STATE_SNAP_OPTIONS, STATE_TANF_OPTIONS
 from programs.programs.policyengine.calculators import all_calculators
 from screener.models import (
     Screen,
@@ -258,7 +258,9 @@ def eligibility_results(screen: Screen, batch=False):
             "nslp",
             "leap",
             "chp",
+            *STATE_TANF_OPTIONS,
             *STATE_MEDICAID_OPTIONS,
+            *STATE_SNAP_OPTIONS,
             "emergency_medicaid",
             "wic",
             "andcs",
