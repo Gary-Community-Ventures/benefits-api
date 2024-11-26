@@ -3,10 +3,19 @@ from screener.models import Screen, HouseholdMember
 
 
 STATE_MEDICAID_OPTIONS = ("co_medicaid", "nc_medicaid")
+STATE_SNAP_OPTIONS = ("co_snap", "nc_snap")
 
 
 def medicaid_eligible(data: dict[str, Eligibility]):
     for name in STATE_MEDICAID_OPTIONS:
+        if name in data:
+            return data[name].eligible
+
+    return False
+
+
+def snap_eligible(data: dict[str, Eligibility]):
+    for name in STATE_SNAP_OPTIONS:
         if name in data:
             return data[name].eligible
 
