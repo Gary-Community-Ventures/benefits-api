@@ -3,10 +3,10 @@ from rest_framework import routers
 from . import views
 
 router = routers.DefaultRouter()
-router.register(r"programs", views.ProgramViewSet)
-router.register(r"program_categories", views.ProgramCategoryViewSet)
-router.register(r"navigators", views.NavigatorViewSet)
-router.register(r"urgent-needs", views.UrgentNeedViewSet)
+router.register(r"programs/(?P<white_label>.+)", views.ProgramViewSet, basename="Programs")
+router.register(r"program_categories/(?P<white_label>.+)", views.ProgramCategoryViewSet, basename="Program Categories")
+router.register(r"navigators/(?P<white_label>.+)", views.NavigatorViewSet, basename="Navigator")
+router.register(r"urgent_needs/(?P<white_label>.+)", views.UrgentNeedViewSet, basename="Urgent Need")
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
