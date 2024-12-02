@@ -25,6 +25,5 @@ class SunBucks(ProgramCalculator):
         child_eligible = False
         if member.age >= SunBucks.min_age and member.age <= SunBucks.max_age:
             child_eligible = True
-        
-        e.condition(child_eligible)
 
+        e.condition(child_eligible)
