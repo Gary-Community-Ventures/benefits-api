@@ -2,7 +2,7 @@ from .base import ConfigurationData
 from screener.models import WhiteLabel
 
 
-class DefaultConfiguarationData(ConfigurationData):
+class DefaultConfigurationData(ConfigurationData):
     is_default = True
 
     @classmethod
