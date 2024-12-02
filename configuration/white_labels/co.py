@@ -2,7 +2,7 @@ from .base import ConfigurationData
 from screener.models import WhiteLabel
 
 
-class CoConfiguarationData(ConfigurationData):
+class CoConfigurationData(ConfigurationData):
     @classmethod
     def get_white_label(self) -> WhiteLabel:
         return WhiteLabel.objects.get(code="co")

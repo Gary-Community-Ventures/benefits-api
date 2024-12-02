@@ -1,11 +1,11 @@
 from ._default import DefaultConfigurationData
 from .base import ConfigurationData
-from .co import CoConfiguarationData
-from .nc import NcConfiguarationData
+from .co import CoConfigurationData
+from .nc import NcConfigurationData
 
 
 white_label_config: dict[str, ConfigurationData] = {
-    "co": CoConfiguarationData,
-    "nc": NcConfiguarationData,
+    "co": CoConfigurationData,
+    "nc": NcConfigurationData,
     "_default": DefaultConfigurationData,
 }
