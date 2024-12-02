@@ -11,15 +11,6 @@ class SunBucks(ProgramCalculator):
     dependencies = ["age", "insurance", "income_amount", "income_frequency", "household_size"]
 
     def household_eligible(self, e: Eligibility):
-        # Must not have Medicaid
-        e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
-
-        # Must not have SNAP
-        e.condition(not snap_eligible(self.data), messages.must_not_have_benefit("SNAP"))
-        
-        # Must not have TANF
-        e.condition(not tanf_eligible(self.data), messages.must_not_have_benefit("TANF"))
-
         # Income
         fpl = self.program.fpl
         income_limit = int(self.fpl_percent * fpl.get_limit(self.screen.household_size))
