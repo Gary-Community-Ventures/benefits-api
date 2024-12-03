@@ -417,6 +417,21 @@ class ConfigurationData:
             "default": "",
             "[REPLACE_ME]": "",
         },
+        "stepDirectory": {
+            "default": [
+                "zipcode",
+                # the hhSize and hhData have to be consecutive
+                "householdSize",
+                "householdData",
+                "hasExpenses",
+                "householdAssets",
+                "hasBenefits",
+                "acuteHHConditions",
+                "referralSource",
+                "signUpInfo",
+            ],
+            "[REPLACE_ME]": [],
+        },
     }
 
     footer_data = {

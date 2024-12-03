@@ -22,6 +22,20 @@ class DefaultConfigurationData(ConfigurationData):
             "default": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id="211mfb"'
         },
         "shareLink": {"default": "https://screener.myfriendben.org"},
+        "stepDirectory": {
+            "default": [
+                "zipcode",
+                # the hhSize and hhData have to be consecutive
+                "householdSize",
+                "householdData",
+                "hasExpenses",
+                "householdAssets",
+                "hasBenefits",
+                "acuteHHConditions",
+                "referralSource",
+                "signUpInfo",
+            ]
+        },
     }
 
     footer_data = {
