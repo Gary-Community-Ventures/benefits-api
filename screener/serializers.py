@@ -227,7 +227,8 @@ class ScreenSerializer(serializers.ModelSerializer):
 
         # don't update create only fields
         for field in self.Meta.create_only_fields:
-            validated_data.pop(field)
+            if field in validated_data:
+                validated_data.pop(field)
 
         Screen.objects.filter(pk=instance.id).update(**validated_data)
         HouseholdMember.objects.filter(screen=instance).delete()
