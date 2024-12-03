@@ -1,3 +1,4 @@
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from configuration.models import (
@@ -22,10 +23,18 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
         white_labels_to_update = white_label_config.keys() if options["all"] else options["white_labels"]
-        for state in white_labels_to_update:
-            WhiteLabelData = white_label_config[state]
+        for white_label_code in white_labels_to_update:
+            if white_label_code not in white_label_config:
+                self.stdout.write(self.style.WARNING(f'White label for "{white_label_code}" does not exist'))
+                continue
 
-            white_label = WhiteLabelData.get_white_label()
+            WhiteLabelData = white_label_config[white_label_code]
+
+            try:
+                white_label = WhiteLabelData.get_white_label()
+            except ObjectDoesNotExist:
+                self.stdout.write(self.style.WARNING(f'White label for "{white_label_code}" is not in the database'))
+                continue
 
             # Save referrer_data to database
             Configuration.objects.update_or_create(
