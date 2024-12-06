@@ -126,6 +126,7 @@ class ConfigurationData:
         "my": "မြန်မာဘာသာစကား",
         "zh": "中文",
         "ar": "عربي",
+        "sw": "Kiswahili",
     }
 
     income_options = {
