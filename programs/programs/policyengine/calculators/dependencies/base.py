@@ -39,7 +39,6 @@ class TaxUnit(PolicyEngineScreenInput):
     """
 
     unit = "tax_units"
-    sub_unit = "tax_unit"
 
 
 class SpmUnit(PolicyEngineScreenInput):

@@ -1,3 +1,4 @@
+from typing import Optional
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from decouple import config
@@ -7,6 +8,7 @@ from django.db.models import Q
 from authentication.models import User
 from integrations.models import Link
 from programs.models import Navigator, Program, TranslationOverride, UrgentNeed
+from screener.models import WhiteLabel
 from translations.models import BLANK_TRANSLATION_PLACEHOLDER, Translation
 from configuration.models import Configuration
 import argparse
@@ -21,6 +23,11 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
+            "white_label",
+            nargs=None,
+            help="What white label to check",
+        )
+        parser.add_argument(
             "-s",
             "--strict",
             action=argparse.BooleanOptionalAction,
@@ -30,7 +37,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write("")
 
-        self._check_links(options["strict"])
+        self._check_links(options["white_label"], options["strict"])
 
         self.stdout.write("")
 
@@ -62,10 +69,12 @@ class Command(BaseCommand):
             return False
         return True
 
-    def _check_links(self, strict: bool = False) -> bool:
-        links = self._get_links()
+    def _check_links(self, white_label: str, strict: bool = False) -> bool:
+        links = self._get_links(white_label)
 
-        Link.objects.all().update(in_use=False)
+        Link.objects.filter(white_label__code=white_label).update(in_use=False)
+
+        white_label = WhiteLabel.objects.get(code=white_label)
 
         for link in links:
             if link == BLANK_TRANSLATION_PLACEHOLDER or link == "":
@@ -76,7 +85,7 @@ class Command(BaseCommand):
                 link_model.in_use = True
                 link_model.save()
             except Link.DoesNotExist:
-                link_model: Link = Link.objects.create(link=link, validated=False, in_use=True)
+                link_model: Link = Link.objects.create(link=link, validated=False, in_use=True, white_label=white_label)
 
             link_model.validate()
 
@@ -87,24 +96,39 @@ class Command(BaseCommand):
 
             self._output_condition(valid, f"{link} {link_model.status_code}")
 
-    def _get_links(self) -> list[str]:
-        program_links = [p.apply_button_link for p in Program.objects.filter(active=True)]
-        urgent_need_links = [u.link for u in UrgentNeed.objects.filter(active=True)]
-        navigator_links = [n.assistance_link for n in Navigator.objects.filter(programs__isnull=False)]
+    def _get_links(self, white_label: str) -> list[str]:
+        program_links = [
+            p.apply_button_link for p in Program.objects.filter(active=True, white_label__code=white_label)
+        ]
+        urgent_need_links = [u.link for u in UrgentNeed.objects.filter(active=True, white_label__code=white_label)]
+        navigator_links = [
+            n.assistance_link for n in Navigator.objects.filter(programs__isnull=False, white_label__code=white_label)
+        ]
         translation_override_links = [
             o.translation
             for o in TranslationOverride.objects.filter(field__in=["apply_button_link", "learn_more_link"])
         ]
-        config_links = [
-            json.loads(Configuration.objects.get(name="public_charge_rule").data)["link"],
-            *[
-                o["link"]
-                for o in json.loads(Configuration.objects.get(name="more_help_options").data)["moreHelpOptions"]
-                if "link" in o
-            ],
-            *json.loads(Configuration.objects.get(name="privacy_policy").data).values(),
-            *json.loads(Configuration.objects.get(name="consent_to_contact").data).values(),
+
+        public_charge_links = [
+            json.loads(c.data)["link"]
+            for c in Configuration.objects.filter(name="public_charge_rule", white_label__code=white_label)
         ]
+
+        more_help_option_links = []
+        for config in Configuration.objects.filter(name="more_help_options", white_label__code=white_label):
+            more_help_option_links.extend(
+                [o["link"] for o in json.loads(config.data)["moreHelpOptions"] if "link" in o]
+            )
+
+        privacy_policy_links = []
+        for config in Configuration.objects.filter(name="privacy_policy", white_label__code=white_label):
+            privacy_policy_links.extend(json.loads(config.data).values())
+
+        consent_to_contact_links = []
+        for config in Configuration.objects.filter(name="consent_to_contact", white_label__code=white_label):
+            consent_to_contact_links.extend(json.loads(config.data).values())
+
+        config_links = [*public_charge_links, *more_help_option_links, *privacy_policy_links, *consent_to_contact_links]
 
         links = {
             *self._get_translation_links(program_links),

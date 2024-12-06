@@ -11,9 +11,10 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument("--limit", default=1, type=int)
+        parser.add_argument("--white-label", default="co", type=str)
 
     def handle(self, *args, **options):
-        screens = Screen.objects.all().exclude(user__isnull=True)
+        screens = Screen.objects.all().exclude(user__isnull=True, white_label__code=options["white_label"])
         latest_snapshots = []
         limit = options["limit"]
         for screen in screens:

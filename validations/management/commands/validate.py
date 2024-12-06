@@ -28,6 +28,7 @@ class ValidationResult:
 
     def __init__(
         self,
+        white_label: str,
         uuid: str,
         program_name: str,
         result: Result,
@@ -37,6 +38,7 @@ class ValidationResult:
         expected_eligibility: bool = False,
         eligibility: bool = False,
     ):
+        self.white_label = white_label
         self.uuid = uuid
         self.program_name = program_name
         self.result = result
@@ -62,6 +64,7 @@ class ValidationResult:
     def sheets_row(self):
         link_and_name = [
             self.sheets_cell(self.format_url(), is_link=True),
+            self.sheets_cell(self.white_label),
             self.sheets_cell(self.program_name),
             self.sheets_cell(self.result.value),
         ]
@@ -87,12 +90,13 @@ class ValidationResults:
         self.skipped = 0
         self.results: list[ValidationResult] = []
 
-    def skip(self, uuid: str, program_name: str):
+    def skip(self, white_label: str, uuid: str, program_name: str):
         self.skipped += 1
-        self.results.append(ValidationResult(uuid, program_name, Result.SKIPPED))
+        self.results.append(ValidationResult(white_label, uuid, program_name, Result.SKIPPED))
 
     def test(
         self,
+        white_label: str,
         uuid: str,
         program_id: int,
         program_name: str,
@@ -110,6 +114,7 @@ class ValidationResults:
 
         self.results.append(
             ValidationResult(
+                white_label,
                 uuid,
                 program_name,
                 result,
@@ -139,12 +144,16 @@ class Command(BaseCommand):
             help="Don't display skipped validations",
         )
         parser.add_argument("-s", "--sheet-id", help="The Google sheet id to display results in")
+        parser.add_argument("-w", "--white-label", help="What white label to run validations for")
 
     def handle(self, *args, **options):
+        queryset = Validation.objects.all()
+
+        if options["white_label"] is not None:
+            queryset = queryset.filter(screen__white_label__code=options["white_label"])
+
         if options["program"] is not None:
-            queryset = Validation.objects.filter(program_name=options["program"])
-        else:
-            queryset = Validation.objects.all()
+            queryset = queryset.filter(program_name=options["program"])
 
         validations = queryset.prefetch_related("screen").order_by("-created_date")
 
@@ -159,16 +168,18 @@ class Command(BaseCommand):
         validation_results = ValidationResults()
         for group in grouped_validations.values():
             screen = group[0].screen
+            white_label = screen.white_label.code
             results = eligibility_results(screen, batch=True)[0]
 
             for validation in group:
                 program = self._find_program(validation, results)
 
                 if program is None:
-                    validation_results.skip(screen.uuid, validation.program_name)
+                    validation_results.skip(white_label, screen.uuid, validation.program_name)
                     continue
 
                 validation_results.test(
+                    white_label,
                     screen.uuid,
                     program["program_id"],
                     validation.program_name,
@@ -177,6 +188,8 @@ class Command(BaseCommand):
                     validation.eligible,
                     program["eligible"],
                 )
+        validation_results.results.sort(key=lambda r: r.white_label)
+
         self._stdout_display(validation_results, options["hide_skipped"])
         if options["sheet_id"] is not None:
             self._google_sheet_display(validation_results, options["sheet_id"], options["hide_skipped"])
@@ -188,7 +201,7 @@ class Command(BaseCommand):
 
     def _stdout_display(self, results: ValidationResults, hide_skipped: bool):
         for result in results.results:
-            url_and_name = f"{result.format_url()} {result.program_name}"
+            url_and_name = f"{result.format_url()} {result.white_label} {result.program_name}"
             text = f"{url_and_name} {result.format_value_change()}"
             if result.result == Result.PASSED:
                 self.stdout.write(self.style.SUCCESS(text))
@@ -203,11 +216,12 @@ class Command(BaseCommand):
             self.stdout.write(f"Skipped: {results.skipped}")
 
     def _google_sheet_display(self, results: ValidationResults, google_sheet_id: str, hide_skipped: bool):
-        column_count = 7
+        column_count = 8
         row_data = [
             wrap_row(
                 [
                     title_cell("URL"),
+                    title_cell("White Label"),
                     title_cell("Program Name"),
                     title_cell("Result"),
                     title_cell("Expected Value"),

@@ -12,7 +12,14 @@ class ConfigurationAdmin(ModelAdmin):
             "widget": JSONEditorWidget(options={"modes": ["tree", "code"], "mode": "tree", "enableDrag": False})
         },
     }
-    search_fields = ("name",)
+    search_fields = ("name", "white_label__name")
+    list_display = ("name", "white_label_name")
+
+    def white_label_name(self, obj):
+        return obj.white_label.name
+
+    white_label_name.admin_order_field = "white_label__name"
+    white_label_name.short_description = "White Label"
 
     # Convert the JSON string to a dictionary
     # This makes it so that the JSON data coming from the 'data' field of the Configuration model
