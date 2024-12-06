@@ -184,6 +184,7 @@ LANGUAGES = (
     ("my", _("Burmese")),
     ("zh", _("Chinese")),
     ("ar", _("Arabic")),
+    ("sw", _("Kiswahili")),
 )
 
 TIME_ZONE = "UTC"
@@ -207,6 +208,7 @@ PARLER_LANGUAGES = {
         {"code": "my"},
         {"code": "zh"},
         {"code": "ar"},
+        {"code": "sw"},
     ),
     "default": {
         "fallbacks": ["en-us"],  # defaults to PARLER_DEFAULT_LANGUAGE_CODE
