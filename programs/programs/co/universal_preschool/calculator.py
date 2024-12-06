@@ -42,4 +42,4 @@ class UniversalPreschool(ProgramCalculator):
         if member.relationship == "fosterChild":
             income_limit = int(UniversalPreschool.foster_income_limit * fpl)
 
-        return income < income_limit
+        return income <= income_limit
