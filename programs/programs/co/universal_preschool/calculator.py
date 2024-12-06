@@ -5,8 +5,11 @@ from screener.models import HouseholdMember
 class UniversalPreschool(ProgramCalculator):
     qualifying_age = 3
     age = 4
-    percent_of_fpl = 2.7
-    amount_by_hours = {"10_hours": 4_837, "15_hours": 6_044, "30_hours": 10_655}
+    income_limit = 1
+    foster_income_limit = 2.7
+    amount_10_hr = 4_920
+    amount_15_hr = 6_204
+    amount_30_hr = 11_004
     dependencies = ["age", "income_amount", "income_frequency", "relationship", "household_size"]
 
     def member_eligible(self, e: MemberEligibility):
@@ -23,16 +26,20 @@ class UniversalPreschool(ProgramCalculator):
         qualifying_condition = self._has_qualifying_condition(member)
 
         if not qualifying_condition:
-            return UniversalPreschool.amount_by_hours["15_hours"]
+            return UniversalPreschool.amount_15_hr
 
         if member.age == UniversalPreschool.age:
-            return UniversalPreschool.amount_by_hours["30_hours"]
+            return UniversalPreschool.amount_30_hr
 
-        return UniversalPreschool.amount_by_hours["10_hours"]
+        return UniversalPreschool.amount_10_hr
 
     def _has_qualifying_condition(self, member: HouseholdMember):
-        fpl = self.program.fpl.as_dict()
-        income_limit = int(UniversalPreschool.percent_of_fpl * fpl[self.screen.household_size])
-        income_condition = self.screen.calc_gross_income("yearly", ["all"]) < income_limit
+        fpl = self.program.fpl.as_dict()[self.screen.household_size]
+        income = self.screen.calc_gross_income("yearly", ["all"])
 
-        return income_condition or member.relationship == "fosterChild"
+        income_limit = int(UniversalPreschool.income_limit * fpl)
+
+        if member.relationship == "fosterChild":
+            income_limit = int(UniversalPreschool.foster_income_limit * fpl)
+
+        return income <= income_limit
