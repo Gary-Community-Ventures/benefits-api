@@ -12,6 +12,7 @@ class Ssdi(ProgramCalculator):
     income_limit_blind = 2_590
     amount = 1_537
     min_age = 18
+    max_age = 65
     ineligible_relationships = ["fosterChild", "grandChild"]
     parent_relationships = ["spouse", "domesticPartner", "headOfHousehold"]
     dependencies = ["income_amount", "income_frequency", "household_size"]
@@ -36,6 +37,7 @@ class Ssdi(ProgramCalculator):
 
         # age
         e.condition(member.age >= Ssdi.min_age or self._child_eligible(member))
+        e.condition(member.age <= Ssdi.max_age)
 
         if e.eligible:
             self.eligible_members.append(member)

@@ -1,4 +1,5 @@
 from programs.models import WarningMessage
+from programs.programs.calc import Eligibility
 from programs.util import Dependencies
 from screener.models import Screen
 
@@ -6,9 +7,12 @@ from screener.models import Screen
 class WarningCalculator:
     dependencies = tuple()
 
-    def __init__(self, screen: Screen, warning: WarningMessage, missing_dependencies: Dependencies):
+    def __init__(
+        self, screen: Screen, warning: WarningMessage, eligibility: Eligibility, missing_dependencies: Dependencies
+    ):
         self.screen = screen
         self.warning = warning
+        self.eligibility = eligibility
         self.missing_dependencies = missing_dependencies
 
     def calc(self) -> bool:
