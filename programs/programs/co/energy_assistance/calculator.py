@@ -9,7 +9,7 @@ class LeapValueCache(GoogleSheetsCache):
     expire_time = 60 * 60 * 24
     default = []
     sheet_id = "1W8WbJsb5Mgb4CUkte2SCuDnqigqkmaO3LC0KSfhEdGg"
-    range_name = "'FFY 2024'!A2:G65"
+    range_name = "'FFY 2025'!A2:G65"
 
     def update(self):
         data = super().update()
