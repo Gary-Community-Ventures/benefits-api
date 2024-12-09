@@ -282,11 +282,7 @@ class Screen(models.Model):
             "wic": self.has_wic,
             "nc_wic": self.has_wic,
             "snap": self.has_snap,
-            "sunbucks": self.has_sunbucks
-            or self.has_tanf
-            or self.has_snap
-            or self.has_medicaid
-            or self.has_medicaid_hi,
+            "sunbucks": self.has_sunbucks,
             "co_snap": self.has_snap,
             "nc_snap": self.has_snap,
             "lifeline": self.has_lifeline,
