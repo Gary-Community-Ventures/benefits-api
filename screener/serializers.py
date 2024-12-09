@@ -136,6 +136,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_tanf",
             "has_wic",
             "has_snap",
+            "has_sunbucks",
             "has_lifeline",
             "has_acp",
             "has_eitc",
