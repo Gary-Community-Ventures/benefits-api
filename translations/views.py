@@ -1,6 +1,8 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.conf import settings
+
+from screener.models import WhiteLabel
 from .models import Translation
 from rest_framework.response import Response
 from rest_framework import views
@@ -222,8 +224,13 @@ def auto_translate(request, id=0, lang="en-us"):
         return render(request, "edit/lang_form.html", context)
 
 
+def get_white_label_choices():
+    return [(w.code, w.name) for w in WhiteLabel.objects.exclude(code="_default").order_by("name")]
+
+
 class NewProgramForm(forms.Form):
     name_abbreviated = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    white_label = forms.ChoiceField(choices=get_white_label_choices, widget=forms.Select(attrs={"class": "input"}))
 
 
 @login_required(login_url="/admin/login")
@@ -242,9 +249,7 @@ def programs_view(request):
     elif request.method == "POST":
         form = NewProgramForm(request.POST)
         if form.is_valid():
-            program = Program.objects.new_program(
-                form["name_abbreviated"].value(),
-            )
+            program = Program.objects.new_program(form["white_label"].value(), form["name_abbreviated"].value())
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/programs/{program.id}"
             return response
@@ -291,6 +296,7 @@ def programs_filter_view(request):
 class NewNavigatorForm(forms.Form):
     label = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "input"}))
     phone_number = PhoneNumberField(required=False, widget=forms.TextInput(attrs={"class": "input"}))
+    white_label = forms.ChoiceField(choices=get_white_label_choices, widget=forms.Select(attrs={"class": "input"}))
 
 
 @login_required(login_url="/admin/login")
@@ -310,6 +316,7 @@ def navigators_view(request):
         form = NewNavigatorForm(request.POST)
         if form.is_valid():
             navigator = Navigator.objects.new_navigator(
+                form["white_label"].value(),
                 form["label"].value(),
                 form["phone_number"].value(),
             )
@@ -359,6 +366,7 @@ def navigator_filter_view(request):
 class NewUrgentNeedForm(forms.Form):
     label = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "input"}))
     phone_number = PhoneNumberField(required=False, widget=forms.TextInput(attrs={"class": "input"}))
+    white_label = forms.ChoiceField(choices=get_white_label_choices, widget=forms.Select(attrs={"class": "input"}))
 
 
 @login_required(login_url="/admin/login")
@@ -377,6 +385,7 @@ def urgent_needs_view(request):
         form = NewUrgentNeedForm(request.POST)
         if form.is_valid():
             urgent_need = UrgentNeed.objects.new_urgent_need(
+                form["white_label"].value(),
                 form["label"].value(),
                 form["phone_number"].value(),
             )
@@ -425,6 +434,7 @@ def urgent_need_filter_view(request):
 
 class NewDocumentForm(forms.Form):
     external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    white_label = forms.ChoiceField(choices=get_white_label_choices, widget=forms.Select(attrs={"class": "input"}))
 
 
 @login_required(login_url="/admin/login")
@@ -442,7 +452,7 @@ def documents_view(request):
     if request.method == "POST":
         form = NewDocumentForm(request.POST)
         if form.is_valid():
-            document = Document.objects.new_document(form["external_name"].value())
+            document = Document.objects.new_document(form["white_label"].value(), form["external_name"].value())
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/documents/{document.id}"
             return response
@@ -486,6 +496,7 @@ def document_filter_view(request):
 class NewWarningMessageForm(forms.Form):
     external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
     calculator_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    white_label = forms.ChoiceField(choices=get_white_label_choices, widget=forms.Select(attrs={"class": "input"}))
 
 
 @login_required(login_url="/admin/login")
@@ -503,7 +514,9 @@ def warning_messages_view(request):
     if request.method == "POST":
         form = NewWarningMessageForm(request.POST)
         if form.is_valid():
-            warning = WarningMessage.objects.new_warning(form["calculator_name"].value(), form["external_name"].value())
+            warning = WarningMessage.objects.new_warning(
+                form["white_label"].value(), form["calculator_name"].value(), form["external_name"].value()
+            )
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/warning_messages/{warning.id}"
             return response
@@ -548,6 +561,7 @@ class NewTranslationOverrideForm(forms.Form):
     external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
     calculator_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
     field_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    white_label = forms.ChoiceField(choices=get_white_label_choices, widget=forms.Select(attrs={"class": "input"}))
 
 
 @login_required(login_url="/admin/login")
@@ -566,7 +580,10 @@ def translation_overrides_view(request):
         form = NewTranslationOverrideForm(request.POST)
         if form.is_valid():
             translation_override = TranslationOverride.objects.new_translation_override(
-                form["calculator_name"].value(), form["field_name"].value(), form["external_name"].value()
+                form["white_label"].value(),
+                form["calculator_name"].value(),
+                form["field_name"].value(),
+                form["external_name"].value(),
             )
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/translation_overrides/{translation_override.id}"
@@ -613,6 +630,7 @@ def translation_override_filter_view(request):
 class NewProgramCategoryForm(forms.Form):
     external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
     icon = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    white_label = forms.ChoiceField(choices=get_white_label_choices, widget=forms.Select(attrs={"class": "input"}))
 
 
 @login_required(login_url="/admin/login")
@@ -631,7 +649,7 @@ def program_categories_view(request):
         form = NewProgramCategoryForm(request.POST)
         if form.is_valid():
             program_category = ProgramCategory.objects.new_program_category(
-                form["external_name"].value(), form["icon"].value()
+                form["white_label"].value(), form["external_name"].value(), form["icon"].value()
             )
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/program_categories/{program_category.id}"

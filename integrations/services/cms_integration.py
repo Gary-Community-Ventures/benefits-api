@@ -10,7 +10,7 @@ import json
 from sentry_sdk import capture_message
 
 from authentication.models import User
-from screener.models import Screen
+from screener.models import Screen, WhiteLabel
 
 
 class CmsIntegration:
@@ -56,6 +56,7 @@ class HubSpotIntegration(CmsIntegration):
         self._update_contact(self.user.external_id, data)
 
     def should_add(self):
+        return True
         if settings.DEBUG:
             return False
         if self.user is None or self.screen.is_test_data is None:
@@ -219,7 +220,21 @@ class BrevoIntegration(CmsIntegration):
         return True
 
 
-def get_cms_integration():
-    if settings.CONTACT_SERVICE == "brevo":
-        return BrevoIntegration
-    return HubSpotIntegration
+CMS_INTEGRATIONS = {"brevo": BrevoIntegration, "hubspot": HubSpotIntegration}
+
+
+class NoCmsSelected(Exception):
+    pass
+
+
+def get_cms_integration(white_label: WhiteLabel):
+    if white_label.cms_method is None:
+        raise NoCmsSelected(f'cms_method is None for "{white_label.name}". Please add a cms_method.')
+
+    if white_label.cms_method not in CMS_INTEGRATIONS:
+        raise NoCmsSelected(
+            f'cms_method of "{white_label.cms_method}" in the "{white_label.name}" white label does not exist. '
+            f"The options are {list(CMS_INTEGRATIONS.keys())}"
+        )
+
+    return CMS_INTEGRATIONS[white_label.cms_method]

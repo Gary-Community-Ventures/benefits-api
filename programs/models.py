@@ -101,7 +101,7 @@ class LegalStatus(models.Model):
 class ProgramCategoryManager(models.Manager):
     translated_fields = ("name", "description")
 
-    def new_program_category(self, external_name: str, icon: str):
+    def new_program_category(self, white_label: str, external_name: str, icon: str):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
@@ -109,7 +109,7 @@ class ProgramCategoryManager(models.Manager):
             )
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         program_category = self.create(external_name=external_name, icon=icon, white_label=white_label, **translations)
 
         for [field, translation] in translations.items():
@@ -127,18 +127,29 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
         {
             "calculator": str,
             "icon": str,
+            "white_label": str,
         },
     )
 
     def to_model_data(self) -> DataType:
         program_category = self.instance
-        return {"calculator": program_category.calculator, "icon": program_category.icon}
+        return {
+            "calculator": program_category.calculator,
+            "icon": program_category.icon,
+            "white_label": program_category.white_label.code,
+        }
 
     def from_model_data(self, data: DataType):
         program_category = self.instance
 
         program_category.calculator = data["calculator"]
         program_category.icon = data["icon"]
+
+        try:
+            white_label = WhiteLabel.objects.get(code=data["white_label"])
+        except WhiteLabel.DoesNotExist:
+            white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
+        program_category.white_label = white_label
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["ProgramCategory"]) -> "ProgramCategory":
@@ -171,7 +182,7 @@ class DocumentManager(models.Manager):
     translated_fields = ("text", "link_url", "link_text")
     no_auto_fields = ("link_url",)
 
-    def new_document(self, external_name):
+    def new_document(self, white_label: str, external_name: str):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
@@ -181,8 +192,8 @@ class DocumentManager(models.Manager):
             )
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
-        document = self.create(external_name=external_name, white_label=white_label, **translation)
+        white_label = WhiteLabel.objects.get(code=white_label)
+        document = self.create(external_name=external_name, white_label=white_label, **translations)
 
         for [field, translation] in translations.items():
             translation.label = f"document.{external_name}_{document.id}-{field}"
@@ -193,6 +204,28 @@ class DocumentManager(models.Manager):
 
 class DocumentDataController(ModelDataController["Document"]):
     _model_name = "Document"
+
+    DataType = TypedDict(
+        "DataType",
+        {
+            "white_label": str,
+        },
+    )
+
+    def to_model_data(self) -> DataType:
+        document = self.instance
+        return {
+            "white_label": document.white_label.code,
+        }
+
+    def from_model_data(self, data: DataType):
+        document = self.instance
+
+        try:
+            white_label = WhiteLabel.objects.get(code=data["white_label"])
+        except WhiteLabel.DoesNotExist:
+            white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
+        document.white_label = white_label
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["Document"]) -> "Document":
@@ -236,7 +269,7 @@ class ProgramManager(models.Manager):
     )
     no_auto_fields = ("apply_button_link", "learn_more_link")
 
-    def new_program(self, name_abbreviated):
+    def new_program(self, white_label: str, name_abbreviated: str):
         translations = {}
         for field in self.translated_fields:
             default_message = "" if field == "apply_button_description" else BLANK_TRANSLATION_PLACEHOLDER
@@ -250,7 +283,7 @@ class ProgramManager(models.Manager):
         external_name_exists = self.filter(external_name=name_abbreviated).count() > 0
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         program = self.create(
             name_abbreviated=name_abbreviated,
             external_name=name_abbreviated if not external_name_exists else None,
@@ -284,6 +317,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "low_confidence": bool,
             "documents": list[str],
             "category": Optional[str],
+            "white_label": str,
         },
     )
 
@@ -305,6 +339,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "name_abbreviated": program.name_abbreviated,
             "documents": [d.external_name for d in program.documents.all()],
             "category": program.category.external_name if program.category is not None else None,
+            "white_label": program.white_label.code,
         }
 
     def from_model_data(self, data: DataType):
@@ -351,6 +386,12 @@ class ProgramDataController(ModelDataController["Program"]):
         if data["category"] is not None:
             program_category = ProgramCategory.objects.get(external_name=data["category"])
         program.category = program_category
+
+        try:
+            white_label = WhiteLabel.objects.get(code=data["white_label"])
+        except WhiteLabel.DoesNotExist:
+            white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
+        program.white_label = white_label
 
         program.save()
 
@@ -495,7 +536,7 @@ class UrgentNeedManager(models.Manager):
     )
     no_auto_fields = ("link",)
 
-    def new_urgent_need(self, name, phone_number):
+    def new_urgent_need(self, white_label: str, name: str, phone_number: str):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
@@ -506,7 +547,7 @@ class UrgentNeedManager(models.Manager):
         external_name_exists = self.filter(external_name=name).count() > 0
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         urgent_need = self.create(
             phone_number=phone_number,
             external_name=name if not external_name_exists else None,
@@ -536,6 +577,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "low_confidence": str,
             "categories": CategoriesType,
             "functions": NeedFunctionsType,
+            "white_label": str,
         },
     )
 
@@ -553,6 +595,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "low_confidence": need.low_confidence,
             "categories": self._category(),
             "functions": self._functions(),
+            "white_label": need.white_label.code,
         }
 
     def from_model_data(self, data: DataType):
@@ -561,6 +604,12 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
         need.active = data["active"]
         need.low_confidence = data["low_confidence"]
 
+        try:
+            white_label = WhiteLabel.objects.get(code=data["white_label"])
+        except WhiteLabel.DoesNotExist:
+            white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
+        need.white_label = white_label
+
         # get or create type short
         categories = []
         for category in data["categories"]:
@@ -568,6 +617,9 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
                 cat_instance = UrgentNeedCategory.objects.get(name=category["name"])
             except UrgentNeedCategory.DoesNotExist:
                 cat_instance = UrgentNeedFunction.objects.create(name=category["name"])
+
+            cat_instance.white_label = white_label
+            cat_instance.save()
             categories.append(cat_instance)
         need.type_short.set(categories)
 
@@ -652,7 +704,7 @@ class NavigatorManager(models.Manager):
     )
     no_auto_fields = ("assistance_link",)
 
-    def new_navigator(self, name, phone_number):
+    def new_navigator(self, white_label: str, name: str, phone_number: str):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
@@ -663,7 +715,7 @@ class NavigatorManager(models.Manager):
         external_name_exists = self.filter(external_name=name).count() > 0
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         navigator = self.create(
             phone_number=phone_number,
             external_name=name if not external_name_exists else None,
@@ -691,6 +743,7 @@ class NavigatorDataController(ModelDataController["Navigator"]):
             "counties": CountiesType,
             "languages": LanugagesType,
             "programs": list[str],
+            "white_label": str,
         },
     )
 
@@ -707,12 +760,19 @@ class NavigatorDataController(ModelDataController["Navigator"]):
             "counties": self._counties(),
             "languages": self._languages(),
             "programs": [p.external_name for p in navigator.programs.all()],
+            "white_label": navigator.white_label.code,
         }
 
     def from_model_data(self, data: DataType):
         navigator = self.instance
 
         navigator.phone_number = data["phone_number"]
+
+        try:
+            white_label = WhiteLabel.objects.get(code=data["white_label"])
+        except WhiteLabel.DoesNotExist:
+            white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
+        navigator.white_label = white_label
 
         # get or create counties
         counties = []
@@ -721,6 +781,9 @@ class NavigatorDataController(ModelDataController["Navigator"]):
                 county_instance = County.objects.get(name=county["name"])
             except County.DoesNotExist:
                 county_instance = County.objects.create(name=county["name"])
+
+            county_instance.white_label = white_label
+            county_instance.save()
             counties.append(county_instance)
         navigator.counties.set(counties)
 
@@ -782,7 +845,7 @@ class Navigator(models.Model):
 class WarningMessageManager(models.Manager):
     translated_fields = ("message",)
 
-    def new_warning(self, calculator, external_name=None):
+    def new_warning(self, white_label: str, calculator: str, external_name: Optional[str] = None):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(f"warning.{calculator}_temporary_key-{field}")
@@ -794,7 +857,7 @@ class WarningMessageManager(models.Manager):
         external_name_exists = self.filter(external_name=external_name).count() > 0
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         warning = self.create(
             external_name=external_name if not external_name_exists else None,
             calculator=calculator,
@@ -814,7 +877,9 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
     dependencies = ["Program"]
 
     CountiesType = list[TypedDict("CountyType", {"name": str})]
-    DataType = TypedDict("DataType", {"calculator": str, "counties": CountiesType, "programs": list[str]})
+    DataType = TypedDict(
+        "DataType", {"calculator": str, "counties": CountiesType, "programs": list[str], "white_label": str}
+    )
 
     def _counties(self) -> CountiesType:
         return [{"name": c.name} for c in self.instance.counties.all()]
@@ -825,12 +890,19 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
             "calculator": warning.calculator,
             "counties": self._counties(),
             "programs": [p.external_name for p in warning.programs.all()],
+            "white_label": warning.white_label.code,
         }
 
     def from_model_data(self, data: DataType):
         warning = self.instance
 
         warning.calculator = data["calculator"]
+
+        try:
+            white_label = WhiteLabel.objects.get(code=data["white_label"])
+        except WhiteLabel.DoesNotExist:
+            white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
+        warning.white_label = white_label
 
         # get or create counties
         counties = []
@@ -906,7 +978,9 @@ class Referrer(models.Model):
 class TranslationOverrideManager(models.Manager):
     translated_fields = ("translation",)
 
-    def new_translation_override(self, calculator: str, program_field: str, external_name: Optional[str] = None):
+    def new_translation_override(
+        self, white_label: str, calculator: str, program_field: str, external_name: Optional[str] = None
+    ):
         """Make a new translation override with the calculator, field, and external_name"""
 
         translations = {}
@@ -923,7 +997,7 @@ class TranslationOverrideManager(models.Manager):
         external_name_exists = self.filter(external_name=external_name).count() > 0
 
         # set white label
-        white_label = WhiteLabel.objects.all().first()
+        white_label = WhiteLabel.objects.get(code=white_label)
         translation_override = self.create(
             external_name=external_name if not external_name_exists else None,
             calculator=calculator,
@@ -945,7 +1019,8 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
 
     CountiesType = list[TypedDict("CountyType", {"name": str})]
     DataType = TypedDict(
-        "DataType", {"calculator": str, "field": str, "active": bool, "counties": CountiesType, "program": str}
+        "DataType",
+        {"calculator": str, "field": str, "active": bool, "counties": CountiesType, "program": str, "white_label": str},
     )
 
     def _counties(self) -> CountiesType:
@@ -959,6 +1034,7 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
             "active": translation_override.active,
             "counties": self._counties(),
             "program": translation_override.program.external_name,
+            "white_label": translation_override.white_label.code,
         }
 
     def from_model_data(self, data: DataType):
@@ -967,6 +1043,12 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
         translation_override.calculator = data["calculator"]
         translation_override.field = data["field"]
         translation_override.active = data["active"]
+
+        try:
+            white_label = WhiteLabel.objects.get(code=data["white_label"])
+        except WhiteLabel.DoesNotExist:
+            white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
+        translation_override.white_label = white_label
 
         # get or create counties
         counties = []

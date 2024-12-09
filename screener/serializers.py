@@ -103,7 +103,7 @@ class ScreenSerializer(serializers.ModelSerializer):
     household_members = HouseholdMemberSerializer(many=True)
     expenses = ExpenseSerializer(many=True)
     user = UserOffersSerializer(read_only=True)
-    white_label = serializers.CharField(source="white_label.code", read_only=True)
+    white_label = serializers.CharField(source="white_label.code")
 
     class Meta:
         model = Screen
@@ -193,20 +193,20 @@ class ScreenSerializer(serializers.ModelSerializer):
             "completed",
             "user",
             "is_test_data",
-            "white_label",
         )
-        create_only_fields = (
-            "external_id",
-            "is_test",
-            "referrer_code",
-        )
+        create_only_fields = ("external_id", "is_test", "referrer_code", "white_label")
+
+    def validate(self, attrs):
+        white_label_code = attrs.pop("white_label")["code"]
+        white_label = WhiteLabel.objects.get(code=white_label_code)
+        attrs["white_label"] = white_label
+
+        return attrs
 
     def create(self, validated_data):
         household_members = validated_data.pop("household_members")
         expenses = validated_data.pop("expenses")
-        # set white label
-        white_label = WhiteLabel.objects.all().first()
-        screen = Screen.objects.create(**validated_data, completed=False, white_label=white_label)
+        screen = Screen.objects.create(**validated_data, completed=False)
         screen.set_screen_is_test()
         for member in household_members:
             incomes = member.pop("income_streams")
@@ -228,7 +228,8 @@ class ScreenSerializer(serializers.ModelSerializer):
 
         # don't update create only fields
         for field in self.Meta.create_only_fields:
-            validated_data.pop(field)
+            if field in validated_data:
+                validated_data.pop(field)
 
         Screen.objects.filter(pk=instance.id).update(**validated_data)
         HouseholdMember.objects.filter(screen=instance).delete()

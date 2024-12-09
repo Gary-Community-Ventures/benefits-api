@@ -2,6 +2,7 @@ from .models import Screen
 from programs.models import Referrer
 from .serializers import ScreenSerializer
 from sentry_sdk import capture_exception, capture_message
+from typing import Optional
 import requests
 
 
@@ -36,10 +37,13 @@ class Hook:
         return "eligibility", results
 
 
-def eligibility_hooks():
-    hooks: dict[str, Hook] = {}
+def get_web_hook(screen: Screen) -> Optional[Hook]:
+    if screen.referrer_code is None:
+        return None
 
-    for hook in Referrer.objects.all():
-        hooks[hook.referrer_code] = Hook(hook)
+    try:
+        referrer = Referrer.objects.get(white_label=screen.white_label, referrer_code=screen.referrer_code)
+    except Referrer.DoesNotExist:
+        return None
 
-    return hooks
+    return Hook(referrer)

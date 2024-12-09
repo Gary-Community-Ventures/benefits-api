@@ -13,8 +13,8 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "-d",
-            "--domain",
+            "domain",
+            nargs=None,
             help="Domain of the environment to pull from",
         )
 
