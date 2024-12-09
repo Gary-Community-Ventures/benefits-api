@@ -146,7 +146,7 @@ class CoConfigurationData(ConfigurationData):
             "_label": "referralOptions.fircsummitresourcecenter",
             "_default_message": "FIRC Summit Resource Center",
         },
-        "ccig": "Colorado Community Insight Group",
+        "ccig": "Colorado Design Insight Group",
         "eaglecounty": "Eagle County",
         "searchEngine": {"_label": "referralOptions.searchEngine", "_default_message": "Google or other search engine"},
         "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
