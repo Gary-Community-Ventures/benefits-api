@@ -153,7 +153,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["ProgramCategory"]) -> "ProgramCategory":
-        return Model.objects.new_program_category('_default', external_name, "housing")
+        return Model.objects.new_program_category("_default", external_name, "housing")
 
 
 class ProgramCategory(models.Model):
@@ -229,7 +229,7 @@ class DocumentDataController(ModelDataController["Document"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["Document"]) -> "Document":
-        return Model.objects.new_document('_default', external_name)
+        return Model.objects.new_document("_default", external_name)
 
 
 class Document(models.Model):
@@ -397,7 +397,7 @@ class ProgramDataController(ModelDataController["Program"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["Program"]) -> "Program":
-        return Model.objects.new_program('_default', external_name)
+        return Model.objects.new_program("_default", external_name)
 
 
 # This model describes all of the benefit programs available in the screener
@@ -637,7 +637,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["UrgentNeed"]) -> "UrgentNeed":
-        return Model.objects.new_urgent_need('_default', external_name, None)
+        return Model.objects.new_urgent_need("_default", external_name, None)
 
 
 class UrgentNeed(models.Model):
@@ -808,7 +808,7 @@ class NavigatorDataController(ModelDataController["Navigator"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["Navigator"]) -> "Navigator":
-        return Model.objects.new_navigator('_default', external_name, None)
+        return Model.objects.new_navigator("_default", external_name, None)
 
 
 class Navigator(models.Model):
@@ -925,7 +925,7 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["WarningMessage"]) -> "WarningMessage":
-        return Model.objects.new_warning('_default', "_show", external_name)
+        return Model.objects.new_warning("_default", "_show", external_name)
 
 
 class WarningMessage(models.Model):
@@ -1067,7 +1067,7 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["TranslationOverride"]) -> "TranslationOverride":
-        return Model.objects.new_translation_override('_default', "_show", "", external_name)
+        return Model.objects.new_translation_override("_default", "_show", "", external_name)
 
 
 class TranslationOverride(models.Model):
