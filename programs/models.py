@@ -779,11 +779,11 @@ class NavigatorDataController(ModelDataController["Navigator"]):
         for county in data["counties"]:
             try:
                 county_instance = County.objects.get(name=county["name"])
+                county_instance.white_label = white_label
+                county_instance.save()
             except County.DoesNotExist:
-                county_instance = County.objects.create(name=county["name"])
+                county_instance = County.objects.create(name=county["name"], white_label=white_label)
 
-            county_instance.white_label = white_label
-            county_instance.save()
             counties.append(county_instance)
         navigator.counties.set(counties)
 
@@ -909,8 +909,10 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
         for county in data["counties"]:
             try:
                 county_instance = County.objects.get(name=county["name"])
+                county_instance.white_label = white_label
+                county_instance.save()
             except County.DoesNotExist:
-                county_instance = County.objects.create(name=county["name"])
+                county_instance = County.objects.create(name=county["name"], white_label=white_label)
             counties.append(county_instance)
         warning.counties.set(counties)
 
@@ -1055,8 +1057,10 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
         for county in data["counties"]:
             try:
                 county_instance = County.objects.get(name=county["name"])
+                county_instance.white_label = white_label
+                county_instance.save()
             except County.DoesNotExist:
-                county_instance = County.objects.create(name=county["name"])
+                county_instance = County.objects.create(name=county["name"], white_label=white_label)
             counties.append(county_instance)
         translation_override.counties.set(counties)
 
