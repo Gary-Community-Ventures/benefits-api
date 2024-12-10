@@ -616,9 +616,8 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             try:
                 cat_instance = UrgentNeedCategory.objects.get(name=category["name"])
             except UrgentNeedCategory.DoesNotExist:
-                cat_instance = UrgentNeedFunction.objects.create(name=category["name"])
+                cat_instance = UrgentNeedCategory.objects.create(name=category["name"])
 
-            cat_instance.white_label = white_label
             cat_instance.save()
             categories.append(cat_instance)
         need.type_short.set(categories)
