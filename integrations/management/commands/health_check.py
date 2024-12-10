@@ -1,10 +1,8 @@
-from typing import Optional
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from decouple import config
 from hubspot import HubSpot
 from hubspot.crm.contacts.exceptions import ForbiddenException
-from django.db.models import Q
 from authentication.models import User
 from integrations.models import Link
 from programs.models import Navigator, Program, TranslationOverride, UrgentNeed
@@ -57,13 +55,7 @@ class Command(BaseCommand):
             return False
 
     def _no_pii_in_db(self) -> bool:
-        users = User.objects.filter(is_staff=False).filter(
-            Q(first_name__isnull=False)
-            | Q(last_name__isnull=False)
-            | Q(cell__isnull=False)
-            | Q(email__isnull=False)
-            | Q(external_id__isnull=True)
-        )
+        users = User.objects.filter(is_staff=False).filter(external_id__isnull=True)
 
         if len(users) > 0:
             return False
