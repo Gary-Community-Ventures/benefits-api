@@ -281,6 +281,7 @@ class Screen(models.Model):
             "nc_tanf": self.has_tanf,
             "co_tanf": self.has_tanf,
             "wic": self.has_wic,
+            "co_wic": self.has_wic,
             "nc_wic": self.has_wic,
             "snap": self.has_snap,
             "sunbucks": self.has_sunbucks,
