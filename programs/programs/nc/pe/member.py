@@ -17,8 +17,8 @@ class NcMedicaid(Medicaid):
         "YOUNG_ADULT": 512,  # * 12 = 6146,  Medicaid Expansion Adults
         "PARENT": 0,
         "SSI_RECIPIENT": 0,
-        "AGED": 1519,  # * 12 = 13035, Medicaid for the Aged
-        "DISABLED": 1086,  # * 12 = 18227, Medicaid for the Disabled
+        "AGED": 1086,  # * 12 = 13035, Medicaid for the Aged
+        "DISABLED": 1519,  # * 12 = 18227, Medicaid for the Disabled
     }
 
     pe_inputs = [

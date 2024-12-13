@@ -51,6 +51,7 @@ class Screen(models.Model):
     has_tanf = models.BooleanField(default=False, blank=True, null=True)
     has_wic = models.BooleanField(default=False, blank=True, null=True)
     has_snap = models.BooleanField(default=False, blank=True, null=True)
+    has_sunbucks = models.BooleanField(default=False, blank=True, null=True)
     has_lifeline = models.BooleanField(default=False, blank=True, null=True)
     has_acp = models.BooleanField(default=False, blank=True, null=True)
     has_eitc = models.BooleanField(default=False, blank=True, null=True)
@@ -280,8 +281,10 @@ class Screen(models.Model):
             "nc_tanf": self.has_tanf,
             "co_tanf": self.has_tanf,
             "wic": self.has_wic,
+            "co_wic": self.has_wic,
             "nc_wic": self.has_wic,
             "snap": self.has_snap,
+            "sunbucks": self.has_sunbucks,
             "co_snap": self.has_snap,
             "nc_snap": self.has_snap,
             "lifeline": self.has_lifeline,
