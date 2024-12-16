@@ -8,9 +8,9 @@ if TYPE_CHECKING:
 
 
 class Ssdi(ProgramCalculator):
-    income_limit = 1_550
-    income_limit_blind = 2_590
-    amount = 1_537
+    income_limit = 1_620
+    income_limit_blind = 2_700
+    amount = 1_580
     min_age = 18
     max_age = 65
     ineligible_relationships = ["fosterChild", "grandChild"]
