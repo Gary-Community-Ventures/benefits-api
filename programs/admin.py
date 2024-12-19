@@ -141,6 +141,7 @@ class WarningMessageAdmin(ModelAdmin):
     filter_horizontal = (
         "programs",
         "counties",
+        "legal_statuses",
     )
 
     def get_str(self, obj):
