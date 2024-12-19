@@ -13,7 +13,41 @@ from programs.programs.translation_overrides import warning_calculators
 
 class FplCache(Cache):
     expire_time = 60 * 60 * 24  # 24 hours
-    default = {}
+    default = {
+        "2023": {
+            1: 14_580,
+            2: 19_720,
+            3: 24_860,
+            4: 30_000,
+            5: 35_140,
+            6: 40_280,
+            7: 45_420,
+            8: 50_560,
+            "additional": 5_140,
+        },
+        "2024": {
+            1: 15_060,
+            2: 20_440,
+            3: 25_820,
+            4: 31_200,
+            5: 36_580,
+            6: 41_960,
+            7: 47_340,
+            8: 52_720,
+            "additional": 5_380,
+        },
+        "2025": {
+            1: 15_060,
+            2: 20_440,
+            3: 25_820,
+            4: 31_200,
+            5: 36_580,
+            6: 41_960,
+            7: 47_340,
+            8: 52_720,
+            "additional": 5_380,
+        },
+    }
     api_url = "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/api/"
     max_household_size = 8
 
@@ -58,6 +92,10 @@ class FplCache(Cache):
         """
         The URL to request the FPL for a year and household size
         """
+        # NOTE: This made it work, but I am worried that it will break if the API changes back.
+        # if household_size == '1':
+        #     return self.api_url + year
+
         return self.api_url + year + "/us/" + household_size
 
 
