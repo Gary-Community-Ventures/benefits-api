@@ -976,6 +976,7 @@ class WarningMessage(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
     counties = models.ManyToManyField(County, related_name="warning_messages", blank=True)
+    legal_statuses = models.ManyToManyField(LegalStatus, related_name="warning_messages", blank=True)
 
     message = models.ForeignKey(
         Translation, related_name="warning_messages", blank=False, null=False, on_delete=models.PROTECT
