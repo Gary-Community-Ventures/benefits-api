@@ -25,6 +25,7 @@ class Tabor(ProgramCalculator):
     def member_value(self, member: HouseholdMember) -> int:
         income = member.calc_gross_income("yearly", ["all"])
 
+        # Add spouses income
         is_married = member.is_married()
         if is_married["is_married"]:
             spouse = is_married["married_to"]
