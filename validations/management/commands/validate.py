@@ -53,7 +53,7 @@ class ValidationResult:
         program_id = ""
         if self.program_id is not None:
             program_id = f"/{self.program_id}/"
-        return f"{front_end_domain}/{self.uuid}/results/benefits{program_id}?admin=true"
+        return f"{front_end_domain}/{self.white_label}/{self.uuid}/results/benefits{program_id}?admin=true"
 
     def format_value_change(self):
         return f"{self.expected_value} => {self.value}"
