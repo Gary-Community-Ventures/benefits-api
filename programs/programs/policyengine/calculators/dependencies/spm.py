@@ -19,6 +19,7 @@ class SnapEarnedIncomeDependency(SpmUnit):
     def value(self):
         return self.screen.calc_gross_income("yearly", ["earned"])
 
+
 class SnapUnearnedIncomeDependency(SpmUnit):
     field = "snap_unearned_income"
     dependencies = (
