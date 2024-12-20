@@ -1,12 +1,4 @@
 from .base import SpmUnit
-from programs.models import FederalPoveryLimit
-
-
-class SnapChildSupportDeductionDependency(SpmUnit):
-    field = "snap_child_support_deduction"
-
-    def value(self):
-        return self.screen.calc_expenses("yearly", ["childSupport"])
 
 
 class SnapDependentCareDeductionDependency(SpmUnit):
@@ -26,6 +18,18 @@ class SnapEarnedIncomeDependency(SpmUnit):
 
     def value(self):
         return self.screen.calc_gross_income("yearly", ["earned"])
+
+
+class SnapUnearnedIncomeDependency(SpmUnit):
+    field = "snap_unearned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
+
+    def value(self):
+        return self.screen.calc_gross_income("yearly", ["unearned"])
 
 
 class HousingCostDependency(SpmUnit):
