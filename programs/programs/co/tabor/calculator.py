@@ -32,7 +32,7 @@ class Tabor(ProgramCalculator):
             income += spouse.calc_gross_income("yearly", ["all"])
 
         for threshold, value in Tabor.income_limits.items():
-            if income < threshold:
+            if income <= threshold:
                 return value
 
         return 0  # just in case
