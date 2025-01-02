@@ -123,7 +123,6 @@ class Command(BaseCommand):
         feedback_links = []
         for config in Configuration.objects.filter(name="feedback_links", white_label__code=white_label):
             feedback_links.extend(json.loads(config.data).values())
-        print(feedback_links)
 
         config_links = [*public_charge_links, *more_help_option_links, *privacy_policy_links, *consent_to_contact_links]
 
