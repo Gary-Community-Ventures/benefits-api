@@ -43,7 +43,7 @@ class ChildCareAssistance(ProgramCalculator):
 
         # income
         frequency = "yearly"
-        gross_income = self.screen.calc_gross_income(frequency, ["all"])
+        gross_income = self.screen.calc_gross_income(frequency, ["all"], ["cashAssistance"])
         deductions = self.screen.calc_expenses(frequency, ["childSupport"])
         net_income = gross_income - deductions
         fpl_percent = cccap_county_limits[county_name] / 100

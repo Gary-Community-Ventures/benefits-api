@@ -202,7 +202,10 @@ class CoConfigurationData(ConfigurationData):
             "_label": "incomeOptions.sSDependent",
             "_default_message": "Social Security Dependent Benefits (retirement, disability, or survivors)",
         },
-        "cashAssistance": {"_label": "incomeOptions.cashAssistance", "_default_message": "Cash Assistance Grant"},
+        "cashAssistance": {
+            "_label": "incomeOptions.cashAssistance",
+            "_default_message": "Government Cash Assistance (including Colorado Works/TANF)",
+        },
         "gifts": {"_label": "incomeOptions.gifts", "_default_message": "Gifts/Contributions (Received)"},
         "investment": {
             "_label": "incomeOptions.investment",
@@ -2009,13 +2012,6 @@ class CoConfigurationData(ConfigurationData):
                     "description": {
                         "_label": "childCareBenefits.univpresc_desc",
                         "_default_message": "Free preschool",
-                    },
-                },
-                "pell": {
-                    "name": {"_label": "childCareBenefits.pell", "_default_message": "Pell Grant: "},
-                    "description": {
-                        "_label": "childCareBenefits.pell_desc",
-                        "_default_message": "Federal grant to help with the cost of college or technical school",
                     },
                 },
             },
