@@ -21,6 +21,7 @@ class Cache:
             self.last_update = datetime.datetime.now()
             self.invalid = False
         except Exception as e:
+            print(e)
             capture_exception(e, level="warning")
 
     def save(self, data):
