@@ -7,6 +7,7 @@ import programs.programs.messages as messages
 class IncomeLimitsCache(GoogleSheetsCache):
     sheet_id = "1ZzQYhULtiP61crj0pbPjhX62L1TnyAisLcr_dQXbbFg"
     range_name = "A2:K"  # WARN: This selects the first tab because the tab name is "(Updated mm/dd/yyyy)"
+    default = {}
 
     def update(self):
         data = super().update()
