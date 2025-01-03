@@ -61,7 +61,7 @@ class Command(BaseCommand):
             Configuration.objects.update_or_create(
                 name="feedback_links",
                 white_label=white_label,
-                defaults={"data": WhiteLabelData.language_options, "active": True},
+                defaults={"data": WhiteLabelData.feedback_links, "active": True},
             )
 
             if WhiteLabelData.is_default:
