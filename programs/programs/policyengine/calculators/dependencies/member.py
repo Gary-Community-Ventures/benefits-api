@@ -237,6 +237,13 @@ class CommoditySupplementalFoodProgram(Member):
     field = "commodity_supplemental_food_program"
 
 
+class SnapChildSupportDependency(Member):
+    field = "child_support_expense"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["childSupport"]) / self.screen.household_size
+
+
 class SnapIneligibleStudentDependency(Member):
     field = "is_snap_ineligible_student"
 
