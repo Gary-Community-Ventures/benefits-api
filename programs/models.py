@@ -915,9 +915,13 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
     dependencies = ["Program"]
 
     CountiesType = list[TypedDict("CountyType", {"name": str})]
+    LegalStatusesDataType = list[TypedDict("LegalStatusDataType", {"status": str})]
     DataType = TypedDict(
         "DataType", {"calculator": str, "counties": CountiesType, "programs": list[str], "white_label": str}
     )
+
+    def _legal_statuses(self) -> LegalStatusesDataType:
+        return [{"status": l.status} for l in self.instance.legal_statuses.all()]
 
     def _counties(self) -> CountiesType:
         return [{"name": c.name} for c in self.instance.counties.all()]
@@ -926,6 +930,7 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
         warning = self.instance
         return {
             "calculator": warning.calculator,
+            "legal_status_required": self._legal_statuses(),
             "counties": self._counties(),
             "programs": [p.external_name for p in warning.programs.all()],
             "white_label": warning.white_label.code,
@@ -941,6 +946,17 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
         except WhiteLabel.DoesNotExist:
             white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
         warning.white_label = white_label
+
+        # get or create legal status required
+        legal_status_required = data["legal_status_required"]
+        statuses = []
+        for status in legal_status_required:
+            try:
+                legal_status_instance = LegalStatus.objects.get(status=status["status"])
+            except LegalStatus.DoesNotExist:
+                legal_status_instance = LegalStatus.objects.create(status=status["status"])
+            statuses.append(legal_status_instance)
+        warning.legal_statuses.set(statuses)
 
         # get or create counties
         counties = []
@@ -976,6 +992,7 @@ class WarningMessage(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
     counties = models.ManyToManyField(County, related_name="warning_messages", blank=True)
+    legal_statuses = models.ManyToManyField(LegalStatus, related_name="warning_messages", blank=True)
 
     message = models.ForeignKey(
         Translation, related_name="warning_messages", blank=False, null=False, on_delete=models.PROTECT

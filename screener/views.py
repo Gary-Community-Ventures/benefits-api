@@ -24,6 +24,7 @@ from screener.serializers import (
     EligibilitySerializer,
     MessageSerializer,
     ResultsSerializer,
+    WarningMessageSerializer,
 )
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError, Dependencies
@@ -214,6 +215,7 @@ def eligibility_results(screen: Screen, batch=False):
             *translations_prefetch_name("documents__", Document.objects.translated_fields),
             "warning_messages",
             "warning_messages__counties",
+            "warning_messages__legal_statuses",
             *translations_prefetch_name("warning_messages__", WarningMessage.objects.translated_fields),
             "translation_overrides",
             "translation_overrides__counties",
@@ -340,7 +342,7 @@ def eligibility_results(screen: Screen, batch=False):
                 )
 
                 if warning_calculator.calc():
-                    warnings.append(warning)
+                    warnings.append(WarningMessageSerializer(warning).data)
 
         if not skip and program.active:
             legal_status = [status.status for status in program.legal_status_required.all()]
@@ -386,7 +388,7 @@ def eligibility_results(screen: Screen, batch=False):
                     "new": new,
                     "low_confidence": program.low_confidence,
                     "documents": [serialized_document(document) for document in program.documents.all()],
-                    "warning_messages": [default_message(w.message) for w in warnings],
+                    "warning_messages": warnings,
                 }
             )
 

@@ -1,8 +1,9 @@
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
+from programs.models import WarningMessage
 from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance, WhiteLabel
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
-from translations.serializers import TranslationSerializer
+from translations.serializers import ModelTranslationSerializer, TranslationSerializer
 from validations.serializers import ValidationSerializer
 
 
@@ -257,6 +258,18 @@ class NavigatorSerializer(serializers.Serializer):
     languages = serializers.ListField()
 
 
+class WarningMessageSerializer(serializers.ModelSerializer):
+    message = ModelTranslationSerializer()
+    legal_statuses = serializers.SerializerMethodField()
+
+    class Meta:
+        model = WarningMessage
+        fields = ("message", "legal_statuses")
+
+    def get_legal_statuses(self, obj: WarningMessage):
+        return [m.status for m in obj.legal_statuses.all()]
+
+
 class EligibilitySerializer(serializers.Serializer):
     description_short = TranslationSerializer()
     name = TranslationSerializer()
@@ -281,7 +294,7 @@ class EligibilitySerializer(serializers.Serializer):
     documents = TranslationSerializer(many=True)
     multiple_tax_units = serializers.BooleanField()
     estimated_value_override = TranslationSerializer()
-    warning_messages = TranslationSerializer(many=True)
+    warning_messages = WarningMessageSerializer(many=True)
 
     class Meta:
         fields = "__all__"
