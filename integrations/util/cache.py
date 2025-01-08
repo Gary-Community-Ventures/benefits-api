@@ -1,5 +1,6 @@
 from typing import Any
 from sentry_sdk import capture_exception
+from django.conf import settings
 import datetime
 
 
@@ -21,6 +22,8 @@ class Cache:
             self.last_update = datetime.datetime.now()
             self.invalid = False
         except Exception as e:
+            if settings.DEBUG:
+                print(e)
             capture_exception(e, level="warning")
 
     def save(self, data):

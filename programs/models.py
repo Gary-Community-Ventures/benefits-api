@@ -58,7 +58,6 @@ class FplCache(Cache):
         """
         Get FPLs for all relevant years using the official ASPE Poverty Guidelines API
         """
-        return self.default
         fpls = FederalPoveryLimit.objects.filter(fpl__isnull=False).distinct()
         fpl_dict = {}
         for fpl in fpls:
@@ -81,7 +80,13 @@ class FplCache(Cache):
         """
         Request the FPL from the API for the indicated year and household size
         """
-        response = requests.get(self._fpl_url(year, household_size))
+        response = requests.get(self._fpl_url(year, household_size), allow_redirects=False)
+        if "Location" in response.headers:
+            new_url = response.headers["Location"].replace("http", "https")
+            if "https://" not in new_url:
+                new_url = response.headers["Location"].replace("http", "https")
+            response = requests.get(new_url)
+
         response.raise_for_status()
         data = response.json()["data"]
 
@@ -93,10 +98,6 @@ class FplCache(Cache):
         """
         The URL to request the FPL for a year and household size
         """
-        # NOTE: This made it work, but I am worried that it will break if the API changes back.
-        # if household_size == '1':
-        #     return self.api_url + year
-
         return self.api_url + year + "/us/" + household_size
 
 
