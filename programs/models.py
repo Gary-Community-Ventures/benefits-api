@@ -67,6 +67,7 @@ class FplCache(Cache):
                 try:
                     data = self._fetch_income_limit(fpl.period, str(i))
                 except self.InvalidYear:
+                    household_sz_fpl = None
                     break
 
                 household_sz_fpl[i] = data
@@ -74,6 +75,17 @@ class FplCache(Cache):
                     income_limit_extra_member = self._fetch_income_limit(fpl.period, str(self.max_household_size + 1))
                     household_sz_fpl["additional"] = income_limit_extra_member - data
             fpl_dict[fpl.period] = household_sz_fpl
+
+        # replace invalid years with the most recent year's fpl
+        most_recent_year = 0
+        for year, values in fpl_dict.items():
+            if values is not None and int(year) > most_recent_year:
+                most_recent_year = int(year)
+
+        for year, values in fpl_dict.items():
+            if values is None:
+                fpl_dict[year] = fpl_dict[str(most_recent_year)].copy()
+
         return fpl_dict
 
     def _fetch_income_limit(self, year: str, household_size: str):
