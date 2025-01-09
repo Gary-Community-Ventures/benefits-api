@@ -202,7 +202,10 @@ class CoConfigurationData(ConfigurationData):
             "_label": "incomeOptions.sSDependent",
             "_default_message": "Social Security Dependent Benefits (retirement, disability, or survivors)",
         },
-        "cashAssistance": {"_label": "incomeOptions.cashAssistance", "_default_message": "Cash Assistance Grant"},
+        "cashAssistance": {
+            "_label": "incomeOptions.cashAssistance",
+            "_default_message": "Government Cash Assistance (including Colorado Works/TANF)",
+        },
         "gifts": {"_label": "incomeOptions.gifts", "_default_message": "Gifts/Contributions (Received)"},
         "investment": {
             "_label": "incomeOptions.investment",
