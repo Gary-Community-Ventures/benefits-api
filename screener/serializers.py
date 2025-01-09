@@ -78,6 +78,7 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "screen",
+            "frontend_id",
             "relationship",
             "age",
             "student",
@@ -271,7 +272,7 @@ class WarningMessageSerializer(serializers.ModelSerializer):
 
 
 class MemberEligibilitySerializer(serializers.Serializer):
-    member = serializers.IntegerField()
+    frontend_id = serializers.UUIDField()
     eligible = serializers.BooleanField()
     value = serializers.IntegerField()
 
