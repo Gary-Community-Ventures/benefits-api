@@ -26,7 +26,7 @@ class Eligibility:
         self.pass_messages = []
         self.fail_messages = []
         self.eligible_members: list[MemberEligibility] = []
-        self.value: int = 0
+        self.household_value: int = 0
 
     def condition(self, passed: bool, message=None):
         """
@@ -61,6 +61,18 @@ class Eligibility:
         Store a members eligibility
         """
         self.eligible_members.append(member_eligibility)
+
+    @property
+    def value(self) -> int:
+        """
+        The total value of the household and each member
+        """
+        total = self.household_value
+
+        for member in self.eligible_members:
+            total += member.value
+
+        return total
 
 
 class ProgramCalculator:
@@ -121,19 +133,14 @@ class ProgramCalculator:
         Update the eligibility with household and member values
         """
         if not e.eligible:
-            # if the household is not eligible, the program has 0 value
-            e.value = 0
             return
 
-        total = self.household_value()
+        e.household_value = self.household_value()
 
         for member_eligibility in e.eligible_members:
             if member_eligibility.eligible:
                 member_value = self.member_value(member_eligibility.member)
                 member_eligibility.value = member_value
-                total += member_value
-
-        e.value = total
 
     def household_value(self) -> int:
         """
