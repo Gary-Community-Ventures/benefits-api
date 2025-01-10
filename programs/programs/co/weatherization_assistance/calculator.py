@@ -4,56 +4,38 @@ from programs.programs.calc import Eligibility, ProgramCalculator
 import programs.programs.messages as messages
 
 
-class SmiCache(GoogleSheetsCache):
-    sheet_id = "1KE0fBYqmIcwXO-tLu4RIF47GLFTyxLi4mi3uG-llMDY"
-    range_name = "current 60% SMI!B2:I2"
-    default = [0, 0, 0, 0, 0, 0, 0, 0]
-
-    def update(self):
-        data = super().update()
-
-        return [int(a.replace(",", "")) for a in data[0]]
-
-
-class AmiCache(GoogleSheetsCache):
-    sheet_id = "1KE0fBYqmIcwXO-tLu4RIF47GLFTyxLi4mi3uG-llMDY"
-    range_name = "current 80% AMI!A2:I"
+class IncomeLimitsCache(GoogleSheetsCache):
+    sheet_id = "1ZzQYhULtiP61crj0pbPjhX62L1TnyAisLcr_dQXbbFg"
+    range_name = "A2:K"  # WARN: This selects the first tab because the tab name is "(Updated mm/dd/yyyy)"
     default = {}
 
     def update(self):
         data = super().update()
 
-        county_fpls = {r[0].strip() + " County": self._get_income_limits(r[1:]) for r in data}
+        return {self._format_county(r[0]): self._format_amounts(r[1:9]) for r in data}
 
-        return county_fpls
+    @staticmethod
+    def _format_county(county: str):
+        return county.strip() + " County"
 
-    def _get_income_limits(self, raw_limits: list[str]):
-        limits = []
-
-        for limit in raw_limits:
-            limits.append(int(limit.replace(",", "")))
-
-        return limits
+    @staticmethod
+    def _format_amounts(amounts: list[str]):
+        return [float(a.strip().replace("$", "").replace(",", "")) for a in amounts]
 
 
 class WeatherizationAssistance(ProgramCalculator):
-    smi_cache = SmiCache()
-    ami_cache = AmiCache()
+    income_limits = IncomeLimitsCache()
     presumptive_eligibility = ("andcs", "ssi", "snap", "leap", "tanf")
     amount = 350
     dependencies = ["household_size", "income_amount", "income_frequency"]
 
     def household_eligible(self, e: Eligibility):
         # income condition
-        income_limit = self.smi_cache.fetch()[self.screen.household_size - 1]
-        if self.screen.zipcode != None:
-            counties = counties_from_screen(self.screen)
-
-            for county in counties:
-                ami_limit = self.ami_cache.fetch()[county][self.screen.household_size - 1]
-
-                if ami_limit > income_limit:
-                    income_limit = ami_limit
+        counties = counties_from_screen(self.screen)
+        income_limits = []
+        for county in counties:
+            income_limits.append(self.income_limits.fetch()[county][self.screen.household_size - 1])
+        income_limit = min(income_limits)
 
         income = int(self.screen.calc_gross_income("yearly", ["all"]))
         income_eligible = income <= income_limit
