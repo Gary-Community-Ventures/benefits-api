@@ -2014,13 +2014,6 @@ class CoConfigurationData(ConfigurationData):
                         "_default_message": "Free preschool",
                     },
                 },
-                "pell": {
-                    "name": {"_label": "childCareBenefits.pell", "_default_message": "Pell Grant: "},
-                    "description": {
-                        "_label": "childCareBenefits.pell_desc",
-                        "_default_message": "Federal grant to help with the cost of college or technical school",
-                    },
-                },
             },
             "category_name": {
                 "_label": "childCareYouthAndEducation",
