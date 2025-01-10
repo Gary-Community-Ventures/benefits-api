@@ -2233,7 +2233,12 @@ class CoConfigurationData(ConfigurationData):
         },
         "logoFooterSource": {"default": "MFB_Logo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
-        "logoClass": {"default": "logo", "eaglecounty": "eaglecounty-logo-size"},
+        "logoClass": {
+            "default": "logo",
+            "eaglecounty": "eaglecounty-logo-size",
+            "larimercounty": "larimercounty-logo-size",
+            "tellercounty": "tellercounty-logo-size",
+        },
         "twoOneOneLink": {
             "default": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id="211mfb"',
             "211co": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=whitelabel&utm_id="211mfb"',
