@@ -105,12 +105,12 @@ class Screen(models.Model):
     def frozen(self):
         return self.validations.count() > 0
 
-    def calc_gross_income(self, frequency, types):
+    def calc_gross_income(self, frequency, types, exclude=[]):
         household_members = self.household_members.all()
         gross_income = 0
 
         for household_member in household_members:
-            gross_income += household_member.calc_gross_income(frequency, types)
+            gross_income += household_member.calc_gross_income(frequency, types, exclude)
         return float(gross_income)
 
     def calc_expenses(self, frequency, types):
@@ -413,12 +413,15 @@ class HouseholdMember(models.Model):
     has_income = models.BooleanField(blank=True, null=True)
     has_expenses = models.BooleanField(blank=True, null=True)
 
-    def calc_gross_income(self, frequency, types):
+    def calc_gross_income(self, frequency, types, exclude=[]):
         gross_income = 0
         earned_income_types = ["wages", "selfEmployment"]
 
         income_streams = self.income_streams.all()
         for income_stream in income_streams:
+            if income_stream.type in exclude:
+                continue
+
             include_all = "all" in types
             specific_match = income_stream.type in types
             earned_income_match = "earned" in types and income_stream.type in earned_income_types
