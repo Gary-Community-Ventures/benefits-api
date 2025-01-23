@@ -39,9 +39,7 @@ class NCLieap(ProgramCalculator):
         if household_size:
             income_limit = int(self.fpl_percent * self.income_limits[household_size][1])
 
-        e.condition(
-            gross_income < income_limit, messages.income(gross_income, income_limit)
-        )
+        e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
     def household_value(self):
         household_size = self.screen.household_size
@@ -51,16 +49,12 @@ class NCLieap(ProgramCalculator):
             if household_size <= 3:
                 if gross_income <= self.income_limits[household_size][0]:  # 0-50% FPL
                     return 400
-                elif (
-                    gross_income <= self.income_limits[household_size][1]
-                ):  # 51%-130% FPL
+                elif gross_income <= self.income_limits[household_size][1]:  # 51%-130% FPL
                     return 300
             else:  # Household size >= 4
                 if gross_income <= self.income_limits[household_size][0]:  # 0-50% FPL
                     return 500
-                elif (
-                    gross_income <= self.income_limits[household_size][1]
-                ):  # 51%-130% FPL
+                elif gross_income <= self.income_limits[household_size][1]:  # 51%-130% FPL
                     return 400
 
         return 0
