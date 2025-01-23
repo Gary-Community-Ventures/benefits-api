@@ -23,25 +23,25 @@ class NCLieap(ProgramCalculator):
         12: [4021, 8043],
         13: [4313, 8626],
         14: [4604, 9208],
-        15: [4896, 9791]
+        15: [4896, 9791],
     }
-    
 
     def household_eligible(self, e: Eligibility):
         household_size = self.screen.household_size
         gross_income = self.screen.calc_gross_income("monthly", ["all"])
-                        
+
         # has rent or mortgage expense
         has_rent = self.screen.has_expense(["rent"])
         has_mortgage = self.screen.has_expense(["mortgage"])
         e.condition(has_rent or has_mortgage)
-        
+
         # income
         if household_size:
             income_limit = int(self.fpl_percent * self.income_limits[household_size][1])
-            
-        e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
+        e.condition(
+            gross_income < income_limit, messages.income(gross_income, income_limit)
+        )
 
     def household_value(self):
         household_size = self.screen.household_size
@@ -49,14 +49,18 @@ class NCLieap(ProgramCalculator):
 
         if household_size:
             if household_size <= 3:
-                if gross_income <= self.income_limits[household_size][0]: # 0-50% FPL
+                if gross_income <= self.income_limits[household_size][0]:  # 0-50% FPL
                     return 400
-                elif gross_income <= self.income_limits[household_size][1]: # 51%-130% FPL
+                elif (
+                    gross_income <= self.income_limits[household_size][1]
+                ):  # 51%-130% FPL
                     return 300
             else:  # Household size >= 4
-                if gross_income <= self.income_limits[household_size][0]: # 0-50% FPL
+                if gross_income <= self.income_limits[household_size][0]:  # 0-50% FPL
                     return 500
-                elif gross_income <= self.income_limits[household_size][1]: # 51%-130% FPL
+                elif (
+                    gross_income <= self.income_limits[household_size][1]
+                ):  # 51%-130% FPL
                     return 400
 
         return 0
