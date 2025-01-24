@@ -1,3 +1,4 @@
+from sentry_sdk import capture_exception
 from authentication.models import User
 from integrations.services.cms_integration import get_cms_integration
 from integrations.services.communications import MessageUser
@@ -36,21 +37,28 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
 
                 if user and user.external_id:
                     integration.update()
-                else:
+                elif integration.should_add():
                     external_id = integration.add()
 
-                    if screen.user.email is not None:
-                        message.email(screen.user.email)
-                    if screen.user.cell is not None:
-                        message.text(str(screen.user.cell))
-
-                    user.anonomize(external_id)
-
-                if not integration.should_add():
-                    return Response(status=204)
+                    # don't delete the user if there is an error sending a text/email
+                    try:
+                        if screen.user.email is not None:
+                            message.email(screen.user.email)
+                        if screen.user.cell is not None:
+                            message.text(str(screen.user.cell))
+                    except Exception as e:
+                        capture_exception(e, level="error")
+                    finally:
+                        user.anonomize(external_id)
+                else:
+                    if not user.is_staff and not user.is_superuser:
+                        # you should not be able to create a user with an admin email,
+                        # but just incase you can this prevents admin acounts from being deleted
+                        user.delete()
 
             except Exception as e:
-                user.delete()
+                if not user.is_staff and not user.is_superuser:
+                    user.delete()
                 raise e
 
             return Response(status=204)
