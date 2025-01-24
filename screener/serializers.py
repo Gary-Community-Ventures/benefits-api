@@ -197,6 +197,10 @@ class ScreenSerializer(serializers.ModelSerializer):
         )
         create_only_fields = ("external_id", "is_test", "referrer_code", "white_label")
 
+    def __init__(self, *args, **kwargs):
+        self.force = kwargs.pop("force", False)
+        super().__init__(*args, **kwargs)
+
     def validate(self, attrs):
         white_label_code = attrs.pop("white_label")["code"]
         white_label = WhiteLabel.objects.get(code=white_label_code)
