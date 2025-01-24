@@ -1,8 +1,11 @@
 from datetime import datetime
+from enum import unique
 from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
+
+from google.auth import default
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
@@ -396,6 +399,7 @@ class Message(models.Model):
 # Screen
 class HouseholdMember(models.Model):
     screen = models.ForeignKey(Screen, related_name="household_members", on_delete=models.CASCADE)
+    frontend_id = models.UUIDField(default=uuid.uuid4)
     relationship = models.CharField(max_length=30, blank=True, null=True)
     age = models.PositiveIntegerField(blank=True, null=True)
     birth_year_month = models.DateField(blank=True, null=True)

@@ -78,6 +78,7 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "screen",
+            "frontend_id",
             "relationship",
             "age",
             "student",
@@ -274,6 +275,12 @@ class WarningMessageSerializer(serializers.ModelSerializer):
         return [m.status for m in obj.legal_statuses.all()]
 
 
+class MemberEligibilitySerializer(serializers.Serializer):
+    frontend_id = serializers.UUIDField()
+    eligible = serializers.BooleanField()
+    value = serializers.IntegerField()
+
+
 class EligibilitySerializer(serializers.Serializer):
     description_short = TranslationSerializer()
     name = TranslationSerializer()
@@ -285,10 +292,12 @@ class EligibilitySerializer(serializers.Serializer):
     apply_button_link = TranslationSerializer()
     apply_button_description = TranslationSerializer()
     estimated_value = serializers.IntegerField()
+    household_value = serializers.IntegerField()
     estimated_delivery_time = TranslationSerializer()
     estimated_application_time = TranslationSerializer()
     legal_status_required = serializers.ListField()
     eligible = serializers.BooleanField()
+    members = MemberEligibilitySerializer(many=True)
     failed_tests = serializers.ListField()
     passed_tests = serializers.ListField()
     navigators = NavigatorSerializer(many=True)
