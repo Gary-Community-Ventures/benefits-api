@@ -33,7 +33,13 @@ class Command(BaseCommand):
             text = translation.text
             current_translation = translation.get_lang(lang)
             is_edited = current_translation is not None and current_translation.edited
-            if is_edited or translation.text is None or translation.no_auto:
+            if is_edited or translation.text is None:
+                continue
+
+            if translation.no_auto:
+                translation.set_current_language(lang)
+                translation.text = text
+                translation.save()
                 continue
 
             if temp_chars + len(text) > char_limit or temp_count + 1 > max_batch_size:
