@@ -19,7 +19,6 @@ class NCLieap(ProgramCalculator):
     small_household_large_income_value = 300
     large_household_low_income_value = 500
     large_household_large_income_value = 400
-    has_elder_people = False
 
     def household_eligible(self, e: Eligibility):
         household_size = self.screen.household_size
@@ -38,17 +37,13 @@ class NCLieap(ProgramCalculator):
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
         income_limit = int(self.fpl_percent * self.program.fpl.as_dict()[household_size])
 
-        for member in self.screen.household_members.all():
-            if member.age > 60:
-                self.has_elder_people = True
-
         if household_size <= self.large_household_size:
             if gross_income <= income_limit * self.max_value_fpl_percent:
-                return self.small_household_low_income_value * (4 if self.has_elder_people else 3)
+                return self.small_household_low_income_value
             elif gross_income <= income_limit:
-                return self.small_household_large_income_value * (4 if self.has_elder_people else 3)
+                return self.small_household_large_income_value
         else:
             if gross_income <= income_limit * self.max_value_fpl_percent:
-                return self.large_household_low_income_value * (4 if self.has_elder_people else 3)
+                return self.large_household_low_income_value
             elif gross_income <= income_limit:
-                return self.large_household_large_income_value * (4 if self.has_elder_people else 3)
+                return self.large_household_large_income_value
