@@ -1,11 +1,8 @@
 from datetime import datetime
-from enum import unique
 from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
-
-from google.auth import default
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
@@ -46,6 +43,7 @@ class Screen(models.Model):
     last_email_request_date = models.DateTimeField(blank=True, null=True)
     is_test = models.BooleanField(default=False, blank=True)
     is_test_data = models.BooleanField(blank=True, null=True)
+    alternate_path = models.CharField(max_length=60, blank=True, null=True)
     is_verified = models.BooleanField(default=False, blank=True)
     user = models.ForeignKey(User, related_name="screens", on_delete=models.SET_NULL, blank=True, null=True)
     external_id = models.CharField(max_length=120, blank=True, null=True)
@@ -86,6 +84,7 @@ class Screen(models.Model):
     has_rag = models.BooleanField(default=False, blank=True, null=True)
     has_nfp = models.BooleanField(default=False, blank=True, null=True)
     has_fatc = models.BooleanField(default=False, blank=True, null=True)
+    has_section_8 = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -317,6 +316,7 @@ class Screen(models.Model):
             "rag": self.has_rag,
             "nfp": self.has_nfp,
             "fatc": self.has_fatc,
+            "section_8": self.has_section_8,
             "cowap": self.has_cowap,
             "ubp": self.has_ubp,
             "co_medicaid": self.has_medicaid or self.has_medicaid_hi,
@@ -369,7 +369,13 @@ class Screen(models.Model):
         return False
 
     def missing_fields(self):
-        screen_fields = ("zipcode", "county", "household_size", "household_assets")
+        screen_fields = (
+            "zipcode",
+            "county",
+            "household_size",
+            "household_assets",
+            "energy_calculator",
+        )
 
         missing_fields = Dependencies()
 
@@ -530,6 +536,7 @@ class HouseholdMember(models.Model):
             "disabled",
             "long_term_disability",
             "insurance",
+            "energy_calculator",
         )
 
         missing_fields = Dependencies()
@@ -696,6 +703,29 @@ class Insurance(models.Model):
             "family_planning": self.family_planning,
             "va": self.va,
         }
+
+
+class EnergyCaluculatorScreen(models.Model):
+    screen = models.OneToOneField(Screen, related_name="energy_calculator", null=False, on_delete=models.CASCADE)
+    is_home_owner = models.BooleanField(default=False, null=True, blank=True)
+    is_renter = models.BooleanField(default=False, null=True, blank=True)
+    electric_provider = models.CharField(max_length=200, null=True, blank=True)
+    gas_provider = models.CharField(max_length=200, null=True, blank=True)
+    electricity_is_disconnected = models.BooleanField(default=False, null=True, blank=True)
+    has_past_due_energy_bills = models.BooleanField(default=False, null=True, blank=True)
+    needs_water_heater = models.BooleanField(default=False, null=True, blank=True)
+    needs_hvac = models.BooleanField(default=False, null=True, blank=True)
+    needs_stove = models.BooleanField(default=False, null=True, blank=True)
+    needs_dryer = models.BooleanField(default=False, null=True, blank=True)
+
+
+class EnergyCaluculatorMember(models.Model):
+    household_member = models.OneToOneField(
+        HouseholdMember, related_name="energy_calculator", null=False, on_delete=models.CASCADE
+    )
+    surviving_spouse = models.BooleanField(default=False, null=True, blank=True)
+    totally_disabled = models.BooleanField(default=False, null=True, blank=True)
+    recieves_ssi = models.BooleanField(default=False, null=True, blank=True)
 
 
 # A point in time log table to capture the exact eligibility and value results

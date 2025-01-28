@@ -1,6 +1,16 @@
 from datetime import datetime, timedelta
 from programs.models import WarningMessage
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance, WhiteLabel
+from screener.models import (
+    EnergyCaluculatorMember,
+    EnergyCaluculatorScreen,
+    Screen,
+    HouseholdMember,
+    IncomeStream,
+    Expense,
+    Message,
+    Insurance,
+    WhiteLabel,
+)
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from translations.serializers import ModelTranslationSerializer, TranslationSerializer
@@ -40,6 +50,20 @@ class ExpenseSerializer(serializers.ModelSerializer):
         model = Expense
         fields = "__all__"
         read_only_fields = ("screen", "household_member", "id")
+
+
+class EnergyCalculatorMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EnergyCaluculatorMember
+        fields = "__all__"
+        read_only_fields = ("household_member", "id")
+
+
+class EnergyCalculatorScreenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EnergyCaluculatorScreen
+        fields = "__all__"
+        read_only_fields = ("screen", "id")
 
 
 class HouseholdMemberSerializer(serializers.ModelSerializer):
@@ -212,17 +236,23 @@ class ScreenSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         household_members = validated_data.pop("household_members")
         expenses = validated_data.pop("expenses")
+        energy_calculator_screen = validated_data.pop("energy_calculator", None)
         screen = Screen.objects.create(**validated_data, completed=False)
         screen.set_screen_is_test()
         for member in household_members:
             incomes = member.pop("income_streams")
             insurance = member.pop("insurance")
+            energy_calculator_member = validated_data.pop("energy_calculator", None)
             household_member = HouseholdMember.objects.create(**member, screen=screen)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
             Insurance.objects.create(**insurance, household_member=household_member)
+            if energy_calculator_member is not None:
+                EnergyCaluculatorMember(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=screen)
+        if energy_calculator_screen is not None:
+            EnergyCaluculatorScreen.objects.create(**energy_calculator_screen, screen=screen)
         return screen
 
     def update(self, instance, validated_data):
@@ -231,6 +261,7 @@ class ScreenSerializer(serializers.ModelSerializer):
 
         household_members = validated_data.pop("household_members")
         expenses = validated_data.pop("expenses")
+        energy_calculator_screen = validated_data.pop("energy_calculator", None)
 
         # don't update create only fields
         for field in self.Meta.create_only_fields:
@@ -243,12 +274,19 @@ class ScreenSerializer(serializers.ModelSerializer):
         for member in household_members:
             incomes = member.pop("income_streams")
             insurance = member.pop("insurance")
+            energy_calculator_member = validated_data.pop("energy_calculator", None)
             household_member = HouseholdMember.objects.create(**member, screen=instance)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
             Insurance.objects.create(**insurance, household_member=household_member)
+            if energy_calculator_member is not None:
+                print("ec member", energy_calculator_member)
+                EnergyCaluculatorMember(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=instance)
+        if energy_calculator_screen is not None:
+            print("ec screen", energy_calculator_screen)
+            EnergyCaluculatorScreen.objects.create(**energy_calculator_screen, screen=instance)
         instance.refresh_from_db()
         instance.set_screen_is_test()
         return instance
