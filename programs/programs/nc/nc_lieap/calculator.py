@@ -5,7 +5,6 @@ import programs.programs.messages as messages
 class NCLieap(ProgramCalculator):
     expenses = ["rent", "mortgage", "heating"]
     fpl_percent = 1.3
-    resource_limit = 2250
     dependencies = [
         "income_frequency",
         "income_amount",
@@ -13,7 +12,7 @@ class NCLieap(ProgramCalculator):
         "household_size",
         "age",
     ]
-    large_household_size = 3
+    large_household_size = 4
     max_value_fpl_percent = 0.5
     small_household_low_income_value = 400
     small_household_large_income_value = 300
@@ -37,7 +36,7 @@ class NCLieap(ProgramCalculator):
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
         income_limit = int(self.fpl_percent * self.program.fpl.as_dict()[household_size])
 
-        if household_size <= self.large_household_size:
+        if household_size < self.large_household_size:
             if gross_income <= income_limit * self.max_value_fpl_percent:
                 return self.small_household_low_income_value
             elif gross_income <= income_limit:
