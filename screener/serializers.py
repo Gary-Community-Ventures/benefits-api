@@ -1,6 +1,14 @@
 from datetime import datetime, timedelta
 from programs.models import WarningMessage
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance, WhiteLabel
+from screener.models import (
+    Screen,
+    HouseholdMember,
+    IncomeStream,
+    Expense,
+    Message,
+    Insurance,
+    WhiteLabel,
+)
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from translations.serializers import ModelTranslationSerializer, TranslationSerializer
@@ -159,6 +167,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_erc",
             "has_leap",
             "has_oap",
+            "has_nc_crisis_intervention",
             "has_coctc",
             "has_upk",
             "has_ssdi",
@@ -214,7 +223,9 @@ class ScreenSerializer(serializers.ModelSerializer):
             insurance = member.pop("insurance")
             household_member = HouseholdMember.objects.create(**member, screen=screen)
             for income in incomes:
-                IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
+                IncomeStream.objects.create(
+                    **income, screen=screen, household_member=household_member
+                )
             Insurance.objects.create(**insurance, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=screen)
@@ -240,7 +251,9 @@ class ScreenSerializer(serializers.ModelSerializer):
             insurance = member.pop("insurance")
             household_member = HouseholdMember.objects.create(**member, screen=instance)
             for income in incomes:
-                IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
+                IncomeStream.objects.create(
+                    **income, screen=instance, household_member=household_member
+                )
             Insurance.objects.create(**insurance, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=instance)
