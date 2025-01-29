@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name="screen",
-            name="has_nc_crisis_intervention",
+            name="has_ncci",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]
