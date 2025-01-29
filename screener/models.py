@@ -705,7 +705,7 @@ class Insurance(models.Model):
         }
 
 
-class EnergyCaluculatorScreen(models.Model):
+class EnergyCalculatorScreen(models.Model):
     screen = models.OneToOneField(Screen, related_name="energy_calculator", null=False, on_delete=models.CASCADE)
     is_home_owner = models.BooleanField(default=False, null=True, blank=True)
     is_renter = models.BooleanField(default=False, null=True, blank=True)
@@ -719,7 +719,7 @@ class EnergyCaluculatorScreen(models.Model):
     needs_dryer = models.BooleanField(default=False, null=True, blank=True)
 
 
-class EnergyCaluculatorMember(models.Model):
+class EnergyCalculatorMember(models.Model):
     household_member = models.OneToOneField(
         HouseholdMember, related_name="energy_calculator", null=False, on_delete=models.CASCADE
     )
