@@ -274,6 +274,7 @@ class ScreenSerializer(serializers.ModelSerializer):
 
         Screen.objects.filter(pk=instance.id).update(**validated_data)
         HouseholdMember.objects.filter(screen=instance).delete()
+        EnergyCaluculatorScreen.objects.filter(screen=instance).delete()
         Expense.objects.filter(screen=instance).delete()
         for member in household_members:
             incomes = member.pop("income_streams")
@@ -284,12 +285,10 @@ class ScreenSerializer(serializers.ModelSerializer):
                 IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
             Insurance.objects.create(**insurance, household_member=household_member)
             if energy_calculator_member is not None:
-                print("ec member", energy_calculator_member)
                 EnergyCaluculatorMember(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=instance)
         if energy_calculator_screen is not None:
-            print("ec screen", energy_calculator_screen)
             EnergyCaluculatorScreen.objects.create(**energy_calculator_screen, screen=instance)
         instance.refresh_from_db()
         instance.set_screen_is_test()
