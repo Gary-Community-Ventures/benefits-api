@@ -1645,11 +1645,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "section_8": {
                     "name": {
                         "_label": "housingAndUtilities.section_8",
-                        "_default_message": "Section 8: ",
+                        "_default_message": "Housing Choice Voucher: ",
                     },
                     "description": {
                         "_label": "housingAndUtilities.section_8_desc",
-                        "_default_message": "Housing Choice Voucher (SOMEONE PLEASE CORRECT THE LANGUAGE FOR THIS ONE)",  # TODO: update copy
+                        "_default_message": "Rent Subsidy (formerly Section 8)",
                     },
                 },
             },
@@ -1660,18 +1660,18 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "medicaid": {
                     "name": {
                         "_label": "healthCareBenefits.medicaid",
-                        "_default_message": "Medicaid: ",
+                        "_default_message": "Health First Colorado (Medicaid): ",
                     },
                     "description": {
                         "_label": "healthCareBenefits.medicaid_desc",
-                        "_default_message": "Health insurance (SOMEONE PLEASE CORRECT THE LANGUAGE FOR THIS ONE)",  # TODO: update copy
+                        "_default_message": "Free / low-cost public health insurance",
                     },
                 },
                 "chp": {
-                    "name": {"_label": "healthCareBenefits.chp", "_default_message": "Child Health Plan Plus: "},
+                    "name": {"_label": "healthCareBenefits.chp", "_default_message": "Child Health Plan Plus (CHP+): "},
                     "description": {
                         "_label": "healthCareBenefits.chp_desc",
-                        "_default_message": "Health insurance (SOMEONE PLEASE CORRECT THE LANGUAGE FOR THIS ONE)",  # TODO: update copy
+                        "_default_message": "Low-cost health insurance for children and pregnant women",
                     },
                 },
             },
