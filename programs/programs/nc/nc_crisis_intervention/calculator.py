@@ -3,7 +3,7 @@ import programs.programs.messages as messages
 
 
 class NCCrisisIntervention(ProgramCalculator):
-    expenses = ["rent", "mortgage", "heating"]
+    expenses = ["rent", "mortgage", "heating", "cooling"]
     fpl_percent = 1.5
     large_household_size = 4
     max_value_fpl_percent = 0.5
