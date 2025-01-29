@@ -1668,10 +1668,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     },
                 },
                 "chp": {
-                    "name": {"_label": "healthCareBenefits.chp", "_default_message": "Child Health Plan Plus"},
+                    "name": {"_label": "healthCareBenefits.chp", "_default_message": "Child Health Plan Plus: "},
                     "description": {
                         "_label": "healthCareBenefits.chp_desc",
-                        "_default_message": "Health insurance (Personalized support for first-time parents)",  # TODO: update copy
+                        "_default_message": "Health insurance (SOMEONE PLEASE CORRECT THE LANGUAGE FOR THIS ONE)",  # TODO: update copy
                     },
                 },
             },
