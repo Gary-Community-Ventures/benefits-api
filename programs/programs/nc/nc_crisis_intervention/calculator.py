@@ -5,8 +5,6 @@ import programs.programs.messages as messages
 class CrisisIntervention(ProgramCalculator):
     expenses = ["rent", "mortgage", "heating"]
     fpl_percent = 1.5
-    percent_of_fpl = 4
-    # resource_limit = 2250
     large_household_size = 4
     max_value_fpl_percent = 0.5
     small_household_low_income_value = 400
@@ -17,27 +15,31 @@ class CrisisIntervention(ProgramCalculator):
     dependencies = [
         "household_size",
         "income_amount",
-        "zipcode",
-        "household_size",
-        "age",
+        "income_frequency",
     ]
 
     def household_eligible(self, e: Eligibility):
         household_size = self.screen.household_size
 
         # has rent or mortgage expense
-        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        has_rent_or_mortgage = self.screen.has_expense(CrisisIntervention.expenses)
         e.condition(has_rent_or_mortgage)
 
         # income
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
-        income_limit = int(self.fpl_percent * self.program.fpl.as_dict()[household_size])
-        e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
+        income_limit = int(
+            self.fpl_percent * self.program.fpl.as_dict()[household_size]
+        )
+        e.condition(
+            gross_income < income_limit, messages.income(gross_income, income_limit)
+        )
 
     def household_value(self):
         household_size = self.screen.household_size
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
-        income_limit = int(self.fpl_percent * self.program.fpl.as_dict()[household_size])
+        income_limit = int(
+            self.fpl_percent * self.program.fpl.as_dict()[household_size]
+        )
 
         if household_size <= self.large_household_size:
             if gross_income <= income_limit * self.max_value_fpl_percent:
