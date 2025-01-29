@@ -71,6 +71,7 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
     insurance = InsuranceSerializer()
     birth_year = serializers.IntegerField(required=False, allow_null=True)
     birth_month = serializers.IntegerField(required=False, allow_null=True)
+    energy_calculator = EnergyCalculatorMemberSerializer(required=False, allow_null=True)
 
     def validate(self, data):
         birth_year = data.pop("birth_year", None)
@@ -121,6 +122,7 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
             "insurance",
             "birth_year",
             "birth_month",
+            "energy_calculator",
         )
         read_only_fields = ("screen", "id")
 
@@ -130,6 +132,7 @@ class ScreenSerializer(serializers.ModelSerializer):
     expenses = ExpenseSerializer(many=True)
     user = UserOffersSerializer(read_only=True)
     white_label = serializers.CharField(source="white_label.code")
+    energy_calculator = EnergyCalculatorScreenSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Screen
@@ -155,6 +158,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "last_email_request_date",
             "last_tax_filing_year",
             "expenses",
+            "energy_calculator",
             "user",
             "external_id",
             "request_language_code",
