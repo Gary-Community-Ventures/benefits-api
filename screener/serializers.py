@@ -1,6 +1,16 @@
 from datetime import datetime, timedelta
 from programs.models import WarningMessage
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance, WhiteLabel
+from screener.models import (
+    EnergyCalculatorMember,
+    EnergyCalculatorScreen,
+    Screen,
+    HouseholdMember,
+    IncomeStream,
+    Expense,
+    Message,
+    Insurance,
+    WhiteLabel,
+)
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from translations.serializers import ModelTranslationSerializer, TranslationSerializer
@@ -42,11 +52,26 @@ class ExpenseSerializer(serializers.ModelSerializer):
         read_only_fields = ("screen", "household_member", "id")
 
 
+class EnergyCalculatorMemberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EnergyCalculatorMember
+        fields = "__all__"
+        read_only_fields = ("household_member", "id")
+
+
+class EnergyCalculatorScreenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EnergyCalculatorScreen
+        fields = "__all__"
+        read_only_fields = ("screen", "id")
+
+
 class HouseholdMemberSerializer(serializers.ModelSerializer):
     income_streams = IncomeStreamSerializer(many=True)
     insurance = InsuranceSerializer()
     birth_year = serializers.IntegerField(required=False, allow_null=True)
     birth_month = serializers.IntegerField(required=False, allow_null=True)
+    energy_calculator = EnergyCalculatorMemberSerializer(required=False, allow_null=True)
 
     def validate(self, data):
         birth_year = data.pop("birth_year", None)
@@ -97,6 +122,7 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
             "insurance",
             "birth_year",
             "birth_month",
+            "energy_calculator",
         )
         read_only_fields = ("screen", "id")
 
@@ -106,6 +132,7 @@ class ScreenSerializer(serializers.ModelSerializer):
     expenses = ExpenseSerializer(many=True)
     user = UserOffersSerializer(read_only=True)
     white_label = serializers.CharField(source="white_label.code")
+    energy_calculator = EnergyCalculatorScreenSerializer(required=False, allow_null=True)
 
     class Meta:
         model = Screen
@@ -131,6 +158,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "last_email_request_date",
             "last_tax_filing_year",
             "expenses",
+            "energy_calculator",
             "user",
             "external_id",
             "request_language_code",
@@ -212,17 +240,23 @@ class ScreenSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         household_members = validated_data.pop("household_members")
         expenses = validated_data.pop("expenses")
+        energy_calculator_screen = validated_data.pop("energy_calculator", None)
         screen = Screen.objects.create(**validated_data, completed=False)
         screen.set_screen_is_test()
         for member in household_members:
             incomes = member.pop("income_streams")
             insurance = member.pop("insurance")
+            energy_calculator_member = validated_data.pop("energy_calculator", None)
             household_member = HouseholdMember.objects.create(**member, screen=screen)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
             Insurance.objects.create(**insurance, household_member=household_member)
+            if energy_calculator_member is not None:
+                EnergyCalculatorMember(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=screen)
+        if energy_calculator_screen is not None:
+            EnergyCalculatorScreen.objects.create(**energy_calculator_screen, screen=screen)
         return screen
 
     def update(self, instance, validated_data):
@@ -231,6 +265,7 @@ class ScreenSerializer(serializers.ModelSerializer):
 
         household_members = validated_data.pop("household_members")
         expenses = validated_data.pop("expenses")
+        energy_calculator_screen = validated_data.pop("energy_calculator", None)
 
         # don't update create only fields
         for field in self.Meta.create_only_fields:
@@ -239,16 +274,22 @@ class ScreenSerializer(serializers.ModelSerializer):
 
         Screen.objects.filter(pk=instance.id).update(**validated_data)
         HouseholdMember.objects.filter(screen=instance).delete()
+        EnergyCalculatorScreen.objects.filter(screen=instance).delete()
         Expense.objects.filter(screen=instance).delete()
         for member in household_members:
             incomes = member.pop("income_streams")
             insurance = member.pop("insurance")
+            energy_calculator_member = validated_data.pop("energy_calculator", None)
             household_member = HouseholdMember.objects.create(**member, screen=instance)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
             Insurance.objects.create(**insurance, household_member=household_member)
+            if energy_calculator_member is not None:
+                EnergyCalculatorMember(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=instance)
+        if energy_calculator_screen is not None:
+            EnergyCalculatorScreen.objects.create(**energy_calculator_screen, screen=instance)
         instance.refresh_from_db()
         instance.set_screen_is_test()
         return instance
