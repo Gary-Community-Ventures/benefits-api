@@ -131,33 +131,33 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     condition_options = {
         "you": {
             "survivingSpouse": {
-                "icon": {"_icon": "Student", "_classname": "option-card-icon"},
+                "icon": {"_icon": "SurvivingSpouse", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "conditionOptions.student",
-                    "_default_message": "Student at a college, university, or other post-secondary institution like a job-training program",
+                    "_label": "eCConditionOptions.survivingSpouse",
+                    "_default_message": "Surviving Spouse",
                 },
             },
             "totallyDisabled": {
-                "icon": {"_icon": "Pregnant", "_classname": "option-card-icon"},
+                "icon": {"_icon": "TotallyDisabled", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "conditionOptions.pregnant",
-                    "_default_message": "Pregnant",
+                    "_label": "eCConditionOptions.totallyDisabled",
+                    "_default_message": "Have a disability",
                 },
             },
         },
         "them": {
             "survivingSpouse": {
-                "icon": {"_icon": "Student", "_classname": "option-card-icon"},
+                "icon": {"_icon": "SurvivingSpouse", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "conditionOptions.student",
-                    "_default_message": "Student at a college, university, or other post-secondary institution like a job-training program",
+                    "_label": "eCConditionOptions.survivingSpouse",
+                    "_default_message": "Surviving Spouse",
                 },
             },
             "totallyDisabled": {
-                "icon": {"_icon": "Pregnant", "_classname": "option-card-icon"},
+                "icon": {"_icon": "TotallyDisabled", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "conditionOptions.pregnant",
-                    "_default_message": "Pregnant",
+                    "_label": "eCConditionOptions.totallyDisabled",
+                    "_default_message": "Have a disability",
                 },
             },
         },
