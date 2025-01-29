@@ -22,8 +22,8 @@ class NCLieap(ProgramCalculator):
         household_size = self.screen.household_size
 
         # has rent or mortgage expense
-        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage", "heating"])
-        e.condition(has_rent_or_mortgage)
+        has_program_expense = self.screen.has_expense(["rent", "mortgage", "heating"])
+        e.condition(has_program_expense)
 
         # income
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
