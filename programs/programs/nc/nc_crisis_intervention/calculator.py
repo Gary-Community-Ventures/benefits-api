@@ -2,7 +2,7 @@ from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibi
 import programs.programs.messages as messages
 
 
-class CrisisIntervention(ProgramCalculator):
+class NCCrisisIntervention(ProgramCalculator):
     expenses = ["rent", "mortgage", "heating"]
     fpl_percent = 1.5
     large_household_size = 4
@@ -22,18 +22,24 @@ class CrisisIntervention(ProgramCalculator):
         household_size = self.screen.household_size
 
         # has rent or mortgage expense
-        has_rent_or_mortgage = self.screen.has_expense(CrisisIntervention.expenses)
+        has_rent_or_mortgage = self.screen.has_expense(NCCrisisIntervention.expenses)
         e.condition(has_rent_or_mortgage)
 
         # income
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
-        income_limit = int(self.fpl_percent * self.program.fpl.as_dict()[household_size])
-        e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
+        income_limit = int(
+            self.fpl_percent * self.program.fpl.as_dict()[household_size]
+        )
+        e.condition(
+            gross_income < income_limit, messages.income(gross_income, income_limit)
+        )
 
     def household_value(self):
         household_size = self.screen.household_size
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
-        income_limit = int(self.fpl_percent * self.program.fpl.as_dict()[household_size])
+        income_limit = int(
+            self.fpl_percent * self.program.fpl.as_dict()[household_size]
+        )
 
         if household_size <= self.large_household_size:
             if gross_income <= income_limit * self.max_value_fpl_percent:
