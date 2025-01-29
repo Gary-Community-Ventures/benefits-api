@@ -2,7 +2,7 @@ from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 
 
-class NCLieap(ProgramCalculator):   
+class NCLieap(ProgramCalculator):
     fpl_percent = 1.3
     dependencies = [
         "income_frequency",
