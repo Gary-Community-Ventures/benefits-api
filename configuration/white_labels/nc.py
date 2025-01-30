@@ -1575,7 +1575,7 @@ class NcConfigurationData(ConfigurationData):
                         "_default_message": "Low Income Energy Assistance Program (LIEAP): ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.nc_leap_desc",
+                        "_label": "housingAndUtilities.nc_lieap_desc",
                         "_default_message": "Help with winter heating bills",
                     },
                 },
