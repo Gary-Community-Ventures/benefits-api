@@ -4,6 +4,7 @@ import programs.programs.messages as messages
 
 class NCLieap(ProgramCalculator):
     fpl_percent = 1.3
+    expenses = ["rent", "mortgage", "heating"]
     dependencies = [
         "income_frequency",
         "income_amount",
@@ -21,8 +22,8 @@ class NCLieap(ProgramCalculator):
     def household_eligible(self, e: Eligibility):
         household_size = self.screen.household_size
 
-        # has rent or mortgage expense
-        has_program_expense = self.screen.has_expense(["rent", "mortgage", "heating"])
+        # has rent, mortgage or heating expense
+        has_program_expense = self.screen.has_expense(NCLieap.expenses)
         e.condition(has_program_expense)
 
         # income
