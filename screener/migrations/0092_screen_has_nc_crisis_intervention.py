@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name="screen",
-            name="has_ncci",
+            name="has_nccip",
             field=models.BooleanField(blank=True, default=False, null=True),
         ),
     ]

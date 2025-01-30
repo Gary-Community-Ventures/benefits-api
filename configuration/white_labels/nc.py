@@ -8,7 +8,9 @@ class NcConfigurationData(ConfigurationData):
     def get_white_label(self) -> WhiteLabel:
         return WhiteLabel.objects.get(code="nc")
 
-    public_charge_rule = {"link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/"}
+    public_charge_rule = {
+        "link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/"
+    }
 
     more_help_options = {
         "moreHelpOptions": [
@@ -1579,6 +1581,16 @@ class NcConfigurationData(ConfigurationData):
                         "_default_message": "Help with winter heating bills",
                     },
                 },
+                "nccip": {
+                    "name": {
+                        "_label": "housingAndUtilities.nccip",
+                        "_default_message": "NC Crisis Intervention Program (CIP): ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.nccip_desc",
+                        "_default_message": "Help with heating or cooling expense",
+                    },
+                },
                 "cowap": {
                     "name": {
                         "_label": "housingAndUtilities.cowap",
@@ -1697,7 +1709,9 @@ class NcConfigurationData(ConfigurationData):
             },
         },
         "logoFooterSource": {"default": " MFB_Logo"},
-        "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
+        "logoFooterAlt": {
+            "default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}
+        },
         "logoClass": {"default": "logo"},
         "twoOneOneLink": {
             "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"

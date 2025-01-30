@@ -167,7 +167,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_erc",
             "has_leap",
             "has_oap",
-            "has_ncci",
+            "has_nccip",
             "has_coctc",
             "has_upk",
             "has_ssdi",
@@ -223,7 +223,9 @@ class ScreenSerializer(serializers.ModelSerializer):
             insurance = member.pop("insurance")
             household_member = HouseholdMember.objects.create(**member, screen=screen)
             for income in incomes:
-                IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
+                IncomeStream.objects.create(
+                    **income, screen=screen, household_member=household_member
+                )
             Insurance.objects.create(**insurance, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=screen)
@@ -249,7 +251,9 @@ class ScreenSerializer(serializers.ModelSerializer):
             insurance = member.pop("insurance")
             household_member = HouseholdMember.objects.create(**member, screen=instance)
             for income in incomes:
-                IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
+                IncomeStream.objects.create(
+                    **income, screen=instance, household_member=household_member
+                )
             Insurance.objects.create(**insurance, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=instance)
