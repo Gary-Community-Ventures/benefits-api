@@ -18,7 +18,6 @@ class AffordableResidentialEnergy(ProgramCalculator):
     amount = 0  # TODO: figure out value
     dependencies = ["household_size", "energy_calculator", "income_amount", "income_frequency"]
     electricity_providers = [
-        # TODO: figure out atmos
         "co-city-of-gunnison",
         "co-gunnison-county-electric-association",
         "co-la-plata-electric-association",
@@ -34,6 +33,11 @@ class AffordableResidentialEnergy(ProgramCalculator):
     income_limits = AffordableResidentialEnergyIncomeLimitCache()
 
     def household_eligible(self, e: Eligibility):
+        # presumptive eligibility
+        if self.screen.has_benefit_from_list(self.presumptive_eligibility):
+            # assume eligibility if they are eligible for one of the presumptive eligibility programs
+            return
+
         # income
         income = self.screen.calc_gross_income("yearly", ["all"])
         county = counties_from_screen(self.screen)[0]
@@ -42,6 +46,3 @@ class AffordableResidentialEnergy(ProgramCalculator):
 
         # utility providers
         e.condition(self.screen.energy_calculator.has_utility_provider(self.electricity_providers + self.gas_providers))
-
-        # presumptive eligibility
-        e.condition(self.screen.has_benefit_from_list(self.presumptive_eligibility))
