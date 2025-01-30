@@ -317,7 +317,7 @@ class Screen(models.Model):
             "erc": self.has_erc,
             "leap": self.has_leap,
             "oap": self.has_oap,
-            "nc_crisis_intervention": self.has_nccip,
+            "nccip": self.has_nccip,
             "coctc": self.has_coctc,
             "upk": self.has_upk,
             "ssdi": self.has_ssdi,

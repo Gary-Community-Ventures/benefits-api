@@ -9,5 +9,5 @@ nc_calculators: dict[str, type[ProgramCalculator]] = {
     "nc_aca": ACASubsidiesNC,
     "nc_emergency_medicaid": EmergencyMedicaid,
     "sunbucks": SunBucks,
-    "nc_crisis_intervention": NCCrisisIntervention,
+    "nccip": NCCrisisIntervention,
 }
