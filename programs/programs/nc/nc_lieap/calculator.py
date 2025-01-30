@@ -8,9 +8,7 @@ class NCLieap(ProgramCalculator):
     dependencies = [
         "income_frequency",
         "income_amount",
-        "zipcode",
         "household_size",
-        "age",
     ]
     large_household_size = 4
     max_value_fpl_percent = 0.5
