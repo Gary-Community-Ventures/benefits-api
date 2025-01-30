@@ -277,7 +277,14 @@ class Screen(models.Model):
 
         return False
 
-    def has_benefit(self, name_abbreviated):
+    def has_benefit_from_list(self, names: list[str]):
+        for program in names:
+            if self.has_benefit(program):
+                return True
+
+        return False
+
+    def has_benefit(self, name_abbreviated: str):
         name_map = {
             "tanf": self.has_tanf,
             "nc_tanf": self.has_tanf,
@@ -717,6 +724,23 @@ class EnergyCalculatorScreen(models.Model):
     needs_hvac = models.BooleanField(default=False, null=True, blank=True)
     needs_stove = models.BooleanField(default=False, null=True, blank=True)
     needs_dryer = models.BooleanField(default=False, null=True, blank=True)
+
+    def has_electricity_provider(self, providers: list[str]):
+        for provider in providers:
+            if provider == self.electric_provider:
+                return True
+
+        return False
+
+    def has_gas_provider(self, providers: list[str]):
+        for provider in providers:
+            if provider == self.gas_provider:
+                return True
+
+        return False
+
+    def has_utility_provider(self, providers: list[str]):
+        return self.has_utility_provider(providers) or self.has_gas_provider(providers)
 
 
 class EnergyCalculatorMember(models.Model):
