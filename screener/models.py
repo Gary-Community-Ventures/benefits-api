@@ -724,7 +724,6 @@ class EnergyCalculatorMember(models.Model):
         HouseholdMember, related_name="energy_calculator", null=False, on_delete=models.CASCADE
     )
     surviving_spouse = models.BooleanField(default=False, null=True, blank=True)
-    disabled = models.BooleanField(default=False, null=True, blank=True)
     receives_ssi = models.BooleanField(default=False, null=True, blank=True)
 
 
