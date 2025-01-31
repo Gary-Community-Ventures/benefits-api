@@ -367,7 +367,7 @@ def eligibility_results(screen: Screen, batch=False):
             for member_eligibility in eligibility.eligible_members:
                 member_data.append(
                     {
-                        "frontend_id": member_eligibility.member.frontend_id,
+                        "frontend_id": str(member_eligibility.member.frontend_id),
                         "eligible": member_eligibility.eligible,
                         "value": member_eligibility.value,
                     }
