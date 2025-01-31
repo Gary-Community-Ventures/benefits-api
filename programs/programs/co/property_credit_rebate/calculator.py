@@ -1,5 +1,6 @@
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
 import programs.programs.messages as messages
+from screener.models import HouseholdMember
 
 
 class PropertyCreditRebate(ProgramCalculator):
@@ -19,21 +20,33 @@ class PropertyCreditRebate(ProgramCalculator):
 
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
         e.condition(
-            gross_income <= PropertyCreditRebate.income_limit[relationship_status],
-            messages.income(gross_income, PropertyCreditRebate.income_limit[relationship_status]),
+            gross_income <= self.income_limit[relationship_status],
+            messages.income(gross_income, self.income_limit[relationship_status]),
         )
 
         # has rent or mortgage expense
-        has_rent_or_mortgage = self.screen.has_expense(PropertyCreditRebate.expenses)
-        e.condition(has_rent_or_mortgage)
+        e.condition(self._has_expense())
+
+    def _has_expense(self):
+        return self.screen.has_expense(self.expenses)
 
     def member_eligible(self, e: MemberEligibility):
         member = e.member
 
         # disabled
-        someone_disabled = member.has_disability() and member.age > PropertyCreditRebate.disabled_min_age
+        is_disabled = self._member_is_disabled(member)
+
+        # surviving spouse
+        is_surviving_spouse = self._is_surviving_spouse(member)
 
         # age
-        someone_old_enough = member.age >= PropertyCreditRebate.min_age
+        is_old_enough = member.age >= self.min_age
 
-        e.condition(someone_disabled or someone_old_enough)
+        e.condition(is_disabled or is_old_enough or is_surviving_spouse)
+
+    def _member_is_disabled(self, member: HouseholdMember):
+        return member.has_disability() and member.age > self.disabled_min_age
+
+    def _is_surviving_spouse(self, member: HouseholdMember):
+        # we don't ask this question in the normal MFB route
+        return False
