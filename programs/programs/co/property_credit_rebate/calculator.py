@@ -4,11 +4,11 @@ from screener.models import HouseholdMember
 
 
 class PropertyCreditRebate(ProgramCalculator):
-    amount = 1044
+    amount = 1_154
     min_age = 65
     disabled_min_age = 18
     expenses = ["rent", "mortgage"]
-    income_limit = {"single": 18_026, "married": 23_345}
+    income_limit = {"single": 18_704, "married": 25_261}
     dependencies = ["age", "income_frequency", "income_amount", "relationship"]
 
     def household_eligible(self, e: Eligibility):
