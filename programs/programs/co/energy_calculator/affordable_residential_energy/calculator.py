@@ -15,7 +15,7 @@ class AffordableResidentialEnergyIncomeLimitCache(GoogleSheetsCache):
 
 
 class AffordableResidentialEnergy(ProgramCalculator):
-    amount = 0  # TODO: figure out value
+    amount = 1
     dependencies = ["household_size", "energy_calculator", "income_amount", "income_frequency"]
     electricity_providers = [
         "co-city-of-gunnison",
