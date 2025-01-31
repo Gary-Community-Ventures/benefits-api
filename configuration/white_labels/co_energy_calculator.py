@@ -137,10 +137,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     "_default_message": "Surviving Spouse",
                 },
             },
-            "totallyDisabled": {
-                "icon": {"_icon": "TotallyDisabled", "_classname": "option-card-icon"},
+            "disabled": {
+                "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "eCConditionOptions.totallyDisabled",
+                    "_label": "eCConditionOptions.disabled",
                     "_default_message": "Have a disability",
                 },
             },
@@ -153,10 +153,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     "_default_message": "Surviving Spouse",
                 },
             },
-            "totallyDisabled": {
-                "icon": {"_icon": "TotallyDisabled", "_classname": "option-card-icon"},
+            "disabled": {
+                "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "eCConditionOptions.totallyDisabled",
+                    "_label": "eCConditionOptions.disabled",
                     "_default_message": "Have a disability",
                 },
             },
@@ -1714,11 +1714,13 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "default": [
                 "zipcode",
                 "householdSize",
+                "ecHouseholdData",
                 "hasBenefits",
             ],
             "renter": [  # WARN: Temporary fix to allow for multiple paths
                 "zipcode",
                 "householdSize",
+                "ecHouseholdData",
                 "hasBenefits",
             ],
         },
