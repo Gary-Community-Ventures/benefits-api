@@ -68,7 +68,7 @@ class EnergyCalculatorScreenSerializer(serializers.ModelSerializer):
 
 class HouseholdMemberSerializer(serializers.ModelSerializer):
     income_streams = IncomeStreamSerializer(many=True)
-    insurance = InsuranceSerializer()
+    insurance = InsuranceSerializer(required=False, allow_null=True)
     birth_year = serializers.IntegerField(required=False, allow_null=True)
     birth_month = serializers.IntegerField(required=False, allow_null=True)
     energy_calculator = EnergyCalculatorMemberSerializer(required=False, allow_null=True)
@@ -246,12 +246,13 @@ class ScreenSerializer(serializers.ModelSerializer):
         screen.set_screen_is_test()
         for member in household_members:
             incomes = member.pop("income_streams")
-            insurance = member.pop("insurance")
+            insurance = member.pop("insurance", None)
             energy_calculator_member = validated_data.pop("energy_calculator", None)
             household_member = HouseholdMember.objects.create(**member, screen=screen)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
-            Insurance.objects.create(**insurance, household_member=household_member)
+            if insurance is not None:
+                Insurance.objects.create(**insurance, household_member=household_member)
             if energy_calculator_member is not None:
                 EnergyCalculatorMember(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
@@ -279,12 +280,13 @@ class ScreenSerializer(serializers.ModelSerializer):
         Expense.objects.filter(screen=instance).delete()
         for member in household_members:
             incomes = member.pop("income_streams")
-            insurance = member.pop("insurance")
+            insurance = member.pop("insurance", None)
             energy_calculator_member = validated_data.pop("energy_calculator", None)
             household_member = HouseholdMember.objects.create(**member, screen=instance)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=instance, household_member=household_member)
-            Insurance.objects.create(**insurance, household_member=household_member)
+            if insurance is not None:
+                Insurance.objects.create(**insurance, household_member=household_member)
             if energy_calculator_member is not None:
                 EnergyCalculatorMember(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
