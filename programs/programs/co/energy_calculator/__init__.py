@@ -2,7 +2,9 @@ from programs.programs.calc import ProgramCalculator
 from programs.programs.co.energy_calculator.affordable_residential_energy.calculator import AffordableResidentialEnergy
 from programs.programs.co.energy_calculator.energy_assistance.calculator import EnergyCalculatorEnergyAssistance
 from programs.programs.co.energy_calculator.energy_outreach_solar.calculator import EnergyOutreachSolar
-from programs.programs.co.energy_calculator.property_credit_rebate.calculator import EnergyCalculatorPropertyCreditRebate
+from programs.programs.co.energy_calculator.property_credit_rebate.calculator import (
+    EnergyCalculatorPropertyCreditRebate,
+)
 from programs.programs.co.energy_calculator.utility_bill_pay.calculator import EnergyCalculatorUtilityBillPay
 
 
