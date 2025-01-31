@@ -1741,5 +1741,5 @@ class NcConfigurationData(ConfigurationData):
 
     feedback_links = {
         "survey": "https://airtable.com/app8EC0NO7FrnAMlP/pagiU2dMjYRofDxEn/form",
-        "email": "mailto:myfriendben@codethedream.org",
+        "email": "myfriendben@codethedream.org",
     }
