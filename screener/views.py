@@ -362,6 +362,17 @@ def eligibility_results(screen: Screen, batch=False):
                 )
             )
             program_translations = GetProgramTranslation(screen, program, missing_dependencies)
+
+            member_data = []
+            for member_eligibility in eligibility.eligible_members:
+                member_data.append(
+                    {
+                        "frontend_id": str(member_eligibility.member.frontend_id),
+                        "eligible": member_eligibility.eligible,
+                        "value": member_eligibility.value,
+                    }
+                )
+
             data.append(
                 {
                     "program_id": program.id,
@@ -369,6 +380,7 @@ def eligibility_results(screen: Screen, batch=False):
                     "name_abbreviated": program.name_abbreviated,
                     "external_name": program.external_name,
                     "estimated_value": eligibility.value,
+                    "household_value": eligibility.household_value,
                     "estimated_delivery_time": program_translations.get_translation("estimated_delivery_time"),
                     "estimated_application_time": program_translations.get_translation("estimated_application_time"),
                     "description_short": program_translations.get_translation("description_short"),
@@ -381,6 +393,7 @@ def eligibility_results(screen: Screen, batch=False):
                     "legal_status_required": legal_status,
                     "estimated_value_override": program_translations.get_translation("estimated_value"),
                     "eligible": eligibility.eligible,
+                    "members": member_data,
                     "failed_tests": eligibility.fail_messages,
                     "passed_tests": eligibility.pass_messages,
                     "navigators": [serialized_navigator(navigator) for navigator in navigators],

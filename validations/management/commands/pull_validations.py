@@ -1,11 +1,12 @@
 from django.core.management.base import BaseCommand
 from getpass import getpass
-import requests
 
+from django.db import transaction
 from screener.models import Screen
 from screener.serializers import ScreenSerializer
 from validations.models import Validation
 from validations.serializers import ValidationSerializer
+import requests
 
 
 class Command(BaseCommand):
@@ -18,6 +19,7 @@ class Command(BaseCommand):
             help="Domain of the environment to pull from",
         )
 
+    @transaction.atomic
     def handle(self, *args, **options):
         domain = options["domain"]
         api_key = getpass("API key: ")
@@ -42,7 +44,7 @@ class Command(BaseCommand):
         try:
             # update
             screen = Screen.objects.get(uuid=uuid)
-            serializer = ScreenSerializer(screen, data=remote_screen)
+            serializer = ScreenSerializer(screen, data=remote_screen, force=True)
         except Screen.DoesNotExist:
             # create
             serializer = ScreenSerializer(data=remote_screen)

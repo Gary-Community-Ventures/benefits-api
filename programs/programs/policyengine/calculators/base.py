@@ -32,8 +32,6 @@ class PolicyEngineCalulator(ProgramCalculator):
     def eligible(self) -> Eligibility:
         e = super().eligible()
 
-        self.value(e)
-
         e.eligible = e.value > 0
 
         return e
@@ -41,7 +39,7 @@ class PolicyEngineCalulator(ProgramCalculator):
     def household_eligible(self, e: Eligibility):
         household_value = self.household_value()
 
-        e.value = household_value
+        e.household_value = household_value
 
     def member_eligible(self, e: MemberEligibility):
         member = e.member
@@ -53,10 +51,6 @@ class PolicyEngineCalulator(ProgramCalculator):
 
     def household_value(self):
         return int(self.get_variable())
-
-    def value(self, e: Eligibility):
-        for member_eligibility in e.eligible_members:
-            e.value += member_eligibility.value
 
     def calc(self) -> Eligibility:
         if not self.can_calc():

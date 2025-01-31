@@ -455,8 +455,8 @@ class CoConfigurationData(ConfigurationData):
             "disabled": {
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "conditionOptions.disabled",
-                    "_default_message": "Have any disabilities that make you unable to work now or in the future",
+                    "_label": "conditionOptions.disabled.them",
+                    "_default_message": "Have any disabilities that make them unable to work now or in the future",
                 },
             },
             "longTermDisability": {
@@ -2279,11 +2279,11 @@ class CoConfigurationData(ConfigurationData):
         "city": "Denver",
         "state": "CO",
         "zip_code": "80202",
-        "email": "myfriendben@garycommunity.org",
+        "email": "hello@myfriendben.org",
         "privacy_policy_link": "https://co.myfriendben.org/privacy-policy/",
     }
 
     feedback_links = {
-        "email": "mailto: myfriendben@garycommunity.org",
+        "email": "hello@myfriendben.org",
         "survey": "https://docs.google.com/forms/d/e/1FAIpQLSdnfqjvlVSBQkJuUMvhEDUp-t6oD-8tPQi67uRG2iNetXmSfA/viewform?usp=sf_link",
     }

@@ -1,6 +1,14 @@
 from datetime import datetime, timedelta
 from programs.models import WarningMessage
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance, WhiteLabel
+from screener.models import (
+    Screen,
+    HouseholdMember,
+    IncomeStream,
+    Expense,
+    Message,
+    Insurance,
+    WhiteLabel,
+)
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from translations.serializers import ModelTranslationSerializer, TranslationSerializer
@@ -78,6 +86,7 @@ class HouseholdMemberSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "screen",
+            "frontend_id",
             "relationship",
             "age",
             "student",
@@ -160,6 +169,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_leap",
             "has_nc_lieap",
             "has_oap",
+            "has_nccip",
             "has_coctc",
             "has_upk",
             "has_ssdi",
@@ -197,6 +207,10 @@ class ScreenSerializer(serializers.ModelSerializer):
             "is_test_data",
         )
         create_only_fields = ("external_id", "is_test", "referrer_code", "white_label")
+
+    def __init__(self, *args, **kwargs):
+        self.force = kwargs.pop("force", False)
+        super().__init__(*args, **kwargs)
 
     def validate(self, attrs):
         white_label_code = attrs.pop("white_label")["code"]
@@ -271,6 +285,12 @@ class WarningMessageSerializer(serializers.ModelSerializer):
         return [m.status for m in obj.legal_statuses.all()]
 
 
+class MemberEligibilitySerializer(serializers.Serializer):
+    frontend_id = serializers.UUIDField()
+    eligible = serializers.BooleanField()
+    value = serializers.IntegerField()
+
+
 class EligibilitySerializer(serializers.Serializer):
     description_short = TranslationSerializer()
     name = TranslationSerializer()
@@ -282,10 +302,12 @@ class EligibilitySerializer(serializers.Serializer):
     apply_button_link = TranslationSerializer()
     apply_button_description = TranslationSerializer()
     estimated_value = serializers.IntegerField()
+    household_value = serializers.IntegerField()
     estimated_delivery_time = TranslationSerializer()
     estimated_application_time = TranslationSerializer()
     legal_status_required = serializers.ListField()
     eligible = serializers.BooleanField()
+    members = MemberEligibilitySerializer(many=True)
     failed_tests = serializers.ListField()
     passed_tests = serializers.ListField()
     navigators = NavigatorSerializer(many=True)

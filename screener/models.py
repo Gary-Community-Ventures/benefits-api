@@ -1,8 +1,11 @@
 from datetime import datetime
+from enum import unique
 from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
+
+from google.auth import default
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
@@ -25,7 +28,11 @@ class WhiteLabel(models.Model):
 class Screen(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="screens", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="screens",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     completed = models.BooleanField(null=False, blank=False)
     submission_date = models.DateTimeField(blank=True, null=True)
@@ -75,6 +82,7 @@ class Screen(models.Model):
     has_leap = models.BooleanField(default=False, blank=True, null=True)
     has_nc_lieap = models.BooleanField(default=False, blank=True, null=True)
     has_oap = models.BooleanField(default=False, blank=True, null=True)
+    has_nccip = models.BooleanField(default=False, blank=True, null=True)
     has_coctc = models.BooleanField(default=False, blank=True, null=True)
     has_upk = models.BooleanField(default=False, blank=True, null=True)
     has_ssdi = models.BooleanField(default=False, blank=True, null=True)
@@ -226,7 +234,12 @@ class Screen(models.Model):
                     if other_member.relationship == "headOfHousehold" and other_member.id not in relationship_map:
                         probable_spouse = other_member.id
                         break
-            elif relationship in ("parent", "fosterParent", "stepParent", "grandParent"):
+            elif relationship in (
+                "parent",
+                "fosterParent",
+                "stepParent",
+                "grandParent",
+            ):
                 for other_member in all_members:
                     if (
                         other_member.relationship == relationship
@@ -309,6 +322,7 @@ class Screen(models.Model):
             "leap": self.has_leap,
             "nc_lieap": self.has_nc_lieap,
             "oap": self.has_oap,
+            "nccip": self.has_nccip,
             "coctc": self.has_coctc,
             "upk": self.has_upk,
             "ssdi": self.has_ssdi,
@@ -398,6 +412,7 @@ class Message(models.Model):
 # Screen
 class HouseholdMember(models.Model):
     screen = models.ForeignKey(Screen, related_name="household_members", on_delete=models.CASCADE)
+    frontend_id = models.UUIDField(default=uuid.uuid4)
     relationship = models.CharField(max_length=30, blank=True, null=True)
     age = models.PositiveIntegerField(blank=True, null=True)
     birth_year_month = models.DateField(blank=True, null=True)
