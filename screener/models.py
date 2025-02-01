@@ -31,6 +31,7 @@ class Screen(models.Model):
     submission_date = models.DateTimeField(blank=True, null=True)
     start_date = models.DateTimeField(blank=True, null=True)
     referral_source = models.CharField(max_length=320, default=None, blank=True, null=True)
+    path = models.CharField(max_length=60, default=None, blank=True, null=True)
     referrer_code = models.CharField(max_length=320, default=None, blank=True, null=True)
     agree_to_tos = models.BooleanField(blank=True, null=True)
     is_13_or_older = models.BooleanField(blank=True, null=True)

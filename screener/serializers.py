@@ -152,6 +152,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "county",
             "referral_source",
             "referrer_code",
+            "path",
             "household_size",
             "household_assets",
             "household_members",
