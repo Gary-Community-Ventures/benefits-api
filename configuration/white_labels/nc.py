@@ -1589,13 +1589,13 @@ class NcConfigurationData(ConfigurationData):
                         "_default_message": "Help with heating or cooling expense",
                     },
                 },
-                "cowap": {
+                "ncwap": {
                     "name": {
-                        "_label": "housingAndUtilities.cowap",
+                        "_label": "housingAndUtilities.ncwap",
                         "_default_message": "Weatherization Assistance Program: ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.cowap_desc",
+                        "_label": "housingAndUtilities.ncwap_desc",
                         "_default_message": "Free home energy upgrades",
                     },
                 },

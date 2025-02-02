@@ -87,6 +87,7 @@ class Screen(models.Model):
     has_upk = models.BooleanField(default=False, blank=True, null=True)
     has_ssdi = models.BooleanField(default=False, blank=True, null=True)
     has_cowap = models.BooleanField(default=False, blank=True, null=True)
+    has_ncwap = models.BooleanField(default=False, blank=True, null=True)
     has_ubp = models.BooleanField(default=False, blank=True, null=True)
     has_pell_grant = models.BooleanField(default=False, blank=True, null=True)
     has_rag = models.BooleanField(default=False, blank=True, null=True)
@@ -331,6 +332,7 @@ class Screen(models.Model):
             "nfp": self.has_nfp,
             "fatc": self.has_fatc,
             "cowap": self.has_cowap,
+            "ncwap": self.has_ncwap,
             "ubp": self.has_ubp,
             "co_medicaid": self.has_medicaid or self.has_medicaid_hi,
             "nc_medicaid": self.has_medicaid or self.has_medicaid_hi,

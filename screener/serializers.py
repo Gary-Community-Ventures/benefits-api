@@ -174,6 +174,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_upk",
             "has_ssdi",
             "has_cowap",
+            "has_ncwap",
             "has_ubp",
             "has_rag",
             "has_nfp",
