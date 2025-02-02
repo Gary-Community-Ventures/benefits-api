@@ -2,7 +2,7 @@ from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
 
 
-class NCWeatherization (ProgramCalculator):
+class NCWeatherization(ProgramCalculator):
     fpl_percent = 2
     expenses = ["rent", "mortgage"]
     dependencies = ["household_size", "income_amount", "income_frequency"]
@@ -19,4 +19,3 @@ class NCWeatherization (ProgramCalculator):
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
         income_limit = int(self.fpl_percent * self.program.fpl.as_dict()[household_size])
         e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
-
