@@ -6,12 +6,9 @@ from django.db import migrations
 def make_frontend_ids(apps, _):
     HouseholdMember = apps.get_model("screener", "HouseholdMember")
 
-    bulk_updates = []
     for member in HouseholdMember.objects.all():
         member.frontend_id = uuid.uuid4()
-        bulk_updates.append(member)
-
-    HouseholdMember.objects.bulk_update(bulk_updates, ["frontend_id"])
+        member.save()
 
 
 class Migration(migrations.Migration):

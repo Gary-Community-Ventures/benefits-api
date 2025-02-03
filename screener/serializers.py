@@ -1,6 +1,14 @@
 from datetime import datetime, timedelta
 from programs.models import WarningMessage
-from screener.models import Screen, HouseholdMember, IncomeStream, Expense, Message, Insurance, WhiteLabel
+from screener.models import (
+    Screen,
+    HouseholdMember,
+    IncomeStream,
+    Expense,
+    Message,
+    Insurance,
+    WhiteLabel,
+)
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
 from translations.serializers import ModelTranslationSerializer, TranslationSerializer
@@ -159,7 +167,9 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_ede",
             "has_erc",
             "has_leap",
+            "has_nc_lieap",
             "has_oap",
+            "has_nccip",
             "has_coctc",
             "has_upk",
             "has_ssdi",

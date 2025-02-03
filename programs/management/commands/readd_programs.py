@@ -28,6 +28,7 @@ class Command(BaseCommand):
         {"abbr": "leap", "external": "leap"},
         {"abbr": "pell_grant", "external": "pell_grant"},
         {"abbr": "mydenver", "external": "mydenver"},
+        {"abbr": "nccip", "external": "nccip"},
         {"abbr": "ede", "external": "ede"},
         {"abbr": "cdhcs", "external": "cdhcs"},
         {"abbr": "nslp", "external": "nslp"},
