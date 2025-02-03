@@ -13,7 +13,41 @@ from programs.programs.translation_overrides import warning_calculators
 
 class FplCache(Cache):
     expire_time = 60 * 60 * 24  # 24 hours
-    default = {}
+    default = {
+        "2023": {
+            1: 14_580,
+            2: 19_720,
+            3: 24_860,
+            4: 30_000,
+            5: 35_140,
+            6: 40_280,
+            7: 45_420,
+            8: 50_560,
+            "additional": 5_140,
+        },
+        "2024": {
+            1: 15_060,
+            2: 20_440,
+            3: 25_820,
+            4: 31_200,
+            5: 36_580,
+            6: 41_960,
+            7: 47_340,
+            8: 52_720,
+            "additional": 5_380,
+        },
+        "2025": {
+            1: 15_060,
+            2: 20_440,
+            3: 25_820,
+            4: 31_200,
+            5: 36_580,
+            6: 41_960,
+            7: 47_340,
+            8: 52_720,
+            "additional": 5_380,
+        },
+    }
     api_url = "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/api/"
     max_household_size = 8
 
@@ -33,6 +67,7 @@ class FplCache(Cache):
                 try:
                     data = self._fetch_income_limit(fpl.period, str(i))
                 except self.InvalidYear:
+                    household_sz_fpl = None
                     break
 
                 household_sz_fpl[i] = data
@@ -40,13 +75,30 @@ class FplCache(Cache):
                     income_limit_extra_member = self._fetch_income_limit(fpl.period, str(self.max_household_size + 1))
                     household_sz_fpl["additional"] = income_limit_extra_member - data
             fpl_dict[fpl.period] = household_sz_fpl
+
+        # replace invalid years with the most recent year's fpl
+        most_recent_year = 0
+        for year, values in fpl_dict.items():
+            if values is not None and int(year) > most_recent_year:
+                most_recent_year = int(year)
+
+        for year, values in fpl_dict.items():
+            if values is None:
+                fpl_dict[year] = fpl_dict[str(most_recent_year)].copy()
+
         return fpl_dict
 
     def _fetch_income_limit(self, year: str, household_size: str):
         """
         Request the FPL from the API for the indicated year and household size
         """
-        response = requests.get(self._fpl_url(year, household_size))
+        response = requests.get(self._fpl_url(year, household_size), allow_redirects=False)
+        if "Location" in response.headers:
+            new_url = response.headers["Location"].replace("http", "https")
+            if "https://" not in new_url:
+                new_url = response.headers["Location"].replace("http", "https")
+            response = requests.get(new_url)
+
         response.raise_for_status()
         data = response.json()["data"]
 
