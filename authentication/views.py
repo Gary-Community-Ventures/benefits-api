@@ -15,20 +15,22 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
+
     print("IN UserViewSet")
     queryset = User.objects.all().order_by("-email_or_cell")
-    print("QUERYSET",queryset)
+    print("QUERYSET", queryset)
     serializer_class = UserSerializer
     permission_classes = [permissions.DjangoModelPermissions]
     print("IN UserViewSet")
+
     def update(self, request, pk=None):
-        print("IN UPDATE",pk)
+        print("IN UPDATE", pk)
         if pk is None:
             return Response("Must have an associated screen", status=400)
         screen = Screen.objects.get(uuid=pk)
-        print("SCREEN",screen)
+        print("SCREEN", screen)
         user = screen.user
-        print("USER",user)
+        print("USER", user)
         if user:
             print("IN USER")
             serializer = UserOffersSerializer(user, data=request.data)
@@ -50,14 +52,14 @@ class UserViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
             else:
                 print("IN ELSE, SHOULD SEND MESSAGE")
                 # if settings.CONTACT_SERVICE == "brevo":
-                    # brevo_service = BrevoService()
+                # brevo_service = BrevoService()
                 #     if screen.user.email:
                 #         brevo_service.send_email(screen, screen.user.email, screen.get_language_code())
                 #     if screen.user.cell:
                 #         brevo_service.send_sms(screen, str(screen.user.cell), screen.get_language_code())
                 #     brevo_service.upsert_user(screen, screen.user)
                 # else:
-                        # print("IN ELSE CONTACT SERVICE")
+                # print("IN ELSE CONTACT SERVICE")
                 message = MessageUser(screen, screen.get_language_code())
                 if screen.user.email is not None:
                     print("SENDING EMAIL")

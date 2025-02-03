@@ -26,17 +26,20 @@ class TranslationCache(Cache):
         for lang in langs:
             lang_translations = {}
             for translation in translations:
-                print(f"Processing translation for label: {translation.label}, active: {translation.active}")  # Debug statement
+                print(
+                    f"Processing translation for label: {translation.label}, active: {translation.active}"
+                )  # Debug statement
                 if translation.active:
                     translation.set_current_language(lang)
                     lang_translations[translation.label] = translation.text
                     print(f"Lang: {lang}, Label: {translation.label}, Text: {translation.text}")  # Debug statement
             translations_dict[lang] = lang_translations
-        
-        if 'en-us' not in translations_dict:
+
+        if "en-us" not in translations_dict:
             print("Warning: 'en-us' not found in translations_dict!")  # Debug statement
-        
+
         return translations_dict
+
 
 class TranslationManager(TranslatableManager):
     use_in_migrations = True

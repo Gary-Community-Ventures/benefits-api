@@ -21,7 +21,8 @@ class BrevoService:
         self.sms_instance = sib_api_v3_sdk.TransactionalSMSApi(sib_api_v3_sdk.ApiClient(configuration))
         self.email_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
         self.front_end_domain = settings.FRONTEND_DOMAIN
-        print("FRONT END DOMAIN",self.front_end_domain)
+        print("FRONT END DOMAIN", self.front_end_domain)
+
     def upsert_user(self, screen, user):
         print("upserting user")
         # if settings.DEBUG:
@@ -86,7 +87,9 @@ class BrevoService:
                 user.save()
                 print("saved user")
         except ApiException as e:
-            print(f"Exception when calling ContactsApi->create_contact: Status Code: {e.status}, Reason: {e.reason}, Body: {e.body}")
+            print(
+                f"Exception when calling ContactsApi->create_contact: Status Code: {e.status}, Reason: {e.reason}, Body: {e.body}"
+            )
 
     def update_contact(self, ext_id, data):
         ext_id_dict = json.loads(ext_id.replace("'", '"'))
