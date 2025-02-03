@@ -2,7 +2,6 @@ from programs.programs.calc import Eligibility, ProgramCalculator
 from programs.programs.co.energy_calculator.energy_assistance.calculator import EnergyCalculatorEnergyAssistance
 
 
-
 class EnergyCalculatorOutreachCrisisIntervention(ProgramCalculator):
     amount = 1
     dependencies = [*EnergyCalculatorEnergyAssistance.dependencies, "energy_calculator"]
