@@ -44,7 +44,7 @@ class DefaultConfigurationData(ConfigurationData):
         "city": "Denver",
         "state": "CO",
         "zip_code": "80202",
-        "email": "myfriendben@garycommunity.org",
+        "email": "hello@myfriendben.org",
         "privacy_policy_link": "https://co.myfriendben.org/privacy-policy/",
     }
 
@@ -64,6 +64,6 @@ class DefaultConfigurationData(ConfigurationData):
     }
 
     feedback_links = {
-        "email": "myfriendben@garycommunity.org",
+        "email": "hello@myfriendben.org",
         "survey": "https://docs.google.com/forms/d/e/1FAIpQLSdnfqjvlVSBQkJuUMvhEDUp-t6oD-8tPQi67uRG2iNetXmSfA/viewform?usp=sf_link",
     }

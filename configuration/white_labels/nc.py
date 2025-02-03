@@ -1569,14 +1569,24 @@ class NcConfigurationData(ConfigurationData):
                         "_default_message": "Phone or internet discount",
                     },
                 },
-                "leap": {
+                "nc_lieap": {
                     "name": {
-                        "_label": "housingAndUtilities.leap",
-                        "_default_message": "Low-Income Energy Assistance Program (LEAP): ",
+                        "_label": "housingAndUtilities.nc_lieap",
+                        "_default_message": "Low Income Energy Assistance Program (LIEAP): ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.leap_desc",
+                        "_label": "housingAndUtilities.nc_lieap_desc",
                         "_default_message": "Help with winter heating bills",
+                    },
+                },
+                "nccip": {
+                    "name": {
+                        "_label": "housingAndUtilities.nccip",
+                        "_default_message": "NC Crisis Intervention Program (CIP): ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.nccip_desc",
+                        "_default_message": "Help with heating or cooling expense",
                     },
                 },
                 "cowap": {
@@ -1741,5 +1751,5 @@ class NcConfigurationData(ConfigurationData):
 
     feedback_links = {
         "survey": "https://airtable.com/app8EC0NO7FrnAMlP/pagiU2dMjYRofDxEn/form",
-        "email": "mailto:myfriendben@codethedream.org",
+        "email": "myfriendben@codethedream.org",
     }
