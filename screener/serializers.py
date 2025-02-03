@@ -254,7 +254,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             if insurance is not None:
                 Insurance.objects.create(**insurance, household_member=household_member)
             if energy_calculator_member is not None:
-                EnergyCalculatorMember(**energy_calculator_member, household_member=household_member)
+                EnergyCalculatorMember.objects.create(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=screen)
         if energy_calculator_screen is not None:
@@ -288,7 +288,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             if insurance is not None:
                 Insurance.objects.create(**insurance, household_member=household_member)
             if energy_calculator_member is not None:
-                EnergyCalculatorMember(**energy_calculator_member, household_member=household_member)
+                EnergyCalculatorMember.objects.create(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
             Expense.objects.create(**expense, screen=instance)
         if energy_calculator_screen is not None:
