@@ -381,7 +381,6 @@ class Screen(models.Model):
             "county",
             "household_size",
             "household_assets",
-            "energy_calculator",
         )
 
         missing_fields = Dependencies()
@@ -395,6 +394,9 @@ class Screen(models.Model):
 
         for expence in self.expenses.all():
             missing_fields.update(expence.missing_fields())
+
+        if hasattr(self, "energy_calculator"):
+            missing_fields.add("energy_calculator")
 
         return missing_fields
 
@@ -543,7 +545,6 @@ class HouseholdMember(models.Model):
             "disabled",
             "long_term_disability",
             "insurance",
-            "energy_calculator",
         )
 
         missing_fields = Dependencies()
@@ -554,6 +555,9 @@ class HouseholdMember(models.Model):
 
         for income in self.income_streams.all():
             missing_fields.update(income.missing_fields())
+
+        if hasattr(self, "energy_calculator"):
+            missing_fields.add("energy_calculator")
 
         return missing_fields
 
