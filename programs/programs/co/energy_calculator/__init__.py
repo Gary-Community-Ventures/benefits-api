@@ -1,5 +1,6 @@
 from programs.programs.calc import ProgramCalculator
 from programs.programs.co.energy_calculator.affordable_residential_energy.calculator import AffordableResidentialEnergy
+from programs.programs.co.energy_calculator.electric_affordability_black_hills.calculator import EnergyCalculatorElectricityAffordabilityBlackHills
 from programs.programs.co.energy_calculator.electric_affordability_xcel.calculator import (
     EnergyCalculatorElectricityAffordabilityXcel,
 )
@@ -34,4 +35,5 @@ co_energy_calculators: dict[str, type[ProgramCalculator]] = {
     "co_energy_calculator_xcelgap": EnergyCalculatorGasAffordabilityXcel,
     "co_energy_calculator_xceleap": EnergyCalculatorElectricityAffordabilityXcel,
     "co_energy_calculator_bhgap": EnergyCalculatorGasAffordabilityBlackHills,
+    "co_energy_calculator_bheap": EnergyCalculatorElectricityAffordabilityBlackHills,
 }

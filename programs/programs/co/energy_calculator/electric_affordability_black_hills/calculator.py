@@ -7,7 +7,7 @@ from programs.programs.co.energy_calculator.weatherization_assistance.calculator
 )
 
 
-class EnergyCalculatorElectricityAffordabilityXcel(ProgramCalculator):
+class EnergyCalculatorElectricityAffordabilityBlackHills(ProgramCalculator):
     amount = 1
     dependencies = [
         *EnergyCalculatorEnergyAssistance.dependencies,
@@ -22,7 +22,7 @@ class EnergyCalculatorElectricityAffordabilityXcel(ProgramCalculator):
         "co_energy_calculator_cowap",
         "co_energy_calculator_ubp",
     ]
-    electricity_providers = ["co-xcel-energy"]
+    electricity_providers = ["co-black-hills-energy"]
 
     def household_eligible(self, e: Eligibility):
         # eligible for another program
