@@ -64,6 +64,6 @@ class DefaultConfigurationData(ConfigurationData):
     }
 
     feedback_links = {
-        "email": "mailto: myfriendben@garycommunity.org",
+        "email": "myfriendben@garycommunity.org",
         "survey": "https://docs.google.com/forms/d/e/1FAIpQLSdnfqjvlVSBQkJuUMvhEDUp-t6oD-8tPQi67uRG2iNetXmSfA/viewform?usp=sf_link",
     }
