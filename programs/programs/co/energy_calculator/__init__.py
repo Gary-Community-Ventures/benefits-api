@@ -1,6 +1,8 @@
 from programs.programs.calc import ProgramCalculator
 from programs.programs.co.energy_calculator.affordable_residential_energy.calculator import AffordableResidentialEnergy
-from programs.programs.co.energy_calculator.electric_affordability_black_hills.calculator import EnergyCalculatorElectricityAffordabilityBlackHills
+from programs.programs.co.energy_calculator.electric_affordability_black_hills.calculator import (
+    EnergyCalculatorElectricityAffordabilityBlackHills,
+)
 from programs.programs.co.energy_calculator.electric_affordability_xcel.calculator import (
     EnergyCalculatorElectricityAffordabilityXcel,
 )
