@@ -7,7 +7,7 @@ from programs.programs.co.energy_calculator.weatherization_assistance.calculator
 )
 
 
-class EnergyCalculatorGasAffordability(ProgramCalculator):
+class EnergyCalculatorGasAffordabilityXcel(ProgramCalculator):
     amount = 1
     dependencies = [
         *EnergyCalculatorEnergyAssistance.dependencies,
