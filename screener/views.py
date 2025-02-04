@@ -133,7 +133,12 @@ class EligibilityTranslationView(views.APIView):
     @swagger_auto_schema(responses={200: ResultsSerializer()})
     def get(self, request, id):
         screen = Screen.objects.prefetch_related(
-            "household_members", "household_members__income_streams", "household_members__insurance", "expenses"
+            "household_members",
+            "household_members__income_streams",
+            "household_members__insurance",
+            "household_members__energy_calculator",
+            "expenses",
+            "energy_calculator",
         ).get(uuid=id)
         eligibility, missing_programs, categories = eligibility_results(screen)
         urgent_needs = urgent_need_results(screen, eligibility)
@@ -205,6 +210,7 @@ def eligibility_results(screen: Screen, batch=False):
         .prefetch_related(
             "legal_status_required",
             "fpl",
+            "required_programs",
             *translations_prefetch_name("", Program.objects.translated_fields),
             "navigator",
             "navigator__counties",
