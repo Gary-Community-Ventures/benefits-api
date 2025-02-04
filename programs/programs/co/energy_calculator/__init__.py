@@ -7,7 +7,9 @@ from programs.programs.co.energy_calculator.energy_assistance.calculator import 
 from programs.programs.co.energy_calculator.emergency_assistance.calculator import EnergyCalculatorEmergencyAssistance
 from programs.programs.co.energy_calculator.energy_outreach.calculator import EnergyCalculatorEnergyOutreach
 from programs.programs.co.energy_calculator.energy_outreach_solar.calculator import EnergyOutreachSolar
-from programs.programs.co.energy_calculator.gas_affordability_black_hills.calculator import EnergyCalculatorGasAffordabilityBlackHills
+from programs.programs.co.energy_calculator.gas_affordability_black_hills.calculator import (
+    EnergyCalculatorGasAffordabilityBlackHills,
+)
 from programs.programs.co.energy_calculator.gas_affordability_xcel.calculator import (
     EnergyCalculatorGasAffordabilityXcel,
 )
