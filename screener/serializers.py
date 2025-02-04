@@ -350,6 +350,7 @@ class EligibilitySerializer(serializers.Serializer):
     multiple_tax_units = serializers.BooleanField()
     estimated_value_override = TranslationSerializer()
     warning_messages = WarningMessageSerializer(many=True)
+    required_programs = serializers.ListField(child=serializers.IntegerField())
 
     class Meta:
         fields = "__all__"
