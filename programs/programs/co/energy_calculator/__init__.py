@@ -17,6 +17,7 @@ from programs.programs.co.energy_calculator.gas_affordability_xcel.calculator im
     EnergyCalculatorGasAffordabilityXcel,
 )
 from programs.programs.co.energy_calculator.gas_bill_assistance.calculator import EnergyCalculatorGasBillAssistance
+from programs.programs.co.energy_calculator.percentage_of_income_payment_plan.calculator import EnergyCalculatorPercentageOfIncomePaymentPlan
 from programs.programs.co.energy_calculator.property_credit_rebate.calculator import (
     EnergyCalculatorPropertyCreditRebate,
 )
@@ -40,4 +41,5 @@ co_energy_calculators: dict[str, type[ProgramCalculator]] = {
     "co_energy_calculator_bhgap": EnergyCalculatorGasAffordabilityBlackHills,
     "co_energy_calculator_bheap": EnergyCalculatorElectricityAffordabilityBlackHills,
     "co_energy_calculator_gba": EnergyCalculatorGasBillAssistance,
+    "co_energy_calculator_poipp": EnergyCalculatorPercentageOfIncomePaymentPlan,
 }
