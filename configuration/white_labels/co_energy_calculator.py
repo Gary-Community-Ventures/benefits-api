@@ -140,8 +140,8 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "disabled": {
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "eCConditionOptions.disabled",
-                    "_default_message": "Have a disability",
+                    "_label": "eCConditionOptions.disabledYou",
+                    "_default_message": "Have any disabilities that make you unable to work now or in the future",
                 },
             },
         },
@@ -156,8 +156,8 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "disabled": {
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "eCConditionOptions.disabled",
-                    "_default_message": "Have a disability",
+                    "_label": "eCConditionOptions.disabledThem",
+                    "_default_message": "Have any disabilities that make them unable to work now or in the future",
                 },
             },
         },
