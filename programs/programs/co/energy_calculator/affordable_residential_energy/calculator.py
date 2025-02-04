@@ -33,6 +33,9 @@ class AffordableResidentialEnergy(ProgramCalculator):
     income_limits = AffordableResidentialEnergyIncomeLimitCache()
 
     def household_eligible(self, e: Eligibility):
+        # utility providers
+        e.condition(self.screen.energy_calculator.has_utility_provider(self.electricity_providers + self.gas_providers))
+
         # presumptive eligibility
         if self.screen.has_benefit_from_list(self.presumptive_eligibility):
             # assume eligibility if they are eligible for one of the presumptive eligibility programs
@@ -43,6 +46,3 @@ class AffordableResidentialEnergy(ProgramCalculator):
         county = counties_from_screen(self.screen)[0]
         income_limit = self.income_limits[county][self.screen.household_size]
         e.condition(income < income_limit)
-
-        # utility providers
-        e.condition(self.screen.energy_calculator.has_utility_provider(self.electricity_providers + self.gas_providers))
