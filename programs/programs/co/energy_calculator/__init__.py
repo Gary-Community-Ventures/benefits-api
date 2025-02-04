@@ -7,7 +7,10 @@ from programs.programs.co.energy_calculator.energy_assistance.calculator import 
 from programs.programs.co.energy_calculator.emergency_assistance.calculator import EnergyCalculatorEmergencyAssistance
 from programs.programs.co.energy_calculator.energy_outreach.calculator import EnergyCalculatorEnergyOutreach
 from programs.programs.co.energy_calculator.energy_outreach_solar.calculator import EnergyOutreachSolar
-from programs.programs.co.energy_calculator.gas_affordability_xcel.calculator import EnergyCalculatorGasAffordabilityXcel
+from programs.programs.co.energy_calculator.gas_affordability_black_hills.calculator import EnergyCalculatorGasAffordabilityBlackHills
+from programs.programs.co.energy_calculator.gas_affordability_xcel.calculator import (
+    EnergyCalculatorGasAffordabilityXcel,
+)
 from programs.programs.co.energy_calculator.property_credit_rebate.calculator import (
     EnergyCalculatorPropertyCreditRebate,
 )
@@ -28,4 +31,5 @@ co_energy_calculators: dict[str, type[ProgramCalculator]] = {
     "co_energy_calculator_cowap": EnergyCalculatorWeatherizationAssistance,
     "co_energy_calculator_xcelgap": EnergyCalculatorGasAffordabilityXcel,
     "co_energy_calculator_xceleap": EnergyCalculatorElectricityAffordabilityXcel,
+    "co_energy_calculator_bhgap": EnergyCalculatorGasAffordabilityBlackHills,
 }
