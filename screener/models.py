@@ -544,7 +544,6 @@ class HouseholdMember(models.Model):
             "visually_impaired",
             "disabled",
             "long_term_disability",
-            "insurance",
         )
 
         missing_fields = Dependencies()
@@ -556,8 +555,10 @@ class HouseholdMember(models.Model):
         for income in self.income_streams.all():
             missing_fields.update(income.missing_fields())
 
-        if hasattr(self, "energy_calculator"):
-            missing_fields.add("energy_calculator")
+        one_to_one_member_fields = ["insurance", "energy_calculator"]
+        for field in one_to_one_member_fields:
+            if hasattr(self, field):
+                missing_fields.add(field)
 
         return missing_fields
 
@@ -752,7 +753,6 @@ class EnergyCalculatorMember(models.Model):
         HouseholdMember, related_name="energy_calculator", null=False, on_delete=models.CASCADE
     )
     surviving_spouse = models.BooleanField(default=False, null=True, blank=True)
-    disabled = models.BooleanField(default=False, null=True, blank=True)
     receives_ssi = models.BooleanField(default=False, null=True, blank=True)
 
 
