@@ -17,7 +17,9 @@ from programs.programs.co.energy_calculator.gas_affordability_xcel.calculator im
     EnergyCalculatorGasAffordabilityXcel,
 )
 from programs.programs.co.energy_calculator.gas_bill_assistance.calculator import EnergyCalculatorGasBillAssistance
-from programs.programs.co.energy_calculator.percentage_of_income_payment_plan.calculator import EnergyCalculatorPercentageOfIncomePaymentPlan
+from programs.programs.co.energy_calculator.percentage_of_income_payment_plan.calculator import (
+    EnergyCalculatorPercentageOfIncomePaymentPlan,
+)
 from programs.programs.co.energy_calculator.property_credit_rebate.calculator import (
     EnergyCalculatorPropertyCreditRebate,
 )
