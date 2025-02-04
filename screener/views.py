@@ -402,7 +402,7 @@ def eligibility_results(screen: Screen, batch=False):
                     "low_confidence": program.low_confidence,
                     "documents": [serialized_document(document) for document in program.documents.all()],
                     "warning_messages": warnings,
-                    "required_programs": program.required_programs,
+                    "required_programs": [p.id for p in program.required_programs.all()],
                 }
             )
 
