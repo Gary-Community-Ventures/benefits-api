@@ -8,6 +8,9 @@ from programs.programs.co.energy_calculator.property_credit_rebate.calculator im
     EnergyCalculatorPropertyCreditRebate,
 )
 from programs.programs.co.energy_calculator.utility_bill_pay.calculator import EnergyCalculatorUtilityBillPay
+from programs.programs.co.energy_calculator.weatherization_assistance.calculator import (
+    EnergyCalculatorWeatherizationAssistance,
+)
 
 
 co_energy_calculators: dict[str, type[ProgramCalculator]] = {
@@ -18,4 +21,5 @@ co_energy_calculators: dict[str, type[ProgramCalculator]] = {
     "co_energy_calculator_cpcr": EnergyCalculatorPropertyCreditRebate,
     "co_energy_calculator_ea": EnergyCalculatorEmergencyAssistance,
     "co_energy_calculator_eoccip": EnergyCalculatorOutreachCrisisIntervention,
+    "co_energy_calculator_cowap": EnergyCalculatorWeatherizationAssistance,
 }
