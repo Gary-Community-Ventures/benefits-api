@@ -7,7 +7,7 @@ from programs.programs.co.energy_calculator.weatherization_assistance.calculator
 )
 
 
-class EnergyCalculatorGasBillAssistance(ProgramCalculator):
+class EnergyCalculatorNaturalGasBillAssistance(ProgramCalculator):
     amount = 1
     dependencies = [
         *EnergyCalculatorEnergyAssistance.dependencies,
@@ -22,6 +22,7 @@ class EnergyCalculatorGasBillAssistance(ProgramCalculator):
         "co_energy_calculator_cowap",
         "co_energy_calculator_ubp",
     ]
+    gas_providers = []  # TODO: figure this out
 
     def household_eligible(self, e: Eligibility):
         # eligible for another program
@@ -31,3 +32,6 @@ class EnergyCalculatorGasBillAssistance(ProgramCalculator):
             if eligible:
                 has_another_program = True
         e.condition(has_another_program)
+
+        # has gas provider
+        e.condition(self.screen.energy_calculator.has_gas_provider(self.gas_providers))
