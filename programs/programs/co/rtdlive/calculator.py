@@ -50,7 +50,7 @@ class RtdLive(ProgramCalculator):
         for member in members:
             gross_income += member.calc_gross_income("yearly", ["all"])
 
-        fpl = self.program.fpl.as_dict()
+        fpl = self.program.year.as_dict()
         income_limit = RtdLive.percent_of_fpl * fpl[len(members)]
 
         return gross_income <= income_limit
