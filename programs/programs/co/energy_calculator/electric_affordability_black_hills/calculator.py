@@ -33,5 +33,5 @@ class EnergyCalculatorElectricityAffordabilityBlackHills(ProgramCalculator):
                 has_another_program = True
         e.condition(has_another_program)
 
-        # has gas provider
+        # has electric provider
         e.condition(self.screen.energy_calculator.has_electricity_provider(self.electricity_providers))
