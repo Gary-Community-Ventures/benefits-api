@@ -1722,6 +1722,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "hasBenefits",
             ],
         },
+        "featureFlags": {"default": ["energy_calculator"]},
     }
 
     footer_data = {

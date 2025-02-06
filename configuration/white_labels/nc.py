@@ -1727,6 +1727,7 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
+        "featureFlags": {"default": []},
     }
 
     footer_data = {
