@@ -413,7 +413,11 @@ def eligibility_results(screen: Screen, batch=False):
             )
 
     category_map = {}
+    program_ids = [p["program_id"] for p in data]
     for program in all_programs:
+        if program.id not in program_ids:
+            continue
+
         category = program.category
         if category.id in category_map:
             category_map[category.id]["programs"].append(program.id)
