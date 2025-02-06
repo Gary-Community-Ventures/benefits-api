@@ -469,6 +469,7 @@ class Program(models.Model):
     category = models.ForeignKey(
         ProgramCategory, related_name="programs", blank=True, null=True, on_delete=models.SET_NULL
     )
+    required_programs = models.ManyToManyField("self", related_name="dependent_programs", symmetrical=False, blank=True)
 
     description_short = models.ForeignKey(
         Translation, related_name="program_description_short", blank=False, null=False, on_delete=models.PROTECT

@@ -433,6 +433,7 @@ class ConfigurationData:
             ],
             "[REPLACE_ME]": [],
         },
+        "featureFlags": {"default": []},
     }
 
     footer_data = {

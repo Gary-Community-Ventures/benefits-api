@@ -2271,6 +2271,7 @@ class CoConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
+        "featureFlags": {"default": []},
     }
 
     footer_data = {

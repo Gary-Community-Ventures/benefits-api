@@ -8,7 +8,7 @@ class UtilityBillPay(ProgramCalculator):
     def household_eligible(self, e: Eligibility):
         # has other programs
         presumptive_eligible = False
-        for benefit in UtilityBillPay.presumptive_eligibility:
+        for benefit in self.presumptive_eligibility:
             if self.screen.has_benefit(benefit):
                 presumptive_eligible = True
             elif benefit in self.data and self.data[benefit].eligible:
@@ -17,5 +17,7 @@ class UtilityBillPay(ProgramCalculator):
         e.condition(presumptive_eligible)
 
         # has rent or mortgage expense
-        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
-        e.condition(has_rent_or_mortgage)
+        e.condition(self._has_expense())
+
+    def _has_expense(self):
+        return self.screen.has_expense(["rent", "mortgage"])
