@@ -20,7 +20,7 @@ class FamilyPlanningServices(ProgramCalculator):
         e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
 
         # Income
-        fpl = self.program.fpl
+        fpl = self.program.year
         income_limit = int(
             FamilyPlanningServices.fpl_percent * fpl.get_limit(self.screen.household_size + len(e.eligible_members))
         )

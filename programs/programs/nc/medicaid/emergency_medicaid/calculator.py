@@ -26,7 +26,7 @@ class EmergencyMedicaid(ProgramCalculator):
         e.condition(medicaid_eligible(self.data), messages.must_have_benefit("Medicaid"))
 
         # Income
-        fpl = self.program.fpl
+        fpl = self.program.year
         income_limit = int(self.fpl_percent * fpl.get_limit(self.screen.household_size))
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"]))
 

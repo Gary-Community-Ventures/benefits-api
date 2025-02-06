@@ -204,7 +204,7 @@ def eligibility_results(screen: Screen, batch=False):
         Program.objects.filter(active=True, category__isnull=False, white_label=screen.white_label)
         .prefetch_related(
             "legal_status_required",
-            "fpl",
+            "year",
             *translations_prefetch_name("", Program.objects.translated_fields),
             "navigator",
             "navigator__counties",

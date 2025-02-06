@@ -26,13 +26,13 @@ class NCLieap(ProgramCalculator):
 
         # income
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
-        income_limit = int(self.fpl_percent * self.program.fpl.as_dict()[household_size])
+        income_limit = int(self.fpl_percent * self.program.year.as_dict()[household_size])
         e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
     def household_value(self):
         household_size = self.screen.household_size
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
-        income_limit = int(self.fpl_percent * self.program.fpl.as_dict()[household_size])
+        income_limit = int(self.fpl_percent * self.program.year.as_dict()[household_size])
 
         if household_size < self.large_household_size:
             if gross_income <= income_limit * self.max_value_fpl_percent:

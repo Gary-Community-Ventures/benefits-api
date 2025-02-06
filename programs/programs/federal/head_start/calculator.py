@@ -39,7 +39,7 @@ class HeadStart(ProgramCalculator):
         e.condition(in_eligible_county, messages.location())
 
         # income
-        fpl = self.program.fpl.as_dict()
+        fpl = self.program.year.as_dict()
         income_limit = int(fpl[self.screen.household_size] / 12)
         income_limit_adams_county = int(fpl[self.screen.household_size] / 12 * HeadStart.adams_percent_of_fpl)
         gross_income = int(self.screen.calc_gross_income("monthly", ["all"]))

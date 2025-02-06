@@ -339,7 +339,7 @@ class ProgramManager(models.Manager):
         program = self.create(
             name_abbreviated=name_abbreviated,
             external_name=name_abbreviated if not external_name_exists else None,
-            fpl=None,
+            year=None,
             active=False,
             low_confidence=False,
             white_label=white_label,
@@ -362,7 +362,7 @@ class ProgramDataController(ModelDataController["Program"]):
     DataType = TypedDict(
         "DataType",
         {
-            "fpl": Optional[FplDataType],
+            "year": Optional[FplDataType],
             "legal_status_required": LegalStatusesDataType,
             "name_abbreviated": str,
             "active": bool,
@@ -384,7 +384,7 @@ class ProgramDataController(ModelDataController["Program"]):
     def to_model_data(self) -> DataType:
         program = self.instance
         return {
-            "fpl": self._fpl(),
+            "year": self._fpl(),
             "legal_status_required": self._legal_statuses(),
             "active": program.active,
             "low_confidence": program.low_confidence,
@@ -411,9 +411,9 @@ class ProgramDataController(ModelDataController["Program"]):
                 fpl_instance.save()
             except FederalPoveryLimit.DoesNotExist:
                 fpl_instance = FederalPoveryLimit.objects.create(year=fpl["year"], period=fpl["period"])
-            program.fpl = fpl_instance
+            program.year = fpl_instance
         else:
-            program.fpl = None
+            program.year = None
 
         # get or create legal status required
         legal_status_required = data["legal_status_required"]
@@ -465,7 +465,7 @@ class Program(models.Model):
     documents = models.ManyToManyField(Document, related_name="program_documents", blank=True)
     active = models.BooleanField(blank=True, default=True)
     low_confidence = models.BooleanField(blank=True, null=False, default=False)
-    fpl = models.ForeignKey(FederalPoveryLimit, related_name="fpl", blank=True, null=True, on_delete=models.SET_NULL)
+    year = models.ForeignKey(FederalPoveryLimit, related_name="fpl", blank=True, null=True, on_delete=models.SET_NULL)
     category = models.ForeignKey(
         ProgramCategory, related_name="programs", blank=True, null=True, on_delete=models.SET_NULL
     )
