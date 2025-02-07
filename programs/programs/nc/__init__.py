@@ -1,3 +1,4 @@
+from .nc_weatherization.calculator import NCWeatherization
 from .nc_lieap.calculator import NCLieap
 from .nc_aca.calculator import ACASubsidiesNC
 from .medicaid.emergency_medicaid.calculator import EmergencyMedicaid
@@ -12,4 +13,5 @@ nc_calculators: dict[str, type[ProgramCalculator]] = {
     "sunbucks": SunBucks,
     "nc_lieap": NCLieap,
     "nccip": NCCrisisIntervention,
+    "ncwap": NCWeatherization,
 }
