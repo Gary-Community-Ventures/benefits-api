@@ -152,6 +152,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "county",
             "referral_source",
             "referrer_code",
+            "path",
             "household_size",
             "household_assets",
             "household_members",
@@ -354,6 +355,7 @@ class EligibilitySerializer(serializers.Serializer):
     multiple_tax_units = serializers.BooleanField()
     estimated_value_override = TranslationSerializer()
     warning_messages = WarningMessageSerializer(many=True)
+    required_programs = serializers.ListField(child=serializers.IntegerField())
 
     class Meta:
         fields = "__all__"

@@ -36,6 +36,7 @@ class DefaultConfigurationData(ConfigurationData):
                 "signUpInfo",
             ]
         },
+        "featureFlags": {"default": []},
     }
 
     footer_data = {

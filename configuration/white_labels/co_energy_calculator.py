@@ -1711,19 +1711,12 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "default": "https://screener.myfriendben.org",
         },
         "stepDirectory": {
-            "default": [
-                "zipcode",
-                "householdSize",
-                "ecHouseholdData",
-                "hasBenefits",
-            ],
-            "renter": [  # WARN: Temporary fix to allow for multiple paths
-                "zipcode",
-                "householdSize",
-                "ecHouseholdData",
-                "hasBenefits",
-            ],
+            "default": {
+                "default": ["zipcode", "energyCalculatorElectricityProvider", "hasBenefits", "householdSize", "ecHouseholdData"],
+                "renter": ["zipcode", "energyCalculatorElectricityProvider", "hasBenefits", "householdSize", "ecHouseholdData"],
+            }
         },
+        "featureFlags": {"default": ["energy_calculator"]},
     }
 
     footer_data = {
