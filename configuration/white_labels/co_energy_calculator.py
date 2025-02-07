@@ -15,6 +15,23 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
 
     acute_condition_options = {}
 
+    utility_status_options = {
+        "electricityIsDisconnected": {
+            "icon": {"_icon": "Plug", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "utilityStatusOptions.electricityIsDisconnected",
+                "_default_message": "Your electricity and/or gas has been disconnected.",
+            },
+        },
+        "hasPastDueEnergyBills": {
+            "icon": {"_icon": "Empty_fuel", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "utilityStatusOptions.hasPastDueEnergyBills",
+                "_default_message": "You have a past-due electric or heating bill or you are low on fuel.",
+            },
+        },
+    }
+
     sign_up_options = {}
 
     relationship_options = {
