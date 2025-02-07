@@ -1711,16 +1711,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "default": "https://screener.myfriendben.org",
         },
         "stepDirectory": {
-            "default": [
-                "zipcode",
-                "householdSize",
-                "hasBenefits",
-            ],
-            "renter": [  # WARN: Temporary fix to allow for multiple paths
-                "zipcode",
-                "householdSize",
-                "hasBenefits",
-            ],
+            "default": {
+                "default": ["zipcode", "energyCalculatorElectricityProvider", "hasBenefits", "householdSize"],
+                "renter": ["zipcode", "energyCalculatorElectricityProvider", "hasBenefits", "householdSize"],
+            }
         },
     }
 
