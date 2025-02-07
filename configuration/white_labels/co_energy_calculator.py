@@ -1712,8 +1712,20 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         },
         "stepDirectory": {
             "default": {
-                "default": ["zipcode", "energyCalculatorElectricityProvider", "hasBenefits", "householdSize", "ecHouseholdData"],
-                "renter": ["zipcode", "energyCalculatorElectricityProvider", "hasBenefits", "householdSize", "ecHouseholdData"],
+                "default": [
+                    "zipcode",
+                    "energyCalculatorElectricityProvider",
+                    "hasBenefits",
+                    "householdSize",
+                    "ecHouseholdData",
+                ],
+                "renter": [
+                    "zipcode",
+                    "energyCalculatorElectricityProvider",
+                    "hasBenefits",
+                    "householdSize",
+                    "ecHouseholdData",
+                ],
             }
         },
         "featureFlags": {"default": ["energy_calculator"]},
