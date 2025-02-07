@@ -137,11 +137,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     "_default_message": "Surviving Spouse",
                 },
             },
-            "totallyDisabled": {
-                "icon": {"_icon": "TotallyDisabled", "_classname": "option-card-icon"},
+            "disabled": {
+                "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "eCConditionOptions.totallyDisabled",
-                    "_default_message": "Have a disability",
+                    "_label": "eCConditionOptions.disabledYou",
+                    "_default_message": "Have any disabilities that make you unable to work now or in the future",
                 },
             },
         },
@@ -153,11 +153,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     "_default_message": "Surviving Spouse",
                 },
             },
-            "totallyDisabled": {
-                "icon": {"_icon": "TotallyDisabled", "_classname": "option-card-icon"},
+            "disabled": {
+                "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "eCConditionOptions.totallyDisabled",
-                    "_default_message": "Have a disability",
+                    "_label": "eCConditionOptions.disabledThem",
+                    "_default_message": "Have any disabilities that make them unable to work now or in the future",
                 },
             },
         },
@@ -1711,17 +1711,24 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "default": "https://screener.myfriendben.org",
         },
         "stepDirectory": {
-            "default": [
-                "zipcode",
-                "householdSize",
-                "hasBenefits",
-            ],
-            "renter": [  # WARN: Temporary fix to allow for multiple paths
-                "zipcode",
-                "householdSize",
-                "hasBenefits",
-            ],
+            "default": {
+                "default": [
+                    "zipcode",
+                    "energyCalculatorElectricityProvider",
+                    "hasBenefits",
+                    "householdSize",
+                    "ecHouseholdData",
+                ],
+                "renter": [
+                    "zipcode",
+                    "energyCalculatorElectricityProvider",
+                    "hasBenefits",
+                    "householdSize",
+                    "ecHouseholdData",
+                ],
+            }
         },
+        "featureFlags": {"default": ["energy_calculator"]},
     }
 
     footer_data = {

@@ -152,6 +152,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "county",
             "referral_source",
             "referrer_code",
+            "path",
             "household_size",
             "household_assets",
             "household_members",
@@ -254,7 +255,8 @@ class ScreenSerializer(serializers.ModelSerializer):
             household_member = HouseholdMember.objects.create(**member, screen=screen)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
-            Insurance.objects.create(**insurance, household_member=household_member)
+            if insurance is not None:
+                Insurance.objects.create(**insurance, household_member=household_member)
             if energy_calculator_member is not None:
                 EnergyCalculatorMember.objects.create(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
@@ -354,6 +356,7 @@ class EligibilitySerializer(serializers.Serializer):
     multiple_tax_units = serializers.BooleanField()
     estimated_value_override = TranslationSerializer()
     warning_messages = WarningMessageSerializer(many=True)
+    required_programs = serializers.ListField(child=serializers.IntegerField())
 
     class Meta:
         fields = "__all__"

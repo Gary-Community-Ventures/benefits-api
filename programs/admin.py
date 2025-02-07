@@ -27,6 +27,7 @@ class ProgramAdmin(ModelAdmin):
     filter_horizontal = (
         "legal_status_required",
         "documents",
+        "required_programs",
     )
 
     def get_str(self, obj):
