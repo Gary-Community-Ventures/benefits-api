@@ -344,7 +344,9 @@ class Document(models.Model):
     TranslationExportBuilder = DocumentDataController
 
     def __str__(self) -> str:
-        return self.external_name if self.external_name is not None else self.text
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        name = self.external_name if self.external_name is not None else self.text
+        return f"{white_label_name}{name}"
 
 
 class ProgramManager(models.Manager):
@@ -666,7 +668,8 @@ class UrgentNeedCategory(models.Model):
         verbose_name_plural = "Urgent Need Categories"
 
     def __str__(self):
-        return self.name
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name}"
 
 
 class UrgentNeedManager(models.Manager):
@@ -863,7 +866,8 @@ class County(models.Model):
     name = models.CharField(max_length=64)
 
     def __str__(self) -> str:
-        return self.name
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name}"
 
 
 class NavigatorLanguage(models.Model):
@@ -1184,7 +1188,9 @@ class WarningMessage(models.Model):
         return [c.name for c in self.counties.all()]
 
     def __str__(self):
-        return self.external_name if self.external_name is not None else self.calculator
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        name = self.external_name if self.external_name is not None else self.calculator
+        return f"{white_label_name}{name}"
 
 
 class WebHookFunction(models.Model):
@@ -1209,7 +1215,8 @@ class Referrer(models.Model):
     remove_programs = models.ManyToManyField(Program, related_name="removed_programs", blank=True)
 
     def __str__(self):
-        return self.referrer_code
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.referrer_code}"
 
 
 class TranslationOverrideManager(models.Manager):
@@ -1358,4 +1365,6 @@ class TranslationOverride(models.Model):
         return [c.name for c in self.counties.all()]
 
     def __str__(self):
-        return self.external_name if self.external_name is not None else self.calculator
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        name = self.external_name if self.external_name is not None else self.calculator
+        return f"{white_label_name}{name}"
