@@ -17,5 +17,5 @@ class NCWeatherization(ProgramCalculator):
 
         # income
         gross_income = self.screen.calc_gross_income("yearly", ["all"])
-        income_limit = int(self.fpl_percent * self.program.fpl.as_dict()[household_size])
+        income_limit = int(self.fpl_percent * self.program.year.as_dict()[household_size])
         e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
