@@ -1714,17 +1714,20 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "default": {
                 "default": [
                     "zipcode",
-                    "energyCalculatorElectricityProvider",
-                    "hasBenefits",
                     "householdSize",
-                    "ecHouseholdData",
+                    "energyCalculatorHouseholdData",
+                    "energyCalculatorElectricityProvider",
+                    "energyCalculatorGasProvider",
+                    "hasBenefits",
                 ],
                 "renter": [
+                    "energyCalculatorExpenses",
                     "zipcode",
-                    "energyCalculatorElectricityProvider",
-                    "hasBenefits",
                     "householdSize",
-                    "ecHouseholdData",
+                    "energyCalculatorHouseholdData",
+                    "energyCalculatorElectricityProvider",
+                    "energyCalculatorGasProvider",
+                    "hasBenefits",
                 ],
             }
         },
