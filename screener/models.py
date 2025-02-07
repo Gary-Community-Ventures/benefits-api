@@ -25,7 +25,11 @@ class WhiteLabel(models.Model):
 class Screen(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4)
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="screens", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="screens",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     completed = models.BooleanField(null=False, blank=False)
     submission_date = models.DateTimeField(blank=True, null=True)
@@ -74,11 +78,14 @@ class Screen(models.Model):
     has_ede = models.BooleanField(default=False, blank=True, null=True)
     has_erc = models.BooleanField(default=False, blank=True, null=True)
     has_leap = models.BooleanField(default=False, blank=True, null=True)
+    has_nc_lieap = models.BooleanField(default=False, blank=True, null=True)
     has_oap = models.BooleanField(default=False, blank=True, null=True)
+    has_nccip = models.BooleanField(default=False, blank=True, null=True)
     has_coctc = models.BooleanField(default=False, blank=True, null=True)
     has_upk = models.BooleanField(default=False, blank=True, null=True)
     has_ssdi = models.BooleanField(default=False, blank=True, null=True)
     has_cowap = models.BooleanField(default=False, blank=True, null=True)
+    has_ncwap = models.BooleanField(default=False, blank=True, null=True)
     has_ubp = models.BooleanField(default=False, blank=True, null=True)
     has_pell_grant = models.BooleanField(default=False, blank=True, null=True)
     has_rag = models.BooleanField(default=False, blank=True, null=True)
@@ -227,7 +234,12 @@ class Screen(models.Model):
                     if other_member.relationship == "headOfHousehold" and other_member.id not in relationship_map:
                         probable_spouse = other_member.id
                         break
-            elif relationship in ("parent", "fosterParent", "stepParent", "grandParent"):
+            elif relationship in (
+                "parent",
+                "fosterParent",
+                "stepParent",
+                "grandParent",
+            ):
                 for other_member in all_members:
                     if (
                         other_member.relationship == relationship
@@ -308,7 +320,9 @@ class Screen(models.Model):
             "ede": self.has_ede,
             "erc": self.has_erc,
             "leap": self.has_leap,
+            "nc_lieap": self.has_nc_lieap,
             "oap": self.has_oap,
+            "nccip": self.has_nccip,
             "coctc": self.has_coctc,
             "upk": self.has_upk,
             "ssdi": self.has_ssdi,
@@ -318,6 +332,7 @@ class Screen(models.Model):
             "fatc": self.has_fatc,
             "section_8": self.has_section_8,
             "cowap": self.has_cowap,
+            "ncwap": self.has_ncwap,
             "ubp": self.has_ubp,
             "co_medicaid": self.has_medicaid or self.has_medicaid_hi,
             "nc_medicaid": self.has_medicaid or self.has_medicaid_hi,

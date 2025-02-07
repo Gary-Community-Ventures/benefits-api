@@ -31,7 +31,7 @@ class MedicaidAdultWithDisability(ProgramCalculator):
         e.condition(member.insurance.has_insurance_types(MedicaidAdultWithDisability.insurance_types))
 
         # income
-        fpl = self.program.fpl.as_dict()
+        fpl = self.program.year.as_dict()
         income_limit = fpl[self.screen.household_size] * MedicaidAdultWithDisability.max_income_percent
         earned_deduction = MedicaidAdultWithDisability.earned_deduction
         earned_percent = MedicaidAdultWithDisability.earned_percent

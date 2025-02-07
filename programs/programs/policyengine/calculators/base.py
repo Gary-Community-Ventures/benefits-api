@@ -62,10 +62,10 @@ class PolicyEngineCalulator(ProgramCalculator):
 
     @property
     def pe_period(self) -> str:
-        if self.program.fpl is None:
+        if self.program.year is None:
             raise Exception(f"the period is not configured for: {self.pe_name}")
 
-        return self.program.fpl.period
+        return self.program.year.period
 
     @property
     def sim(self) -> Sim:

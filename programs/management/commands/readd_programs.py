@@ -28,6 +28,7 @@ class Command(BaseCommand):
         {"abbr": "leap", "external": "leap"},
         {"abbr": "pell_grant", "external": "pell_grant"},
         {"abbr": "mydenver", "external": "mydenver"},
+        {"abbr": "nccip", "external": "nccip"},
         {"abbr": "ede", "external": "ede"},
         {"abbr": "cdhcs", "external": "cdhcs"},
         {"abbr": "nslp", "external": "nslp"},
@@ -82,7 +83,7 @@ class Command(BaseCommand):
         for program in self.programs:
             new_program = Program.objects.new_program(program["abbr"])
             new_program.external_name = program["external"]
-            new_program.fpl = fpl
+            new_program.year = fpl
             for status in statuses:
                 # set all legal statuses for each program
                 new_program.legal_status_required.add(status)
