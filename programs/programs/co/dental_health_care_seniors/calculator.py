@@ -11,7 +11,7 @@ class DentalHealthCareSeniors(ProgramCalculator):
 
     def household_eligible(self, e: Eligibility):
         # Income test
-        fpl = self.program.fpl.as_dict()
+        fpl = self.program.year.as_dict()
         gross_income = int(self.screen.calc_gross_income("monthly", ["all"]))
         income_band = int(DentalHealthCareSeniors.percent_of_fpl * fpl[self.screen.household_size] / 12)
         e.condition(gross_income <= income_band, messages.income(gross_income, income_band))

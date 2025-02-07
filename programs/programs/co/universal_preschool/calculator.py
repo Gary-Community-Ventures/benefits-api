@@ -34,7 +34,7 @@ class UniversalPreschool(ProgramCalculator):
         return UniversalPreschool.amount_10_hr
 
     def _has_qualifying_condition(self, member: HouseholdMember):
-        fpl = self.program.fpl.as_dict()[self.screen.household_size]
+        fpl = self.program.year.as_dict()[self.screen.household_size]
         income = self.screen.calc_gross_income("yearly", ["all"])
 
         income_limit = int(UniversalPreschool.income_limit * fpl)

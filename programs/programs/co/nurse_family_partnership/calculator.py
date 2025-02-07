@@ -25,7 +25,7 @@ class NurseFamilyPartnership(ProgramCalculator):
         e.condition(member.pregnant)
 
         # income
-        income_limit = self.program.fpl.as_dict()[2] * NurseFamilyPartnership.fpl_percent
+        income_limit = self.program.year.as_dict()[2] * NurseFamilyPartnership.fpl_percent
         income = member.calc_gross_income("yearly", ["all"])
         is_income_eligible = income <= income_limit
 
