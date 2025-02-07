@@ -285,6 +285,9 @@ class Screen(models.Model):
 
     def has_insurance_types(self, types, strict=True):
         for member in self.household_members.all():
+            if not hasattr(member, "insurance"):
+                continue
+
             if member.insurance.has_insurance_types(types, strict):
                 return True
 
