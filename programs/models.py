@@ -521,6 +521,7 @@ class Program(models.Model):
         null=True,
         on_delete=models.SET_NULL,
     )
+    required_programs = models.ManyToManyField("self", related_name="dependent_programs", symmetrical=False, blank=True)
 
     description_short = models.ForeignKey(
         Translation,
