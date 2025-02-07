@@ -188,7 +188,9 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_ede",
             "has_erc",
             "has_leap",
+            "has_nc_lieap",
             "has_oap",
+            "has_nccip",
             "has_coctc",
             "has_upk",
             "has_ssdi",
@@ -252,7 +254,8 @@ class ScreenSerializer(serializers.ModelSerializer):
             household_member = HouseholdMember.objects.create(**member, screen=screen)
             for income in incomes:
                 IncomeStream.objects.create(**income, screen=screen, household_member=household_member)
-            Insurance.objects.create(**insurance, household_member=household_member)
+            if insurance is not None:
+                Insurance.objects.create(**insurance, household_member=household_member)
             if energy_calculator_member is not None:
                 EnergyCalculatorMember.objects.create(**energy_calculator_member, household_member=household_member)
         for expense in expenses:
