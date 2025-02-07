@@ -1716,6 +1716,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "renter": ["zipcode", "energyCalculatorElectricityProvider", "hasBenefits", "householdSize"],
             }
         },
+        "featureFlags": {"default": ["energy_calculator"]},
     }
 
     footer_data = {

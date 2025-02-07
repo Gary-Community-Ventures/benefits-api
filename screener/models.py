@@ -278,7 +278,14 @@ class Screen(models.Model):
 
         return False
 
-    def has_benefit(self, name_abbreviated):
+    def has_benefit_from_list(self, names: list[str]):
+        for program in names:
+            if self.has_benefit(program):
+                return True
+
+        return False
+
+    def has_benefit(self, name_abbreviated: str):
         name_map = {
             "tanf": self.has_tanf,
             "nc_tanf": self.has_tanf,
@@ -375,12 +382,13 @@ class Screen(models.Model):
             "county",
             "household_size",
             "household_assets",
+            "energy_calculator",
         )
 
         missing_fields = Dependencies()
 
         for field in screen_fields:
-            if getattr(self, field) is None:
+            if not hasattr(self, field) or getattr(self, field) is None:
                 missing_fields.add(field)
 
         for member in self.household_members.all():
@@ -388,9 +396,6 @@ class Screen(models.Model):
 
         for expence in self.expenses.all():
             missing_fields.update(expence.missing_fields())
-
-        if hasattr(self, "energy_calculator"):
-            missing_fields.add("energy_calculator")
 
         return missing_fields
 
@@ -538,21 +543,18 @@ class HouseholdMember(models.Model):
             "visually_impaired",
             "disabled",
             "long_term_disability",
+            "insurance",
+            "energy_calculator",
         )
 
         missing_fields = Dependencies()
 
         for field in member_fields:
-            if getattr(self, field) is None:
+            if not hasattr(self, field) or getattr(self, field) is None:
                 missing_fields.add(field)
 
         for income in self.income_streams.all():
             missing_fields.update(income.missing_fields())
-
-        one_to_one_member_fields = ["insurance", "energy_calculator"]
-        for field in one_to_one_member_fields:
-            if hasattr(self, field):
-                missing_fields.add(field)
 
         return missing_fields
 
@@ -723,6 +725,23 @@ class EnergyCalculatorScreen(models.Model):
     needs_hvac = models.BooleanField(default=False, null=True, blank=True)
     needs_stove = models.BooleanField(default=False, null=True, blank=True)
     needs_dryer = models.BooleanField(default=False, null=True, blank=True)
+
+    def has_electricity_provider(self, providers: list[str]):
+        for provider in providers:
+            if provider == self.electric_provider:
+                return True
+
+        return False
+
+    def has_gas_provider(self, providers: list[str]):
+        for provider in providers:
+            if provider == self.gas_provider:
+                return True
+
+        return False
+
+    def has_utility_provider(self, providers: list[str]):
+        return self.has_utility_provider(providers) or self.has_gas_provider(providers)
 
 
 class EnergyCalculatorMember(models.Model):
