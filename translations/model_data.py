@@ -9,6 +9,9 @@ class ModelDataController(Generic[T]):
 
     DataType = TypedDict("DataType", {})
 
+    class DeferCreation(Exception):
+        pass
+
     def __init__(self, instance: T):
         self.instance = instance
 
