@@ -21,14 +21,21 @@ class AffordableResidentialEnergy(ProgramCalculator):
         "co-city-of-gunnison",
         "co-gunnison-county-electric-association",
         "co-la-plata-electric-association",
-        # TODO: figure out Platte River
         "co-fort-collins-utilities",
         "co-loveland-water-and-power",
         "co-longmont-power-and-communications",
         "co-estes-park-power-and-communications",
+        "co-mountain-parks-electric",
+        "co-poudre-valley-rea",
+        "co-united-power",
         "co-xcel-energy",
     ]
-    gas_providers = []  # TODO: figure out gas providers
+    gas_providers = [
+        "co-atmos-energy",
+        "co-xcel-energy",
+        "co-black-hills-energy",
+        "co-colorado-natural-gas",
+    ]
     presumptive_eligibility = ["leap", "section_8", "co_tanf", "andcs", "oap", "co_snap", "co_wic"]
     income_limits = AffordableResidentialEnergyIncomeLimitCache()
 
