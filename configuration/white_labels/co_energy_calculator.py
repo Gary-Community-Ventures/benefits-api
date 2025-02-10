@@ -1735,6 +1735,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     "energyCalculatorHouseholdData",
                     "energyCalculatorElectricityProvider",
                     "energyCalculatorGasProvider",
+                    "energyCalculatorUtilityStatus",
                     "hasBenefits",
                 ],
                 "renter": [
@@ -1744,6 +1745,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     "energyCalculatorHouseholdData",
                     "energyCalculatorElectricityProvider",
                     "energyCalculatorGasProvider",
+                    "energyCalculatorUtilityStatus",
                     "hasBenefits",
                 ],
             }
