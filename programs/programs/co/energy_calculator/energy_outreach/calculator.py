@@ -8,7 +8,7 @@ class EnergyCalculatorEnergyOutreach(ProgramCalculator):
 
     def household_eligible(self, e: Eligibility):
         # eligible for LEAP
-        leap_eligible = self.data["energy_calculator_leap"].eligible
+        leap_eligible = self.data["co_energy_calculator_leap"].eligible
         e.condition(leap_eligible)
 
         # heating is not working

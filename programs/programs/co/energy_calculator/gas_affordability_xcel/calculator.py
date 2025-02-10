@@ -17,7 +17,7 @@ class EnergyCalculatorGasAffordabilityXcel(ProgramCalculator):
         "energy_calculator",
     ]
     presumptive_eligibility = [
-        "energy_calculator_leap",
+        "co_energy_calculator_leap",
         "co_energy_calculator_eoc",
         "co_energy_calculator_cowap",
         "co_energy_calculator_ubp",
