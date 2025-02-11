@@ -8,7 +8,9 @@ class NcConfigurationData(ConfigurationData):
     def get_white_label(self) -> WhiteLabel:
         return WhiteLabel.objects.get(code="nc")
 
-    public_charge_rule = {"link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/"}
+    public_charge_rule = {
+        "link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/"
+    }
 
     more_help_options = {
         "moreHelpOptions": [
@@ -1707,7 +1709,9 @@ class NcConfigurationData(ConfigurationData):
             },
         },
         "logoFooterSource": {"default": " MFB_Logo"},
-        "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
+        "logoFooterAlt": {
+            "default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}
+        },
         "logoClass": {"default": "logo"},
         "twoOneOneLink": {
             "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"
@@ -1738,6 +1742,16 @@ class NcConfigurationData(ConfigurationData):
             ],
         },
         "featureFlags": {"default": []},
+        "noResultMessage": {
+            "default": {
+                "id": "noResultMessage",
+                "defaultMessage": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+            },
+            "ccig": {
+                "id": "ccig.results.message",
+                "defaultMessage": "Thank you for completing your application to join the Colorado Community Insight Group by filling out MyFriendBen. Your application will be processed within 2 - 4 days. In the meantime, we encourage you to explore the benefits and resources that may be available to your family listed below. If you have any questions in the meantime, please feel free to email us at ccig@garycommunity.org.",
+            },
+        },
     }
 
     footer_data = {

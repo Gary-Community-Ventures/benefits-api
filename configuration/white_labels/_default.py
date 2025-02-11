@@ -13,10 +13,15 @@ class DefaultConfigurationData(ConfigurationData):
         "theme": {"default": "default"},
         "logoSource": {"default": ""},
         "logoAlt": {
-            "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"}
+            "default": {
+                "id": "referrerHook.logoAlts.default",
+                "defaultMessage": "MyFriendBen home page button",
+            }
         },
         "logoFooterSource": {"default": "MFB_Logo"},
-        "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
+        "logoFooterAlt": {
+            "default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}
+        },
         "logoClass": {"default": "logo"},
         "twoOneOneLink": {
             "default": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id="211mfb"'
@@ -37,6 +42,12 @@ class DefaultConfigurationData(ConfigurationData):
             ]
         },
         "featureFlags": {"default": []},
+        "noResultMessage": {
+            "default": {
+                "id": "noResultMessage",
+                "defaultMessage": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+            },
+        },
     }
 
     footer_data = {
