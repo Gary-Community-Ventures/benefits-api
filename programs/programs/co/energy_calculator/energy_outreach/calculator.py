@@ -24,7 +24,7 @@ class EnergyCalculatorEnergyOutreach(ProgramCalculator):
         income = self.screen.calc_gross_income("yearly", ["all"])
         county = counties_from_screen(self.screen)[0]
         income_limit = self.income_limits[county][self.screen.household_size]
-        e.condition(income < income_limit)
+        e.condition(income <= income_limit)
 
         # past due heating
         e.condition(
