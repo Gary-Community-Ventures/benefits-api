@@ -3,7 +3,6 @@ from programs.programs.calc import Eligibility, ProgramCalculator
 
 
 class EnergyCalculatorEmergencyAssistance(ProgramCalculator):
-    amount = 1
     county = "Denver County"
     fpl_percent = 4
     dependencies = ["energy_calculator", "household_size", "income_amount", "income_frequency", "zipcode"]

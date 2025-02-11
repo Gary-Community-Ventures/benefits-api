@@ -8,7 +8,6 @@ from programs.programs.co.energy_calculator.weatherization_assistance.calculator
 
 
 class EnergyCalculatorNaturalGasBillAssistance(ProgramCalculator):
-    amount = 1
     dependencies = [
         *EnergyCalculatorEnergyAssistance.dependencies,
         *EnergyCalculatorEnergyOutreach.dependencies,
