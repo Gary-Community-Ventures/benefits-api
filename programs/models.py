@@ -401,26 +401,27 @@ class ProgramDataController(ModelDataController["Program"]):
     _model_name = "Program"
     dependencies = ["Document", "ProgramCategory"]
 
-    FplDataType = TypedDict("FplDataType", {"year": str, "period": str})
+    YearDataType = TypedDict("FplDataType", {"year": str, "period": str})
     LegalStatusesDataType = list[TypedDict("LegalStatusDataType", {"status": str})]
     DataType = TypedDict(
         "DataType",
         {
-            "year": Optional[FplDataType],
+            "fpl": Optional[YearDataType],
             "legal_status_required": LegalStatusesDataType,
             "name_abbreviated": str,
             "active": bool,
             "low_confidence": bool,
             "documents": list[str],
             "category": Optional[str],
+            "required_programs": list[str],
             "white_label": str,
         },
     )
 
-    def _fpl(self) -> Optional[FplDataType]:
-        if self.instance.fpl is None:
+    def _year(self) -> Optional[YearDataType]:
+        if self.instance.year is None:
             return None
-        return {"year": self.instance.fpl.year, "period": self.instance.fpl.period}
+        return {"year": self.instance.year.year, "period": self.instance.year.period}
 
     def _legal_statuses(self) -> LegalStatusesDataType:
         return [{"status": l.status} for l in self.instance.legal_status_required.all()]
@@ -428,13 +429,14 @@ class ProgramDataController(ModelDataController["Program"]):
     def to_model_data(self) -> DataType:
         program = self.instance
         return {
-            "year": self._fpl(),
+            "fpl": self._year(),
             "legal_status_required": self._legal_statuses(),
             "active": program.active,
             "low_confidence": program.low_confidence,
             "name_abbreviated": program.name_abbreviated,
             "documents": [d.external_name for d in program.documents.all()],
             "category": (program.category.external_name if program.category is not None else None),
+            "required_programs": [p.external_name for p in program.required_programs.all()],
             "white_label": program.white_label.code,
         }
 
@@ -482,6 +484,16 @@ class ProgramDataController(ModelDataController["Program"]):
         if data["category"] is not None:
             program_category = ProgramCategory.objects.get(external_name=data["category"])
         program.category = program_category
+
+        # add required programs
+        required_programs = []
+        for required_program_name in data["required_programs"]:
+            try:
+                required_program = Program.objects.get(external_name=required_program_name)
+            except Program.DoesNotExist:
+                raise self.DeferCreation()  # wait until the program gets created
+            required_programs.append(required_program)
+        program.required_programs.set(required_programs)
 
         try:
             white_label = WhiteLabel.objects.get(code=data["white_label"])

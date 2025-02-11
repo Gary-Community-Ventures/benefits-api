@@ -8,7 +8,12 @@ class EnergyCalculatorWeatherizationAssistance(WeatherizationAssistance):
         "co-black-hills-energy",
         "co-holy-cross-energy",
     ]
-    gas_providers = []  # TODO: figure this out
+    gas_providers = [
+        "co-xcel-energy",
+        "co-atmos-energy",
+        "co-colorado-natural-gas",
+        "co-black-hills-energy",
+    ]
 
     def _has_expenses(self):
         return True
