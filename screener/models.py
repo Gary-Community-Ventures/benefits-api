@@ -759,7 +759,7 @@ class EnergyCalculatorScreen(models.Model):
         return False
 
     def has_utility_provider(self, providers: list[str]):
-        return self.has_utility_provider(providers) or self.has_gas_provider(providers)
+        return self.has_electricity_provider(providers) or self.has_gas_provider(providers)
 
 
 class EnergyCalculatorMember(models.Model):
