@@ -15,6 +15,7 @@ class EnergyOutreachSolarIncomeLimitCache(GoogleSheetsCache):
 
 
 class EnergyOutreachSolar(ProgramCalculator):
+    amount = 1
     dependencies = ["household_size", "energy_calculator", "income_amount", "income_frequency"]
     electricity_providers = ["co-black-hills-energy", "co-xcel-energy"]
     income_limits = EnergyOutreachSolarIncomeLimitCache()

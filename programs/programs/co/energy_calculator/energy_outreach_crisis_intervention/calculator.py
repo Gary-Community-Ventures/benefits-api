@@ -3,6 +3,7 @@ from programs.programs.co.energy_calculator.energy_assistance.calculator import 
 
 
 class EnergyCalculatorEnergyOutreachCrisisIntervention(ProgramCalculator):
+    amount = 1
     dependencies = [*EnergyCalculatorEnergyAssistance.dependencies, "energy_calculator"]
 
     def household_eligible(self, e: Eligibility):
