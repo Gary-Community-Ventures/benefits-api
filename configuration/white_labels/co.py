@@ -141,6 +141,7 @@ class CoConfigurationData(ConfigurationData):
         "dhs": "Denver Human Services",
         "eaglecounty": "Eagle County",
         "jeffcoHS": "Jeffco Human Services",
+        "jeffcoPS": "Jeffco Public Schools",
         "larimercounty": "Larimer County",
         "tellercounty": "Teller County",
         "gac": "Get Ahead Colorado",
@@ -2168,6 +2169,7 @@ class CoConfigurationData(ConfigurationData):
             "bia": "BIA_MFBLogo",
             "jeffcoHS": "JHSA_MFBLogo",
             "jeffcoHSCM": "JHSA_MFBLogo",
+            "jeffcoPS": "JPS_MFBLogo",
             "villageExchange": "VE_Logo",
             "cch": "CCH_MFBLogo",
             "lgs": "LGS_Logo",
@@ -2194,6 +2196,10 @@ class CoConfigurationData(ConfigurationData):
             "jeffcoHSCM": {
                 "id": "referrerHook.logoAlts.jeffcoHSCM",
                 "defaultMessage": "Jeffco Human Services and MyFriendBen home page button",
+            },
+            "jeffcoPS": {
+                "id": "referrerHook.logoAlts.jeffcoPS",
+                "defaultMessage": "Jeffco Public Schools and MyFriendBen home page button",
             },
             "cch": {
                 "id": "referrerHook.logoAlts.cch",
