@@ -1722,11 +1722,13 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 ],
                 "renter": [
                     "energyCalculatorExpenses",
+                    "energyCalculatorRedirectToMFB",
                     "zipcode",
                     "householdSize",
                     "energyCalculatorHouseholdData",
                     "energyCalculatorElectricityProvider",
                     "energyCalculatorGasProvider",
+                    "energyCalculatorApplianceStatus",
                     "hasBenefits",
                 ],
             }
