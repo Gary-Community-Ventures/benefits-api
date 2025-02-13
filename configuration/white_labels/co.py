@@ -26,6 +26,17 @@ class CoConfigurationData(ConfigurationData):
                 },
                 "link": "https://maps.cofamilycenters.org",
             },
+            {
+                "name": {
+                    "_default_message": "County Human Services Offices",
+                    "_label": "moreHelp.coloradoHumanServicesOffices.resourceName",
+                },
+                "description": {
+                    "_default_message": "Your county human services office can answer questions and help you apply for benefits. Click the link below to find your local office.",
+                    "_label": "moreHelp.coloradoHumanServicesOffices.description",
+                },
+                "link": "https://cdhs.colorado.gov/contact-your-county",
+            },
         ]
     }
 
