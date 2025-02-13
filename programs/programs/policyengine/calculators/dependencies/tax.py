@@ -11,7 +11,7 @@ class Coeitc(TaxUnit):
 
 
 class Ctc(TaxUnit):
-    field = "ctc"
+    field = "ctc_value"
 
 
 class Coctc(TaxUnit):

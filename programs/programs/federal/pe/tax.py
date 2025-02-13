@@ -14,7 +14,7 @@ class Eitc(PolicyEngineTaxUnitCalulator):
 
 
 class Ctc(PolicyEngineTaxUnitCalulator):
-    pe_name = "ctc"
+    pe_name = "ctc_value"
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.TaxUnitDependentDependency,
