@@ -13,10 +13,7 @@ class DefaultConfigurationData(ConfigurationData):
         "theme": {"default": "default"},
         "logoSource": {"default": ""},
         "logoAlt": {
-            "default": {
-                "id": "referrerHook.logoAlts.default",
-                "defaultMessage": "MyFriendBen home page button",
-            }
+            "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"}
         },
         "logoFooterSource": {"default": "MFB_Logo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
