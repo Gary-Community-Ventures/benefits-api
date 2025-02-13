@@ -1713,6 +1713,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "stepDirectory": {
             "default": {
                 "default": [
+                    "energyCalculatorLandingPage",
                     "zipcode",
                     "householdSize",
                     "energyCalculatorHouseholdData",
@@ -1721,6 +1722,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     "hasBenefits",
                 ],
                 "renter": [
+                    "energyCalculatorLandingPage",
                     "energyCalculatorExpenses",
                     "energyCalculatorRedirectToMFB",
                     "zipcode",
