@@ -14,6 +14,6 @@ class EnergyCalculatorEmergencyAssistance(ProgramCalculator):
         e.condition(self.county in counties)
 
         # income
-        limit = self.program.fpl.as_dict()[self.screen.household_size] * self.fpl_percent
+        limit = self.program.year.as_dict()[self.screen.household_size] * self.fpl_percent
         income = self.screen.calc_gross_income("yearly", ["all"])
         e.condition(income <= limit)
