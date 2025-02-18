@@ -102,7 +102,7 @@ class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
     def household_value(self):
         total = 0
         for unit in ALL_TAX_UNITS:
-            total += self.tax_unit_value(unit)   
+            total += self.tax_unit_value(unit)
         return total
 
     def tax_unit_value(self, unit: str):
