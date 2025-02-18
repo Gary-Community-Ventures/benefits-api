@@ -17,11 +17,12 @@ class EnergyCalculatorPercentageOfIncomePaymentPlan(ProgramCalculator):
         "energy_calculator",
     ]
     presumptive_eligibility = [
-        "energy_calculator_leap",
+        "co_energy_calculator_leap",
         "co_energy_calculator_eoc",
         "co_energy_calculator_cowap",
         "co_energy_calculator_ubp",
     ]
+    gas_providers = ["co-atmos-energy"]
 
     def household_eligible(self, e: Eligibility):
         # eligible for another program
@@ -31,3 +32,6 @@ class EnergyCalculatorPercentageOfIncomePaymentPlan(ProgramCalculator):
             if eligible:
                 has_another_program = True
         e.condition(has_another_program)
+
+        # has gas provider
+        e.condition(self.screen.energy_calculator.has_gas_provider(self.gas_providers))
