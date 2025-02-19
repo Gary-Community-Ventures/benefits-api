@@ -29,7 +29,7 @@ class DenverSidewalkRebate(ProgramCalculator):
     def household_eligible(self, e: Eligibility):
         # denver county condition
         screen_county = counties_from_screen(self.screen)
-        in_denver = DenverSidewalkRebate.county in screen_county
+        e.condition(DenverSidewalkRebate.county in screen_county, messages.location())
 
         # income condition
         income_limit = DenverSidewalkRebate.income_limits.fetch()[self.screen.household_size - 1]
@@ -44,10 +44,7 @@ class DenverSidewalkRebate(ProgramCalculator):
                 categorical_eligible = True
                 break
 
-        e.condition(
-            (in_denver and categorical_eligible) or (in_denver and income_eligible),
-            messages.income(income, income_limit),
-        )
+        e.condition(categorical_eligible or income_eligible, messages.income(income, income_limit))
 
         # mortgage expense
         e.condition(self._has_expense())
