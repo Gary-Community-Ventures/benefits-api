@@ -6,7 +6,7 @@ from django.template import Template, Context
 from django.shortcuts import loader
 from screener.models import WhiteLabel
 import os
-from pathlib import Path
+import pathlib
 
 
 @dataclass
@@ -22,7 +22,7 @@ class Command(BaseCommand):
 
     dry_run: bool
 
-    TEMPLATES = [FileTemplate("config", Template("/configuration/white_labels/{{code}}.py"))]
+    TEMPLATES = [FileTemplate("config", Template("configuration/white_labels/{{code}}.py"))]
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -70,7 +70,7 @@ class Command(BaseCommand):
         if self.dry_run:
             return
 
-        output_file = Path(path)
+        output_file = pathlib.Path(path)
         output_file.parent.mkdir(exist_ok=True, parents=True)
         output_file.write_text(contents)
 
