@@ -5,7 +5,6 @@ from django.db import transaction
 from django.template import Template, Context
 from django.shortcuts import loader
 from screener.models import WhiteLabel
-import os
 import pathlib
 
 
@@ -61,7 +60,7 @@ class Command(BaseCommand):
             white_label.delete()
 
     def _build_template(self, white_label: WhiteLabel, template: FileTemplate):
-        context = {"code": white_label.code, "name": white_label.name}
+        context = {"code": white_label.code, "name": white_label.name, "code_capitalize": white_label.code.capitalize()}
         contents = loader.render_to_string(f"new_white_label/{template.template_name}.py", context=context)
         path = template.output_path.render(Context(context))
 
