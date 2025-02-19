@@ -21,6 +21,7 @@ class DenverTrashRebate(ProgramCalculator):
     ami = DenverAmiCache()
     expenses = ["rent", "mortgage"]
     dependencies = ["zipcode", "income_amount", "income_frequency", "household_size"]
+    presumptive_eligibility = ("co_medicaid", "snap", "tanf", "cccap")
 
     def household_eligible(self, e: Eligibility):
         # county
@@ -29,9 +30,18 @@ class DenverTrashRebate(ProgramCalculator):
 
         # income
         ami = DenverTrashRebate.ami.fetch()
-        limit = ami[self.screen.household_size - 1]
+        income_limit = ami[self.screen.household_size - 1]
         income = self.screen.calc_gross_income("yearly", ["all"])
-        e.condition(income <= limit, messages.income(income, limit))
+        income_eligible = income <= income_limit
+
+        # categorical eligibility
+        categorical_eligible = False
+        for program in DenverTrashRebate.presumptive_eligibility:
+            if self.screen.has_benefit(program):
+                categorical_eligible = True
+                break
+
+        e.condition(categorical_eligible or income_eligible, messages.income(income, income_limit))
 
         # has rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense(DenverTrashRebate.expenses)
