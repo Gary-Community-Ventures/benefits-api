@@ -28,8 +28,8 @@ class DenverSidewalkRebate(ProgramCalculator):
 
     def household_eligible(self, e: Eligibility):
         # denver county condition
-        screen_county = counties_from_screen(self.screen)
-        e.condition(DenverSidewalkRebate.county in screen_county, messages.location())
+        counties = counties_from_screen(self.screen)
+        e.condition(DenverSidewalkRebate.county in counties, messages.location())
 
         # income condition
         income_limit = DenverSidewalkRebate.income_limits.fetch()[self.screen.household_size - 1]
