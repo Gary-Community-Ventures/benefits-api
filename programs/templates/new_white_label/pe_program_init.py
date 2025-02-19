@@ -5,6 +5,7 @@ import programs.programs.{{code}}.pe.spm as spm
 from programs.programs.policyengine.calculators.base import PolicyEngineCalulator
 
 
+# TODO: update /programs/programs/policyengine/calculators/__init__.py
 {{code}}_member_calculators = {  # TODO: add state specific member benefits from PE
     "{{code}}_medicaid": member.{{code_capitalize}}Medicaid,
 }

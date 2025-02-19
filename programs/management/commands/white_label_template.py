@@ -21,7 +21,16 @@ class Command(BaseCommand):
 
     dry_run: bool
 
-    TEMPLATES = [FileTemplate("config", Template("configuration/white_labels/{{code}}.py"))]
+    TEMPLATES = [
+        FileTemplate("config", Template("configuration/white_labels/{{code}}.py")),
+        FileTemplate("program", Template("programs/programs/{{code}}/example_program/calculator.py")),
+        FileTemplate("empty_init_file", Template("programs/programs/{{code}}/example_program/__init__.py")),
+        FileTemplate("program_init", Template("programs/programs/{{code}}/__init__.py")),
+        FileTemplate("pe_program_spm", Template("programs/programs/{{code}}/pe/spm.py")),
+        FileTemplate("pe_program_tax", Template("programs/programs/{{code}}/pe/tax.py")),
+        FileTemplate("pe_program_member", Template("programs/programs/{{code}}/pe/member.py")),
+        FileTemplate("pe_program_init", Template("programs/programs/{{code}}/pe/__init__.py")),
+    ]
 
     def add_arguments(self, parser):
         parser.add_argument(
