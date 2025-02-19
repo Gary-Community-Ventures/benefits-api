@@ -1,5 +1,7 @@
 import argparse
 from dataclasses import dataclass
+import os
+from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.template import Template, Context
@@ -51,6 +53,10 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def handle(self, *args, **options):
+        if str(settings.BASE_DIR) != os.getcwd():
+            self.stdout.write(self.style.ERROR(f"Please run this command from the root directory of this project"))
+            return
+
         code = options["code"]
         name = options["name"]
         self.dry_run = options["dry_run"]
