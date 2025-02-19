@@ -21,7 +21,7 @@ class DenverTrashRebate(ProgramCalculator):
     ami = DenverAmiCache()
     expenses = ["rent", "mortgage"]
     dependencies = ["zipcode", "income_amount", "income_frequency", "household_size"]
-    presumptive_eligibility = ("co_medicaid", "snap", "tanf", "cccap")
+    presumptive_eligibility = ["co_medicaid", "snap", "tanf", "cccap"]
 
     def household_eligible(self, e: Eligibility):
         # county
