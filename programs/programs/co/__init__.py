@@ -29,6 +29,7 @@ from .denver_trash_rebate.calculator import DenverTrashRebate
 from .denver_property_tax_relief.calculator import DenverPropertyTaxRelief
 from .nurturing_futures.calculator import NurturingFutures
 from .energy_calculator import co_energy_calculators
+from programs.programs.co.denver_sidewalk_rebate.calculator import DenverSidewalkRebate
 from ..calc import ProgramCalculator
 
 
@@ -63,5 +64,6 @@ co_calculators: dict[str, type[ProgramCalculator]] = {
     "dtr": DenverTrashRebate,
     "dptr": DenverPropertyTaxRelief,
     "nf": NurturingFutures,
+    "denver_sidewalk_rebate": DenverSidewalkRebate,
     **co_energy_calculators,
 }
