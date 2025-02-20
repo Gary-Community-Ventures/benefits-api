@@ -32,6 +32,8 @@ class Command(BaseCommand):
         FileTemplate("pe_program_tax", Template("programs/programs/{{code}}/pe/tax.py")),
         FileTemplate("pe_program_member", Template("programs/programs/{{code}}/pe/member.py")),
         FileTemplate("pe_program_init", Template("programs/programs/{{code}}/pe/__init__.py")),
+        FileTemplate("urgent_need", Template("programs/urgent_needs/{{code}}/example_program.py")),
+        FileTemplate("urgent_need_init", Template("programs/urgent_needs/{{code}}/__init__.py")),
     ]
 
     def add_arguments(self, parser):
