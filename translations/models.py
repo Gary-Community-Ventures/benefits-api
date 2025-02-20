@@ -1,9 +1,7 @@
 from typing import Any
 from django.db import models
-from django.urls import reverse
 from parler.models import TranslatableModel, TranslatedFields, TranslatableManager
 from django.conf import settings
-from tqdm import trange
 from dataclasses import dataclass
 from integrations.util.cache import Cache
 from translations.model_data import ModelDataController
