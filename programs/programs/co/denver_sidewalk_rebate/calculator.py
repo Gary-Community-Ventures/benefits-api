@@ -24,7 +24,7 @@ class DenverSidewalkRebate(ProgramCalculator):
     income_limits = IncomeLimitsCache()
     presumptive_eligibility = ["co_medicaid", "snap", "tanf", "cccap"]
     amount = 150
-    dependencies = ["household_size", "income_amount", "income_frequency"]
+    dependencies = ["household_size", "income_amount", "income_frequency", "zipcode"]
 
     def household_eligible(self, e: Eligibility):
         # denver county condition
