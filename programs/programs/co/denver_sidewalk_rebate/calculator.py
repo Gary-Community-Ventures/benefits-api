@@ -47,7 +47,4 @@ class DenverSidewalkRebate(ProgramCalculator):
         e.condition(categorical_eligible or income_eligible, messages.income(income, income_limit))
 
         # mortgage expense
-        e.condition(self._has_expense())
-
-    def _has_expense(self):
-        return self.screen.has_expense(["mortgage"])
+        e.condition(self.screen.has_expense(["mortgage"]))
