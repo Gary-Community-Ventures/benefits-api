@@ -2162,7 +2162,7 @@ class CoConfigurationData(ConfigurationData):
     }
 
     referrer_data = {
-        "theme": {"default": "default", "211co": "twoOneOne"},
+        "theme": {"default": "default", "211co": "twoOneOne", "211nc": "twoOneOneNC"},
         "logoSource": {
             "default": "MFB_COLogo",
             "bia": "BIA_MFBLogo",
