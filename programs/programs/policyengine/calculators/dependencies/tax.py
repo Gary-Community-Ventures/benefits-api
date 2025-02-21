@@ -6,16 +6,12 @@ class Eitc(TaxUnit):
     field = "eitc"
 
 
+class Ctc(TaxUnit):
+    field = "ctc"
+
+
 class Coeitc(TaxUnit):
     field = "co_eitc"
-
-
-class RefundableCtc(TaxUnit):
-    field = "refundable_ctc"
-
-
-class NonRefundableCtc(TaxUnit):
-    field = "non_refundable_ctc"
 
 
 class Coctc(TaxUnit):
