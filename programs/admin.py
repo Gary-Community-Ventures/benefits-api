@@ -21,7 +21,17 @@ from .models import (
 )
 
 
-class ProgramAdmin(ModelAdmin):
+class WhiteLabelModelAdminMixin:
+    def get_queryset(self, request):
+        # FIXME:
+        # if request.user.is_superuser:
+        #     return super().get_queryset(request)
+
+        # limit the white labels shown based on the admin permisions
+        return super().get_queryset(request).filter(white_label__in=request.user.white_labels.all())
+
+
+class ProgramAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "name_abbreviated", "active", "action_buttons"]
     filter_horizontal = (
