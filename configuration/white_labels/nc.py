@@ -1714,10 +1714,7 @@ class NcConfigurationData(ConfigurationData):
         "twoOneOneLink": {
             "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"
         },
-        "shareLink": {
-            "default": "https://screener.bennc.org",
-            "211nc": "https://screener.bennc.org?referrer=211nc"
-        },
+        "shareLink": {"default": "https://screener.bennc.org", "211nc": "https://screener.bennc.org?referrer=211nc"},
         "stepDirectory": {
             "default": [
                 "zipcode",
