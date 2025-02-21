@@ -215,6 +215,8 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
             white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
         program_category.white_label = white_label
 
+        program_category.save()
+
     @classmethod
     def create_instance(cls, external_name: str, Model: type["ProgramCategory"]) -> "ProgramCategory":
         return Model.objects.new_program_category("_default", external_name, "housing")
