@@ -2289,6 +2289,12 @@ class CoConfigurationData(ConfigurationData):
             ],
         },
         "featureFlags": {"default": []},
+        "noResultMessage": {
+            "default": {
+                "_label": "noResultMessage",
+                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+            },
+        },
     }
 
     footer_data = {
