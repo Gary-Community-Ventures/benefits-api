@@ -14,6 +14,9 @@ class Hook:
     def send(self, screen: Screen, results: dict):
         if screen.completed:
             return
+        if self.hook.webhook_url is None:
+            return
+
         request_data = {"external_id": screen.external_id}
         if "send_screen" in self.functions:
             key, value = self.screen_data(screen)

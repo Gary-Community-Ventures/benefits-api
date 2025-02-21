@@ -29,6 +29,22 @@ class ProgramAdmin(ModelAdmin):
         "documents",
         "required_programs",
     )
+    exclude = [
+        "name",
+        "description",
+        "description_short",
+        "learn_more_link",
+        "apply_button_link",
+        "apply_button_description",
+        "estimated_delivery_time",
+        "estimated_application_time",
+        "value_type",
+        "website_description",
+        "estimated_value",
+    ]
+
+    def has_add_permission(self, request):
+        return False
 
     def get_str(self, obj):
         return str(obj) if str(obj).strip() else "unnamed"
@@ -101,6 +117,15 @@ class NavigatorAdmin(ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "action_buttons"]
     filter_horizontal = ("programs", "counties", "languages")
+    exclude = [
+        "name",
+        "email",
+        "assistance_link",
+        "description",
+    ]
+
+    def has_add_permission(self, request):
+        return False
 
     def get_str(self, obj):
         return str(obj) if str(obj).strip() else "unnamed"
@@ -144,6 +169,10 @@ class WarningMessageAdmin(ModelAdmin):
         "counties",
         "legal_statuses",
     )
+    exclude = ["message"]
+
+    def has_add_permission(self, request):
+        return False
 
     def get_str(self, obj):
         return str(obj)
@@ -177,6 +206,17 @@ class UrgentNeedAdmin(ModelAdmin):
         "type_short",
         "functions",
     )
+    exclude = [
+        "name",
+        "description",
+        "link",
+        "type",
+        "warning",
+        "website_description",
+    ]
+
+    def has_add_permission(self, request):
+        return False
 
     def get_str(self, obj):
         return str(obj) if str(obj).strip() else "unnamed"
@@ -235,6 +275,10 @@ class FederalPovertyLimitAdmin(ModelAdmin):
 class DocumentAdmin(ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "action_buttons"]
+    exclude = ["text", "link_url", "link_text"]
+
+    def has_add_permission(self, request):
+        return False
 
     def get_str(self, obj):
         return str(obj)
@@ -281,6 +325,10 @@ class TranslationOverrideAdmin(ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "calculator", "action_buttons"]
     filter_horizontal = ("counties",)
+    exclude = ["translation"]
+
+    def has_add_permission(self, request):
+        return False
 
     def get_str(self, obj):
         return str(obj)
@@ -310,6 +358,10 @@ class TranslationOverrideAdmin(ModelAdmin):
 class ProgramCategoryAdmin(ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "external_name", "action_buttons"]
+    exclude = ["name", "description"]
+
+    def has_add_permission(self, request):
+        return False
 
     def get_str(self, obj):
         return str(obj)
