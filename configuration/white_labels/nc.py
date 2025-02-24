@@ -7,7 +7,9 @@ class NcConfigurationData(ConfigurationData):
     def get_white_label(self) -> WhiteLabel:
         return WhiteLabel.objects.get(code="nc")
 
-    public_charge_rule = {"link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/"}
+    public_charge_rule = {
+        "link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/"
+    }
 
     more_help_options = {
         "moreHelpOptions": [
@@ -1706,7 +1708,9 @@ class NcConfigurationData(ConfigurationData):
             },
         },
         "logoFooterSource": {"default": " MFB_Logo"},
-        "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
+        "logoFooterAlt": {
+            "default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}
+        },
         "logoClass": {"default": "logo"},
         "twoOneOneLink": {
             "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"
@@ -1741,6 +1745,12 @@ class NcConfigurationData(ConfigurationData):
             "default": {
                 "_label": "noResultMessage",
                 "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+            },
+        },
+        "link211Message": {
+            "default": {
+                "_label": "link211Message",
+                "_default_message": 'For more information or to learn more, please visit the link below: <a href="https://nc211.org/" target="_blank" rel="noopener noreferrer">Click here</a>',
             },
         },
     }
