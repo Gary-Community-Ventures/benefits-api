@@ -1,7 +1,9 @@
+from .base import ConfigurationData
 from screener.models import WhiteLabel
 
 
-class ConfigurationData:
+# TODO: add to /configuration/white_labels/__init__.py
+class {{code_capitalize}}ConfigurationData(ConfigurationData):
     @classmethod
     def get_white_label(self) -> WhiteLabel:
         return WhiteLabel.objects.get(code="{{code}}")
