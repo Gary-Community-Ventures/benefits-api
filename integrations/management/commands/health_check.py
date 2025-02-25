@@ -31,13 +31,18 @@ class Command(BaseCommand):
             action=argparse.BooleanOptionalAction,
             help="Compare the website hashes to the stored hashes",
         )
+        parser.add_argument(
+            "--skip-links",
+            action=argparse.BooleanOptionalAction,
+            help="Skip the link check",
+        )
 
     def handle(self, *args, **options):
         self.stdout.write("")
 
-        self._check_links(options["white_label"], options["strict"])
-
-        self.stdout.write("")
+        if not options["skip_links"]:
+            self._check_links(options["white_label"], options["strict"])
+            self.stdout.write("")
 
         self._output_condition(self._cant_read_hubspot(), self.HUB_SPOT_TEXT)
         self._output_condition(self._no_pii_in_db(), self.PII_IN_DB_TEXT)
@@ -55,7 +60,7 @@ class Command(BaseCommand):
             return False
 
     def _no_pii_in_db(self) -> bool:
-        users = User.objects.filter(is_staff=False).filter(external_id__isnull=True)
+        users = User.objects.filter(is_staff=False, external_id__isnull=True, auth_token__isnull=True)
 
         if len(users) > 0:
             return False
