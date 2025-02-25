@@ -15,7 +15,7 @@ class EnergyCalculatorWeatherizationAssistance(WeatherizationAssistance):
         "co-black-hills-energy",
     ]
 
-    def _has_expenses(self):
+    def _has_expense(self):
         return True
 
     def _has_utility_provider(self):

@@ -10,6 +10,7 @@ from .models import User
 class CustomUserAdmin(ModelAdmin):
     search_fields = ("email",)
     ordering = ("email_or_cell", "email")
+    filter_horizontal = ["white_labels"]
 
     list_display = ("email_or_cell", "is_staff")
 
