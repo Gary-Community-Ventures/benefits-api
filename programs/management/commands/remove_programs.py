@@ -3,7 +3,6 @@ from programs.models import (
     Program,
     Navigator,
 )
-from translations.models import Translation
 
 
 class Command(BaseCommand):

@@ -11,8 +11,8 @@ class Hook:
         self.hook = hook
         self.functions = [func.name for func in hook.webhook_functions.all()]
 
-    def send(self, screen: Screen, results: dict):
-        if screen.completed:
+    def send(self, screen: Screen, results: dict, force=True) -> Optional[Exception]:
+        if screen.completed and not force:
             return
         if self.hook.webhook_url is None:
             return
@@ -29,8 +29,10 @@ class Hook:
             res = requests.post(self.hook.webhook_url, json=request_data)
             if res.status_code != 200:
                 capture_message(f"{res.text}", level="error")
+                return Exception(f"{res.status_code}: {res.text}")
         except requests.exceptions.RequestException as e:
             capture_exception(e)
+            return e
 
     def screen_data(self, screen: Screen):
         screen_dict = ScreenSerializer(screen).data

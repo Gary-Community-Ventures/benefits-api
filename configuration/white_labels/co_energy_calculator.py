@@ -1708,7 +1708,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "default": "logo",
         },
         "shareLink": {
-            "default": "https://screener.myfriendben.org",
+            "default": "https://screener.myfriendben.org/co_energy_calculator/landing-page",
         },
         "stepDirectory": {
             "default": {
