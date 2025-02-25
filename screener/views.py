@@ -533,7 +533,7 @@ def urgent_need_results(screen: Screen, data):
         for function in need.functions.all():
             Calculator = urgent_need_functions[function.name]
 
-            calculator = Calculator(screen, missing_dependencies, data)
+            calculator = Calculator(screen, need, missing_dependencies, data)
 
             if not calculator.calc():
                 eligible = False
