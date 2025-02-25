@@ -30,8 +30,6 @@ class Command(BaseCommand):
 
             uuids.append(line)
 
-        print(uuids)
-
         for uuid in uuids:
             screen: Screen = Screen.objects.prefetch_related(
                 "household_members",
