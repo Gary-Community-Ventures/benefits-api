@@ -6,12 +6,12 @@ class Eitc(TaxUnit):
     field = "eitc"
 
 
-class Coeitc(TaxUnit):
-    field = "co_eitc"
-
-
 class Ctc(TaxUnit):
     field = "ctc"
+
+
+class Coeitc(TaxUnit):
+    field = "co_eitc"
 
 
 class Coctc(TaxUnit):

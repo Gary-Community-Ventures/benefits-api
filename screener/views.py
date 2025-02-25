@@ -28,7 +28,7 @@ from screener.serializers import (
 )
 from programs.programs.policyengine.policy_engine import calc_pe_eligibility
 from programs.util import DependencyError, Dependencies
-from programs.programs.urgent_needs.urgent_need_functions import urgent_need_functions
+from programs.programs.urgent_needs import urgent_need_functions
 from programs.models import (
     Document,
     Navigator,
@@ -133,7 +133,12 @@ class EligibilityTranslationView(views.APIView):
     @swagger_auto_schema(responses={200: ResultsSerializer()})
     def get(self, request, id):
         screen = Screen.objects.prefetch_related(
-            "household_members", "household_members__income_streams", "household_members__insurance", "expenses"
+            "household_members",
+            "household_members__income_streams",
+            "household_members__insurance",
+            "household_members__energy_calculator",
+            "expenses",
+            "energy_calculator",
         ).get(uuid=id)
         eligibility, missing_programs, categories = eligibility_results(screen)
         urgent_needs = urgent_need_results(screen, eligibility)
@@ -204,7 +209,8 @@ def eligibility_results(screen: Screen, batch=False):
         Program.objects.filter(active=True, category__isnull=False, white_label=screen.white_label)
         .prefetch_related(
             "legal_status_required",
-            "fpl",
+            "year",
+            "required_programs",
             *translations_prefetch_name("", Program.objects.translated_fields),
             "navigator",
             "navigator__counties",
@@ -264,6 +270,10 @@ def eligibility_results(screen: Screen, batch=False):
             "emergency_medicaid",
             "wic",
             "andcs",
+            "co_energy_calculator_leap",
+            "co_energy_calculator_eoc",
+            "co_energy_calculator_cowap",
+            "co_energy_calculator_ubp",
         )
 
         if program.name_abbreviated not in calc_order:
@@ -402,11 +412,16 @@ def eligibility_results(screen: Screen, batch=False):
                     "low_confidence": program.low_confidence,
                     "documents": [serialized_document(document) for document in program.documents.all()],
                     "warning_messages": warnings,
+                    "required_programs": [p.id for p in program.required_programs.all()],
                 }
             )
 
     category_map = {}
+    program_ids = [p["program_id"] for p in data]
     for program in all_programs:
+        if program.id not in program_ids:
+            continue
+
         category = program.category
         if category.id in category_map:
             category_map[category.id]["programs"].append(program.id)

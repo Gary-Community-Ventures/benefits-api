@@ -50,16 +50,51 @@ def bulk_add(translations):
         TranslationExportBuilder: type[ModelDataController] = Model.TranslationExportBuilder
 
         model_data = list(translations["model_data"][model_name]["instance_data"].values())
+
+        deferred_builders: list[tuple[tuple[ModelDataController], dict]] = []
         for i in trange(len(model_data), desc=model_name.ljust(longest_name, " ")):
             instance_data = model_data[i]
             instance = TranslationExportBuilder.initialize_instance(instance_data["external_name"], Model)
             builder = TranslationExportBuilder(instance)
 
-            builder.from_model_data(instance_data["data"])
+            try:
+                builder.from_model_data(instance_data["data"])
+            except TranslationExportBuilder.DeferCreation:
+                # some builders might need to wait for other builders
+                deferred_builders.append((builder, instance_data["data"]))
 
             for field, label in instance_data["labels"].items():
                 translation = create_translation(label, translations["translations"][label])
                 getattr(translation, field).set([instance])
+
+        try_count = 1
+        max_tries = 9
+        while len(deferred_builders):
+            if try_count > max_tries:
+                raise Exception(
+                    f"Max deferred retries reached for {model_name}."
+                    f" {len(deferred_builders)} builders failed."
+                    " This is likely because of an infinite loop."
+                )
+
+            resolved: list[int] = []
+
+            for i in trange(
+                len(deferred_builders), desc=f"{model_name} (DEFERRED {try_count})".ljust(longest_name, " ")
+            ):
+                [builder, data] = deferred_builders[i]
+                try:
+                    builder.from_model_data(data)
+                    resolved.append(i)
+                except TranslationExportBuilder.DeferCreation:
+                    pass
+
+            # remove after the loop so the loop doesn't get messed up
+            # also delete in revers so the indexes don't shift
+            for i in resolved[::-1]:
+                del deferred_builders[i]
+
+            try_count += 1
 
     protected_translation_ids = []
 

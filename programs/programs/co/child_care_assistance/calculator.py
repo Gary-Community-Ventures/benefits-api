@@ -47,7 +47,7 @@ class ChildCareAssistance(ProgramCalculator):
         deductions = self.screen.calc_expenses(frequency, ["childSupport"])
         net_income = gross_income - deductions
         fpl_percent = cccap_county_limits[county_name] / 100
-        fpl = self.program.fpl.as_dict()
+        fpl = self.program.year.as_dict()
         income_limit = fpl[self.screen.household_size] * fpl_percent
         e.condition(net_income <= income_limit, messages.income(net_income, income_limit))
 

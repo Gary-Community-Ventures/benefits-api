@@ -433,6 +433,7 @@ class ConfigurationData:
             ],
             "[REPLACE_ME]": [],
         },
+        "featureFlags": {"default": []},
     }
 
     footer_data = {
@@ -448,4 +449,16 @@ class ConfigurationData:
     feedback_links = {
         "email": "",
         "survey": "",
+    }
+
+    current_benefits = {
+        "title": {
+            "_label": "currentBenefits.pg-header",
+            "_default_message": "Government Benefits, Nonprofit Programs and Tax Credits in MyFriendBen",
+        },
+        "program_heading": {"_label": "currentBenefits.long-term-benefits", "_default_message": "LONG-TERM BENEFITS"},
+        "urgent_need_heading": {
+            "_label": "currentBenefits.near-term-benefits",
+            "_default_message": "NEAR-TERM BENEFITS",
+        },
     }

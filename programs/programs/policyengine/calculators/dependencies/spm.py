@@ -58,13 +58,6 @@ class SnapGrossIncomeDependency(SpmUnit):
         return int(self.screen.calc_gross_income("yearly", ["all"]))
 
 
-class SnapAlwaysUseSuaDependency(SpmUnit):
-    field = "snap_state_using_standard_utility_allowance"
-
-    def value(self):
-        return False
-
-
 class TakesUpSnapIfEligibleDependency(SpmUnit):
     field = "takes_up_snap_if_eligible"
 

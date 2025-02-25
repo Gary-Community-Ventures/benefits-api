@@ -3,7 +3,7 @@ import programs.programs.messages as messages
 
 
 class SunBucks(ProgramCalculator):
-    member_amount = 1440
+    member_amount = 120
     min_age = 7
     max_age = 16
     fpl_percent = 1.85
@@ -11,7 +11,7 @@ class SunBucks(ProgramCalculator):
 
     def household_eligible(self, e: Eligibility):
         # Income
-        fpl = self.program.fpl
+        fpl = self.program.year
         income_limit = int(self.fpl_percent * fpl.get_limit(self.screen.household_size))
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"]))
 

@@ -18,7 +18,7 @@ class MedicaidChildWithDisability(ProgramCalculator):
         e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
 
         # income
-        fpl = self.program.fpl.as_dict()
+        fpl = self.program.year.as_dict()
         income_limit = fpl[self.screen.household_size] * MedicaidChildWithDisability.max_income_percent
         earned = max(
             0, int(self.screen.calc_gross_income("yearly", ["earned"]) - MedicaidChildWithDisability.earned_deduction)

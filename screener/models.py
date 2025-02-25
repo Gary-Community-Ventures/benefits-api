@@ -1,11 +1,8 @@
 from datetime import datetime
-from enum import unique
 from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
-
-from google.auth import default
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
@@ -38,6 +35,7 @@ class Screen(models.Model):
     submission_date = models.DateTimeField(blank=True, null=True)
     start_date = models.DateTimeField(blank=True, null=True)
     referral_source = models.CharField(max_length=320, default=None, blank=True, null=True)
+    path = models.CharField(max_length=60, default=None, blank=True, null=True)
     referrer_code = models.CharField(max_length=320, default=None, blank=True, null=True)
     agree_to_tos = models.BooleanField(blank=True, null=True)
     is_13_or_older = models.BooleanField(blank=True, null=True)
@@ -50,6 +48,7 @@ class Screen(models.Model):
     last_email_request_date = models.DateTimeField(blank=True, null=True)
     is_test = models.BooleanField(default=False, blank=True)
     is_test_data = models.BooleanField(blank=True, null=True)
+    alternate_path = models.CharField(max_length=60, blank=True, null=True)
     is_verified = models.BooleanField(default=False, blank=True)
     user = models.ForeignKey(User, related_name="screens", on_delete=models.SET_NULL, blank=True, null=True)
     external_id = models.CharField(max_length=120, blank=True, null=True)
@@ -87,11 +86,13 @@ class Screen(models.Model):
     has_upk = models.BooleanField(default=False, blank=True, null=True)
     has_ssdi = models.BooleanField(default=False, blank=True, null=True)
     has_cowap = models.BooleanField(default=False, blank=True, null=True)
+    has_ncwap = models.BooleanField(default=False, blank=True, null=True)
     has_ubp = models.BooleanField(default=False, blank=True, null=True)
     has_pell_grant = models.BooleanField(default=False, blank=True, null=True)
     has_rag = models.BooleanField(default=False, blank=True, null=True)
     has_nfp = models.BooleanField(default=False, blank=True, null=True)
     has_fatc = models.BooleanField(default=False, blank=True, null=True)
+    has_section_8 = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -284,12 +285,22 @@ class Screen(models.Model):
 
     def has_insurance_types(self, types, strict=True):
         for member in self.household_members.all():
+            if not hasattr(member, "insurance"):
+                continue
+
             if member.insurance.has_insurance_types(types, strict):
                 return True
 
         return False
 
-    def has_benefit(self, name_abbreviated):
+    def has_benefit_from_list(self, names: list[str]):
+        for program in names:
+            if self.has_benefit(program):
+                return True
+
+        return False
+
+    def has_benefit(self, name_abbreviated: str):
         name_map = {
             "tanf": self.has_tanf,
             "nc_tanf": self.has_tanf,
@@ -330,7 +341,9 @@ class Screen(models.Model):
             "rag": self.has_rag,
             "nfp": self.has_nfp,
             "fatc": self.has_fatc,
+            "section_8": self.has_section_8,
             "cowap": self.has_cowap,
+            "ncwap": self.has_ncwap,
             "ubp": self.has_ubp,
             "co_medicaid": self.has_medicaid or self.has_medicaid_hi,
             "nc_medicaid": self.has_medicaid or self.has_medicaid_hi,
@@ -382,12 +395,18 @@ class Screen(models.Model):
         return False
 
     def missing_fields(self):
-        screen_fields = ("zipcode", "county", "household_size", "household_assets")
+        screen_fields = (
+            "zipcode",
+            "county",
+            "household_size",
+            "household_assets",
+            "energy_calculator",
+        )
 
         missing_fields = Dependencies()
 
         for field in screen_fields:
-            if getattr(self, field) is None:
+            if not hasattr(self, field) or getattr(self, field) is None:
                 missing_fields.add(field)
 
         for member in self.household_members.all():
@@ -543,12 +562,13 @@ class HouseholdMember(models.Model):
             "disabled",
             "long_term_disability",
             "insurance",
+            "energy_calculator",
         )
 
         missing_fields = Dependencies()
 
         for field in member_fields:
-            if getattr(self, field) is None:
+            if not hasattr(self, field) or getattr(self, field) is None:
                 missing_fields.add(field)
 
         for income in self.income_streams.all():
@@ -709,6 +729,45 @@ class Insurance(models.Model):
             "family_planning": self.family_planning,
             "va": self.va,
         }
+
+
+class EnergyCalculatorScreen(models.Model):
+    screen = models.OneToOneField(Screen, related_name="energy_calculator", null=False, on_delete=models.CASCADE)
+    is_home_owner = models.BooleanField(default=False, null=True, blank=True)
+    is_renter = models.BooleanField(default=False, null=True, blank=True)
+    electric_provider = models.CharField(max_length=200, null=True, blank=True)
+    gas_provider = models.CharField(max_length=200, null=True, blank=True)
+    electricity_is_disconnected = models.BooleanField(default=False, null=True, blank=True)
+    has_past_due_energy_bills = models.BooleanField(default=False, null=True, blank=True)
+    needs_water_heater = models.BooleanField(default=False, null=True, blank=True)
+    needs_hvac = models.BooleanField(default=False, null=True, blank=True)
+    needs_stove = models.BooleanField(default=False, null=True, blank=True)
+    needs_dryer = models.BooleanField(default=False, null=True, blank=True)
+
+    def has_electricity_provider(self, providers: list[str]):
+        for provider in providers:
+            if provider == self.electric_provider:
+                return True
+
+        return False
+
+    def has_gas_provider(self, providers: list[str]):
+        for provider in providers:
+            if provider == self.gas_provider:
+                return True
+
+        return False
+
+    def has_utility_provider(self, providers: list[str]):
+        return self.has_electricity_provider(providers) or self.has_gas_provider(providers)
+
+
+class EnergyCalculatorMember(models.Model):
+    household_member = models.OneToOneField(
+        HouseholdMember, related_name="energy_calculator", null=False, on_delete=models.CASCADE
+    )
+    surviving_spouse = models.BooleanField(default=False, null=True, blank=True)
+    receives_ssi = models.BooleanField(default=False, null=True, blank=True)
 
 
 # A point in time log table to capture the exact eligibility and value results

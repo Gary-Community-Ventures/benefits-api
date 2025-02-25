@@ -2,7 +2,6 @@ from .base import ConfigurationData
 from screener.models import WhiteLabel
 
 
-# TODO: Update NC configuration
 class NcConfigurationData(ConfigurationData):
     @classmethod
     def get_white_label(self) -> WhiteLabel:
@@ -1589,13 +1588,13 @@ class NcConfigurationData(ConfigurationData):
                         "_default_message": "Help with heating or cooling expense",
                     },
                 },
-                "cowap": {
+                "ncwap": {
                     "name": {
-                        "_label": "housingAndUtilities.cowap",
+                        "_label": "housingAndUtilities.ncwap",
                         "_default_message": "Weatherization Assistance Program: ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.cowap_desc",
+                        "_label": "housingAndUtilities.ncwap_desc",
                         "_default_message": "Free home energy upgrades",
                     },
                 },
@@ -1736,6 +1735,13 @@ class NcConfigurationData(ConfigurationData):
                 "acuteHHConditions",
                 "referralSource",
             ],
+        },
+        "featureFlags": {"default": []},
+        "noResultMessage": {
+            "default": {
+                "_label": "noResultMessage",
+                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+            },
         },
     }
 

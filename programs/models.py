@@ -37,15 +37,15 @@ class FplCache(Cache):
             "additional": 5_380,
         },
         "2025": {
-            1: 15_060,
-            2: 20_440,
-            3: 25_820,
-            4: 31_200,
-            5: 36_580,
-            6: 41_960,
-            7: 47_340,
-            8: 52_720,
-            "additional": 5_380,
+            1: 15_650,
+            2: 21_150,
+            3: 26_650,
+            4: 32_150,
+            5: 37_650,
+            6: 43_150,
+            7: 48_650,
+            8: 54_150,
+            "additional": 5_500,
         },
     }
     api_url = "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/api/"
@@ -58,6 +58,7 @@ class FplCache(Cache):
         """
         Get FPLs for all relevant years using the official ASPE Poverty Guidelines API
         """
+        raise Exception("use default values")
         fpls = FederalPoveryLimit.objects.filter(fpl__isnull=False).distinct()
         fpl_dict = {}
         for fpl in fpls:
@@ -144,7 +145,13 @@ class FederalPoveryLimit(models.Model):
 
 class LegalStatus(models.Model):
     status = models.CharField(max_length=256)
-    parent = models.ForeignKey("self", related_name="children", blank=True, null=True, on_delete=models.SET_NULL)
+    parent = models.ForeignKey(
+        "self",
+        related_name="children",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
 
     def __str__(self):
         return self.status
@@ -162,7 +169,12 @@ class ProgramCategoryManager(models.Manager):
 
         # set white label
         white_label = WhiteLabel.objects.get(code=white_label)
-        program_category = self.create(external_name=external_name, icon=icon, white_label=white_label, **translations)
+        program_category = self.create(
+            external_name=external_name,
+            icon=icon,
+            white_label=white_label,
+            **translations,
+        )
 
         for [field, translation] in translations.items():
             translation.label = f"program_category.{external_name}_{program_category.id}-{field}"
@@ -210,16 +222,28 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
 
 class ProgramCategory(models.Model):
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="program_categories", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="program_categories",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=True, null=True)
     icon = models.CharField(max_length=120, blank=False, null=False)
     name = models.ForeignKey(
-        Translation, related_name="program_category_name", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="program_category_name",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     description = models.ForeignKey(
-        Translation, related_name="program_category_description", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="program_category_description",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
 
     objects = ProgramCategoryManager()
@@ -227,7 +251,8 @@ class ProgramCategory(models.Model):
     TranslationExportBuilder = ProgramCategoryDataController
 
     def __str__(self):
-        return self.name.text
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name.text}"
 
 
 class DocumentManager(models.Manager):
@@ -286,15 +311,33 @@ class DocumentDataController(ModelDataController["Document"]):
 
 class Document(models.Model):
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="documents", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="documents",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
-    text = models.ForeignKey(Translation, related_name="documents", blank=False, null=False, on_delete=models.PROTECT)
+    text = models.ForeignKey(
+        Translation,
+        related_name="documents",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
+    )
     link_url = models.ForeignKey(
-        Translation, related_name="document_link_url", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="document_link_url",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     link_text = models.ForeignKey(
-        Translation, related_name="document_link_text", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="document_link_text",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
 
     objects = DocumentManager()
@@ -302,7 +345,9 @@ class Document(models.Model):
     TranslationExportBuilder = DocumentDataController
 
     def __str__(self) -> str:
-        return self.external_name if self.external_name is not None else self.text
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        name = self.external_name if self.external_name is not None else self.text
+        return f"{white_label_name}{name}"
 
 
 class ProgramManager(models.Manager):
@@ -339,7 +384,7 @@ class ProgramManager(models.Manager):
         program = self.create(
             name_abbreviated=name_abbreviated,
             external_name=name_abbreviated if not external_name_exists else None,
-            fpl=None,
+            year=None,
             active=False,
             low_confidence=False,
             white_label=white_label,
@@ -357,26 +402,27 @@ class ProgramDataController(ModelDataController["Program"]):
     _model_name = "Program"
     dependencies = ["Document", "ProgramCategory"]
 
-    FplDataType = TypedDict("FplDataType", {"year": str, "period": str})
+    YearDataType = TypedDict("FplDataType", {"year": str, "period": str})
     LegalStatusesDataType = list[TypedDict("LegalStatusDataType", {"status": str})]
     DataType = TypedDict(
         "DataType",
         {
-            "fpl": Optional[FplDataType],
+            "fpl": Optional[YearDataType],
             "legal_status_required": LegalStatusesDataType,
             "name_abbreviated": str,
             "active": bool,
             "low_confidence": bool,
             "documents": list[str],
             "category": Optional[str],
+            "required_programs": list[str],
             "white_label": str,
         },
     )
 
-    def _fpl(self) -> Optional[FplDataType]:
-        if self.instance.fpl is None:
+    def _year(self) -> Optional[YearDataType]:
+        if self.instance.year is None:
             return None
-        return {"year": self.instance.fpl.year, "period": self.instance.fpl.period}
+        return {"year": self.instance.year.year, "period": self.instance.year.period}
 
     def _legal_statuses(self) -> LegalStatusesDataType:
         return [{"status": l.status} for l in self.instance.legal_status_required.all()]
@@ -384,13 +430,14 @@ class ProgramDataController(ModelDataController["Program"]):
     def to_model_data(self) -> DataType:
         program = self.instance
         return {
-            "fpl": self._fpl(),
+            "fpl": self._year(),
             "legal_status_required": self._legal_statuses(),
             "active": program.active,
             "low_confidence": program.low_confidence,
             "name_abbreviated": program.name_abbreviated,
             "documents": [d.external_name for d in program.documents.all()],
-            "category": program.category.external_name if program.category is not None else None,
+            "category": (program.category.external_name if program.category is not None else None),
+            "required_programs": [p.external_name for p in program.required_programs.all()],
             "white_label": program.white_label.code,
         }
 
@@ -411,9 +458,9 @@ class ProgramDataController(ModelDataController["Program"]):
                 fpl_instance.save()
             except FederalPoveryLimit.DoesNotExist:
                 fpl_instance = FederalPoveryLimit.objects.create(year=fpl["year"], period=fpl["period"])
-            program.fpl = fpl_instance
+            program.year = fpl_instance
         else:
-            program.fpl = None
+            program.year = None
 
         # get or create legal status required
         legal_status_required = data["legal_status_required"]
@@ -439,6 +486,16 @@ class ProgramDataController(ModelDataController["Program"]):
             program_category = ProgramCategory.objects.get(external_name=data["category"])
         program.category = program_category
 
+        # add required programs
+        required_programs = []
+        for required_program_name in data["required_programs"]:
+            try:
+                required_program = Program.objects.get(external_name=required_program_name)
+            except Program.DoesNotExist:
+                raise self.DeferCreation()  # wait until the program gets created
+            required_programs.append(required_program)
+        program.required_programs.set(required_programs)
+
         try:
             white_label = WhiteLabel.objects.get(code=data["white_label"])
         except WhiteLabel.DoesNotExist:
@@ -457,7 +514,11 @@ class ProgramDataController(ModelDataController["Program"]):
 # logic for eligibility and value is stored.
 class Program(models.Model):
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="programs", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="programs",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     name_abbreviated = models.CharField(max_length=120)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
@@ -465,34 +526,70 @@ class Program(models.Model):
     documents = models.ManyToManyField(Document, related_name="program_documents", blank=True)
     active = models.BooleanField(blank=True, default=True)
     low_confidence = models.BooleanField(blank=True, null=False, default=False)
-    fpl = models.ForeignKey(FederalPoveryLimit, related_name="fpl", blank=True, null=True, on_delete=models.SET_NULL)
+    year = models.ForeignKey(FederalPoveryLimit, related_name="fpl", blank=True, null=True, on_delete=models.SET_NULL)
     category = models.ForeignKey(
-        ProgramCategory, related_name="programs", blank=True, null=True, on_delete=models.SET_NULL
+        ProgramCategory,
+        related_name="programs",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
+    required_programs = models.ManyToManyField("self", related_name="dependent_programs", symmetrical=False, blank=True)
 
     description_short = models.ForeignKey(
-        Translation, related_name="program_description_short", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="program_description_short",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     name = models.ForeignKey(
-        Translation, related_name="program_name", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="program_name",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     description = models.ForeignKey(
-        Translation, related_name="program_description", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="program_description",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     learn_more_link = models.ForeignKey(
-        Translation, related_name="program_learn_more_link", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="program_learn_more_link",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     apply_button_link = models.ForeignKey(
-        Translation, related_name="program_apply_button_link", null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="program_apply_button_link",
+        null=False,
+        on_delete=models.PROTECT,
     )
     apply_button_description = models.ForeignKey(
-        Translation, related_name="program_apply_button_description", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="program_apply_button_description",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     value_type = models.ForeignKey(
-        Translation, related_name="program_value_type", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="program_value_type",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     estimated_delivery_time = models.ForeignKey(
-        Translation, related_name="program_estimated_delivery_time", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="program_estimated_delivery_time",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     estimated_application_time = models.ForeignKey(
         Translation,
@@ -535,10 +632,11 @@ class Program(models.Model):
         return eligibility
 
     def __str__(self):
-        return self.name.text
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name.text}"
 
     def __unicode__(self):
-        return self.name.text
+        return self.__str__()
 
     def get_translation(self, screen, missing_dependencies: Dependencies, field: str):
         if field not in Program.objects.translated_fields:
@@ -566,7 +664,11 @@ class UrgentNeedFunction(models.Model):
 
 class UrgentNeedCategory(models.Model):
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="urgent_need_categories", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="urgent_need_categories",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     name = models.CharField(max_length=120)
 
@@ -574,7 +676,8 @@ class UrgentNeedCategory(models.Model):
         verbose_name_plural = "Urgent Need Categories"
 
     def __str__(self):
-        return self.name
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name}"
 
 
 class UrgentNeedManager(models.Manager):
@@ -592,7 +695,8 @@ class UrgentNeedManager(models.Manager):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
-                f"urgent_need.{name}_temporary_key-{field}", no_auto=(field in self.no_auto_fields)
+                f"urgent_need.{name}_temporary_key-{field}",
+                no_auto=(field in self.no_auto_fields),
             )
 
         # try to set the external_name to the name
@@ -642,7 +746,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
     def to_model_data(self) -> DataType:
         need = self.instance
         return {
-            "phone_number": str(need.phone_number) if need.phone_number is not None else None,
+            "phone_number": (str(need.phone_number) if need.phone_number is not None else None),
             "active": need.active,
             "low_confidence": need.low_confidence,
             "categories": self._category(),
@@ -694,7 +798,11 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
 
 class UrgentNeed(models.Model):
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="urgent_needs", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="urgent_needs",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
@@ -704,22 +812,46 @@ class UrgentNeed(models.Model):
     functions = models.ManyToManyField(UrgentNeedFunction, related_name="function", blank=True)
 
     name = models.ForeignKey(
-        Translation, related_name="urgent_need_name", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="urgent_need_name",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     description = models.ForeignKey(
-        Translation, related_name="urgent_need_description", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="urgent_need_description",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     link = models.ForeignKey(
-        Translation, related_name="urgent_need_link", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="urgent_need_link",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     type = models.ForeignKey(
-        Translation, related_name="urgent_need_type", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="urgent_need_type",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     warning = models.ForeignKey(
-        Translation, related_name="urgent_need_warning", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="urgent_need_warning",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     website_description = models.ForeignKey(
-        Translation, related_name="urgent_website_description", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="urgent_website_description",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
 
     objects = UrgentNeedManager()
@@ -727,17 +859,23 @@ class UrgentNeed(models.Model):
     TranslationExportBuilder = UrgentNeedDataController
 
     def __str__(self):
-        return self.name.text
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name.text}"
 
 
 class County(models.Model):
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="counties", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="counties",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     name = models.CharField(max_length=64)
 
     def __str__(self) -> str:
-        return self.name
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name}"
 
 
 class NavigatorLanguage(models.Model):
@@ -760,7 +898,8 @@ class NavigatorManager(models.Manager):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
-                f"navigator.{name}_temporary_key-{field}", no_auto=(field in self.no_auto_fields)
+                f"navigator.{name}_temporary_key-{field}",
+                no_auto=(field in self.no_auto_fields),
             )
 
         # try to set the external_name to the name
@@ -808,7 +947,7 @@ class NavigatorDataController(ModelDataController["Navigator"]):
     def to_model_data(self) -> DataType:
         navigator = self.instance
         return {
-            "phone_number": str(navigator.phone_number) if navigator.phone_number is not None else None,
+            "phone_number": (str(navigator.phone_number) if navigator.phone_number is not None else None),
             "counties": self._counties(),
             "languages": self._languages(),
             "programs": [p.external_name for p in navigator.programs.all()],
@@ -865,7 +1004,11 @@ class NavigatorDataController(ModelDataController["Navigator"]):
 
 class Navigator(models.Model):
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="navigators", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="navigators",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     programs = models.ManyToManyField(Program, related_name="navigator", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
@@ -874,16 +1017,32 @@ class Navigator(models.Model):
     languages = models.ManyToManyField(NavigatorLanguage, related_name="navigator", blank=True)
 
     name = models.ForeignKey(
-        Translation, related_name="navigator_name", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="navigator_name",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     email = models.ForeignKey(
-        Translation, related_name="navigator_email", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="navigator_email",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     assistance_link = models.ForeignKey(
-        Translation, related_name="navigator_assistance_link", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="navigator_assistance_link",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
     description = models.ForeignKey(
-        Translation, related_name="navigator_name_description", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="navigator_name_description",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
 
     objects = NavigatorManager()
@@ -891,7 +1050,8 @@ class Navigator(models.Model):
     TranslationExportBuilder = NavigatorDataController
 
     def __str__(self):
-        return self.name.text
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name.text}"
 
 
 class WarningMessageManager(models.Manager):
@@ -931,7 +1091,13 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
     CountiesType = list[TypedDict("CountyType", {"name": str})]
     LegalStatusesDataType = list[TypedDict("LegalStatusDataType", {"status": str})]
     DataType = TypedDict(
-        "DataType", {"calculator": str, "counties": CountiesType, "programs": list[str], "white_label": str}
+        "DataType",
+        {
+            "calculator": str,
+            "counties": CountiesType,
+            "programs": list[str],
+            "white_label": str,
+        },
     )
 
     def _legal_statuses(self) -> LegalStatusesDataType:
@@ -1000,7 +1166,11 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
 
 class WarningMessage(models.Model):
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="warning_messages", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="warning_messages",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     programs = models.ManyToManyField(Program, related_name="warning_messages", blank=True)
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
@@ -1009,7 +1179,11 @@ class WarningMessage(models.Model):
     legal_statuses = models.ManyToManyField(LegalStatus, related_name="warning_messages", blank=True)
 
     message = models.ForeignKey(
-        Translation, related_name="warning_messages", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="warning_messages",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
 
     objects = WarningMessageManager()
@@ -1022,7 +1196,9 @@ class WarningMessage(models.Model):
         return [c.name for c in self.counties.all()]
 
     def __str__(self):
-        return self.external_name if self.external_name is not None else self.calculator
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        name = self.external_name if self.external_name is not None else self.calculator
+        return f"{white_label_name}{name}"
 
 
 class WebHookFunction(models.Model):
@@ -1034,7 +1210,11 @@ class WebHookFunction(models.Model):
 
 class Referrer(models.Model):
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="referrers", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="referrers",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     referrer_code = models.CharField(max_length=64, unique=True)
     webhook_url = models.CharField(max_length=320, blank=True, null=True)
@@ -1043,14 +1223,19 @@ class Referrer(models.Model):
     remove_programs = models.ManyToManyField(Program, related_name="removed_programs", blank=True)
 
     def __str__(self):
-        return self.referrer_code
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.referrer_code}"
 
 
 class TranslationOverrideManager(models.Manager):
     translated_fields = ("translation",)
 
     def new_translation_override(
-        self, white_label: str, calculator: str, program_field: str, external_name: Optional[str] = None
+        self,
+        white_label: str,
+        calculator: str,
+        program_field: str,
+        external_name: Optional[str] = None,
     ):
         """Make a new translation override with the calculator, field, and external_name"""
 
@@ -1091,7 +1276,14 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
     CountiesType = list[TypedDict("CountyType", {"name": str})]
     DataType = TypedDict(
         "DataType",
-        {"calculator": str, "field": str, "active": bool, "counties": CountiesType, "program": str, "white_label": str},
+        {
+            "calculator": str,
+            "field": str,
+            "active": bool,
+            "counties": CountiesType,
+            "program": str,
+            "white_label": str,
+        },
     )
 
     def _counties(self) -> CountiesType:
@@ -1145,18 +1337,30 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
 
 class TranslationOverride(models.Model):
     white_label = models.ForeignKey(
-        WhiteLabel, related_name="translation_overrides", null=False, blank=False, on_delete=models.CASCADE
+        WhiteLabel,
+        related_name="translation_overrides",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
     )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=False, null=False)
     field = models.CharField(max_length=64, blank=False, null=False)
     program = models.ForeignKey(
-        Program, related_name="translation_overrides", blank=False, null=True, on_delete=models.CASCADE
+        Program,
+        related_name="translation_overrides",
+        blank=False,
+        null=True,
+        on_delete=models.CASCADE,
     )
     active = models.BooleanField(blank=True, null=False, default=True)
     counties = models.ManyToManyField(County, related_name="translation_overrides", blank=True)
     translation = models.ForeignKey(
-        Translation, related_name="translation_overrides", blank=False, null=False, on_delete=models.PROTECT
+        Translation,
+        related_name="translation_overrides",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
     )
 
     objects = TranslationOverrideManager()
@@ -1169,4 +1373,6 @@ class TranslationOverride(models.Model):
         return [c.name for c in self.counties.all()]
 
     def __str__(self):
-        return self.external_name if self.external_name is not None else self.calculator
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        name = self.external_name if self.external_name is not None else self.calculator
+        return f"{white_label_name}{name}"
