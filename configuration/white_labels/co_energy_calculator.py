@@ -150,7 +150,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "icon": {"_icon": "SurvivingSpouse", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "eCConditionOptions.survivingSpouse",
-                    "_default_message": "Surviving Spouse",
+                    "_default_message": "Widow / Widower",
                 },
             },
             "disabled": {
