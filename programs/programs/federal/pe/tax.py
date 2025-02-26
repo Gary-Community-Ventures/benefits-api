@@ -15,22 +15,11 @@ class Eitc(PolicyEngineTaxUnitCalulator):
 
 
 class Ctc(PolicyEngineTaxUnitCalulator):
-    pe_name = "ctc_value"
+    pe_name = "ctc"
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.TaxUnitDependentDependency,
         dependency.member.TaxUnitSpouseDependency,
         *dependency.irs_gross_income,
     ]
-    pe_outputs = [dependency.tax.Ctc, dependency.tax.IncomeTax]
-
-    def household_value(self):
-        for unit in ALL_TAX_UNITS:
-            try:
-                for dep in self.pe_outputs:
-                    print(dep.field)
-                    print(self.sim.value(self.pe_category, unit, dep.field, self.pe_period))
-            except KeyError:
-                continue
-
-        return super().household_value()
+    pe_outputs = [dependency.tax.Ctc]
