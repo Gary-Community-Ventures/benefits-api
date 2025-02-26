@@ -1702,7 +1702,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
         },
-        "logoFooterSource": {"default": "ENERGY_CALCULATOR_Logo"},
+        "logoFooterSource": {"default": "PoweredByLogo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "Powered by MyFriendBen"}},
         "logoClass": {
             "default": "logo",
