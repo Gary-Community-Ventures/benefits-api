@@ -37,15 +37,15 @@ class FplCache(Cache):
             "additional": 5_380,
         },
         "2025": {
-            1: 15_060,
-            2: 20_440,
-            3: 25_820,
-            4: 31_200,
-            5: 36_580,
-            6: 41_960,
-            7: 47_340,
-            8: 52_720,
-            "additional": 5_380,
+            1: 15_650,
+            2: 21_150,
+            3: 26_650,
+            4: 32_150,
+            5: 37_650,
+            6: 43_150,
+            7: 48_650,
+            8: 54_150,
+            "additional": 5_500,
         },
     }
     api_url = "https://aspe.hhs.gov/topics/poverty-economic-mobility/poverty-guidelines/api/"
@@ -58,6 +58,7 @@ class FplCache(Cache):
         """
         Get FPLs for all relevant years using the official ASPE Poverty Guidelines API
         """
+        raise Exception("use default values")
         fpls = FederalPoveryLimit.objects.filter(fpl__isnull=False).distinct()
         fpl_dict = {}
         for fpl in fpls:
@@ -214,6 +215,8 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
             white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
         program_category.white_label = white_label
 
+        program_category.save()
+
     @classmethod
     def create_instance(cls, external_name: str, Model: type["ProgramCategory"]) -> "ProgramCategory":
         return Model.objects.new_program_category("_default", external_name, "housing")
@@ -302,6 +305,8 @@ class DocumentDataController(ModelDataController["Document"]):
         except WhiteLabel.DoesNotExist:
             white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
         document.white_label = white_label
+
+        document.save()
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["Document"]) -> "Document":

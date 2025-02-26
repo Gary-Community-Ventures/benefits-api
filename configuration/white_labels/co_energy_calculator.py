@@ -1757,3 +1757,18 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "email": "mailto: myfriendben@garycommunity.org",
         "survey": "https://docs.google.com/forms/d/e/1FAIpQLSdnfqjvlVSBQkJuUMvhEDUp-t6oD-8tPQi67uRG2iNetXmSfA/viewform?usp=sf_link",
     }
+
+    current_benefits = {
+        "title": {
+            "_label": "energyCalculator.currentBenefits.title",
+            "_default_message": "Colorado Energy Navigator",
+        },
+        "program_heading": {
+            "_label": "energyCalculator.currentBenefits.long-term-benefits",
+            "_default_message": "ENERGY PROGRAMS",
+        },
+        "urgent_need_heading": {
+            "_label": "currentBenefits.near-term-benefits",
+            "_default_message": "NEAR-TERM BENEFITS",
+        },
+    }
