@@ -406,7 +406,7 @@ class ConfigurationData:
                 "defaultMessage": "",
             },
         },
-        "logoFooterSource": {"default": "MFB_Logo", "MFB_NCFooterLogo": "MFB_NCFooterLogo"},  # TODO: add cobranded footer logo
+        "logoFooterSource": {"default": "MFB_Logo", "[REPLACE_ME]": ""},  # TODO: add cobranded footer logo
         "logoFooterAlt": {  # TODO: add cobranded footer logo alt
             "default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"},
             "[REPLACE_ME]": {"id": "", "defaultMessage": ""},
