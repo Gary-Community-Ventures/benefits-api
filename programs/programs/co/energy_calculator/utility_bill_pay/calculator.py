@@ -19,5 +19,5 @@ class EnergyCalculatorUtilityBillPay(UtilityBillPay):
         # other conditions
         return super().household_eligible(e)
 
-    def _has_expenses(self):
+    def _has_expense(self):
         return True

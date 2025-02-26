@@ -50,9 +50,9 @@ class EnergyAssistance(ProgramCalculator):
         e.condition(leap_income <= income_limit, messages.income(leap_income, income_limit))
 
         # has rent or mortgage expense
-        e.condition(self._has_expenses())
+        e.condition(self._has_expense())
 
-    def _has_expenses(self):
+    def _has_expense(self):
         return self.screen.has_expense(EnergyAssistance.expenses)
 
     def household_value(self):
