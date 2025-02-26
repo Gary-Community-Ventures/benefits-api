@@ -7,7 +7,11 @@ class Eitc(TaxUnit):
 
 
 class Ctc(TaxUnit):
-    field = "ctc"
+    field = "ctc_value"
+
+
+class IncomeTax(TaxUnit):
+    field = "income_tax_before_credits"
 
 
 class Coeitc(TaxUnit):
