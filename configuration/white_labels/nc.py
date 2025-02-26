@@ -1736,7 +1736,13 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": []},
+        "featureFlags": {
+            "default": {
+                "_label": "nc_show_211_link",
+                "text": "For more information or to learn more, please visit the link below : ",
+                "url": "https://nc211.org/",
+            },
+        },
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
