@@ -1743,7 +1743,7 @@ class NcConfigurationData(ConfigurationData):
         "featureFlags": {
             "default": {
                 "_label": "nc_show_211_link",
-                "text": "For more information or to learn more, please visit the link below:",
+                "text": "For more information or to learn more, please visit the link below : ",
                 "url": "https://nc211.org/",
             },
         },
@@ -1751,12 +1751,6 @@ class NcConfigurationData(ConfigurationData):
             "default": {
                 "_label": "noResultMessage",
                 "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
-            },
-        },
-        "link211Message": {
-            "default": {
-                "_label": "link211Message",
-                "_default_message": 'For more information or to learn more, please visit the link below: <a href="https://nc211.org/" target="_blank" rel="noopener noreferrer">Click here</a>',
             },
         },
     }
