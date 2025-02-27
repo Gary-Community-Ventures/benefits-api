@@ -2261,6 +2261,7 @@ class CoConfigurationData(ConfigurationData):
             "eaglecounty": "eaglecounty-logo-size",
             "larimercounty": "larimercounty-logo-size",
             "tellercounty": "tellercounty-logo-size",
+            "pueblo": "pueblocounty-logo-size",
         },
         "twoOneOneLink": {
             "default": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id="211mfb"',
