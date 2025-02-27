@@ -1652,7 +1652,7 @@ class NcConfigurationData(ConfigurationData):
     }
 
     referrer_data = {
-        "theme": {"default": "default", "211nc": "twoOneOne", "211nc": "twoOneOneNC"},
+        "theme": {"default": "default", "211nc": "twoOneOneNC"},
         "logoSource": {
             "default": "MFB_NCLogo",
             "bia": "BIA_MFBLogo",
@@ -1739,7 +1739,7 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": []},
+        "featureFlags": {"default": [], "211nc": ["no_results_more_help"]},  
     }
 
     footer_data = {
