@@ -5,7 +5,7 @@ from .models import Translation
 from rest_framework.response import Response
 from rest_framework import views
 from django import forms
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.db.models import ProtectedError
 from programs.models import (
     Program,
@@ -46,6 +46,12 @@ class NewTranslationForm(forms.Form):
 @staff_member_required
 def admin_view(request):
     if request.method == "GET":
+        if "export" in request.GET:
+            data = Translation.objects.export_translations()
+            response = JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
+            response['Content-Disposition'] = 'attachment; filename="models-data.json"'
+            return response
+        
         translations = Translation.objects.all().order_by("id")
         # Display 50 translations per page
         paginator = Paginator(translations, 50)

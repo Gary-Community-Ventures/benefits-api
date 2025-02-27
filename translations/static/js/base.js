@@ -112,6 +112,18 @@ function checkDropdownPosition(dropdown, dropdownContent) {
   }
 }
 
+function exportButton() {
+  let exportBtn = document.querySelector(".export-btn");
+
+  exportBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    if (confirm("This process takes a few seconds. Do you want to continue?")) {
+      window.location.href = "/api/translations/admin?export=true";
+    }
+  });
+}
+
 function initializeAll() {
   initializeTableSorting();
   initializeSidebarMenu();
@@ -120,3 +132,4 @@ function initializeAll() {
 
 document.addEventListener("DOMContentLoaded", initializeAll);
 document.body.addEventListener("htmx:afterSwap", initializeAll);
+exportButton();
