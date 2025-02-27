@@ -37,11 +37,31 @@ class AffordableResidentialEnergy(ProgramCalculator):
         "co-colorado-natural-gas",
     ]
     presumptive_eligibility = ["leap", "section_8", "co_tanf", "andcs", "oap", "co_snap", "co_wic"]
+    ineleigible_counties = [
+        "Baca County",
+        "Bent County",
+        "Cheyenne County",
+        "Crowley County",
+        "Custer County",
+        "Gilpin County",
+        "Huerfano County",
+        "Kiowa County",
+        "Kit Carson County",
+        "Las Animas County",
+        "Lincoln County",
+        "Montezuma County",
+        "Otero County",
+        "Prowers County",
+    ]
     income_limits = AffordableResidentialEnergyIncomeLimitCache()
 
     def household_eligible(self, e: Eligibility):
         # utility providers
         e.condition(self.screen.energy_calculator.has_utility_provider(self.electricity_providers + self.gas_providers))
+
+        # location
+        counties = counties_from_screen(self.screen)
+        e.condition(any([c not in self.ineleigible_counties for c in counties]))
 
         # presumptive eligibility
         if self.screen.has_benefit_from_list(self.presumptive_eligibility):
@@ -51,5 +71,5 @@ class AffordableResidentialEnergy(ProgramCalculator):
         # income
         income = self.screen.calc_gross_income("yearly", ["all"])
         county = counties_from_screen(self.screen)[0]
-        income_limit = self.income_limits.fetch()[county][self.screen.household_size]
+        income_limit = self.income_limits.fetch()[county][self.screen.household_size - 1]
         e.condition(income < income_limit)
