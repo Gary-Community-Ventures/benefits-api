@@ -1739,7 +1739,7 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": [], "211nc": ["no_results_more_help"]},  
+        "featureFlags": {"default": [], "211nc": ["no_results_more_help"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
