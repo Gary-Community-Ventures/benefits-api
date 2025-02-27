@@ -26,6 +26,17 @@ class CoConfigurationData(ConfigurationData):
                 },
                 "link": "https://maps.cofamilycenters.org",
             },
+            {
+                "name": {
+                    "_default_message": "County Human Services Offices",
+                    "_label": "moreHelp.coloradoHumanServicesOffices.resourceName",
+                },
+                "description": {
+                    "_default_message": "Your county human services office can answer questions and help you apply for benefits. Click the link below to find your local office.",
+                    "_label": "moreHelp.coloradoHumanServicesOffices.description",
+                },
+                "link": "https://cdhs.colorado.gov/contact-your-county",
+            },
         ]
     }
 
@@ -141,6 +152,7 @@ class CoConfigurationData(ConfigurationData):
         "dhs": "Denver Human Services",
         "eaglecounty": "Eagle County",
         "jeffcoHS": "Jeffco Human Services",
+        "jeffcoPS": "Jeffco Public Schools",
         "larimercounty": "Larimer County",
         "tellercounty": "Teller County",
         "gac": "Get Ahead Colorado",
@@ -2168,6 +2180,7 @@ class CoConfigurationData(ConfigurationData):
             "bia": "BIA_MFBLogo",
             "jeffcoHS": "JHSA_MFBLogo",
             "jeffcoHSCM": "JHSA_MFBLogo",
+            "jeffcoPS": "JPS_MFBLogo",
             "villageExchange": "VE_Logo",
             "cch": "CCH_MFBLogo",
             "lgs": "LGS_Logo",
@@ -2194,6 +2207,10 @@ class CoConfigurationData(ConfigurationData):
             "jeffcoHSCM": {
                 "id": "referrerHook.logoAlts.jeffcoHSCM",
                 "defaultMessage": "Jeffco Human Services and MyFriendBen home page button",
+            },
+            "jeffcoPS": {
+                "id": "referrerHook.logoAlts.jeffcoPS",
+                "defaultMessage": "Jeffco Public Schools and MyFriendBen home page button",
             },
             "cch": {
                 "id": "referrerHook.logoAlts.cch",
@@ -2272,6 +2289,12 @@ class CoConfigurationData(ConfigurationData):
             ],
         },
         "featureFlags": {"default": []},
+        "noResultMessage": {
+            "default": {
+                "_label": "noResultMessage",
+                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+            },
+        },
     }
 
     footer_data = {

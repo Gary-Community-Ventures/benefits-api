@@ -3,7 +3,7 @@ import programs.programs.messages as messages
 
 
 class SunBucks(ProgramCalculator):
-    member_amount = 1440
+    member_amount = 120
     min_age = 7
     max_age = 16
     fpl_percent = 1.85

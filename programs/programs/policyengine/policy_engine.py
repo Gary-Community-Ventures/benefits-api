@@ -6,6 +6,7 @@ from typing import List
 from sentry_sdk import capture_exception, capture_message
 from .engines import Sim, pe_engines
 from .calculators.constants import MAIN_TAX_UNIT, SECONDARY_TAX_UNIT
+from django.conf import settings
 
 
 def calc_pe_eligibility(
@@ -29,6 +30,8 @@ def calc_pe_eligibility(
         try:
             return all_eligibility(Method(input_data), valid_programs)
         except Exception as e:
+            if settings.DEBUG:
+                print(repr(e))
             capture_exception(e, level="warning", message="")
             capture_message(f"Failed to calculate eligibility with the {Method.method_name} method", level="warning")
 

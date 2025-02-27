@@ -171,3 +171,10 @@ class Command(BaseCommand):
                 white_label=white_label,
                 defaults={"data": WhiteLabelData.privacy_policy, "active": True},
             )
+
+            # Save current_benefits to database
+            Configuration.objects.update_or_create(
+                name="current_benefits",
+                white_label=white_label,
+                defaults={"data": WhiteLabelData.current_benefits, "active": True},
+            )

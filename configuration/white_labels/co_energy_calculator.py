@@ -1735,6 +1735,12 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             }
         },
         "featureFlags": {"default": ["energy_calculator"]},
+        "noResultMessage": {
+            "default": {
+                "_label": "noResultMessage",
+                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+            },
+        },
     }
 
     footer_data = {
@@ -1750,4 +1756,19 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     feedback_links = {
         "email": "mailto: myfriendben@garycommunity.org",
         "survey": "https://docs.google.com/forms/d/e/1FAIpQLSdnfqjvlVSBQkJuUMvhEDUp-t6oD-8tPQi67uRG2iNetXmSfA/viewform?usp=sf_link",
+    }
+
+    current_benefits = {
+        "title": {
+            "_label": "energyCalculator.currentBenefits.title",
+            "_default_message": "Colorado Energy Navigator",
+        },
+        "program_heading": {
+            "_label": "energyCalculator.currentBenefits.long-term-benefits",
+            "_default_message": "ENERGY PROGRAMS",
+        },
+        "urgent_need_heading": {
+            "_label": "currentBenefits.near-term-benefits",
+            "_default_message": "NEAR-TERM BENEFITS",
+        },
     }

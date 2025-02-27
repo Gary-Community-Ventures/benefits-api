@@ -1,5 +1,5 @@
 from programs.models import Program
-from programs.programs.policyengine.calculators.constants import MAIN_TAX_UNIT, SECONDARY_TAX_UNIT
+from programs.programs.policyengine.calculators.constants import ALL_TAX_UNITS, MAIN_TAX_UNIT, SECONDARY_TAX_UNIT
 from programs.util import Dependencies, DependencyError
 from screener.models import HouseholdMember, Screen
 from programs.programs.calc import Eligibility, MemberEligibility, ProgramCalculator
@@ -100,7 +100,10 @@ class PolicyEngineTaxUnitCalulator(PolicyEngineCalulator):
     pe_category = "tax_units"
 
     def household_value(self):
-        return self.tax_unit_value(MAIN_TAX_UNIT) + self.tax_unit_value(SECONDARY_TAX_UNIT)
+        total = 0
+        for unit in ALL_TAX_UNITS:
+            total += self.tax_unit_value(unit)
+        return total
 
     def tax_unit_value(self, unit: str):
         try:
