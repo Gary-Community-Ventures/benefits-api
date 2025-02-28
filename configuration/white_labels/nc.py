@@ -1705,7 +1705,7 @@ class NcConfigurationData(ConfigurationData):
                 "defaultMessage": "Denver Human Services and MyFriendBen home page button",
             },
         },
-        "logoFooterSource": {"default": " MFB_Logo"},
+        "logoFooterSource": {"default": " MFB_NCFooterLogo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
         "logoClass": {"default": "logo"},
         "twoOneOneLink": {
