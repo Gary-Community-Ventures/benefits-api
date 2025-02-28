@@ -1,5 +1,4 @@
 from ..base import UrgentNeedFunction
-from programs.models import FederalPoveryLimit
 
 
 class DenverEmergencyAssistance(UrgentNeedFunction):
@@ -12,7 +11,7 @@ class DenverEmergencyAssistance(UrgentNeedFunction):
         Return True if the household is bellow 400% fpl and lives in Denver
         """
         county_eligible = self.screen.county == self.county
-        fpl = FederalPoveryLimit.objects.get(year="THIS YEAR").as_dict()
+        fpl = self.urgent_need.year.as_dict()
         income_eligible = (
             self.screen.calc_gross_income("yearly", ["all"]) < fpl[self.screen.household_size] * self.fpl_percent
         )
