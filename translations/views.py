@@ -400,7 +400,7 @@ class NewUrgentNeedForm(WhiteLabelForm):
 @staff_member_required
 def urgent_needs_view(request):
     if request.method == "GET":
-        urgent_needs = model_white_label_query_set(Navigator, request.user).order_by("external_name")
+        urgent_needs = model_white_label_query_set(UrgentNeed, request.user).order_by("external_name")
 
         paginator = Paginator(urgent_needs, 50)
         page_number = request.GET.get("page")
@@ -445,7 +445,7 @@ def urgent_need_view(request, id=0):
 def urgent_need_filter_view(request):
     if request.method == "GET":
         urgent_needs = (
-            model_white_label_query_set(Navigator, request.user)
+            model_white_label_query_set(UrgentNeed, request.user)
             .filter(name__translations__text__icontains=request.GET.get("name", ""))
             .distinct()
             .order_by("external_name")
