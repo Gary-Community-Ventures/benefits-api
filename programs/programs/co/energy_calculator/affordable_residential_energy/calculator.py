@@ -37,7 +37,7 @@ class AffordableResidentialEnergy(ProgramCalculator):
         "co-colorado-natural-gas",
     ]
     presumptive_eligibility = ["leap", "section_8", "co_tanf", "andcs", "oap", "co_snap", "co_wic"]
-    ineleigible_counties = [
+    ineligible_counties = [
         "Baca County",
         "Bent County",
         "Cheyenne County",
@@ -61,7 +61,7 @@ class AffordableResidentialEnergy(ProgramCalculator):
 
         # location
         counties = counties_from_screen(self.screen)
-        e.condition(any([c not in self.ineleigible_counties for c in counties]))
+        e.condition(any([c not in self.ineligible_counties for c in counties]))
 
         # presumptive eligibility
         if self.screen.has_benefit_from_list(self.presumptive_eligibility):
