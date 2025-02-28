@@ -24,6 +24,6 @@ class Trua(UrgentNeedFunction):
         """
         household_income = self.screen.calc_gross_income("yearly", ["all"])
         income_limit = self.income_limits.fetch()[self.screen.household_size - 1]
-        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        has_rent_or_mortgage = self.screen.has_expense(["rent"])
 
         return household_income <= income_limit and has_rent_or_mortgage

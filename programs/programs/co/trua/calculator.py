@@ -33,5 +33,5 @@ class Trua(ProgramCalculator):
         e.condition(Trua.county in counties, messages.location())
 
         # rent or mortgage expense
-        has_rent_or_mortgage = self.screen.has_expense(["rent", "mortgage"])
+        has_rent_or_mortgage = self.screen.has_expense(["rent"])
         e.condition(has_rent_or_mortgage)
