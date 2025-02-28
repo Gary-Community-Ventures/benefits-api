@@ -140,19 +140,8 @@ class EligibilityTranslationView(views.APIView):
             "expenses",
             "energy_calculator",
         ).get(uuid=id)
-        eligibility, missing_programs, categories = eligibility_results(screen)
-        urgent_needs = urgent_need_results(screen, eligibility)
-        validations = ValidationSerializer(screen.validations.all(), many=True).data
 
-        results = {
-            "programs": eligibility,
-            "urgent_needs": urgent_needs,
-            "screen_id": screen.id,
-            "default_language": screen.request_language_code,
-            "missing_programs": missing_programs,
-            "validations": validations,
-            "program_categories": categories,
-        }
+        results = all_results(screen)
 
         if screen.submission_date is None:
             screen.submission_date = datetime.now(timezone.utc)
@@ -187,6 +176,22 @@ class MessageViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
             message.text("+1" + body["phone"], send_tests=True)
 
         return Response({}, status=status.HTTP_201_CREATED)
+
+
+def all_results(screen: Screen, batch=False):
+    eligibility, missing_programs, categories = eligibility_results(screen, batch)
+    urgent_needs = urgent_need_results(screen, eligibility)
+    validations = ValidationSerializer(screen.validations.all(), many=True).data
+
+    return {
+        "programs": eligibility,
+        "urgent_needs": urgent_needs,
+        "screen_id": screen.id,
+        "default_language": screen.request_language_code,
+        "missing_programs": missing_programs,
+        "validations": validations,
+        "program_categories": categories,
+    }
 
 
 def translations_prefetch_name(prefix: str, fields):
