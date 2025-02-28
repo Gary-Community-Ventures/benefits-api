@@ -134,7 +134,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "icon": {"_icon": "SurvivingSpouse", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "eCConditionOptions.survivingSpouse",
-                    "_default_message": "Surviving Spouse",
+                    "_default_message": "Widow / Widower",
                 },
             },
             "disabled": {
@@ -150,7 +150,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "icon": {"_icon": "SurvivingSpouse", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "eCConditionOptions.survivingSpouse",
-                    "_default_message": "Surviving Spouse",
+                    "_default_message": "Widow / Widower",
                 },
             },
             "disabled": {
@@ -1702,8 +1702,8 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
         },
-        "logoFooterSource": {"default": "MFB_Logo"},
-        "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
+        "logoFooterSource": {"default": "PoweredByLogo"},
+        "logoFooterAlt": {"default": {"id": "poweredByFooter.logo.alt", "defaultMessage": "Powered by MyFriendBen"}},
         "logoClass": {
             "default": "logo",
         },
@@ -1734,7 +1734,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 ],
             }
         },
-        "featureFlags": {"default": ["energy_calculator"]},
+        "featureFlags": {"default": ["energy_calculator", "powered_by_mfb_footer"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
