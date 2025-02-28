@@ -39,7 +39,7 @@ class WhiteLabelModelAdminMixin(ModelAdmin):
     # the objects with the same white label as the object the admin is editing
     def render_change_form(self, request, context, add=False, change=False, form_url="", obj=None):
         if obj is None:
-            return super().get_queryset(request, context, add, change, form_url, obj)
+            return super().get_queryset(request, context, add=add, change=change, form_url=form_url, obj=obj)
 
         user_white_labels = request.user.white_labels.all()
 
@@ -59,7 +59,7 @@ class WhiteLabelModelAdminMixin(ModelAdmin):
         white_label_input = context["adminform"].form.fields["white_label"]
         white_label_input.queryset = white_label_input.queryset.filter(id__in=user_white_labels)
 
-        return super().render_change_form(request, context, add, change, form_url, obj)
+        return super().render_change_form(request, context, add=add, change=change, form_url=form_url, obj=obj)
 
 
 class ProgramAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
