@@ -2896,7 +2896,7 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": []},
+        "featureFlags": {"default": ["nc_show_211_link"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
