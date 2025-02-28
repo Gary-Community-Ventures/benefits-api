@@ -41,13 +41,13 @@ class WhiteLabelModelAdminMixin(ModelAdmin):
         if request.user.is_superuser:
             return super().render_change_form(request, context, add, change, form_url, obj)
 
+        user_white_labels = request.user.white_labels.all()
+
         white_label_input = context["adminform"].form.fields["white_label"]
         white_label_input.queryset = white_label_input.queryset.filter(id__in=user_white_labels)
 
         if obj is None:
             return super().render_change_form(request, context, add=add, change=change, form_url=form_url, obj=obj)
-
-        user_white_labels = request.user.white_labels.all()
 
         for field in self.white_label_filter_horizontal:
             form_field = context["adminform"].form.fields[field]
