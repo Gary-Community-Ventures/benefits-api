@@ -2919,3 +2919,5 @@ class NcConfigurationData(ConfigurationData):
         "survey": "https://airtable.com/app8EC0NO7FrnAMlP/pagiU2dMjYRofDxEn/form",
         "email": "myfriendben@codethedream.org",
     }
+
+    override_text = {}

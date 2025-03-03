@@ -462,3 +462,5 @@ class ConfigurationData:
             "_default_message": "NEAR-TERM BENEFITS",
         },
     }
+
+    override_text = {"[REPLACE_ME]": {"_label": "[REPLACE_ME]", "_default_message": "[REPLACE_ME]"}}

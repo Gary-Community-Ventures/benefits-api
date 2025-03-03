@@ -1772,3 +1772,5 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "_default_message": "NEAR-TERM BENEFITS",
         },
     }
+
+    override_text = {}
