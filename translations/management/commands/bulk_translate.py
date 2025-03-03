@@ -6,7 +6,7 @@ from integrations.services.google_translate.integration import Translate
 
 class Command(BaseCommand):
     help = """
-    Get translation export
+    Use Google Translate to translate into a new language
     """
 
     def add_arguments(self, parser):
