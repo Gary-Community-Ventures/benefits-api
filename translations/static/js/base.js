@@ -115,11 +115,29 @@ function checkDropdownPosition(dropdown, dropdownContent) {
 function exportButton() {
   let exportBtn = document.querySelector(".export-btn");
 
-  exportBtn.addEventListener("click", function (event) {
+  exportBtn.addEventListener("click", async function (event) {
     event.preventDefault();
 
-    if (confirm("This process takes a few seconds. Do you want to continue?")) {
-      window.location.href = "/api/translations/admin?export=true";
+    if (!confirm("This process may take a few seconds. Do you want to continue?")) {
+      return;
+    }
+
+    try {
+      let response = await fetch("/api/translations/admin?export=true");
+
+      if (!response.ok) {
+        throw new Error("Failed to generate/download the file");
+      }
+
+      let blob = await response.blob();
+      let link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "models-data.json";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      alert("Error: " + error.message);
     }
   });
 }
