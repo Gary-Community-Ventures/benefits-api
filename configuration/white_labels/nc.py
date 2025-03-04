@@ -2743,6 +2743,36 @@ class NcConfigurationData(ConfigurationData):
                         "_default_message": "Phone or internet discount",
                     },
                 },
+                "nc_lieap": {
+                    "name": {
+                        "_label": "housingAndUtilities.nc_lieap",
+                        "_default_message": "Low Income Energy Assistance Program (LIEAP): ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.nc_lieap_desc",
+                        "_default_message": "Help with winter heating bills",
+                    },
+                },
+                "nccip": {
+                    "name": {
+                        "_label": "housingAndUtilities.nccip",
+                        "_default_message": "NC Crisis Intervention Program (CIP): ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.nccip_desc",
+                        "_default_message": "Help with heating or cooling expense",
+                    },
+                },
+                "ncwap": {
+                    "name": {
+                        "_label": "housingAndUtilities.ncwap",
+                        "_default_message": "Weatherization Assistance Program: ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.ncwap_desc",
+                        "_default_message": "Free home energy upgrades",
+                    },
+                },
                 "leap": {
                     "name": {
                         "_label": "housingAndUtilities.leap",
@@ -2856,12 +2886,11 @@ class NcConfigurationData(ConfigurationData):
                 "defaultMessage": "Denver Human Services and MyFriendBen home page button",
             },
         },
-        "logoFooterSource": {"default": " MFB_Logo"},
+        "logoFooterSource": {"default": "MFB_NCFooterLogo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
         "logoClass": {"default": "logo"},
         "twoOneOneLink": {
             "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb",
-            "211nc": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb",
         },
         "shareLink": {
             "default": "https://screener.myfriendben.org",
