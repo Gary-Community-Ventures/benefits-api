@@ -1,14 +1,14 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.conf import settings
-
+import os, json
 from authentication.models import User
 from screener.models import WhiteLabel
 from .models import Translation
 from rest_framework.response import Response
 from rest_framework import views
 from django import forms
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, FileResponse
 from django.db.models import ProtectedError
 from programs.models import (
     Program,
@@ -51,9 +51,18 @@ def admin_view(request):
     if request.method == "GET":
         if "export" in request.GET:
             data = Translation.objects.export_translations()
-            response = JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
-            response['Content-Disposition'] = 'attachment; filename="models-data.json"'
-            return response
+            # response = JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
+            # response['Content-Disposition'] = 'attachment; filename="models-data.json"'
+            # return response
+
+            file_path = os.path.join(settings.MEDIA_ROOT, "models-data.json")
+
+            os.makedirs(settings.MEDIA_ROOT, exist_ok=True)
+
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False)
+
+            return FileResponse(open(file_path, "rb"), as_attachment=True, filename="models-data.json")
         
         translations = Translation.objects.all().order_by("id")
         # Display 50 translations per page

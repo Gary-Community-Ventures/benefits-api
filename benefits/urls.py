@@ -19,6 +19,8 @@ from django.urls import include, path
 from sesame.views import LoginView
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from django.conf import settings
+from django.conf.urls.static import static
 
 handler403 = "benefits.views.catch_403_view"
 handler400 = "benefits.views.catch_400_view"
@@ -50,3 +52,6 @@ urlpatterns = [
         name="schema-swagger-ui",
     ),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
