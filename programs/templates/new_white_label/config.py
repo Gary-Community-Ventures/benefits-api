@@ -22,49 +22,67 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
 
     acute_condition_options = {  # TODO: add/remove urgent need options set to and empty list if none
         "food": {
-            "icon": {"_name": "Food", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.food",
-            "_default_message": "Food or groceries",
+            "icon": {"_icon": "Food", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.food",
+                "_default_message": "Food or groceries",
+            },
         },
         "babySupplies": {
-            "icon": {"_name": "Baby_supplies", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.babySupplies",
-            "_default_message": "Diapers and other baby supplies",
+            "icon": {"_icon": "Baby_supplies", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.babySupplies",
+                "_default_message": "Diapers and other baby supplies",
+            },
         },
         "housing": {
-            "icon": {"_name": "Housing", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.housing",
-            "_default_message": "Help with managing your mortgage, rent, or utilities",
+            "icon": {"_icon": "Housing", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.housing",
+                "_default_message": "Help with managing your mortgage, rent, or utilities",
+            },
         },
         "support": {
-            "icon": {"_name": "Support", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.support",
-            "_default_message": "A challenge you or your child would like to talk about",
+            "icon": {"_icon": "Support", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.support",
+                "_default_message": "A challenge you or your child would like to talk about",
+            },
         },
         "childDevelopment": {
-            "icon": {"_name": "Child_development", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.childDevelopment",
-            "_default_message": "Concern about your child's development",
+            "icon": {"_icon": "Child_development", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.childDevelopment",
+                "_default_message": "Concern about your child's development",
+            },
         },
         "familyPlanning": {
-            "icon": {"_name": "Family_planning", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.familyPlanning",
-            "_default_message": "Family planning or birth control",
+            "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.familyPlanning",
+                "_default_message": "Family planning or birth control",
+            },
         },
         "jobResources": {
-            "icon": {"_name": "Job_resources", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.jobResources",
-            "_default_message": "Finding a job",
+            "icon": {"_icon": "Job_resources", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.jobResources",
+                "_default_message": "Finding a job",
+            },
         },
         "dentalCare": {
-            "icon": {"_name": "Dental_care", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.dentalCare",
-            "_default_message": "Low-cost dental care",
+            "icon": {"_icon": "Dental_care", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.dentalCare",
+                "_default_message": "Low-cost dental care",
+            },
         },
         "legalServices": {
-            "icon": {"_name": "Legal_services", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.legalServices",
-            "_default_message": "Free or low-cost help with civil legal needs or IDs",
+            "icon": {"_icon": "Legal_services", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.legalServices",
+                "_default_message": "Free or low-cost help with civil legal needs or IDs",
+            },
         },
     }
 
