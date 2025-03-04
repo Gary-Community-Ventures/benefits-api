@@ -155,6 +155,7 @@ class CoConfigurationData(ConfigurationData):
         "jeffcoPS": "Jeffco Public Schools",
         "larimercounty": "Larimer County",
         "tellercounty": "Teller County",
+        "pueblo": "Pueblo County",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
         "fircsummitresourcecenter": {
@@ -2193,6 +2194,7 @@ class CoConfigurationData(ConfigurationData):
             "achs": "ACHS_MFBLogo",
             "larimercounty": "LC_MFBLogo",
             "tellercounty": "TC_MFBLogo",
+            "pueblo": "PC_MFBLogo",
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
@@ -2247,6 +2249,10 @@ class CoConfigurationData(ConfigurationData):
                 "id": "referrerHook.logoAlts.tellercounty",
                 "defaultMessage": "Teller County and MyFriendBen home page button",
             },
+            "pueblo": {
+                "id": "referrerHook.logoAlts.pueblo",
+                "defaultMessage": "Pueblo County and MyFriendBen home page button",
+            },
         },
         "logoFooterSource": {"default": "MFB_Logo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
@@ -2255,6 +2261,7 @@ class CoConfigurationData(ConfigurationData):
             "eaglecounty": "eaglecounty-logo-size",
             "larimercounty": "larimercounty-logo-size",
             "tellercounty": "tellercounty-logo-size",
+            "pueblo": "pueblocounty-logo-size",
         },
         "twoOneOneLink": {
             "default": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id="211mfb"',

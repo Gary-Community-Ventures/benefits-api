@@ -1,3 +1,4 @@
+from programs.models import UrgentNeed
 from screener.models import Screen
 from programs.util import Dependencies
 
@@ -9,8 +10,9 @@ class UrgentNeedFunction:
 
     dependencies = []
 
-    def __init__(self, screen: Screen, missing_dependencies: Dependencies, data) -> None:
+    def __init__(self, screen: Screen, urgent_need: UrgentNeed, missing_dependencies: Dependencies, data) -> None:
         self.screen = screen
+        self.urgent_need = urgent_need
         self.missing_dependencies = missing_dependencies
         self.data = data
 
