@@ -21,53 +21,71 @@ class MaConfigurationData(ConfigurationData):
 
     acute_condition_options = {  # TODO: add/remove urgent need options set to and empty list if none
         "food": {
-            "icon": {"_name": "Food", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.food",
-            "_default_message": "Food or groceries",
+            "icon": {"_icon": "Food", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.food",
+                "_default_message": "Food or groceries",
+            },
         },
         "babySupplies": {
-            "icon": {"_name": "Baby_supplies", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.babySupplies",
-            "_default_message": "Diapers and other baby supplies",
+            "icon": {"_icon": "Baby_supplies", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.babySupplies",
+                "_default_message": "Diapers and other baby supplies",
+            },
         },
         "housing": {
-            "icon": {"_name": "Housing", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.housing",
-            "_default_message": "Help with managing your mortgage, rent, or utilities",
+            "icon": {"_icon": "Housing", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.housing",
+                "_default_message": "Help with managing your mortgage, rent, or utilities",
+            },
         },
         "support": {
-            "icon": {"_name": "Support", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.support",
-            "_default_message": "A challenge you or your child would like to talk about",
+            "icon": {"_icon": "Support", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.support",
+                "_default_message": "A challenge you or your child would like to talk about",
+            },
         },
         "childDevelopment": {
-            "icon": {"_name": "Child_development", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.childDevelopment",
-            "_default_message": "Concern about your child's development",
+            "icon": {"_icon": "Child_development", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.childDevelopment",
+                "_default_message": "Concern about your child's development",
+            },
         },
         "familyPlanning": {
-            "icon": {"_name": "Family_planning", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.familyPlanning",
-            "_default_message": "Family planning or birth control",
+            "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.familyPlanning",
+                "_default_message": "Family planning or birth control",
+            },
         },
         "jobResources": {
-            "icon": {"_name": "Job_resources", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.jobResources",
-            "_default_message": "Finding a job",
+            "icon": {"_icon": "Job_resources", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.jobResources",
+                "_default_message": "Finding a job",
+            },
         },
         "dentalCare": {
-            "icon": {"_name": "Dental_care", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.dentalCare",
-            "_default_message": "Low-cost dental care",
+            "icon": {"_icon": "Dental_care", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.dentalCare",
+                "_default_message": "Low-cost dental care",
+            },
         },
         "legalServices": {
-            "icon": {"_name": "Legal_services", "_classname": "option-card-icon"},
-            "_label": "acuteConditionOptions.legalServices",
-            "_default_message": "Free or low-cost help with civil legal needs or IDs",
+            "icon": {"_icon": "Legal_services", "_classname": "option-card-icon"},
+            "text": {
+                "_label": "acuteConditionOptions.legalServices",
+                "_default_message": "Free or low-cost help with civil legal needs or IDs",
+            },
         },
     }
 
-    sign_up_options = {  # TODO: add ways that the user can sign up for communication on the sign up page
+    sign_up_options = {
         "sendUpdates": {
             "_label": "signUpOptions.sendUpdates",
             "_default_message": "Please notify me when new benefits become available to me that I am likely eligible for based on the information I have provided.",
@@ -78,7 +96,7 @@ class MaConfigurationData(ConfigurationData):
         },
     }
 
-    relationship_options = {  # TODO: add relationship options on the member page
+    relationship_options = {
         "child": {"_label": "relationshipOptions.child", "_default_message": "Child"},
         "fosterChild": {
             "_label": "relationshipOptions.fosterChildOrKinshipChild",
@@ -112,7 +130,7 @@ class MaConfigurationData(ConfigurationData):
         },
     }
 
-    language_options = {  # TODO: add/remove language options
+    language_options = {
         "en-us": "English",
         "es": "Español",
         "vi": "Tiếng Việt",
@@ -127,7 +145,7 @@ class MaConfigurationData(ConfigurationData):
         "sw": "Kiswahili",
     }
 
-    income_options = {  # TODO: add types of income to collect on the income question
+    income_options = {
         "wages": {"_label": "incomeOptions.wages", "_default_message": "Wages, salaries, tips"},
         "selfEmployment": {
             "_label": "incomeOptions.selfEmployment",
@@ -180,101 +198,137 @@ class MaConfigurationData(ConfigurationData):
     health_insurance_options = {  # TODO: add health insurance options on the member question
         "you": {
             "none": {
-                "icon": {"_name": "None", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.none-dont-know-I",
-                "_default_message": "I don't have or know if I have health insurance",
+                "icon": {"_icon": "None", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.none-dont-know-I",
+                    "_default_message": "I don't have or know if I have health insurance",
+                },
             },
             "employer": {
-                "icon": {"_name": "Employer", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.employer",
-                "_default_message": "Employer-provided health insurance",
+                "icon": {"_icon": "Employer", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.employer",
+                    "_default_message": "Employer-provided health insurance",
+                },
             },
             "private": {
-                "icon": {"_name": "PrivateInsurance", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.private",
-                "_default_message": "Private (non-employer) health insurance",
+                "icon": {"_icon": "PrivateInsurance", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.private",
+                    "_default_message": "Private (non-employer) health insurance",
+                },
             },
             "medicaid": {
-                "icon": {"_name": "Medicaid", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.medicaid",
-                "_default_message": "Health First Colorado (Full Medicaid)",
+                "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.medicaid",
+                    "_default_message": "Health First Colorado (Full Medicaid)",
+                },
             },
             "medicare": {
-                "icon": {"_name": "Medicare", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.medicare",
-                "_default_message": "Medicare",
+                "icon": {"_icon": "Medicare", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.medicare",
+                    "_default_message": "Medicare",
+                },
             },
             "chp": {
-                "icon": {"_name": "Chp", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.chp",
-                "_default_message": "Child Health Plan Plus (CHP+)",
+                "icon": {"_icon": "Chp", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.chp",
+                    "_default_message": "Child Health Plan Plus (CHP+)",
+                },
             },
             "emergency_medicaid": {
-                "icon": {"_name": "Emergency_medicaid", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.emergency_medicaid",
-                "_default_message": "Emergency Medicaid / Reproductive Health",
+                "icon": {"_icon": "Emergency_medicaid", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.emergency_medicaid",
+                    "_default_message": "Emergency Medicaid / Reproductive Health",
+                },
             },
             "family_planning": {
-                "icon": {"_name": "Family_planning", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.family_planning",
-                "_default_message": "Family Planning Limited Medicaid",
+                "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.family_planning",
+                    "_default_message": "Family Planning Limited Medicaid",
+                },
             },
             "va": {
-                "icon": {"_name": "VA", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.va",
-                "_default_message": "VA health care benefits",
+                "icon": {"_icon": "VA", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.va",
+                    "_default_message": "VA health care benefits",
+                },
             },
         },
         "them": {
             "none": {
-                "icon": {"_name": "None", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.none-dont-know-they",
-                "_default_message": "They don't have or know if they have health insurance",
+                "icon": {"_icon": "None", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.none-dont-know-they",
+                    "_default_message": "They don't have or know if they have health insurance",
+                },
             },
             "employer": {
-                "icon": {"_name": "Employer", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.employer",
-                "_default_message": "Employer-provided health insurance",
+                "icon": {"_icon": "Employer", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.employer",
+                    "_default_message": "Employer-provided health insurance",
+                },
             },
             "private": {
-                "icon": {"_name": "PrivateInsurance", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.private",
-                "_default_message": "Private (non-employer) health insurance",
+                "icon": {"_icon": "PrivateInsurance", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.private",
+                    "_default_message": "Private (non-employer) health insurance",
+                },
             },
             "medicaid": {
-                "icon": {"_name": "Medicaid", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.medicaid",
-                "_default_message": "Health First Colorado (Full Medicaid)",
+                "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.medicaid",
+                    "_default_message": "Health First Colorado (Full Medicaid)",
+                },
             },
             "medicare": {
-                "icon": {"_name": "Medicare", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.medicare",
-                "_default_message": "Medicare",
+                "icon": {"_icon": "Medicare", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.medicare",
+                    "_default_message": "Medicare",
+                },
             },
             "chp": {
-                "icon": {"_name": "Chp", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.chp",
-                "_default_message": "Child Health Plan Plus (CHP+)",
+                "icon": {"_icon": "Chp", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.chp",
+                    "_default_message": "Child Health Plan Plus (CHP+)",
+                },
             },
             "emergency_medicaid": {
-                "icon": {"_name": "Emergency_medicaid", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.emergency_medicaid",
-                "_default_message": "Emergency Medicaid / Reproductive Health",
+                "icon": {"_icon": "Emergency_medicaid", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.emergency_medicaid",
+                    "_default_message": "Emergency Medicaid / Reproductive Health",
+                },
             },
             "family_planning": {
-                "icon": {"_name": "Family_planning", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.family_planning",
-                "_default_message": "Family Planning Limited Medicaid",
+                "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.family_planning",
+                    "_default_message": "Family Planning Limited Medicaid",
+                },
             },
             "va": {
-                "icon": {"_name": "VA", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.va",
-                "_default_message": "VA health care benefits",
+                "icon": {"_icon": "VA", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.va",
+                    "_default_message": "VA health care benefits",
+                },
             },
         },
     }
 
-    frequency_options = {  # TODO: add how frequency options to income question
+    frequency_options = {
         "weekly": {"_label": "frequencyOptions.weekly", "_default_message": "every week"},
         "biweekly": {"_label": "frequencyOptions.biweekly", "_default_message": "every 2 weeks"},
         "semimonthly": {"_label": "frequencyOptions.semimonthly", "_default_message": "twice a month"},
@@ -282,7 +336,7 @@ class MaConfigurationData(ConfigurationData):
         "hourly": {"_label": "frequencyOptions.hourly", "_default_message": "hourly"},
     }
 
-    expense_options = {  # TODO: add expense types to expense question
+    expense_options = {
         "rent": {"_label": "expenseOptions.rent", "_default_message": "Rent"},
         "telephone": {"_label": "expenseOptions.telephone", "_default_message": "Telephone"},
         "internet": {"_label": "expenseOptions.internet", "_default_message": "Internet"},
@@ -306,59 +360,79 @@ class MaConfigurationData(ConfigurationData):
         "dependentCare": {"_label": "expenseOptions.dependentCare", "_default_message": "Dependent Care"},
     }
 
-    condition_options = {  # TODO: add condition options to member question
+    condition_options = {
         "you": {
             "student": {
-                "icon": {"_name": "Student", "_classname": "option-card-icon"},
-                "_label": "conditionOptions.student",
-                "_default_message": "Student at a college, university, or other post-secondary institution like a job-training program",
+                "icon": {"_icon": "Student", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "conditionOptions.student",
+                    "_default_message": "Student at a college, university, or other post-secondary institution like a job-training program",
+                },
             },
             "pregnant": {
-                "icon": {"_name": "Pregnant", "_classname": "option-card-icon"},
-                "_label": "conditionOptions.pregnant",
-                "_default_message": "Pregnant",
+                "icon": {"_icon": "Pregnant", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "conditionOptions.pregnant",
+                    "_default_message": "Pregnant",
+                },
             },
             "blindOrVisuallyImpaired": {
-                "icon": {"_name": "BlindOrVisuallyImpaired", "_classname": "option-card-icon"},
-                "_label": "conditionOptions.blindOrVisuallyImpaired",
-                "_default_message": "Blind or visually impaired",
+                "icon": {"_icon": "BlindOrVisuallyImpaired", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "conditionOptions.blindOrVisuallyImpaired",
+                    "_default_message": "Blind or visually impaired",
+                },
             },
             "disabled": {
-                "icon": {"_name": "Disabled", "_classname": "option-card-icon"},
-                "_label": "conditionOptions.disabled",
-                "_default_message": "Have any disabilities that make you unable to work now or in the future",
+                "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "conditionOptions.disabled",
+                    "_default_message": "Have any disabilities that make you unable to work now or in the future",
+                },
             },
             "longTermDisability": {
-                "icon": {"_name": "LongTermDisability", "_classname": "option-card-icon"},
-                "_label": "conditionOptions.longTermDisability",
-                "_default_message": "Any medical or developmental condition that has lasted, or is expected to last, more than 12 months",
+                "icon": {"_icon": "LongTermDisability", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "conditionOptions.longTermDisability",
+                    "_default_message": "Any medical or developmental condition that has lasted, or is expected to last, more than 12 months",
+                },
             },
         },
         "them": {
             "student": {
-                "icon": {"_name": "Student", "_classname": "option-card-icon"},
-                "_label": "conditionOptions.student",
-                "_default_message": "Student at a college, university, or other post-secondary institution like a job-training program",
+                "icon": {"_icon": "Student", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "conditionOptions.student",
+                    "_default_message": "Student at a college, university, or other post-secondary institution like a job-training program",
+                },
             },
             "pregnant": {
-                "icon": {"_name": "Pregnant", "_classname": "option-card-icon"},
-                "_label": "conditionOptions.pregnant",
-                "_default_message": "Pregnant",
+                "icon": {"_icon": "Pregnant", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "conditionOptions.pregnant",
+                    "_default_message": "Pregnant",
+                },
             },
             "blindOrVisuallyImpaired": {
-                "icon": {"_name": "BlindOrVisuallyImpaired", "_classname": "option-card-icon"},
-                "_label": "conditionOptions.blindOrVisuallyImpaired",
-                "_default_message": "Blind or visually impaired",
+                "icon": {"_icon": "BlindOrVisuallyImpaired", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "conditionOptions.blindOrVisuallyImpaired",
+                    "_default_message": "Blind or visually impaired",
+                },
             },
             "disabled": {
-                "icon": {"_name": "Disabled", "_classname": "option-card-icon"},
-                "_label": "conditionOptions.disabled",
-                "_default_message": "Have any disabilities that make you unable to work now or in the future",
+                "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "conditionOptions.disabled.them",
+                    "_default_message": "Have any disabilities that make them unable to work now or in the future",
+                },
             },
             "longTermDisability": {
-                "icon": {"_name": "LongTermDisability", "_classname": "option-card-icon"},
-                "_label": "conditionOptions.longTermDisability",
-                "_default_message": "Any medical or developmental condition that has lasted, or is expected to last, more than 12 months",
+                "icon": {"_icon": "LongTermDisability", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "conditionOptions.longTermDisability",
+                    "_default_message": "Any medical or developmental condition that has lasted, or is expected to last, more than 12 months",
+                },
             },
         },
     }
@@ -1108,32 +1182,287 @@ class MaConfigurationData(ConfigurationData):
         "05544": {"Essex County": "Essex County"},
     }
 
-    category_benefits = {  # TODO: add benefits and benefit categories to the already has benefits step
-        "[REPLACE_ME]": {
+    category_benefits = {
+        "cash": {
             "benefits": {
-                "[REPLACE_ME]": {
+                "tanf": {
                     "name": {
-                        "_label": "",
-                        "_default_message": "",
+                        "_label": "cashAssistanceBenefits.tanf",
+                        "_default_message": "Temporary Assistance for Needy Families/Colorado Works (TANF): ",
                     },
                     "description": {
-                        "_label": "",
-                        "_default_message": "",
+                        "_label": "cashAssistanceBenefits.tanf_desc",
+                        "_default_message": "Cash assistance and work support",
+                    },
+                },
+                "ssi": {
+                    "name": {
+                        "_label": "cashAssistanceBenefits.ssi",
+                        "_default_message": "Supplemental Security Income (SSI): ",
+                    },
+                    "description": {
+                        "_label": "cashAssistanceBenefits.ssi_desc",
+                        "_default_message": "Federal cash assistance for individuals who are disabled, blind, or 65 years of age or older",
+                    },
+                },
+                "andcs": {
+                    "name": {
+                        "_label": "cashAssistanceBenefits.andcs",
+                        "_default_message": "Aid to the Needy Disabled - Colorado Supplement (AND-CS): ",
+                    },
+                    "description": {
+                        "_label": "cashAssistanceBenefits.andcs_desc",
+                        "_default_message": "State cash assistance for individuals who are disabled and receiving SSI",
+                    },
+                },
+                "oap": {
+                    "name": {"_label": "cashAssistanceBenefits.oap", "_default_message": "Old Age Pension (OAP): "},
+                    "description": {
+                        "_label": "cashAssistanceBenefits.oap_desc",
+                        "_default_message": "State cash assistance for individuals 60 years of age or older",
+                    },
+                },
+                "ssdi": {
+                    "name": {
+                        "_label": "cashAssistanceBenefits.ssdi",
+                        "_default_message": "Social Security Disability Insurance (SSDI): ",
+                    },
+                    "description": {
+                        "_label": "cashAssistanceBenefits.ssdi_desc",
+                        "_default_message": "Social security benefit for people with disabilities",
                     },
                 },
             },
-            "category_name": {"_label": "", "_default_message": ""},
+            "category_name": {"_label": "cashAssistance", "_default_message": "Cash Assistance"},
+        },
+        "foodAndNutrition": {
+            "benefits": {
+                "snap": {
+                    "name": {
+                        "_label": "foodAndNutritionBenefits.snap",
+                        "_default_message": "Supplemental Nutrition Assistance Program (SNAP): ",
+                    },
+                    "description": {
+                        "_label": "foodAndNutritionBenefits.snap_desc",
+                        "_default_message": "Food assistance",
+                    },
+                },
+                "wic": {
+                    "name": {
+                        "_label": "foodAndNutritionBenefits.wic",
+                        "_default_message": "Special Supplemental Nutrition Program for Women, Infants, and Children (WIC): ",
+                    },
+                    "description": {
+                        "_label": "foodAndNutritionBenefits.wic_desc",
+                        "_default_message": "Food and breastfeeding assistance",
+                    },
+                },
+                "nslp": {
+                    "name": {
+                        "_label": "foodAndNutritionBenefits.nslp",
+                        "_default_message": "National School Lunch Program: ",
+                    },
+                    "description": {
+                        "_label": "foodAndNutritionBenefits.nslp_desc",
+                        "_default_message": "Free school meals",
+                    },
+                },
+                "ede": {
+                    "name": {"_label": "foodAndNutritionBenefits.ede", "_default_message": "Everyday Eats: "},
+                    "description": {
+                        "_label": "foodAndNutritionBenefits.ede_desc",
+                        "_default_message": "Food support for people 60 years of age or older",
+                    },
+                },
+            },
+            "category_name": {"_label": "foodAndNutrition", "_default_message": "Food and Nutrition"},
+        },
+        "childCare": {
+            "benefits": {
+                "cccap": {
+                    "name": {
+                        "_label": "childCareBenefits.cccap",
+                        "_default_message": "Colorado Child Care Assistance Program (CCCAP): ",
+                    },
+                    "description": {
+                        "_label": "childCareBenefits.cccap_desc",
+                        "_default_message": "Help with child care costs",
+                    },
+                },
+                "denverpresc": {
+                    "name": {
+                        "_label": "childCareBenefits.denverpresc",
+                        "_default_message": "Denver Preschool Program: ",
+                    },
+                    "description": {
+                        "_label": "childCareBenefits.denverpresc_desc",
+                        "_default_message": "Tuition credits for Denver preschoolers",
+                    },
+                },
+                "coheadstart": {
+                    "name": {"_label": "childCareBenefits.coheadstart", "_default_message": "Colorado Head Start: "},
+                    "description": {
+                        "_label": "childCareBenefits.coheadstart_desc",
+                        "_default_message": "Free early child care and preschool",
+                    },
+                },
+                "mydenver": {
+                    "name": {"_label": "childCareBenefits.mydenver", "_default_message": "MY Denver Card: "},
+                    "description": {
+                        "_label": "childCareBenefits.mydenver_desc",
+                        "_default_message": "Reduced-cost youth programs",
+                    },
+                },
+                "upk": {
+                    "name": {
+                        "_label": "childCareBenefits.univpresc",
+                        "_default_message": "Universal Preschool Colorado (UPK): ",
+                    },
+                    "description": {
+                        "_label": "childCareBenefits.univpresc_desc",
+                        "_default_message": "Free preschool",
+                    },
+                },
+            },
+            "category_name": {
+                "_label": "childCareYouthAndEducation",
+                "_default_message": "Child Care, Youth, and Education",
+            },
+        },
+        "housingAndUtilities": {
+            "benefits": {
+                "lifeline": {
+                    "name": {"_label": "housingAndUtilities.lifeline", "_default_message": "Lifeline: "},
+                    "description": {
+                        "_label": "housingAndUtilities.lifeline_desc",
+                        "_default_message": "Phone or internet discount",
+                    },
+                },
+                "leap": {
+                    "name": {
+                        "_label": "housingAndUtilities.leap",
+                        "_default_message": "Low-Income Energy Assistance Program (LEAP): ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.leap_desc",
+                        "_default_message": "Help with winter heating bills",
+                    },
+                },
+                "cowap": {
+                    "name": {
+                        "_label": "housingAndUtilities.cowap",
+                        "_default_message": "Weatherization Assistance Program: ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.cowap_desc",
+                        "_default_message": "Free home energy upgrades",
+                    },
+                },
+                "ubp": {
+                    "name": {
+                        "_label": "housingAndUtilities.ubp",
+                        "_default_message": "Colorado Utility Bill Help Program: ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.ubp_desc",
+                        "_default_message": "Help paying utility bills",
+                    },
+                },
+                "coPropTaxRentHeatCreditRebate": {
+                    "name": {
+                        "_label": "cashAssistanceBenefits.coPropTaxRentHeatCreditRebate",
+                        "_default_message": "Colorado Property Tax/Rent/Heat Credit Rebate: ",
+                    },
+                    "description": {
+                        "_label": "cashAssistanceBenefits.coPropTaxRentHeatCreditRebate_desc",
+                        "_default_message": "Cash to pay property tax, rent, and heat bills",
+                    },
+                },
+            },
+            "category_name": {"_label": "housingAndUtilities", "_default_message": "Housing and Utilities"},
+        },
+        "transportation": {
+            "benefits": {
+                "rtdlive": {
+                    "name": {"_label": "transportationBenefits.rtdlive", "_default_message": "RTD LiVE: "},
+                    "description": {
+                        "_label": "transportationBenefits.rtdlive_desc",
+                        "_default_message": "Discounted RTD fares",
+                    },
+                }
+            },
+            "category_name": {"_label": "transportation", "_default_message": "Transportation"},
+        },
+        "healthCare": {
+            "benefits": {
+                "dentallowincseniors": {
+                    "name": {
+                        "_label": "healthCareBenefits.dentallowincseniors",
+                        "_default_message": "Colorado Dental Health Program for Low-Income Seniors: ",
+                    },
+                    "description": {
+                        "_label": "healthCareBenefits.dentallowincseniors_desc",
+                        "_default_message": "Low-cost dental care for people 60 years of age or older",
+                    },
+                },
+                "nfp": {
+                    "name": {"_label": "healthCareBenefits.nfp", "_default_message": "Nurse-Family Partnership: "},
+                    "description": {
+                        "_label": "healthCareBenefits.nfp_desc",
+                        "_default_message": "Personalized support for first-time parents",
+                    },
+                },
+            },
+            "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
+        },
+        "taxCredits": {
+            "benefits": {
+                "eitc": {
+                    "name": {
+                        "_label": "taxCreditBenefits.eitc",
+                        "_default_message": "Earned Income Tax Credit (EITC): ",
+                    },
+                    "description": {
+                        "_label": "taxCreditBenefits.eitc_desc",
+                        "_default_message": "Federal tax credit - earned income",
+                    },
+                },
+                "ctc": {
+                    "name": {"_label": "taxCreditBenefits.ctc", "_default_message": "Child Tax Credit (CTC): "},
+                    "description": {"_label": "taxCreditBenefits.ctc_desc", "_default_message": "Federal tax credit"},
+                },
+                "coeitc": {
+                    "name": {
+                        "_label": "taxCreditBenefits.coeitc",
+                        "_default_message": "Colorado Earned Income Tax Credit/Expanded Earned Income Tax Credit: ",
+                    },
+                    "description": {
+                        "_label": "taxCreditBenefits.coeitc_desc",
+                        "_default_message": "State tax credit - earned income",
+                    },
+                },
+                "coctc": {
+                    "name": {"_label": "taxCreditBenefits.coctc", "_default_message": "Colorado Child Tax Credit: "},
+                    "description": {"_label": "taxCreditBenefits.coctc_desc", "_default_message": "State tax credit"},
+                },
+                "fatc": {
+                    "name": {
+                        "_label": "taxCreditBenefits.fatc",
+                        "_default_message": "Family Affordability Tax Credit: ",
+                    },
+                    "description": {"_label": "taxCreditBenefits.fatc_desc", "_default_message": "State tax credit"},
+                },
+            },
+            "category_name": {"_label": "taxCredits", "_default_message": "Tax Credits"},
         },
     }
 
     consent_to_contact = {  # TODO: add consent to contact links
-        "en-us": "",
-        "[REPLACE_ME]": "",
+        "en-us": "https://google.com",
     }
 
     privacy_policy = {  # TODO: add privacy policy links
-        "en-us": "",
-        "[REPLACE_ME]": "",
+        "en-us": "https://google.com",
     }
 
     referrer_data = {
@@ -1149,15 +1478,15 @@ class MaConfigurationData(ConfigurationData):
             "default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"},
         },
         "logoClass": {"default": "logo"},
-        "shareLink": {  # TODO: change share link based on referrer
-            "default": "",
+        "shareLink": {
+            "default": "https://screener.myfriendben.org",
         },
         "stepDirectory": {
             "default": [
                 "zipcode",
                 # the hhSize and hhData have to be consecutive
-                # "householdSize",
-                # "householdData",  # TODO: set up the household data config
+                "householdSize",
+                "householdData",
                 "hasExpenses",
                 "householdAssets",
                 "hasBenefits",
@@ -1175,17 +1504,17 @@ class MaConfigurationData(ConfigurationData):
         },
     }
 
-    footer_data = {  # TODO: add footer information
-        "address_one": "",
-        "address_two": "",
-        "city": "",
-        "state": "",
-        "zip_code": "",
-        "email": "",
-        "privacy_policy_link": "",
+    footer_data = {
+        "address_one": "1705 17th St.",
+        "address_two": "Suite 200",
+        "city": "Denver",
+        "state": "CO",
+        "zip_code": "80202",
+        "email": "hello@myfriendben.org",
+        "privacy_policy_link": "https://google.com",  # FIXME:
     }
 
     feedback_links = {  # TODO: add links where the user can provide feedback
-        "email": "",
-        "survey": "",
+        "email": "https://google.com",
+        "survey": "https://google.com",
     }
