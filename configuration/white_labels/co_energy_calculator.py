@@ -1773,4 +1773,9 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         },
     }
 
-    override_text = {}
+    override_text = {
+        "questions.householdSize-helpText": {
+            "_label": "energyCalculator.householdSize.helpText",
+            "_default_message": "This is usually family members whom you live with and share important resources with like food and bills.",
+        }
+    }
