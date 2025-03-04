@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import Q
 from django.urls import reverse
 from django.utils.html import format_html
 from unfold.admin import ModelAdmin
@@ -21,9 +22,53 @@ from .models import (
 )
 
 
-class ProgramAdmin(ModelAdmin):
+# WARNING: This is only for the user experience. This does not prevent admin from
+# using the API to edit programs they don't have access to
+class WhiteLabelModelAdminMixin(ModelAdmin):
+    white_label_filter_horizontal = []
+
+    # dont list white labels the admin does not have access to
+    def get_queryset(self, request):
+        if request.user.is_superuser:
+            return super().get_queryset(request)
+
+        # limit the white labels shown based on the admin permisions
+        return super().get_queryset(request).filter(white_label__in=request.user.white_labels.all())
+
+    # limit the objects the user can select to
+    # the objects with the same white label as the object the admin is editing
+    def render_change_form(self, request, context, add=False, change=False, form_url="", obj=None):
+        if request.user.is_superuser:
+            return super().render_change_form(request, context, add, change, form_url, obj)
+
+        user_white_labels = request.user.white_labels.all()
+
+        white_label_input = context["adminform"].form.fields["white_label"]
+        white_label_input.queryset = white_label_input.queryset.filter(id__in=user_white_labels)
+
+        if obj is None:
+            return super().render_change_form(request, context, add=add, change=change, form_url=form_url, obj=obj)
+
+        for field in self.white_label_filter_horizontal:
+            form_field = context["adminform"].form.fields[field]
+            restricted_query_set = form_field.queryset.filter(
+                Q(white_label=obj.white_label) | Q(id__in=getattr(obj, field).all().values_list("id", flat=True))
+            )
+            if not request.user.is_superuser:
+                restricted_query_set = restricted_query_set.filter(white_label__in=user_white_labels)
+
+            form_field.queryset = restricted_query_set
+
+        return super().render_change_form(request, context, add=add, change=change, form_url=form_url, obj=obj)
+
+
+class ProgramAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "name_abbreviated", "active", "action_buttons"]
+    white_label_filter_horizontal = [
+        "documents",
+        "required_programs",
+    ]
     filter_horizontal = (
         "legal_status_required",
         "documents",
@@ -105,17 +150,18 @@ class LegalStatusAdmin(ModelAdmin):
     search_fields = ("status",)
 
 
-class CountiesAdmin(ModelAdmin):
-    search_fields = ("name",)
+class CountiesAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+    search_fields = ("white_label", "name")
 
 
 class NavigatorLanguageAdmin(ModelAdmin):
     search_fields = ("code",)
 
 
-class NavigatorAdmin(ModelAdmin):
+class NavigatorAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "action_buttons"]
+    white_label_filter_horizontal = ("programs", "counties")
     filter_horizontal = ("programs", "counties", "languages")
     exclude = [
         "name",
@@ -161,9 +207,13 @@ class NavigatorAdmin(ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class WarningMessageAdmin(ModelAdmin):
+class WarningMessageAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "calculator", "action_buttons"]
+    white_label_filter_horizontal = (
+        "programs",
+        "counties",
+    )
     filter_horizontal = (
         "programs",
         "counties",
@@ -199,9 +249,10 @@ class WarningMessageAdmin(ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class UrgentNeedAdmin(ModelAdmin):
+class UrgentNeedAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "active", "action_buttons"]
+    white_label_filter_horizontal = ("type_short",)
     filter_horizontal = (
         "type_short",
         "functions",
@@ -258,9 +309,9 @@ class UrgentNeedAdmin(ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class UrgentNeedCategoryAdmin(ModelAdmin):
+class UrgentNeedCategoryAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("name",)
-    fields = ("name",)
+    fields = ("white_label", "name")
 
 
 class UrgentNeedFunctionAdmin(ModelAdmin):
@@ -272,7 +323,7 @@ class FederalPovertyLimitAdmin(ModelAdmin):
     search_fields = ("year",)
 
 
-class DocumentAdmin(ModelAdmin):
+class DocumentAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "action_buttons"]
     exclude = ["text", "link_url", "link_text"]
@@ -308,8 +359,12 @@ class DocumentAdmin(ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class ReferrerAdmin(ModelAdmin):
+class ReferrerAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("referrer_code",)
+    white_label_filter_horizontal = (
+        "primary_navigators",
+        "remove_programs",
+    )
     filter_horizontal = (
         "webhook_functions",
         "primary_navigators",
@@ -321,9 +376,10 @@ class WebHookFunctionsAdmin(ModelAdmin):
     search_fields = ("name",)
 
 
-class TranslationOverrideAdmin(ModelAdmin):
+class TranslationOverrideAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "calculator", "action_buttons"]
+    white_label_filter_horizontal = ("counties",)
     filter_horizontal = ("counties",)
     exclude = ["translation"]
 
@@ -355,7 +411,7 @@ class TranslationOverrideAdmin(ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class ProgramCategoryAdmin(ModelAdmin):
+class ProgramCategoryAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "external_name", "action_buttons"]
     exclude = ["name", "description"]

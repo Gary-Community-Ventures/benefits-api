@@ -58,7 +58,7 @@ class FplCache(Cache):
         """
         Get FPLs for all relevant years using the official ASPE Poverty Guidelines API
         """
-        raise Exception("use default values")
+        raise Exception("use default fpl values")
         fpls = FederalPoveryLimit.objects.filter(fpl__isnull=False).distinct()
         fpl_dict = {}
         for fpl in fpls:
@@ -215,6 +215,8 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
             white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
         program_category.white_label = white_label
 
+        program_category.save()
+
     @classmethod
     def create_instance(cls, external_name: str, Model: type["ProgramCategory"]) -> "ProgramCategory":
         return Model.objects.new_program_category("_default", external_name, "housing")
@@ -303,6 +305,8 @@ class DocumentDataController(ModelDataController["Document"]):
         except WhiteLabel.DoesNotExist:
             white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
         document.white_label = white_label
+
+        document.save()
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["Document"]) -> "Document":
@@ -725,6 +729,7 @@ class UrgentNeedManager(models.Manager):
 class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
     _model_name = "UrgentNeed"
 
+    YearDataType = TypedDict("FplDataType", {"year": str, "period": str})
     CategoriesType = list[TypedDict("CategoryType", {"name": str})]
     NeedFunctionsType = list[TypedDict("NeedFunctionType", {"name": str})]
     DataType = TypedDict(
@@ -735,9 +740,15 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "low_confidence": str,
             "categories": CategoriesType,
             "functions": NeedFunctionsType,
+            "fpl": Optional[YearDataType],
             "white_label": str,
         },
     )
+
+    def _year(self) -> Optional[YearDataType]:
+        if self.instance.year is None:
+            return None
+        return {"year": self.instance.year.year, "period": self.instance.year.period}
 
     def _category(self) -> CategoriesType:
         return [{"name": t.name} for t in self.instance.type_short.all()]
@@ -753,6 +764,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "low_confidence": need.low_confidence,
             "categories": self._category(),
             "functions": self._functions(),
+            "fpl": self._year(),
             "white_label": need.white_label.code,
         }
 
@@ -761,6 +773,19 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
         need.phone_number = data["phone_number"]
         need.active = data["active"]
         need.low_confidence = data["low_confidence"]
+
+        # get or create fpl
+        fpl = data["fpl"]
+        if fpl is not None:
+            try:
+                fpl_instance = FederalPoveryLimit.objects.get(year=fpl["year"])
+                fpl_instance.period = fpl["period"]
+                fpl_instance.save()
+            except FederalPoveryLimit.DoesNotExist:
+                fpl_instance = FederalPoveryLimit.objects.create(year=fpl["year"], period=fpl["period"])
+            need.year = fpl_instance
+        else:
+            need.year = None
 
         try:
             white_label = WhiteLabel.objects.get(code=data["white_label"])
@@ -812,6 +837,9 @@ class UrgentNeed(models.Model):
     active = models.BooleanField(blank=True, null=False, default=True)
     low_confidence = models.BooleanField(blank=True, null=False, default=False)
     functions = models.ManyToManyField(UrgentNeedFunction, related_name="function", blank=True)
+    year = models.ForeignKey(
+        FederalPoveryLimit, related_name="urgent_need", blank=True, null=True, on_delete=models.SET_NULL
+    )
 
     name = models.ForeignKey(
         Translation,
