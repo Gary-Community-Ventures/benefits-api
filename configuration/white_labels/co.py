@@ -8,7 +8,11 @@ class CoConfigurationData(ConfigurationData):
         return WhiteLabel.objects.get(code="co")
 
     public_charge_rule = {
-        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract."
+        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract.",
+        "text": {
+            "_label": "landingPage.publicChargeLinkCO",
+            "_default_message": "Colorado Department of Human Services Public Charge Rule"
+        }
     }
 
     more_help_options = {
