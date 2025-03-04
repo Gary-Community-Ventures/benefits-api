@@ -182,96 +182,132 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
     health_insurance_options = {  # TODO: add health insurance options on the member question
         "you": {
             "none": {
-                "icon": {"_name": "None", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.none-dont-know-I",
-                "_default_message": "I don't have or know if I have health insurance",
+                "icon": {"_icon": "None", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.none-dont-know-I",
+                    "_default_message": "I don't have or know if I have health insurance",
+                },
             },
             "employer": {
-                "icon": {"_name": "Employer", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.employer",
-                "_default_message": "Employer-provided health insurance",
+                "icon": {"_icon": "Employer", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.employer",
+                    "_default_message": "Employer-provided health insurance",
+                },
             },
             "private": {
-                "icon": {"_name": "PrivateInsurance", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.private",
-                "_default_message": "Private (non-employer) health insurance",
+                "icon": {"_icon": "PrivateInsurance", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.private",
+                    "_default_message": "Private (non-employer) health insurance",
+                },
             },
             "medicaid": {
-                "icon": {"_name": "Medicaid", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.medicaid",
-                "_default_message": "Health First Colorado (Full Medicaid)",
+                "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.medicaid",
+                    "_default_message": "Health First Colorado (Full Medicaid)",
+                },
             },
             "medicare": {
-                "icon": {"_name": "Medicare", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.medicare",
-                "_default_message": "Medicare",
+                "icon": {"_icon": "Medicare", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.medicare",
+                    "_default_message": "Medicare",
+                },
             },
             "chp": {
-                "icon": {"_name": "Chp", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.chp",
-                "_default_message": "Child Health Plan Plus (CHP+)",
+                "icon": {"_icon": "Chp", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.chp",
+                    "_default_message": "Child Health Plan Plus (CHP+)",
+                },
             },
             "emergency_medicaid": {
-                "icon": {"_name": "Emergency_medicaid", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.emergency_medicaid",
-                "_default_message": "Emergency Medicaid / Reproductive Health",
+                "icon": {"_icon": "Emergency_medicaid", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.emergency_medicaid",
+                    "_default_message": "Emergency Medicaid / Reproductive Health",
+                },
             },
             "family_planning": {
-                "icon": {"_name": "Family_planning", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.family_planning",
-                "_default_message": "Family Planning Limited Medicaid",
+                "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.family_planning",
+                    "_default_message": "Family Planning Limited Medicaid",
+                },
             },
             "va": {
-                "icon": {"_name": "VA", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.va",
-                "_default_message": "VA health care benefits",
+                "icon": {"_icon": "VA", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.va",
+                    "_default_message": "VA health care benefits",
+                },
             },
         },
         "them": {
             "none": {
-                "icon": {"_name": "None", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.none-dont-know-they",
-                "_default_message": "They don't have or know if they have health insurance",
+                "icon": {"_icon": "None", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.none-dont-know-they",
+                    "_default_message": "They don't have or know if they have health insurance",
+                },
             },
             "employer": {
-                "icon": {"_name": "Employer", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.employer",
-                "_default_message": "Employer-provided health insurance",
+                "icon": {"_icon": "Employer", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.employer",
+                    "_default_message": "Employer-provided health insurance",
+                },
             },
             "private": {
-                "icon": {"_name": "PrivateInsurance", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.private",
-                "_default_message": "Private (non-employer) health insurance",
+                "icon": {"_icon": "PrivateInsurance", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.private",
+                    "_default_message": "Private (non-employer) health insurance",
+                },
             },
             "medicaid": {
-                "icon": {"_name": "Medicaid", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.medicaid",
-                "_default_message": "Health First Colorado (Full Medicaid)",
+                "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.medicaid",
+                    "_default_message": "Health First Colorado (Full Medicaid)",
+                },
             },
             "medicare": {
-                "icon": {"_name": "Medicare", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.medicare",
-                "_default_message": "Medicare",
+                "icon": {"_icon": "Medicare", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.medicare",
+                    "_default_message": "Medicare",
+                },
             },
             "chp": {
-                "icon": {"_name": "Chp", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.chp",
-                "_default_message": "Child Health Plan Plus (CHP+)",
+                "icon": {"_icon": "Chp", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.chp",
+                    "_default_message": "Child Health Plan Plus (CHP+)",
+                },
             },
             "emergency_medicaid": {
-                "icon": {"_name": "Emergency_medicaid", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.emergency_medicaid",
-                "_default_message": "Emergency Medicaid / Reproductive Health",
+                "icon": {"_icon": "Emergency_medicaid", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.emergency_medicaid",
+                    "_default_message": "Emergency Medicaid / Reproductive Health",
+                },
             },
             "family_planning": {
-                "icon": {"_name": "Family_planning", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.family_planning",
-                "_default_message": "Family Planning Limited Medicaid",
+                "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.family_planning",
+                    "_default_message": "Family Planning Limited Medicaid",
+                },
             },
             "va": {
-                "icon": {"_name": "VA", "_classname": "option-card-icon"},
-                "_label": "healthInsuranceOptions.va",
-                "_default_message": "VA health care benefits",
+                "icon": {"_icon": "VA", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "healthInsuranceOptions.va",
+                    "_default_message": "VA health care benefits",
+                },
             },
         },
     }
