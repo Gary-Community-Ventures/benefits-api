@@ -174,7 +174,10 @@ class NcConfigurationData(ConfigurationData):
     }
 
     referral_options = {
-        "211co": "2-1-1 North Carolina",
+        "211nc": {
+            "_label": "referralOptions.211nc",
+            "_default_message": "2-1-1 North Carolina",
+        },
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
             "_default_message": "Test / Prospective Partner",
@@ -2809,7 +2812,7 @@ class NcConfigurationData(ConfigurationData):
     }
 
     referrer_data = {
-        "theme": {"default": "default", "211co": "twoOneOne"},
+        "theme": {"default": "default", "211nc": "twoOneOneNC"},
         "logoSource": {
             "default": "MFB_NCLogo",
             "bia": "BIA_MFBLogo",
@@ -2871,7 +2874,7 @@ class NcConfigurationData(ConfigurationData):
         "twoOneOneLink": {
             "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"
         },
-        "shareLink": {"default": "https://screener.bennc.org"},
+        "shareLink": {"default": "https://screener.bennc.org", "211nc": "https://screener.bennc.org?referrer=211nc"},
         "stepDirectory": {
             "default": [
                 "zipcode",
@@ -2896,7 +2899,7 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": ["nc_show_211_link"]},
+        "featureFlags": {"default": ["nc_show_211_link"], "211nc": ["no_results_more_help"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
