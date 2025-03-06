@@ -2773,26 +2773,6 @@ class NcConfigurationData(ConfigurationData):
                         "_default_message": "Free home energy upgrades",
                     },
                 },
-                "leap": {
-                    "name": {
-                        "_label": "housingAndUtilities.leap",
-                        "_default_message": "Low-Income Energy Assistance Program (LEAP): ",
-                    },
-                    "description": {
-                        "_label": "housingAndUtilities.leap_desc",
-                        "_default_message": "Help with winter heating bills",
-                    },
-                },
-                "cowap": {
-                    "name": {
-                        "_label": "housingAndUtilities.cowap",
-                        "_default_message": "Weatherization Assistance Program: ",
-                    },
-                    "description": {
-                        "_label": "housingAndUtilities.cowap_desc",
-                        "_default_message": "Free home energy upgrades",
-                    },
-                },
             },
             "category_name": {
                 "_label": "housingAndUtilities",
