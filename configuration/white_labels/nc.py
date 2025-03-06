@@ -97,7 +97,7 @@ class NcConfigurationData(ConfigurationData):
             "icon": {"_icon": "Legal_services", "_classname": "option-card-icon"},
             "text": {
                 "_label": "acuteConditionOptions.legalServices",
-                "_default_message": "Free or low-cost help with civil legal needs or IDs",
+                "_default_message": "Free or low-cost help with civil legal needs",
             },
         },
     }
@@ -174,7 +174,10 @@ class NcConfigurationData(ConfigurationData):
     }
 
     referral_options = {
-        "211co": "2-1-1 North Carolina",
+        "211nc": {
+            "_label": "referralOptions.211nc",
+            "_default_message": "2-1-1 North Carolina",
+        },
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
             "_default_message": "Test / Prospective Partner",
@@ -188,6 +191,22 @@ class NcConfigurationData(ConfigurationData):
             "_default_message": "Social Media",
         },
         "other": {"_label": "referralOptions.other", "_default_message": "Other"},
+        "onTrackFin": {
+            "_label": "referralOptions.onTrackFin",
+            "_default_message": "On Track Financial",
+        },
+        "careReach": {
+            "_label": "referralOptions.careReach",
+            "_default_message": "Care Reach",
+        },
+        "mountainProjects": {
+            "_label": "referralOptions.mountainProjects",
+            "_default_message": "Mountain Projects",
+        },
+        "pisgahLegal": {
+            "_label": "referralOptions.pisgahLegal",
+            "_default_message": "Pisgah Legal Services",
+        },
         "nariahWay": {
             "_label": "referralOptions.nw",
             "_default_message": "Nariah's Way",
@@ -368,16 +387,6 @@ class NcConfigurationData(ConfigurationData):
                     "_default_message": "Medicare",
                 },
             },
-            "emergency_medicaid": {
-                "icon": {
-                    "_icon": "Emergency_medicaid",
-                    "_classname": "option-card-icon",
-                },
-                "text": {
-                    "_label": "healthInsuranceOptions.emergency_medicaid",
-                    "_default_message": "Emergency Medicaid / Reproductive Health",
-                },
-            },
             "family_planning": {
                 "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
                 "text": {
@@ -429,16 +438,6 @@ class NcConfigurationData(ConfigurationData):
                     "_default_message": "Medicare",
                 },
             },
-            "emergency_medicaid": {
-                "icon": {
-                    "_icon": "Emergency_medicaid",
-                    "_classname": "option-card-icon",
-                },
-                "text": {
-                    "_label": "healthInsuranceOptions.emergency_medicaid",
-                    "_default_message": "Emergency Medicaid / Reproductive Health",
-                },
-            },
             "family_planning": {
                 "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
                 "text": {
@@ -487,6 +486,10 @@ class NcConfigurationData(ConfigurationData):
             "_label": "expenseOptions.internet",
             "_default_message": "Internet",
         },
+        "autoInsurance": {
+            "_label": "expenseOptions.autoInsurance",
+            "_default_message": "Auto Insurance Premium &/or Payment",
+        },
         "otherUtilities": {
             "_label": "expenseOptions.otherUtilities",
             "_default_message": "Other Utilities",
@@ -499,6 +502,18 @@ class NcConfigurationData(ConfigurationData):
         "mortgage": {
             "_label": "expenseOptions.mortgage",
             "_default_message": "Mortgage",
+        },
+        "propertyTaxes": {
+            "_label": "expenseOptions.propertyTaxes",
+            "_default_message": "Property Taxes",
+        },
+        "associationFees": {
+            "_label": "expenseOptions.associationFees",
+            "_default_message": "Homeowners or Condo Association Fees and Dues",
+        },
+        "homeownersInsurance": {
+            "_label": "expenseOptions.homeownersInsurance",
+            "_default_message": "Homeowners Insurance",
         },
         "medical": {
             "_label": "expenseOptions.medical",
@@ -2594,222 +2609,164 @@ class NcConfigurationData(ConfigurationData):
     category_benefits = {
         "cash": {
             "benefits": {
-                "tanf": {
+                "nc_tanf": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.tanf",
-                        "_default_message": "Work First Family Assistance (Temporary Assistance for Needy Families (TANF)):  ",
+                        "_label": "cashBenefits.nc_tanf",
+                        "_default_message": "Temporary Assistance for Needy Families (TANF) (Work First Family Assistance):  ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.tanf_desc",
+                        "_label": "cashBenefits.nc_tanf_desc",
                         "_default_message": "Cash assistance and work support",
                     },
                 },
                 "ssi": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.ssi",
+                        "_label": "cashBenefits.ssi",
                         "_default_message": "Supplemental Security Income (SSI): ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.ssi_desc",
+                        "_label": "cashBenefits.ssi_desc",
                         "_default_message": "Federal cash assistance for individuals who are disabled, blind, or 65 years of age or older",
                     },
                 },
                 "ssdi": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.ssdi",
+                        "_label": "cashBenefits.ssdi",
                         "_default_message": "Social Security Disability Insurance (SSDI): ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.ssdi_desc",
+                        "_label": "cashBenefits.ssdi_desc",
                         "_default_message": "Social security benefit for people with disabilities",
                     },
                 },
             },
-            "category_name": {
-                "_label": "cashAssistance",
-                "_default_message": "Cash Assistance",
-            },
+            "category_name": {"_label": "cash", "_default_message": "Cash Assistance"},
         },
-        "foodAndNutrition": {
+        "food": {
             "benefits": {
                 "snap": {
                     "name": {
-                        "_label": "foodAndNutritionBenefits.snap",
+                        "_label": "foodBenefits.snap",
                         "_default_message": "Supplemental Nutrition Assistance Program (SNAP): ",
                     },
                     "description": {
-                        "_label": "foodAndNutritionBenefits.snap_desc",
+                        "_label": "foodBenefits.snap_desc",
                         "_default_message": "Food assistance",
                     },
                 },
-                "wic": {
+                "nc_wic": {
                     "name": {
-                        "_label": "foodAndNutritionBenefits.wic",
+                        "_label": "foodBenefits.nc_wic",
                         "_default_message": "Special Supplemental Nutrition Program for Women, Infants, and Children (WIC): ",
                     },
                     "description": {
-                        "_label": "foodAndNutritionBenefits.wic_desc",
+                        "_label": "foodBenefits.nc_wic_desc",
                         "_default_message": "Food and breastfeeding assistance",
                     },
                 },
-                "nslp": {
+                "sunbucks": {
                     "name": {
-                        "_label": "foodAndNutritionBenefits.nslp",
-                        "_default_message": "National School Lunch Program: ",
+                        "_label": "foodBenefits.sunbucks",
+                        "_default_message": "NC Sun Bucks: ",
                     },
                     "description": {
-                        "_label": "foodAndNutritionBenefits.nslp_desc",
-                        "_default_message": "Free school meals",
+                        "_label": "foodBenefits.sunbucks_desc",
+                        "_default_message": "Summer break food assistance for families with school age children:",
                     },
                 },
             },
             "category_name": {
-                "_label": "foodAndNutrition",
+                "_label": "food",
                 "_default_message": "Food and Nutrition",
             },
         },
-        "childCare": {
+        "housing": {
             "benefits": {
-                "cccap": {
+                "ncwap": {
                     "name": {
-                        "_label": "childCareBenefits.cccap",
-                        "_default_message": "NC Child Care Subsidy (CCCAP): ",
+                        "_label": "housingBenefits.ncwap",
+                        "_default_message": "NC Weatherization Assistance Program: ",
                     },
                     "description": {
-                        "_label": "childCareBenefits.cccap_desc",
-                        "_default_message": "Help with child care costs",
-                    },
-                },
-                "coheadstart": {
-                    "name": {
-                        "_label": "childCareBenefits.coheadstart",
-                        "_default_message": "NC Pre-K Program: ",
-                    },
-                    "description": {
-                        "_label": "childCareBenefits.coheadstart_desc",
-                        "_default_message": "Free early child care and preschool",
-                    },
-                },
-                "pell": {
-                    "name": {
-                        "_label": "childCareBenefits.pell",
-                        "_default_message": "Pell Grant: ",
-                    },
-                    "description": {
-                        "_label": "childCareBenefits.pell_desc",
-                        "_default_message": "Federal grant to help with the cost of college or technical school",
-                    },
-                },
-            },
-            "category_name": {
-                "_label": "childCareYouthAndEducation",
-                "_default_message": "Child Care, Youth, and Education",
-            },
-        },
-        "housingAndUtilities": {
-            "benefits": {
-                "acp": {
-                    "name": {
-                        "_label": "housingAndUtilities.acp",
-                        "_default_message": "Affordable Connectivity Program (ACP): ",
-                    },
-                    "description": {
-                        "_label": "housingAndUtilities.acp_desc",
-                        "_default_message": "Home internet discount",
+                        "_label": "housingBenefits.ncwap_desc",
+                        "_default_message": "Helps low-income homeowners and renters save money by improving home energy efficiency",
                     },
                 },
                 "lifeline": {
                     "name": {
-                        "_label": "housingAndUtilities.lifeline",
-                        "_default_message": "Lifeline: ",
+                        "_label": "housingBenefits.lifeline",
+                        "_default_message": "Lifeline Telephone Assistance: ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.lifeline_desc",
-                        "_default_message": "Phone or internet discount",
+                        "_label": "housingBenefits.lifeline_desc",
+                        "_default_message": "Helps low-income households pay for phone and internet service",
                     },
                 },
                 "nc_lieap": {
                     "name": {
-                        "_label": "housingAndUtilities.nc_lieap",
-                        "_default_message": "Low Income Energy Assistance Program (LIEAP): ",
+                        "_label": "housingBenefits.nc_lieap",
+                        "_default_message": "NC LIEAP (Low-Income Energy Assistance Program): ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.nc_lieap_desc",
+                        "_label": "housingBenefits.nc_lieap_desc",
                         "_default_message": "Help with winter heating bills",
                     },
                 },
                 "nccip": {
                     "name": {
-                        "_label": "housingAndUtilities.nccip",
-                        "_default_message": "NC Crisis Intervention Program (CIP): ",
+                        "_label": "housingBenefits.nccip",
+                        "_default_message": "Crisis Intervention Program (CIP): ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.nccip_desc",
-                        "_default_message": "Help with heating or cooling expense",
-                    },
-                },
-                "ncwap": {
-                    "name": {
-                        "_label": "housingAndUtilities.ncwap",
-                        "_default_message": "Weatherization Assistance Program: ",
-                    },
-                    "description": {
-                        "_label": "housingAndUtilities.ncwap_desc",
-                        "_default_message": "Free home energy upgrades",
+                        "_label": "housingBenefits.nccip_desc",
+                        "_default_message": "Assistance with heating or cooling expenses",
                     },
                 },
             },
             "category_name": {
-                "_label": "housingAndUtilities",
+                "_label": "housing",
                 "_default_message": "Housing and Utilities",
             },
         },
-        "taxCredits": {
+        "tax": {
             "benefits": {
                 "eitc": {
                     "name": {
-                        "_label": "taxCreditBenefits.eitc",
+                        "_label": "taxBenefits.eitc",
                         "_default_message": "Earned Income Tax Credit (EITC): ",
                     },
                     "description": {
-                        "_label": "taxCreditBenefits.eitc_desc",
+                        "_label": "taxBenefits.eitc_desc",
                         "_default_message": "Federal tax credit - earned income",
                     },
                 },
                 "ctc": {
                     "name": {
-                        "_label": "taxCreditBenefits.ctc",
+                        "_label": "taxBenefits.ctc",
                         "_default_message": "Child Tax Credit (CTC): ",
                     },
                     "description": {
-                        "_label": "taxCreditBenefits.ctc_desc",
+                        "_label": "taxBenefits.ctc_desc",
                         "_default_message": "Federal tax credit",
                     },
                 },
+                "nc_aca": {
+                    "name": {
+                        "_label": "taxBenefits.nc_aca",
+                        "_default_message": "ACA (Affordable Care Act) Subsidies: ",
+                    },
+                    "description": {
+                        "_label": "taxBenefits.nc_aca_desc",
+                        "_default_message": "Health insurance marketplace and premium tax credit.",
+                    },
+                },
             },
-            "category_name": {
-                "_label": "taxCredits",
-                "_default_message": "Tax Credits",
-            },
+            "category_name": {"_label": "tax", "_default_message": "Tax Credits"},
         },
     }
 
-    consent_to_contact = {
-        "en-us": "https://bennc.org/additional-terms-and-consent-to-contact/",
-        "es": "https://nc.myfriendben.org/es/additional-terms-and-consent-to-contact",
-        "fr": "https://nc.myfriendben.org/fr/additional-terms-and-consent-to-contact",
-        "vi": "https://nc.myfriendben.org/vi/additional-terms-and-consent-to-contact",
-    }
-
-    privacy_policy = {
-        "en-us": "https://bennc.org/privacy-policy/",
-        "es": "https://nc.myfriendben.org/es/data-privacy-policy",
-        "fr": "https://nc.myfriendben.org/fr/data-privacy-policy",
-        "vi": "https://nc.myfriendben.org/vi/data-privacy-policy",
-    }
-
     referrer_data = {
-        "theme": {"default": "default", "211co": "twoOneOne"},
+        "theme": {"default": "default", "211nc": "twoOneOne"},
         "logoSource": {
             "default": "MFB_NCLogo",
             "bia": "BIA_MFBLogo",
@@ -2865,13 +2822,16 @@ class NcConfigurationData(ConfigurationData):
                 "defaultMessage": "Denver Human Services and MyFriendBen home page button",
             },
         },
-        "logoFooterSource": {"default": " MFB_NCFooterLogo"},
+        "logoFooterSource": {"default": "MFB_NCFooterLogo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
         "logoClass": {"default": "logo"},
         "twoOneOneLink": {
-            "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"
+            "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb",
         },
-        "shareLink": {"default": "https://screener.bennc.org"},
+        "shareLink": {
+            "default": "https://screener.myfriendben.org",
+            "211nc": "https://screener.myfriendben.org?referrer=211nc",
+        },
         "stepDirectory": {
             "default": [
                 "zipcode",
@@ -2913,6 +2873,20 @@ class NcConfigurationData(ConfigurationData):
         "zip_code": 27701,
         "email": "myfriendben@codethedream.org",
         "privacy_policy_link": "https://bennc.org/privacy-policy/",
+    }
+
+    privacy_policy = {
+        "en-us": "https://bennc.org/privacy-policy/",
+        "es": "https://nc.myfriendben.org/es/data-privacy-policy",
+        "fr": "https://nc.myfriendben.org/fr/data-privacy-policy",
+        "vi": "https://nc.myfriendben.org/vi/data-privacy-policy",
+    }
+
+    consent_to_contact = {
+        "en-us": "https://bennc.org/additional-terms-and-consent-to-contact/",
+        "es": "https://nc.myfriendben.org/es/additional-terms-and-consent-to-contact",
+        "fr": "https://nc.myfriendben.org/fr/additional-terms-and-consent-to-contact",
+        "vi": "https://nc.myfriendben.org/vi/additional-terms-and-consent-to-contact",
     }
 
     feedback_links = {
