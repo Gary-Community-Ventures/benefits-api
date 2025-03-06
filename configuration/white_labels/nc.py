@@ -2868,6 +2868,7 @@ class NcConfigurationData(ConfigurationData):
         "logoFooterSource": {"default": " MFB_NCFooterLogo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
         "logoClass": {"default": "logo"},
+        "footerLogoClass": {"default": "footer-logo-nc"},
         "twoOneOneLink": {
             "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"
         },
