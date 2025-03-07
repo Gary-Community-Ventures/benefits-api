@@ -1,4 +1,5 @@
 import programs.programs.policyengine.calculators.dependencies as dependency
+from programs.programs.policyengine.calculators.base import PolicyEngineSpmCalulator
 from programs.programs.federal.pe.spm import Snap, Tanf
 
 
@@ -19,3 +20,17 @@ class NcTanf(Tanf):
     ]
 
     pe_outputs = [dependency.spm.NcTanf]
+
+
+class NcScca(PolicyEngineSpmCalulator):
+    pe_name = "nc_scca"
+    pe_inputs = [
+        dependency.household.NcStateCode,
+        dependency.member.AgeDependency,
+        dependency.member.IsDisabledDependency,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.spm.NcSccaCountableIncome,
+        dependency.household.NcCountyDependency,
+    ]
+
+    pe_outputs = [dependency.spm.NcScca]
