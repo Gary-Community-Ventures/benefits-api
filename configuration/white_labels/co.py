@@ -8,7 +8,11 @@ class CoConfigurationData(ConfigurationData):
         return WhiteLabel.objects.get(code="co")
 
     public_charge_rule = {
-        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract."
+        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract.",
+        "text": {
+            "_label": "landingPage.publicChargeLinkCO",
+            "_default_message": "Colorado Department of Human Services Public Charge Rule",
+        },
     }
 
     more_help_options = {
@@ -155,6 +159,7 @@ class CoConfigurationData(ConfigurationData):
         "jeffcoPS": "Jeffco Public Schools",
         "larimercounty": "Larimer County",
         "tellercounty": "Teller County",
+        "pueblo": "Pueblo County",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
         "fircsummitresourcecenter": {
@@ -164,6 +169,7 @@ class CoConfigurationData(ConfigurationData):
         "ccig": "Colorado Design Insight Group",
         "searchEngine": {"_label": "referralOptions.searchEngine", "_default_message": "Google or other search engine"},
         "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
+        "friend": {"_label": "referralOptions.friend", "_default_message": "Friend / Family / Word of Mouth"},
         "other": {"_label": "referralOptions.other", "_default_message": "Other"},
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
@@ -2193,6 +2199,7 @@ class CoConfigurationData(ConfigurationData):
             "achs": "ACHS_MFBLogo",
             "larimercounty": "LC_MFBLogo",
             "tellercounty": "TC_MFBLogo",
+            "pueblo": "PC_MFBLogo",
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
@@ -2247,6 +2254,10 @@ class CoConfigurationData(ConfigurationData):
                 "id": "referrerHook.logoAlts.tellercounty",
                 "defaultMessage": "Teller County and MyFriendBen home page button",
             },
+            "pueblo": {
+                "id": "referrerHook.logoAlts.pueblo",
+                "defaultMessage": "Pueblo County and MyFriendBen home page button",
+            },
         },
         "logoFooterSource": {"default": "MFB_Logo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
@@ -2255,6 +2266,7 @@ class CoConfigurationData(ConfigurationData):
             "eaglecounty": "eaglecounty-logo-size",
             "larimercounty": "larimercounty-logo-size",
             "tellercounty": "tellercounty-logo-size",
+            "pueblo": "pueblocounty-logo-size",
         },
         "twoOneOneLink": {
             "default": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id="211mfb"',
@@ -2288,7 +2300,7 @@ class CoConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": []},
+        "featureFlags": {"default": ["nc_show_211_link"], "211nc": ["no_results_more_help"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
