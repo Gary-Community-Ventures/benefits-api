@@ -8,7 +8,11 @@ class CoConfigurationData(ConfigurationData):
         return WhiteLabel.objects.get(code="co")
 
     public_charge_rule = {
-        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract."
+        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract.",
+        "text": {
+            "_label": "landingPage.publicChargeLinkCO",
+            "_default_message": "Colorado Department of Human Services Public Charge Rule",
+        },
     }
 
     more_help_options = {
@@ -165,6 +169,7 @@ class CoConfigurationData(ConfigurationData):
         "ccig": "Colorado Design Insight Group",
         "searchEngine": {"_label": "referralOptions.searchEngine", "_default_message": "Google or other search engine"},
         "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
+        "friend": {"_label": "referralOptions.friend", "_default_message": "Friend / Family / Word of Mouth"},
         "other": {"_label": "referralOptions.other", "_default_message": "Other"},
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
@@ -2295,7 +2300,7 @@ class CoConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": []},
+        "featureFlags": {"default": ["nc_show_211_link"], "211nc": ["no_results_more_help"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",

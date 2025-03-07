@@ -7,7 +7,13 @@ class NcConfigurationData(ConfigurationData):
     def get_white_label(self) -> WhiteLabel:
         return WhiteLabel.objects.get(code="nc")
 
-    public_charge_rule = {"link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/"}
+    public_charge_rule = {
+        "link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/",
+        "text": {
+            "_label": "landingPage.publicChargeLinkNC",
+            "_default_message": "North Carolina Justice Center's fact sheet about public charge",
+        },
+    }
 
     more_help_options = {
         "moreHelpOptions": [
@@ -2810,7 +2816,7 @@ class NcConfigurationData(ConfigurationData):
     }
 
     referrer_data = {
-        "theme": {"default": "default", "211nc": "twoOneOne"},
+        "theme": {"default": "default", "211nc": "twoOneOneNC"},
         "logoSource": {
             "default": "MFB_NCLogo",
             "bia": "BIA_MFBLogo",
@@ -2900,7 +2906,7 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": ["nc_show_211_link"]},
+        "featureFlags": {"default": ["nc_show_211_link"], "211nc": ["no_results_more_help"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
