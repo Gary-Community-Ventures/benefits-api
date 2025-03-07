@@ -103,7 +103,7 @@ class NcConfigurationData(ConfigurationData):
             "icon": {"_icon": "Legal_services", "_classname": "option-card-icon"},
             "text": {
                 "_label": "acuteConditionOptions.legalServices",
-                "_default_message": "Free or low-cost help with civil legal needs or IDs",
+                "_default_message": "Free or low-cost help with civil legal needs",
             },
         },
     }
@@ -197,6 +197,22 @@ class NcConfigurationData(ConfigurationData):
             "_default_message": "Social Media",
         },
         "other": {"_label": "referralOptions.other", "_default_message": "Other"},
+        "onTrackFin": {
+            "_label": "referralOptions.onTrackFin",
+            "_default_message": "On Track Financial",
+        },
+        "careReach": {
+            "_label": "referralOptions.careReach",
+            "_default_message": "Care Reach",
+        },
+        "mountainProjects": {
+            "_label": "referralOptions.mountainProjects",
+            "_default_message": "Mountain Projects",
+        },
+        "pisgahLegal": {
+            "_label": "referralOptions.pisgahLegal",
+            "_default_message": "Pisgah Legal Services",
+        },
         "nariahWay": {
             "_label": "referralOptions.nw",
             "_default_message": "Nariah's Way",
@@ -377,16 +393,6 @@ class NcConfigurationData(ConfigurationData):
                     "_default_message": "Medicare",
                 },
             },
-            "emergency_medicaid": {
-                "icon": {
-                    "_icon": "Emergency_medicaid",
-                    "_classname": "option-card-icon",
-                },
-                "text": {
-                    "_label": "healthInsuranceOptions.emergency_medicaid",
-                    "_default_message": "Emergency Medicaid / Reproductive Health",
-                },
-            },
             "family_planning": {
                 "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
                 "text": {
@@ -438,16 +444,6 @@ class NcConfigurationData(ConfigurationData):
                     "_default_message": "Medicare",
                 },
             },
-            "emergency_medicaid": {
-                "icon": {
-                    "_icon": "Emergency_medicaid",
-                    "_classname": "option-card-icon",
-                },
-                "text": {
-                    "_label": "healthInsuranceOptions.emergency_medicaid",
-                    "_default_message": "Emergency Medicaid / Reproductive Health",
-                },
-            },
             "family_planning": {
                 "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
                 "text": {
@@ -496,6 +492,10 @@ class NcConfigurationData(ConfigurationData):
             "_label": "expenseOptions.internet",
             "_default_message": "Internet",
         },
+        "autoInsurance": {
+            "_label": "expenseOptions.autoInsurance",
+            "_default_message": "Auto Insurance Premium &/or Payment",
+        },
         "otherUtilities": {
             "_label": "expenseOptions.otherUtilities",
             "_default_message": "Other Utilities",
@@ -508,6 +508,18 @@ class NcConfigurationData(ConfigurationData):
         "mortgage": {
             "_label": "expenseOptions.mortgage",
             "_default_message": "Mortgage",
+        },
+        "propertyTaxes": {
+            "_label": "expenseOptions.propertyTaxes",
+            "_default_message": "Property Taxes",
+        },
+        "associationFees": {
+            "_label": "expenseOptions.associationFees",
+            "_default_message": "Homeowners or Condo Association Fees and Dues",
+        },
+        "homeownersInsurance": {
+            "_label": "expenseOptions.homeownersInsurance",
+            "_default_message": "Homeowners Insurance",
         },
         "medical": {
             "_label": "expenseOptions.medical",
@@ -2803,20 +2815,6 @@ class NcConfigurationData(ConfigurationData):
         },
     }
 
-    consent_to_contact = {
-        "en-us": "https://bennc.org/additional-terms-and-consent-to-contact/",
-        "es": "https://nc.myfriendben.org/es/additional-terms-and-consent-to-contact",
-        "fr": "https://nc.myfriendben.org/fr/additional-terms-and-consent-to-contact",
-        "vi": "https://nc.myfriendben.org/vi/additional-terms-and-consent-to-contact",
-    }
-
-    privacy_policy = {
-        "en-us": "https://bennc.org/privacy-policy/",
-        "es": "https://nc.myfriendben.org/es/data-privacy-policy",
-        "fr": "https://nc.myfriendben.org/fr/data-privacy-policy",
-        "vi": "https://nc.myfriendben.org/vi/data-privacy-policy",
-    }
-
     referrer_data = {
         "theme": {"default": "default", "211nc": "twoOneOneNC"},
         "logoSource": {
@@ -2874,13 +2872,16 @@ class NcConfigurationData(ConfigurationData):
                 "defaultMessage": "Denver Human Services and MyFriendBen home page button",
             },
         },
-        "logoFooterSource": {"default": " MFB_NCFooterLogo"},
+        "logoFooterSource": {"default": "MFB_NCFooterLogo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
         "logoClass": {"default": "logo"},
         "twoOneOneLink": {
-            "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"
+            "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb",
         },
-        "shareLink": {"default": "https://screener.bennc.org", "211nc": "https://screener.bennc.org?referrer=211nc"},
+        "shareLink": {
+            "default": "https://screener.myfriendben.org",
+            "211nc": "https://screener.myfriendben.org?referrer=211nc",
+        },
         "stepDirectory": {
             "default": [
                 "zipcode",
@@ -2922,6 +2923,20 @@ class NcConfigurationData(ConfigurationData):
         "zip_code": 27701,
         "email": "myfriendben@codethedream.org",
         "privacy_policy_link": "https://bennc.org/privacy-policy/",
+    }
+
+    privacy_policy = {
+        "en-us": "https://bennc.org/privacy-policy/",
+        "es": "https://nc.myfriendben.org/es/data-privacy-policy",
+        "fr": "https://nc.myfriendben.org/fr/data-privacy-policy",
+        "vi": "https://nc.myfriendben.org/vi/data-privacy-policy",
+    }
+
+    consent_to_contact = {
+        "en-us": "https://bennc.org/additional-terms-and-consent-to-contact/",
+        "es": "https://nc.myfriendben.org/es/additional-terms-and-consent-to-contact",
+        "fr": "https://nc.myfriendben.org/fr/additional-terms-and-consent-to-contact",
+        "vi": "https://nc.myfriendben.org/vi/additional-terms-and-consent-to-contact",
     }
 
     feedback_links = {
