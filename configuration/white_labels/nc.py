@@ -267,16 +267,16 @@ class NcConfigurationData(ConfigurationData):
 
     language_options = {
         "en-us": "English",
-        "es": "Espau00f1ol",
-        "vi": "Tiu1ebfng Viu1ec7t",
-        "fr": "Franu00e7ais",
-        "am": "u12a0u121bu122du129b",
+        "es": "Español",
+        "vi": "Tiếng Việt",
+        "fr": "Français",
+        "am": "አማርኛ",
         "so": "Soomaali",
-        "ru": "u0420u0443u0441u0441u043au0438u0439",
-        "ne": "u0928u0947u092au093eu0932u0940",
-        "my": "u1019u103cu1014u103au1019u102cu1018u102cu101eu102cu1005u1000u102cu1038",
-        "zh": "u4e2du6587",
-        "ar": "u0639u0631u0628u064a",
+        "ru": "Русский",
+        "ne": "नेपाली",
+        "my": "မြန်မာဘာသာစကား",
+        "zh": "中文",
+        "ar": "عربي",
     }
 
     income_options = {
