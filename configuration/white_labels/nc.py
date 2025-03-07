@@ -7,6 +7,8 @@ class NcConfigurationData(ConfigurationData):
     def get_white_label(self) -> WhiteLabel:
         return WhiteLabel.objects.get(code="nc")
 
+    state = {"name": "North Carolina"}
+
     public_charge_rule = {
         "link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/",
         "text": {
