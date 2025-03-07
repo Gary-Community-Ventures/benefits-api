@@ -67,6 +67,13 @@ class Command(BaseCommand):
             if WhiteLabelData.is_default:
                 continue
 
+            # Save state to database
+            Configuration.objects.update_or_create(
+                name="state",
+                white_label=white_label,
+                defaults={"data": WhiteLabelData.state, "active": True},
+            )
+
             # Save acute_condition_options to database
             Configuration.objects.update_or_create(
                 name="public_charge_rule",
