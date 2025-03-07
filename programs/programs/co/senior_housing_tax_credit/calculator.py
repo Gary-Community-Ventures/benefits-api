@@ -1,4 +1,4 @@
-from programs.programs.calc import MemberEligibility, ProgramCalculator
+from programs.programs.calc import Eligibility, MemberEligibility, ProgramCalculator
 import math
 
 
