@@ -7,7 +7,15 @@ class NcConfigurationData(ConfigurationData):
     def get_white_label(self) -> WhiteLabel:
         return WhiteLabel.objects.get(code="nc")
 
-    public_charge_rule = {"link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/"}
+    state = {"name": "North Carolina"}
+
+    public_charge_rule = {
+        "link": "https://www.ncjustice.org/publications/public-charge-the-law-has-changed/",
+        "text": {
+            "_label": "landingPage.publicChargeLinkNC",
+            "_default_message": "North Carolina Justice Center's fact sheet about public charge",
+        },
+    }
 
     more_help_options = {
         "moreHelpOptions": [
@@ -259,16 +267,16 @@ class NcConfigurationData(ConfigurationData):
 
     language_options = {
         "en-us": "English",
-        "es": "Espau00f1ol",
-        "vi": "Tiu1ebfng Viu1ec7t",
-        "fr": "Franu00e7ais",
-        "am": "u12a0u121bu122du129b",
+        "es": "Español",
+        "vi": "Tiếng Việt",
+        "fr": "Français",
+        "am": "አማርኛ",
         "so": "Soomaali",
-        "ru": "u0420u0443u0441u0441u043au0438u0439",
-        "ne": "u0928u0947u092au093eu0932u0940",
-        "my": "u1019u103cu1014u103au1019u102cu1018u102cu101eu102cu1005u1000u102cu1038",
-        "zh": "u4e2du6587",
-        "ar": "u0639u0631u0628u064a",
+        "ru": "Русский",
+        "ne": "नेपाली",
+        "my": "မြန်မာဘာသာစကား",
+        "zh": "中文",
+        "ar": "عربي",
     }
 
     income_options = {
@@ -2766,7 +2774,7 @@ class NcConfigurationData(ConfigurationData):
     }
 
     referrer_data = {
-        "theme": {"default": "default", "211nc": "twoOneOne"},
+        "theme": {"default": "default", "211nc": "twoOneOneNC"},
         "logoSource": {
             "default": "MFB_NCLogo",
             "bia": "BIA_MFBLogo",
@@ -2825,6 +2833,7 @@ class NcConfigurationData(ConfigurationData):
         "logoFooterSource": {"default": "MFB_NCFooterLogo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
         "logoClass": {"default": "logo"},
+        "footerLogoClass": {"default": "footer-logo-nc"},
         "twoOneOneLink": {
             "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb",
         },
@@ -2856,7 +2865,7 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": ["nc_show_211_link"]},
+        "featureFlags": {"default": ["nc_show_211_link"], "211nc": ["no_results_more_help"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
