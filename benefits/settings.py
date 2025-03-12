@@ -155,6 +155,7 @@ DATABASES = {
             "USER": config("MIGRATION_SOURCE_DB_USER"),
             "PASSWORD": config("MIGRATION_SOURCE_DB_PASS"),
             "HOST": config("MIGRATION_SOURCE_DB_HOST", "localhost"),
+            "PORT": config("MIGRATION_SOURCE_DB_PORT", "5432"),
         }
         if HAS_MIGRATION_SOURCE_DB
         else {}
