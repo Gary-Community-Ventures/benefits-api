@@ -219,7 +219,34 @@ class BrevoIntegration(CmsIntegration):
         return True
 
 
-CMS_INTEGRATIONS = {"brevo": BrevoIntegration, "hubspot": HubSpotIntegration}
+class NcHubSpotIntegration(HubSpotIntegration):
+    api_client = HubSpot(access_token=config("HUBSPOT_CENTRAL", ""))
+
+    def _hubspot_contact_data(self):
+        contact = {
+            "firstname": self.user.first_name,
+            "lastname": self.user.last_name,
+            "email": self.user.email,
+            "phone": str(self.user.cell),
+            "states": "NC",
+            "send_offers": self.user.send_offers,
+            "tcpa_consent": self.user.tcpa_consent,
+            "send_updates": self.user.send_updates,
+        }
+
+        if self.screen:
+            contact["uuid"] = str(self.screen.uuid)
+
+        return contact
+
+    def _hubspot_send_offers_data(self):
+        return {
+            "send_offers": self.user.send_offers,
+            "send_updates": self.user.send_updates,
+        }
+
+
+CMS_INTEGRATIONS = {"brevo": BrevoIntegration, "hubspot": HubSpotIntegration, "nc_hubspot": NcHubSpotIntegration}
 
 
 class NoCmsSelected(Exception):
