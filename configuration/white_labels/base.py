@@ -8,6 +8,8 @@ class ConfigurationData:
     def get_white_label(self) -> WhiteLabel:
         raise NotImplemented()
 
+    state = {"name": "[REPLACE_ME]"}
+
     public_charge_rule = {"link": ""}
 
     more_help_options = {

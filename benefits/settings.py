@@ -26,6 +26,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
+BACKEND_DOMAIN = config("BACKEND_DOMAIN", "http://localhost:8000")
+
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, "locale"),
 ]

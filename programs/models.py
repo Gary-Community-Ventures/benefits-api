@@ -1189,7 +1189,7 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["WarningMessage"]) -> "WarningMessage":
-        return Model.objects.new_warning("_default", "_show", external_name)
+        return Model.objects.new_warning("_default", "__temp__", external_name)
 
 
 class WarningMessage(models.Model):
@@ -1360,7 +1360,7 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["TranslationOverride"]) -> "TranslationOverride":
-        return Model.objects.new_translation_override("_default", "_show", "", external_name)
+        return Model.objects.new_translation_override("_default", "__temp__", "", external_name)
 
 
 class TranslationOverride(models.Model):

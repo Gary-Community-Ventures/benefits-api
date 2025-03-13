@@ -7,7 +7,7 @@ class Eitc(TaxUnit):
 
 
 class Ctc(TaxUnit):
-    field = "ctc"
+    field = "ctc_value"
 
 
 class Coeitc(TaxUnit):
