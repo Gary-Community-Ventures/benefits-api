@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from integrations.services.communications import MessageUser
 from programs.programs.helpers import STATE_MEDICAID_OPTIONS
 from programs.programs.policyengine.calculators import all_calculators
+from programs.programs.urgent_needs.base import UrgentNeedFunction
 from screener.models import (
     Screen,
     HouseholdMember,
@@ -535,13 +536,18 @@ def urgent_need_results(screen: Screen, data):
     eligible_urgent_needs = []
     for need in urgent_need_resources:
         eligible = True
-        for function in need.functions.all():
-            Calculator = urgent_need_functions[function.name]
+        
+        if not need.functions.exists():
+            base_calculator = UrgentNeedFunction(screen, need, missing_dependencies, data)
+            eligible = base_calculator.calc()
+        else:
+            for function in need.functions.all():
+                Calculator = urgent_need_functions[function.name]
 
-            calculator = Calculator(screen, need, missing_dependencies, data)
+                calculator = Calculator(screen, need, missing_dependencies, data)
 
-            if not calculator.calc():
-                eligible = False
+                if not calculator.calc():
+                    eligible = False
         if eligible:
             phone_number = str(need.phone_number) if need.phone_number else None
             need_data = {
