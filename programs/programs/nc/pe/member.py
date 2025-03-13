@@ -20,6 +20,7 @@ class NcMedicaid(Medicaid):
         "AGED": 1086,  # * 12 = 13035, Medicaid for the Aged
         "DISABLED": 1519,  # * 12 = 18227, Medicaid for the Disabled
     }
+    ineligible_insurance_types = ["medicaid"]
 
     pe_inputs = [
         *Medicaid.pe_inputs,
@@ -39,11 +40,15 @@ class NcMedicaid(Medicaid):
             "people", str(member.id), "is_optional_senior_or_disabled_for_medicaid", self.pe_period
         )
 
+        if member.insurance.has_insurance_types(self.ineligible_insurance_types):
+            return 0
+
         if is_senior_or_disabled:
             if member.has_disability():
                 return self.medicaid_categories["DISABLED"] * 12
             elif member.age >= 65:
                 return self.medicaid_categories["AGED"] * 12
+
         return self.medicaid_categories[medicaid_category] * 12
 
 
