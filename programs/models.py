@@ -834,7 +834,7 @@ class County(models.Model):
     def __str__(self) -> str:
         white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
         return f"{white_label_name}{self.name}"
-    
+
 
 class UrgentNeed(models.Model):
     white_label = models.ForeignKey(

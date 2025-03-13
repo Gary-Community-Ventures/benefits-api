@@ -536,7 +536,7 @@ def urgent_need_results(screen: Screen, data):
     eligible_urgent_needs = []
     for need in urgent_need_resources:
         eligible = True
-        
+
         if not need.functions.exists():
             base_calculator = UrgentNeedFunction(screen, need, missing_dependencies, data)
             eligible = base_calculator.calc()

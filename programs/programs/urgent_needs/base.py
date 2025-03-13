@@ -30,7 +30,7 @@ class UrgentNeedFunction:
         Returns if the condition is met
         """
         return True
-    
+
     def county_eligible(self) -> bool:
         """
         Returns whether or not the screen county is in the list of eligible urgent need counties

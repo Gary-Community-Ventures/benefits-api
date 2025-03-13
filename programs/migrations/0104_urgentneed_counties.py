@@ -13,8 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="urgentneed",
             name="counties",
-            field=models.ManyToManyField(
-                blank=True, related_name="urgent_need", to="programs.county"
-            ),
+            field=models.ManyToManyField(blank=True, related_name="urgent_need", to="programs.county"),
         ),
     ]
