@@ -217,7 +217,7 @@ class CoConfigurationData(ConfigurationData):
         "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
-            "_default_message": "Social Security Survivor's Benefits (Widow/Widower)",
+            "_default_message": "Social Security Survivor's Benefits (Widowed)",
         },
         "unemployment": {"_label": "incomeOptions.unemployment", "_default_message": "Unemployment Benefits"},
         "sSDependent": {
@@ -2325,3 +2325,5 @@ class CoConfigurationData(ConfigurationData):
         "email": "hello@myfriendben.org",
         "survey": "https://docs.google.com/forms/d/e/1FAIpQLSdnfqjvlVSBQkJuUMvhEDUp-t6oD-8tPQi67uRG2iNetXmSfA/viewform?usp=sf_link",
     }
+
+    override_text = {}
