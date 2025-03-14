@@ -138,6 +138,7 @@ WSGI_APPLICATION = "benefits.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+HAS_MIGRATION_SOURCE_DB = config("HAS_MIGRATION_SOURCE_DB", "False") == "True"
 
 DATABASES = {
     "default": {
@@ -146,7 +147,19 @@ DATABASES = {
         "USER": config("DB_USER"),
         "PASSWORD": config("DB_PASS"),
         "HOST": config("DB_HOST", "localhost"),
-    }
+    },
+    "migration_source": (
+        {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": config("MIGRATION_SOURCE_DB_NAME"),
+            "USER": config("MIGRATION_SOURCE_DB_USER"),
+            "PASSWORD": config("MIGRATION_SOURCE_DB_PASS"),
+            "HOST": config("MIGRATION_SOURCE_DB_HOST", "localhost"),
+            "PORT": config("MIGRATION_SOURCE_DB_PORT", "5432"),
+        }
+        if HAS_MIGRATION_SOURCE_DB
+        else {}
+    ),
 }
 
 

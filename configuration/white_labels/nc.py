@@ -2909,7 +2909,7 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": ["nc_show_211_link"], "211nc": ["no_results_more_help"]},
+        "featureFlags": {"default": ["nc_show_211_link"], "211nc": ["no_results_more_help", "nc_show_211_link"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
