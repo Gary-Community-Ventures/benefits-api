@@ -117,7 +117,7 @@ class Command(BaseCommand):
         if not white_label:
             self.stdout.write(self.style.WARNING(f"NC White label does not exist"))
             return
-        
+
         for county in counties:
             County.objects.get_or_create(name=county, white_label=white_label)
 
