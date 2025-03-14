@@ -527,7 +527,7 @@ def urgent_need_results(screen: Screen, data):
 
     urgent_need_resources = (
         UrgentNeed.objects.prefetch_related(
-            "functions", *translations_prefetch_name("", UrgentNeed.objects.translated_fields)
+            "functions", "counties", *translations_prefetch_name("", UrgentNeed.objects.translated_fields)
         )
         .filter(type_short__name__in=list_of_needs, active=True, white_label=screen.white_label)
         .distinct()
@@ -547,7 +547,6 @@ def urgent_need_results(screen: Screen, data):
 
             if not calculator.calc():
                 eligible = False
-
 
                 if not calculator.calc():
                     eligible = False
