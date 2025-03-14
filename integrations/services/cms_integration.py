@@ -247,6 +247,7 @@ class NcHubSpotIntegration(HubSpotIntegration):
             "send_offers": self.user.send_offers,
             "tcpa_consent": self.user.tcpa_consent,
             "send_updates": self.user.send_updates,
+            "hs_language": self.user.language_code,
         }
 
         if self.screen:
