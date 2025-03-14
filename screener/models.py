@@ -82,6 +82,7 @@ class Screen(models.Model):
     has_nc_lieap = models.BooleanField(default=False, blank=True, null=True)
     has_oap = models.BooleanField(default=False, blank=True, null=True)
     has_nccip = models.BooleanField(default=False, blank=True, null=True)
+    has_ncscca = models.BooleanField(default=False, blank=True, null=True)
     has_coctc = models.BooleanField(default=False, blank=True, null=True)
     has_upk = models.BooleanField(default=False, blank=True, null=True)
     has_ssdi = models.BooleanField(default=False, blank=True, null=True)
@@ -334,6 +335,7 @@ class Screen(models.Model):
             "nc_lieap": self.has_nc_lieap,
             "oap": self.has_oap,
             "nccip": self.has_nccip,
+            "nc_scca": self.has_ncscca,
             "coctc": self.has_coctc,
             "upk": self.has_upk,
             "ssdi": self.has_ssdi,
