@@ -821,6 +821,21 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
         return Model.objects.new_urgent_need("_default", external_name, None)
 
 
+class County(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel,
+        related_name="counties",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+    )
+    name = models.CharField(max_length=64)
+
+    def __str__(self) -> str:
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name}"
+
+
 class UrgentNeed(models.Model):
     white_label = models.ForeignKey(
         WhiteLabel,
@@ -838,6 +853,7 @@ class UrgentNeed(models.Model):
     year = models.ForeignKey(
         FederalPoveryLimit, related_name="urgent_need", blank=True, null=True, on_delete=models.SET_NULL
     )
+    counties = models.ManyToManyField(County, related_name="urgent_need", blank=True)
 
     name = models.ForeignKey(
         Translation,
@@ -886,24 +902,14 @@ class UrgentNeed(models.Model):
 
     TranslationExportBuilder = UrgentNeedDataController
 
+    @property
+    def county_names(self) -> list[str]:
+        """List of county names"""
+        return [c.name for c in self.counties.all()]
+
     def __str__(self):
         white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
         return f"{white_label_name}{self.name.text}"
-
-
-class County(models.Model):
-    white_label = models.ForeignKey(
-        WhiteLabel,
-        related_name="counties",
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-    )
-    name = models.CharField(max_length=64)
-
-    def __str__(self) -> str:
-        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
-        return f"{white_label_name}{self.name}"
 
 
 class NavigatorLanguage(models.Model):
