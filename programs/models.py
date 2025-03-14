@@ -58,7 +58,7 @@ class FplCache(Cache):
         """
         Get FPLs for all relevant years using the official ASPE Poverty Guidelines API
         """
-        raise Exception("use default fpl values")
+        return self.default
         fpls = FederalPoveryLimit.objects.filter(fpl__isnull=False).distinct()
         fpl_dict = {}
         for fpl in fpls:
