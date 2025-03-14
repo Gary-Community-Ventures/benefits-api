@@ -537,14 +537,17 @@ def urgent_need_results(screen: Screen, data):
     for need in urgent_need_resources:
         eligible = True
 
-        if not need.functions.exists():
-            base_calculator = UrgentNeedFunction(screen, need, missing_dependencies, data)
-            eligible = base_calculator.calc()
-        else:
-            for function in need.functions.all():
-                Calculator = urgent_need_functions[function.name]
+        calculators = [urgent_need_functions[f.name] for f in need.functions.all()]
 
-                calculator = Calculator(screen, need, missing_dependencies, data)
+        if len(calculators) == 0:
+            calculators = [UrgentNeedFunction]
+
+        for Calculator in calculators:
+            calculator = Calculator(screen, need, missing_dependencies, data)
+
+            if not calculator.calc():
+                eligible = False
+
 
                 if not calculator.calc():
                     eligible = False
