@@ -548,8 +548,6 @@ def urgent_need_results(screen: Screen, data):
             if not calculator.calc():
                 eligible = False
 
-                if not calculator.calc():
-                    eligible = False
         if eligible:
             phone_number = str(need.phone_number) if need.phone_number else None
             need_data = {
