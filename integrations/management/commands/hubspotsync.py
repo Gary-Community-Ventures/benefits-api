@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from authentication.models import User
-from integrations.services.cms_integration import HubSpotIntegration
+from integrations.services.cms_integration import CoHubSpotIntegration
 from screener.models import Screen
 from django.db.models import Q
 import time
@@ -57,7 +57,7 @@ class Command(BaseCommand):
                     continue
 
                 try:
-                    hubspot = HubSpotIntegration(user, screen)
+                    hubspot = CoHubSpotIntegration(user, screen)
                     hubspot_id = hubspot.add()
                     user.anonomize(hubspot_id)
                     status["completed"].append((user.id, hubspot_id))

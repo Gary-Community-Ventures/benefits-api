@@ -8,6 +8,8 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
     def get_white_label(self) -> WhiteLabel:
         return WhiteLabel.objects.get(code="{{code}}")
 
+    state = {"name": "{{name}}"}
+
     public_charge_rule = {"link": ""}  # TODO: add public charge link
 
     more_help_options = {  # TODO: add more help options for the bottom of the results page

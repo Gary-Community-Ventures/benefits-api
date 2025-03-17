@@ -58,7 +58,7 @@ class FplCache(Cache):
         """
         Get FPLs for all relevant years using the official ASPE Poverty Guidelines API
         """
-        raise Exception("use default fpl values")
+        return self.default
         fpls = FederalPoveryLimit.objects.filter(fpl__isnull=False).distinct()
         fpl_dict = {}
         for fpl in fpls:
@@ -823,6 +823,21 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
         return Model.objects.new_urgent_need("_default", external_name, None)
 
 
+class County(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel,
+        related_name="counties",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+    )
+    name = models.CharField(max_length=64)
+
+    def __str__(self) -> str:
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name}"
+
+
 class UrgentNeed(models.Model):
     white_label = models.ForeignKey(
         WhiteLabel,
@@ -840,6 +855,7 @@ class UrgentNeed(models.Model):
     year = models.ForeignKey(
         FederalPoveryLimit, related_name="urgent_need", blank=True, null=True, on_delete=models.SET_NULL
     )
+    counties = models.ManyToManyField(County, related_name="urgent_need", blank=True)
 
     name = models.ForeignKey(
         Translation,
@@ -888,24 +904,14 @@ class UrgentNeed(models.Model):
 
     TranslationExportBuilder = UrgentNeedDataController
 
+    @property
+    def county_names(self) -> list[str]:
+        """List of county names"""
+        return [c.name for c in self.counties.all()]
+
     def __str__(self):
         white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
         return f"{white_label_name}{self.name.text}"
-
-
-class County(models.Model):
-    white_label = models.ForeignKey(
-        WhiteLabel,
-        related_name="counties",
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-    )
-    name = models.CharField(max_length=64)
-
-    def __str__(self) -> str:
-        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
-        return f"{white_label_name}{self.name}"
 
 
 class NavigatorLanguage(models.Model):
@@ -1191,7 +1197,7 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["WarningMessage"]) -> "WarningMessage":
-        return Model.objects.new_warning("_default", "_show", external_name)
+        return Model.objects.new_warning("_default", "__temp__", external_name)
 
 
 class WarningMessage(models.Model):
@@ -1362,7 +1368,7 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["TranslationOverride"]) -> "TranslationOverride":
-        return Model.objects.new_translation_override("_default", "_show", "", external_name)
+        return Model.objects.new_translation_override("_default", "__temp__", "", external_name)
 
 
 class TranslationOverride(models.Model):

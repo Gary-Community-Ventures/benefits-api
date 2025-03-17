@@ -23,13 +23,25 @@ class UrgentNeedFunction:
         if not self.can_calc():
             return False
 
-        return self.eligible()
+        return self.county_eligible() and self.eligible()
 
     def eligible(self):
         """
         Returns if the condition is met
         """
         return True
+
+    def county_eligible(self) -> bool:
+        """
+        Returns whether or not the screen county is in the list of eligible urgent need counties
+
+        If there are no urgent need counties then we assume all counties are eligible
+        """
+
+        if len(self.urgent_need.county_names) == 0:
+            return True
+
+        return self.screen.county in self.urgent_need.county_names
 
     def can_calc(self):
         """
