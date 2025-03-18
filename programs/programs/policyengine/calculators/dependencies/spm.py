@@ -222,6 +222,35 @@ class NcTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
         return int(self.screen.calc_gross_income("yearly", ["unearned"]))
 
 
+class NcScca(SpmUnit):
+    field = "nc_scca"
+
+
+class NcSccaCountableIncome(SpmUnit):
+    field = "nc_scca_countable_income"
+    income_types = [
+        "wages",
+        "selfEmployment",
+        "pension",
+        "veteran",
+        "unemployment",
+        "sSDisability",
+        "workersComp",
+        "sSRetirement",
+        "deferredComp",
+        "rental",
+        "childSupport",
+        "alimony",
+        "investment",
+        "sSSurvivor",
+        "sSDependent",
+        "boarder",
+    ]
+
+    def value(self):
+        return self.screen.calc_gross_income("yearly", self.income_types)
+
+
 class BroadbandCostDependency(SpmUnit):
     field = "broadband_cost"
 

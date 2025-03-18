@@ -16,3 +16,10 @@ class CoStateCode(StateCode):
 
 class NcStateCode(StateCode):
     state = "NC"
+
+
+class NcCountyDependency(Household):
+    field = "county_str"
+
+    def value(self):
+        return self.screen.county.replace(" ", "_").upper() + "_NC"

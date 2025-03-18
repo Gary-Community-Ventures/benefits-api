@@ -252,10 +252,14 @@ class WarningMessageAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
 class UrgentNeedAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "active", "action_buttons"]
-    white_label_filter_horizontal = ("type_short",)
+    white_label_filter_horizontal = (
+        "type_short",
+        "counties",
+    )
     filter_horizontal = (
         "type_short",
         "functions",
+        "counties",
     )
     exclude = [
         "name",
