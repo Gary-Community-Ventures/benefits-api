@@ -212,25 +212,18 @@ class NcTanfCountableEarnedIncomeDependency(SpmUnit):
 
 class NcTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
     field = "nc_tanf_countable_gross_unearned_income"
-    income_types = [
-        "pension",
-        "veteran",
-        "unemployment",
-        "sSDisability",
-        "workersComp",
-        "sSRetirement",
-        "deferredComp",
-        "rental",
-        "childSupport",
-        "alimony",
-        "investment",
-        "sSSurvivor",
-        "sSDependent",
-        "boarder",
-    ]
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
 
     def value(self):
-        return self.screen.calc_gross_income("yearly", self.income_types)
+        return int(
+            self.screen.calc_gross_income(
+                "yearly", ["unearned"], exclude=["sSI", "gifts", "cashAssistance", "cOSDisability"]
+            )
+        )
 
 
 class BroadbandCostDependency(SpmUnit):
