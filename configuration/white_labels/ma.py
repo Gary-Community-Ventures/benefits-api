@@ -227,11 +227,11 @@ class MaConfigurationData(ConfigurationData):
                     "_default_message": "Private (non-employer) health insurance",
                 },
             },
-            "medicaid": {
+            "mass_health": {
                 "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.medicaid",
-                    "_default_message": "Health First Colorado (Full Medicaid)",
+                    "_label": "healthInsuranceOptions.mass_health",
+                    "_default_message": "MassHealth",
                 },
             },
             "medicare": {
@@ -239,27 +239,6 @@ class MaConfigurationData(ConfigurationData):
                 "text": {
                     "_label": "healthInsuranceOptions.medicare",
                     "_default_message": "Medicare",
-                },
-            },
-            "chp": {
-                "icon": {"_icon": "Chp", "_classname": "option-card-icon"},
-                "text": {
-                    "_label": "healthInsuranceOptions.chp",
-                    "_default_message": "Child Health Plan Plus (CHP+)",
-                },
-            },
-            "emergency_medicaid": {
-                "icon": {"_icon": "Emergency_medicaid", "_classname": "option-card-icon"},
-                "text": {
-                    "_label": "healthInsuranceOptions.emergency_medicaid",
-                    "_default_message": "Emergency Medicaid / Reproductive Health",
-                },
-            },
-            "family_planning": {
-                "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
-                "text": {
-                    "_label": "healthInsuranceOptions.family_planning",
-                    "_default_message": "Family Planning Limited Medicaid",
                 },
             },
             "va": {
@@ -292,11 +271,11 @@ class MaConfigurationData(ConfigurationData):
                     "_default_message": "Private (non-employer) health insurance",
                 },
             },
-            "medicaid": {
+            "mass_health": {
                 "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.medicaid",
-                    "_default_message": "Health First Colorado (Full Medicaid)",
+                    "_label": "healthInsuranceOptions.mass_health",
+                    "_default_message": "MassHealth",
                 },
             },
             "medicare": {
@@ -304,27 +283,6 @@ class MaConfigurationData(ConfigurationData):
                 "text": {
                     "_label": "healthInsuranceOptions.medicare",
                     "_default_message": "Medicare",
-                },
-            },
-            "chp": {
-                "icon": {"_icon": "Chp", "_classname": "option-card-icon"},
-                "text": {
-                    "_label": "healthInsuranceOptions.chp",
-                    "_default_message": "Child Health Plan Plus (CHP+)",
-                },
-            },
-            "emergency_medicaid": {
-                "icon": {"_icon": "Emergency_medicaid", "_classname": "option-card-icon"},
-                "text": {
-                    "_label": "healthInsuranceOptions.emergency_medicaid",
-                    "_default_message": "Emergency Medicaid / Reproductive Health",
-                },
-            },
-            "family_planning": {
-                "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
-                "text": {
-                    "_label": "healthInsuranceOptions.family_planning",
-                    "_default_message": "Family Planning Limited Medicaid",
                 },
             },
             "va": {
@@ -1524,4 +1482,24 @@ class MaConfigurationData(ConfigurationData):
     feedback_links = {  # TODO: add links where the user can provide feedback
         "email": "https://google.com",
         "survey": "https://google.com",
+    }
+
+    override_text = {
+        # NOTE: MA uses cities instead of counties
+        "questions.zipcode-a": {
+            "_label": "questions.zipcode.city.question.ma",
+            "_default_message": "Please select a city:",
+        },
+        "questions.zipcode-a-inputLabel": {
+            "_label": "questions.zipcode.city.label.ma",
+            "_default_message": "Select a city",
+        },
+        "questions.zipcode-a-disabledSelectMenuItemText": {
+            "_label": "questions.zipcode.city.menuItemText.ma",
+            "_default_message": "Select a city",
+        },
+        "errorMessage-county": {
+            "_label": "questions.zipcode.city.error.ma",
+            "_default_message": "Please Select a city",
+        },
     }
