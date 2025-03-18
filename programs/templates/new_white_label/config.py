@@ -172,7 +172,7 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
         "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
-            "_default_message": "Social Security Survivor's Benefits (Widow/Widower)",
+            "_default_message": "Social Security Survivor's Benefits (Widowed)",
         },
         "unemployment": {"_label": "incomeOptions.unemployment", "_default_message": "Unemployment Benefits"},
         "sSDependent": {
