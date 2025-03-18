@@ -22,7 +22,7 @@ class NcConfigurationData(ConfigurationData):
             {
                 "name": {"_default_message": "2-1-1 North Carolina", "_label": "moreHelp.nc_resource_name1"},
                 "link": "https://nc211.org/",
-                "phone": {"_default_message": "Dial 2-1-1 or 866.760.6489", "_label": "moreHelp.resource_phone1"},
+                "phone": {"_default_message": "Dial 2-1-1 or 1-888-892-1162", "_label": "moreHelp.nc_resource_phone1"},
             },
             {
                 "name": {"_default_message": "NCCARE360", "_label": "moreHelp.nc_resource_name2"},
