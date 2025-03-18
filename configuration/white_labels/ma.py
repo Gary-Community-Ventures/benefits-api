@@ -1485,6 +1485,11 @@ class MaConfigurationData(ConfigurationData):
     }
 
     override_text = {
+        # NOTE: Text before public charge link is different
+        "landingPage.publicCharge": {
+            "_label": "landingPage.publicCharge.ma",
+            "_default_message": "Some benefits are available to Non-U.S. citizens. Non-U.S. citizens planning to apply for legal permanent residency or a visa should consider how applying for any benefits may affect their immigration status. To learn more, please see this information from ",
+        },
         # NOTE: MA uses cities instead of counties
         "questions.zipcode-a": {
             "_label": "questions.zipcode.city.question.ma",
