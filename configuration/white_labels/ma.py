@@ -11,7 +11,7 @@ class MaConfigurationData(ConfigurationData):
         "link": "https://www.mass.gov/info-details/information-about-the-public-charge-rule-and-how-it-may-impact-you#information-about-the-public-charge-rule-",
         "text": {
             "_label": "landingPage.publicChargeLinkMA",
-            "_default_message": "",  # TODO: get name
+            "_default_message": "mass.gov",
         },
     }
 
@@ -106,7 +106,7 @@ class MaConfigurationData(ConfigurationData):
         "child": {"_label": "relationshipOptions.child", "_default_message": "Child"},
         "fosterChild": {
             "_label": "relationshipOptions.fosterChildOrKinshipChild",
-            "_default_message": "Foster Child / Kinship Care",
+            "_default_message": "Foster Child / Kinship-Guardianship Care",
         },
         "stepChild": {"_label": "relationshipOptions.stepChild", "_default_message": "Step-child"},
         "grandChild": {"_label": "relationshipOptions.grandChild", "_default_message": "Grandchild"},
@@ -128,7 +128,10 @@ class MaConfigurationData(ConfigurationData):
         "relatedOther": {"_label": "relationshipOptions.relatedOther", "_default_message": "Related in some other way"},
     }
 
-    referral_options = {  # TODO: add referreral options for the referrer question
+    referral_options = {
+        "bch": "Boston Children's Hospital",
+        "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
+        "friend": {"_label": "referralOptions.friend", "_default_message": "Friend / Family / Word of Mouth"},
         "other": {"_label": "referralOptions.other", "_default_message": "Other"},
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
@@ -151,7 +154,7 @@ class MaConfigurationData(ConfigurationData):
         "sw": "Kiswahili",
     }
 
-    income_options = {
+    income_options = {  # TODO: a couple of incoming changes
         "wages": {"_label": "incomeOptions.wages", "_default_message": "Wages, salaries, tips"},
         "selfEmployment": {
             "_label": "incomeOptions.selfEmployment",
