@@ -307,7 +307,11 @@ class MaConfigurationData(ConfigurationData):
     }
 
     expense_options = {
-        "rent": {"_label": "expenseOptions.rent", "_default_message": "Rent"},
+        "rent": {"_label": "expenseOptions.nonSubidizedRent", "_default_message": "Rent (Non-Subsidized)"},
+        "subsidizedRent": {
+            "_label": "expenseOptions.subidizedRent",
+            "_default_message": "Rent (Public / Subidized Housing)",
+        },
         "telephone": {"_label": "expenseOptions.telephone", "_default_message": "Telephone"},
         "internet": {"_label": "expenseOptions.internet", "_default_message": "Internet"},
         "auto": {"_label": "expenseOptions.auto", "_default_message": "Auto Insurance Premium &/or Payment"},
