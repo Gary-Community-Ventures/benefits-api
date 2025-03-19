@@ -1159,21 +1159,21 @@ class MaConfigurationData(ConfigurationData):
             "benefits": {
                 "tanf": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.tanf.ma",
+                        "_label": "cashAssistanceBenefits.ma_tanf",
                         "_default_message": "Transitional Aid to Families with Dependent Children (TAFDC): ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.tanf_desc.ma",
+                        "_label": "cashAssistanceBenefits.ma_tanf_desc",
                         "_default_message": "Cash assistance and work support",
                     },
                 },
-                "eaedc": {
+                "ma_eaedc": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.eaedc.ma",
+                        "_label": "cashAssistanceBenefits.ma_eaedc",
                         "_default_message": "Emergency Aid to Elderly, Disabled and Children (EAEDC): ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.eaedc_desc.ma",
+                        "_label": "cashAssistanceBenefits.ma_eaedc_desc",
                         "_default_message": "Cash assistance",
                     },
                 },
@@ -1189,11 +1189,11 @@ class MaConfigurationData(ConfigurationData):
                 },
                 "ma_ssp": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.ma_ssp.ma",
+                        "_label": "cashAssistanceBenefits.ma_ssp",
                         "_default_message": "Massachusetts State Supplement Program (SSP): ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.ma_ssp_desc.ma",
+                        "_label": "cashAssistanceBenefits.ma_ssp_desc",
                         "_default_message": "State cash assistance for people with disabilities or 65 years+",
                     },
                 },
@@ -1244,11 +1244,11 @@ class MaConfigurationData(ConfigurationData):
                 },
                 "csfp": {
                     "name": {
-                        "_label": "foodAndNutritionBenefits.ma_csfp",
+                        "_label": "foodAndNutritionBenefits.csfp",
                         "_default_message": "Commodity Supplemental Food Program: ",
                     },
                     "description": {
-                        "_label": "foodAndNutritionBenefits.ma_csfp_desc",
+                        "_label": "foodAndNutritionBenefits.csfp_desc",
                         "_default_message": "Food support for people 60 years+",
                     },
                 },
