@@ -28,7 +28,7 @@ class Command(BaseCommand):
             for value in counties_from_config.values():
                 counties.update(value.keys())
 
-            for county in set(counties):
+            for county in counties:
                 County.objects.get_or_create(name=county, white_label=white_label)
         except ObjectDoesNotExist:
             self.stdout.write(
