@@ -1,3 +1,4 @@
+import json
 from django.core.management.base import BaseCommand
 from programs.models import County
 from screener.models import WhiteLabel
@@ -20,9 +21,14 @@ class Command(BaseCommand):
         try:
             counties_from_config = Configuration.objects.get(name="counties_by_zipcode", white_label=white_label)
 
-            counties = list(set([key for value in eval(counties_from_config.data).values() for key in value.keys()]))
+            counties_from_config = json.loads(counties_from_config.data)
 
-            for county in counties:
+            counties = set()
+
+            for value in counties_from_config.values():
+                counties.update(value.keys())
+
+            for county in set(counties):
                 County.objects.get_or_create(name=county, white_label=white_label)
         except ObjectDoesNotExist:
             self.stdout.write(
