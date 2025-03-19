@@ -154,7 +154,7 @@ class MaConfigurationData(ConfigurationData):
         "sw": "Kiswahili",
     }
 
-    income_options = {  # TODO: a couple of incoming changes
+    income_options = {
         "wages": {"_label": "incomeOptions.wages", "_default_message": "Wages, salaries, tips"},
         "selfEmployment": {
             "_label": "incomeOptions.selfEmployment",
@@ -207,7 +207,7 @@ class MaConfigurationData(ConfigurationData):
         "boarder": {"_label": "incomeOptions.boarder", "_default_message": "Boarder or Lodger"},
     }
 
-    health_insurance_options = {  # TODO: add health insurance options on the member question
+    health_insurance_options = {
         "you": {
             "none": {
                 "icon": {"_icon": "None", "_classname": "option-card-icon"},
@@ -1159,12 +1159,22 @@ class MaConfigurationData(ConfigurationData):
             "benefits": {
                 "tanf": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.tanf",
-                        "_default_message": "Temporary Assistance for Needy Families/Colorado Works (TANF): ",
+                        "_label": "cashAssistanceBenefits.tanf.ma",
+                        "_default_message": "Transitional Aid to Families with Dependent Children (TAFDC): ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.tanf_desc",
+                        "_label": "cashAssistanceBenefits.tanf_desc.ma",
                         "_default_message": "Cash assistance and work support",
+                    },
+                },
+                "eaedc": {
+                    "name": {
+                        "_label": "cashAssistanceBenefits.eaedc.ma",
+                        "_default_message": "Emergency Aid to Elderly, Disabled and Children (EAEDC): ",
+                    },
+                    "description": {
+                        "_label": "cashAssistanceBenefits.eaedc_desc.ma",
+                        "_default_message": "Cash assistance",
                     },
                 },
                 "ssi": {
@@ -1177,21 +1187,14 @@ class MaConfigurationData(ConfigurationData):
                         "_default_message": "Federal cash assistance for individuals who are disabled, blind, or 65 years of age or older",
                     },
                 },
-                "andcs": {
+                "ma_ssp": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.andcs",
-                        "_default_message": "Aid to the Needy Disabled - Colorado Supplement (AND-CS): ",
+                        "_label": "cashAssistanceBenefits.ma_ssp.ma",
+                        "_default_message": "Massachusetts State Supplement Program (SSP): ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.andcs_desc",
-                        "_default_message": "State cash assistance for individuals who are disabled and receiving SSI",
-                    },
-                },
-                "oap": {
-                    "name": {"_label": "cashAssistanceBenefits.oap", "_default_message": "Old Age Pension (OAP): "},
-                    "description": {
-                        "_label": "cashAssistanceBenefits.oap_desc",
-                        "_default_message": "State cash assistance for individuals 60 years of age or older",
+                        "_label": "cashAssistanceBenefits.ma_ssp_desc.ma",
+                        "_default_message": "State cash assistance for people with disabilities or 65 years+",
                     },
                 },
                 "ssdi": {
@@ -1239,11 +1242,14 @@ class MaConfigurationData(ConfigurationData):
                         "_default_message": "Free school meals",
                     },
                 },
-                "ede": {
-                    "name": {"_label": "foodAndNutritionBenefits.ede", "_default_message": "Everyday Eats: "},
+                "csfp": {
+                    "name": {
+                        "_label": "foodAndNutritionBenefits.ma_csfp",
+                        "_default_message": "Commodity Supplemental Food Program: ",
+                    },
                     "description": {
-                        "_label": "foodAndNutritionBenefits.ede_desc",
-                        "_default_message": "Food support for people 60 years of age or older",
+                        "_label": "foodAndNutritionBenefits.ma_csfp_desc",
+                        "_default_message": "Food support for people 60 years+",
                     },
                 },
             },
@@ -1251,48 +1257,14 @@ class MaConfigurationData(ConfigurationData):
         },
         "childCare": {
             "benefits": {
-                "cccap": {
+                "ccfa": {
                     "name": {
-                        "_label": "childCareBenefits.cccap",
-                        "_default_message": "Colorado Child Care Assistance Program (CCCAP): ",
+                        "_label": "childCareBenefits.ma_ccfa",
+                        "_default_message": "Child Care Financial Assistance Program (CCFA): ",
                     },
                     "description": {
-                        "_label": "childCareBenefits.cccap_desc",
+                        "_label": "childCareBenefits.ma_ccfa_desc",
                         "_default_message": "Help with child care costs",
-                    },
-                },
-                "denverpresc": {
-                    "name": {
-                        "_label": "childCareBenefits.denverpresc",
-                        "_default_message": "Denver Preschool Program: ",
-                    },
-                    "description": {
-                        "_label": "childCareBenefits.denverpresc_desc",
-                        "_default_message": "Tuition credits for Denver preschoolers",
-                    },
-                },
-                "coheadstart": {
-                    "name": {"_label": "childCareBenefits.coheadstart", "_default_message": "Colorado Head Start: "},
-                    "description": {
-                        "_label": "childCareBenefits.coheadstart_desc",
-                        "_default_message": "Free early child care and preschool",
-                    },
-                },
-                "mydenver": {
-                    "name": {"_label": "childCareBenefits.mydenver", "_default_message": "MY Denver Card: "},
-                    "description": {
-                        "_label": "childCareBenefits.mydenver_desc",
-                        "_default_message": "Reduced-cost youth programs",
-                    },
-                },
-                "upk": {
-                    "name": {
-                        "_label": "childCareBenefits.univpresc",
-                        "_default_message": "Universal Preschool Colorado (UPK): ",
-                    },
-                    "description": {
-                        "_label": "childCareBenefits.univpresc_desc",
-                        "_default_message": "Free preschool",
                     },
                 },
             },
@@ -1310,82 +1282,23 @@ class MaConfigurationData(ConfigurationData):
                         "_default_message": "Phone or internet discount",
                     },
                 },
-                "leap": {
-                    "name": {
-                        "_label": "housingAndUtilities.leap",
-                        "_default_message": "Low-Income Energy Assistance Program (LEAP): ",
-                    },
-                    "description": {
-                        "_label": "housingAndUtilities.leap_desc",
-                        "_default_message": "Help with winter heating bills",
-                    },
-                },
-                "cowap": {
-                    "name": {
-                        "_label": "housingAndUtilities.cowap",
-                        "_default_message": "Weatherization Assistance Program: ",
-                    },
-                    "description": {
-                        "_label": "housingAndUtilities.cowap_desc",
-                        "_default_message": "Free home energy upgrades",
-                    },
-                },
-                "ubp": {
-                    "name": {
-                        "_label": "housingAndUtilities.ubp",
-                        "_default_message": "Colorado Utility Bill Help Program: ",
-                    },
-                    "description": {
-                        "_label": "housingAndUtilities.ubp_desc",
-                        "_default_message": "Help paying utility bills",
-                    },
-                },
-                "coPropTaxRentHeatCreditRebate": {
-                    "name": {
-                        "_label": "cashAssistanceBenefits.coPropTaxRentHeatCreditRebate",
-                        "_default_message": "Colorado Property Tax/Rent/Heat Credit Rebate: ",
-                    },
-                    "description": {
-                        "_label": "cashAssistanceBenefits.coPropTaxRentHeatCreditRebate_desc",
-                        "_default_message": "Cash to pay property tax, rent, and heat bills",
-                    },
-                },
             },
             "category_name": {"_label": "housingAndUtilities", "_default_message": "Housing and Utilities"},
         },
         "transportation": {
             "benefits": {
-                "rtdlive": {
-                    "name": {"_label": "transportationBenefits.rtdlive", "_default_message": "RTD LiVE: "},
+                "ma_mbta": {
+                    "name": {
+                        "_label": "transportationBenefits.ma_mbta",
+                        "_default_message": "MBTA Reduced Fare Program: ",
+                    },
                     "description": {
-                        "_label": "transportationBenefits.rtdlive_desc",
-                        "_default_message": "Discounted RTD fares",
+                        "_label": "transportationBenefits.ma_mbta_desc",
+                        "_default_message": "Discounted MBTA fares",
                     },
                 }
             },
             "category_name": {"_label": "transportation", "_default_message": "Transportation"},
-        },
-        "healthCare": {
-            "benefits": {
-                "dentallowincseniors": {
-                    "name": {
-                        "_label": "healthCareBenefits.dentallowincseniors",
-                        "_default_message": "Colorado Dental Health Program for Low-Income Seniors: ",
-                    },
-                    "description": {
-                        "_label": "healthCareBenefits.dentallowincseniors_desc",
-                        "_default_message": "Low-cost dental care for people 60 years of age or older",
-                    },
-                },
-                "nfp": {
-                    "name": {"_label": "healthCareBenefits.nfp", "_default_message": "Nurse-Family Partnership: "},
-                    "description": {
-                        "_label": "healthCareBenefits.nfp_desc",
-                        "_default_message": "Personalized support for first-time parents",
-                    },
-                },
-            },
-            "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
         },
         "taxCredits": {
             "benefits": {
@@ -1403,26 +1316,25 @@ class MaConfigurationData(ConfigurationData):
                     "name": {"_label": "taxCreditBenefits.ctc", "_default_message": "Child Tax Credit (CTC): "},
                     "description": {"_label": "taxCreditBenefits.ctc_desc", "_default_message": "Federal tax credit"},
                 },
-                "coeitc": {
+                "ma_maeitc": {
                     "name": {
-                        "_label": "taxCreditBenefits.coeitc",
-                        "_default_message": "Colorado Earned Income Tax Credit/Expanded Earned Income Tax Credit: ",
+                        "_label": "taxCreditBenefits.ma_maeitc",
+                        "_default_message": "Massachusetts Earned Income Tax Credit: ",
                     },
                     "description": {
-                        "_label": "taxCreditBenefits.coeitc_desc",
+                        "_label": "taxCreditBenefits.ma_maeitc_desc",
                         "_default_message": "State tax credit - earned income",
                     },
                 },
-                "coctc": {
-                    "name": {"_label": "taxCreditBenefits.coctc", "_default_message": "Colorado Child Tax Credit: "},
-                    "description": {"_label": "taxCreditBenefits.coctc_desc", "_default_message": "State tax credit"},
-                },
-                "fatc": {
+                "ma_macftc": {
                     "name": {
-                        "_label": "taxCreditBenefits.fatc",
-                        "_default_message": "Family Affordability Tax Credit: ",
+                        "_label": "taxCreditBenefits.ma_macftc",
+                        "_default_message": "Massachusetts Child and Family Tax Credit: ",
                     },
-                    "description": {"_label": "taxCreditBenefits.fatc_desc", "_default_message": "State tax credit"},
+                    "description": {
+                        "_label": "taxCreditBenefits.ma_macftc_desc",
+                        "_default_message": "State tax credit",
+                    },
                 },
             },
             "category_name": {"_label": "taxCredits", "_default_message": "Tax Credits"},
