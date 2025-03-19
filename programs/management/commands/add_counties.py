@@ -16,6 +16,7 @@ class Command(BaseCommand):
             white_label = WhiteLabel.objects.get(code=options["white_label"])
         except ObjectDoesNotExist:
             self.stdout.write(self.style.WARNING(f'White label for "{options["white_label"]}" is not in the database'))
+            return
         try:
             counties_from_config = Configuration.objects.get(name="counties_by_zipcode", white_label=white_label)
 
