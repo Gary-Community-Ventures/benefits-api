@@ -1576,6 +1576,9 @@ class NcConfigurationData(ConfigurationData):
             "Union County": "Union County",
             "Mecklenburg County": "Mecklenburg County",
         },
+        "28105": {
+            "Mecklenburg County": "Mecklenburg County",
+        },
         "28107": {
             "Union County": "Union County",
             "Stanly County": "Stanly County",
