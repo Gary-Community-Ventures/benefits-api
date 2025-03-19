@@ -248,6 +248,7 @@ class NcHubSpotIntegration(HubSpotIntegration):
             "tcpa_consent": self.user.tcpa_consent,
             "send_updates": self.user.send_updates,
             "hs_language": self.user.language_code,
+            "hubspot_owner_id": "47185138",
         }
 
         if self.screen:

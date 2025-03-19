@@ -94,6 +94,13 @@ class Screen(models.Model):
     has_nfp = models.BooleanField(default=False, blank=True, null=True)
     has_fatc = models.BooleanField(default=False, blank=True, null=True)
     has_section_8 = models.BooleanField(default=False, blank=True, null=True)
+    has_csfp = models.BooleanField(default=False, blank=True, null=True)
+    has_ccfa = models.BooleanField(default=False, blank=True, null=True)
+    has_ma_eaedc = models.BooleanField(default=False, blank=True, null=True)
+    has_ma_ssp = models.BooleanField(default=False, blank=True, null=True)
+    has_ma_mbta = models.BooleanField(default=False, blank=True, null=True)
+    has_ma_maeitc = models.BooleanField(default=False, blank=True, null=True)
+    has_ma_macftc = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -699,6 +706,8 @@ class Insurance(models.Model):
     emergency_medicaid = models.BooleanField(default=False)
     family_planning = models.BooleanField(default=False)
     va = models.BooleanField(default=False)
+    # NOTE: Massachusetts combines Medicaid and CHIP into one program called MassHealth
+    mass_health = models.BooleanField(default=False)
 
     def has_insurance_types(self, types, strict=True):
         if "none" in types:
