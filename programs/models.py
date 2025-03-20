@@ -1008,7 +1008,7 @@ class NavigatorDataController(ModelDataController["Navigator"]):
         counties = []
         for county in data["counties"]:
             try:
-                county_instance = County.objects.get(name=county["name"], white_label=data["white_label"])
+                county_instance = County.objects.get(name=county["name"], white_label__code=data["white_label"])
                 county_instance.white_label = white_label
                 county_instance.save()
             except County.DoesNotExist:
