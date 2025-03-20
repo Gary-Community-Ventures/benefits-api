@@ -238,6 +238,8 @@ class CoHubSpotIntegration(HubSpotIntegration):
 class NcHubSpotIntegration(HubSpotIntegration):
     access_token = config("HUBSPOT_CENTRAL", "")
 
+    OWNER_ID = "47185138"
+
     def _hubspot_contact_data(self):
         contact = {
             "firstname": self.user.first_name,
@@ -246,11 +248,10 @@ class NcHubSpotIntegration(HubSpotIntegration):
             "phone": str(self.user.cell),
             "states": "NC",
             "send_offers": self.user.send_offers,
-            "tcpa_consent": self.user.tcpa_consent,
             "explicit_tcpa_consent": self.user.explicit_tcpa_consent,
             "send_updates": self.user.send_updates,
             "hs_language": self.user.language_code,
-            "hubspot_owner_id": "47185138",
+            "hubspot_owner_id": self.OWNER_ID,
         }
 
         if self.screen:
