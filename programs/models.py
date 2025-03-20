@@ -191,6 +191,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
         {
             "calculator": str,
             "icon": str,
+            "tax_category": bool,
             "white_label": str,
         },
     )
@@ -200,6 +201,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
         return {
             "calculator": program_category.calculator,
             "icon": program_category.icon,
+            "tax_category": program_category.tax_category,
             "white_label": program_category.white_label.code,
         }
 
@@ -208,6 +210,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
 
         program_category.calculator = data["calculator"]
         program_category.icon = data["icon"]
+        program_category.tax_category = data["tax_category"]
 
         try:
             white_label = WhiteLabel.objects.get(code=data["white_label"])
@@ -233,6 +236,7 @@ class ProgramCategory(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=True, null=True)
     icon = models.CharField(max_length=120, blank=False, null=False)
+    tax_category = models.BooleanField(default=False)
     name = models.ForeignKey(
         Translation,
         related_name="program_category_name",
