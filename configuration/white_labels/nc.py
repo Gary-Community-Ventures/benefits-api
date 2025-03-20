@@ -2606,7 +2606,7 @@ class NcConfigurationData(ConfigurationData):
                         "_default_message": "NC Subsidized Child Care Assistance: ",
                     },
                     "description": {
-                        "_label": "childCareBenefits.nc_scca",
+                        "_label": "childCareBenefits.nc_scca_desc",
                         "_default_message": "Help with child care costs",
                     },
                 }
