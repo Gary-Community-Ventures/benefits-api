@@ -6,25 +6,25 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email_or_cell, tcpa_consent, password=None):
+    def create_user(self, email_or_cell, password=None):
         """
         Creates and saves a User with the given email or cell and password.
         """
         if not email_or_cell:
             raise ValueError("Users must have an email address or cell phone number")
 
-        user = self.model(email_or_cell=email_or_cell, tcpa_consent=tcpa_consent)
+        user = self.model(email_or_cell=email_or_cell, password=password, explicit_tcpa_consent=False)
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email_or_cell, tcpa_consent, password=None):
+    def create_superuser(self, email_or_cell, password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
-        user = self.create_user(email_or_cell=email_or_cell, password=password, tcpa_consent=tcpa_consent)
+        user = self.create_user(email_or_cell=email_or_cell, password=password)
         user.is_admin = True
         user.is_superuser = True
         user.is_staff = True
@@ -43,7 +43,8 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=320, blank=True, null=True)
     last_name = models.CharField(max_length=320, blank=True, null=True)
     language_code = models.CharField(max_length=12, blank=True, null=True)
-    tcpa_consent = models.BooleanField()
+    tcpa_consent = models.BooleanField(default=False, blank=True, null=True)
+    explicit_tcpa_consent = models.BooleanField(blank=True, null=True)
     send_offers = models.BooleanField(default=False)
     send_updates = models.BooleanField(default=False)
     white_labels = models.ManyToManyField("screener.WhiteLabel", related_name="admins", blank=True)
