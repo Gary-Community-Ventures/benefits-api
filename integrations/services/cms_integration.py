@@ -190,7 +190,6 @@ class CoHubSpotIntegration(HubSpotIntegration):
             "benefits_screener_id": self.user.id,
             "ab01___send_offers": self.user.send_offers,
             "ab01___send_updates": self.user.send_updates,
-            "ab01___tcpa_consent_to_contact": self.user.tcpa_consent,
             "ab01___explicit_tcpa_consent": self.user.explicit_tcpa_consent,
             "hs_language": self.user.language_code,
             "ab01___1st_mfb_completion_date": self.user.date_joined.date().isoformat(),
