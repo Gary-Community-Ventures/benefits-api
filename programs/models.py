@@ -210,7 +210,8 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
 
         program_category.calculator = data["calculator"]
         program_category.icon = data["icon"]
-        program_category.tax_category = data["tax_category"]
+        if "tax_category" in data:
+            program_category.tax_category = data["tax_category"]
 
         try:
             white_label = WhiteLabel.objects.get(code=data["white_label"])
