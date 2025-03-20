@@ -2,7 +2,7 @@ import programs.programs.policyengine.calculators.dependencies as dependency
 from programs.programs.federal.pe.member import Medicaid
 
 
-# TODO: add state specific Tax calculators from PE here
+# TODO: add state specific SPM calculators from PE here
 # TODO: add dependency.household.{{code_capitalize}}StateCode dependency
 
 # NOTE: here is a possible implentation of Medicaid for {{name}}

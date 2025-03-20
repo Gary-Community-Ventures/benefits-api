@@ -18,6 +18,10 @@ class Coctc(TaxUnit):
     field = "co_ctc"
 
 
+class Maeitc(TaxUnit):
+    field = "ma_eitc"
+
+
 # WARN: this does not take into account multiple tax units
 class PellGrantPrimaryIncomeDependency(TaxUnit):
     field = "pell_grant_primary_income"

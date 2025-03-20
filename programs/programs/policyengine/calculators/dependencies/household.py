@@ -18,6 +18,10 @@ class NcStateCode(StateCode):
     state = "NC"
 
 
+class MaStateCode(StateCode):
+    state = "MA"
+
+
 class NcCountyDependency(Household):
     field = "county_str"
 

@@ -5,14 +5,14 @@ import programs.programs.ma.pe.spm as spm
 from programs.programs.policyengine.calculators.base import PolicyEngineCalulator
 
 
-# TODO: update /programs/programs/policyengine/calculators/__init__.py
-ma_member_calculators = {  # TODO: add state specific member benefits from PE
+ma_member_calculators = {
     "ma_medicaid": member.MaMedicaid,
+    "ma_wic": member.MaWic,
 }
 
-ma_tax_unit_calculators = {}  # TODO: add state specific tax benefits from PE
+ma_tax_unit_calculators = {"ma_maeitc": tax.Maeitc}
 
-ma_spm_calculators = {  # TODO: add state specific SPM benefits from PE
+ma_spm_calculators = {
     "ma_snap": spm.MaSnap,
 }
 

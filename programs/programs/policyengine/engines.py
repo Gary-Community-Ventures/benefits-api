@@ -78,6 +78,19 @@ class PrivateApiSim(ApiSim):
         res = requests.post(self.pe_url, json=data, headers=headers)
 
         self.data = res.json()["result"]
+        # FIXME:
+        import subprocess
+
+        process = subprocess.Popen(
+            ["clip.exe"],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            encoding="utf-8",
+        )
+
+        process.communicate(input=str(self.data))
 
 
 pe_engines: list[Sim] = [PrivateApiSim, ApiSim]
