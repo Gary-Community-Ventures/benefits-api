@@ -2542,7 +2542,7 @@ class NcConfigurationData(ConfigurationData):
                 "tanf": {
                     "name": {
                         "_label": "cashBenefits.nc_tanf",
-                        "_default_message": "Work First Family Assistance (Temporary Assistance for Needy Families (TANF)):  ",
+                        "_default_message": "Work First Family Assistance (Temporary Assistance for Needy Families (TANF)): ",
                     },
                     "description": {
                         "_label": "cashBenefits.nc_tanf_desc",
@@ -2592,7 +2592,7 @@ class NcConfigurationData(ConfigurationData):
                     "name": {"_label": "foodBenefits.sunbucks", "_default_message": "NC Sun Bucks: "},
                     "description": {
                         "_label": "foodBenefits.sunbucks_desc",
-                        "_default_message": "Summer break food assistance for families with school age children:",
+                        "_default_message": "Summer break food assistance for families with school age children",
                     },
                 },
             },
