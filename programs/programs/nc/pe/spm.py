@@ -28,7 +28,6 @@ class NcScca(PolicyEngineSpmCalulator):
         dependency.household.NcStateCode,
         dependency.member.AgeDependency,
         dependency.member.IsDisabledDependency,
-        dependency.member.TaxUnitDependentDependency,
         dependency.spm.NcSccaCountableIncome,
         dependency.household.NcCountyDependency,
     ]
