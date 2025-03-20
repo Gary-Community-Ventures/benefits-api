@@ -23,15 +23,7 @@ class NcConfigurationData(ConfigurationData):
                 "name": {"_default_message": "2-1-1 North Carolina", "_label": "moreHelp.nc_resource_name1"},
                 "link": "https://nc211.org/",
                 "phone": {"_default_message": "Dial 2-1-1 or 1-888-892-1162", "_label": "moreHelp.nc_resource_phone1"},
-            },
-            {
-                "name": {"_default_message": "NCCARE360", "_label": "moreHelp.nc_resource_name2"},
-                "description": {
-                    "_default_message": "NCCARE360 is the first statewide coordinated care network that better connects individuals to local services and resources. NCCARE360 provides a solution to a fragmented health and human services system by connecting providers and organizations across sectors in a shared technology network. In the NCCARE360 network, providers can electronically connect individuals and families who have unmet social needs to community resources. NCCARE360 also allows for easy feedback and follow-up to help close the care loop for individuals and families seeking help.",
-                    "_label": "moreHelp.nc_resource_description1",
-                },
-                "link": "https://nccare360.org/request-assistance/",
-            },
+            }
         ]
     }
 
@@ -272,10 +264,7 @@ class NcConfigurationData(ConfigurationData):
     }
 
     income_options = {
-        "wages": {
-            "_label": "incomeOptions.wages",
-            "_default_message": "Wages, salaries, tips",
-        },
+        "wages": {"_label": "incomeOptions.wages", "_default_message": "Wages, salaries, tips"},
         "selfEmployment": {
             "_label": "incomeOptions.selfEmployment",
             "_default_message": "Income from freelance, independent contractor, or self-employment work",
@@ -288,68 +277,37 @@ class NcConfigurationData(ConfigurationData):
             "_label": "incomeOptions.sSRetirement",
             "_default_message": "Social Security Retirement Benefits",
         },
-        "sSI": {
-            "_label": "incomeOptions.sSI",
-            "_default_message": "Supplemental Security Income (SSI)",
-        },
-        "childSupport": {
-            "_label": "incomeOptions.childSupport",
-            "_default_message": "Child Support (Received)",
-        },
+        "sSI": {"_label": "incomeOptions.sSI", "_default_message": "Supplemental Security Income (SSI)"},
+        "childSupport": {"_label": "incomeOptions.childSupport", "_default_message": "Child Support (Received)"},
         "pension": {
-            "_label": "incomeOptions.pension",
+            "_label": "incomeOptions.nc_pension",
             "_default_message": "Military, Government, or Private Pension",
         },
-        "veteran": {
-            "_label": "incomeOptions.veteran",
-            "_default_message": "Veteran's Pension or Benefits",
-        },
+        "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
             "_default_message": "Social Security Survivor's Benefits (Widowed)",
         },
-        "unemployment": {
-            "_label": "incomeOptions.unemployment",
-            "_default_message": "Unemployment Benefits",
-        },
+        "unemployment": {"_label": "incomeOptions.unemployment", "_default_message": "Unemployment Benefits"},
         "sSDependent": {
             "_label": "incomeOptions.sSDependent",
             "_default_message": "Social Security Dependent Benefits (retirement, disability, or survivors)",
         },
-        "cashAssistance": {
-            "_label": "incomeOptions.cashAssistance",
-            "_default_message": "Cash Assistance Grant",
-        },
-        "gifts": {
-            "_label": "incomeOptions.gifts",
-            "_default_message": "Gifts/Contributions (Received)",
-        },
+        "cashAssistance": {"_label": "incomeOptions.nc_cashAssistance", "_default_message": "Cash Assistance Grant"},
+        "gifts": {"_label": "incomeOptions.gifts", "_default_message": "Gifts/Contributions (Received)"},
         "investment": {
             "_label": "incomeOptions.investment",
             "_default_message": "Investment Income (interest, dividends, and profit from selling stocks)",
         },
-        "rental": {
-            "_label": "incomeOptions.rental",
-            "_default_message": "Rental Income",
-        },
-        "alimony": {
-            "_label": "incomeOptions.alimony",
-            "_default_message": "Alimony (Received)",
-        },
+        "rental": {"_label": "incomeOptions.rental", "_default_message": "Rental Income"},
+        "alimony": {"_label": "incomeOptions.alimony", "_default_message": "Alimony (Received)"},
         "deferredComp": {
             "_label": "incomeOptions.deferredComp",
             "_default_message": "Withdrawals from Deferred Compensation (IRA, Keogh, etc.)",
         },
-        "workersComp": {
-            "_label": "incomeOptions.workersComp",
-            "_default_message": "Worker's Compensation",
-        },
-        "boarder": {
-            "_label": "incomeOptions.boarder",
-            "_default_message": "Boarder or Lodger",
-        },
+        "workersComp": {"_label": "incomeOptions.workersComp", "_default_message": "Worker's Compensation"},
+        "boarder": {"_label": "incomeOptions.boarder", "_default_message": "Boarder or Lodger"},
     }
-
     health_insurance_options = {
         "you": {
             "none": {
@@ -2671,10 +2629,7 @@ class NcConfigurationData(ConfigurationData):
                     },
                 },
                 "lifeline": {
-                    "name": {
-                        "_label": "housingBenefits.lifeline",
-                        "_default_message": "Lifeline Telephone Assistance: ",
-                    },
+                    "name": {"_label": "housingBenefits.lifeline", "_default_message": "Lifeline: "},
                     "description": {
                         "_label": "housingBenefits.lifeline_desc",
                         "_default_message": "Helps low-income households pay for phone and internet service",
