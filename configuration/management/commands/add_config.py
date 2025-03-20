@@ -185,3 +185,10 @@ class Command(BaseCommand):
                 white_label=white_label,
                 defaults={"data": WhiteLabelData.current_benefits, "active": True},
             )
+
+            # Save override_text to database
+            Configuration.objects.update_or_create(
+                name="override_text",
+                white_label=white_label,
+                defaults={"data": WhiteLabelData.override_text, "active": True},
+            )

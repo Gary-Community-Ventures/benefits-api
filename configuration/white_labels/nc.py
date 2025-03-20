@@ -314,7 +314,7 @@ class NcConfigurationData(ConfigurationData):
         },
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
-            "_default_message": "Social Security Survivor's Benefits (Widow/Widower)",
+            "_default_message": "Social Security Survivor's Benefits (Widowed)",
         },
         "unemployment": {
             "_label": "incomeOptions.unemployment",
@@ -2946,3 +2946,5 @@ class NcConfigurationData(ConfigurationData):
         "survey": "https://airtable.com/app8EC0NO7FrnAMlP/pagiU2dMjYRofDxEn/form",
         "email": "myfriendben@codethedream.org",
     }
+
+    override_text = {}
