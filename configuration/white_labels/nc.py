@@ -622,6 +622,7 @@ class NcConfigurationData(ConfigurationData):
         "27027": {"Rockingham County": "Rockingham County"},
         "27028": {"Davie County": "Davie County", "Iredell County": "Iredell County"},
         "27030": {"Surry County": "Surry County", "Stokes County": "Stokes County"},
+        "27031": {"Surry County": "Surry County"},
         "27040": {"Forsyth County": "Forsyth County"},
         "27041": {"Surry County": "Surry County", "Stokes County": "Stokes County"},
         "27042": {"Stokes County": "Stokes County"},
@@ -646,6 +647,7 @@ class NcConfigurationData(ConfigurationData):
             "Iredell County": "Iredell County",
         },
         "27094": {"Forsyth County": "Forsyth County"},
+        "27098": {"Forsyth County": "Forsyth County"},
         "27099": {"Forsyth County": "Forsyth County"},
         "27101": {"Forsyth County": "Forsyth County"},
         "27102": {"Forsyth County": "Forsyth County"},
@@ -676,10 +678,12 @@ class NcConfigurationData(ConfigurationData):
         "27152": {"Forsyth County": "Forsyth County"},
         "27155": {"Forsyth County": "Forsyth County"},
         "27157": {"Forsyth County": "Forsyth County"},
+        "27198": {"Forsyth County": "Forsyth County"},
         "27199": {"Forsyth County": "Forsyth County"},
         "27201": {"Alamance County": "Alamance County"},
         "27202": {"Alamance County": "Alamance County"},
         "27203": {"Randolph County": "Randolph County"},
+        "27204": {"Randolph County": "Randolph County"},
         "27205": {"Randolph County": "Randolph County"},
         "27207": {"Chatham County": "Chatham County"},
         "27208": {
@@ -706,6 +710,7 @@ class NcConfigurationData(ConfigurationData):
             "Alamance County": "Alamance County",
             "Caswell County": "Caswell County",
         },
+        "27228": {"Chatham County": "Chatham County"},
         "27229": {
             "Montgomery County": "Montgomery County",
             "Richmond County": "Richmond County",
@@ -721,6 +726,7 @@ class NcConfigurationData(ConfigurationData):
             "Guilford County": "Guilford County",
         },
         "27235": {"Guilford County": "Guilford County"},
+        "27237": {"Lee County": "Lee County"},
         "27239": {
             "Davidson County": "Davidson County",
             "Randolph County": "Randolph County",
@@ -889,6 +895,7 @@ class NcConfigurationData(ConfigurationData):
             "Davidson County": "Davidson County",
             "Randolph County": "Randolph County",
         },
+        "27361": {"Davidson County": "Davidson County"},
         "27370": {"Randolph County": "Randolph County"},
         "27371": {
             "Montgomery County": "Montgomery County",
@@ -1527,6 +1534,11 @@ class NcConfigurationData(ConfigurationData):
             "Union County": "Union County",
             "Mecklenburg County": "Mecklenburg County",
         },
+        "28105": {
+            "Mecklenburg County": "Mecklenburg County",
+            "Union County": "Union County",
+        },
+        "28106": {"Mecklenburg County": "Mecklenburg County"},
         "28107": {
             "Union County": "Union County",
             "Stanly County": "Stanly County",
@@ -1790,6 +1802,7 @@ class NcConfigurationData(ConfigurationData):
             "Scotland County": "Scotland County",
         },
         "28345": {"Richmond County": "Richmond County", "Moore County": "Moore County"},
+        "28347": {"Richmond County": "Richmond County", "Moore County": "Moore County"},
         "28348": {"Cumberland County": "Cumberland County"},
         "28349": {"Duplin County": "Duplin County"},
         "28350": {"Moore County": "Moore County"},
