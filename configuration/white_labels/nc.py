@@ -23,15 +23,7 @@ class NcConfigurationData(ConfigurationData):
                 "name": {"_default_message": "2-1-1 North Carolina", "_label": "moreHelp.nc_resource_name1"},
                 "link": "https://nc211.org/",
                 "phone": {"_default_message": "Dial 2-1-1 or 1-888-892-1162", "_label": "moreHelp.nc_resource_phone1"},
-            },
-            {
-                "name": {"_default_message": "NCCARE360", "_label": "moreHelp.nc_resource_name2"},
-                "description": {
-                    "_default_message": "NCCARE360 is the first statewide coordinated care network that better connects individuals to local services and resources. NCCARE360 provides a solution to a fragmented health and human services system by connecting providers and organizations across sectors in a shared technology network. In the NCCARE360 network, providers can electronically connect individuals and families who have unmet social needs to community resources. NCCARE360 also allows for easy feedback and follow-up to help close the care loop for individuals and families seeking help.",
-                    "_label": "moreHelp.nc_resource_description1",
-                },
-                "link": "https://nccare360.org/request-assistance/",
-            },
+            }
         ]
     }
 
@@ -2658,10 +2650,7 @@ class NcConfigurationData(ConfigurationData):
                     },
                 },
                 "lifeline": {
-                    "name": {
-                        "_label": "housingBenefits.lifeline",
-                        "_default_message": "Lifeline Telephone Assistance: ",
-                    },
+                    "name": {"_label": "housingBenefits.lifeline", "_default_message": "Lifeline: "},
                     "description": {
                         "_label": "housingBenefits.lifeline_desc",
                         "_default_message": "Helps low-income households pay for phone and internet service",
