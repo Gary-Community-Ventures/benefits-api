@@ -19,7 +19,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email_or_cell, password=None, tcpa_consent=False):
+    def create_superuser(self, email_or_cell, password=None):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
@@ -28,7 +28,6 @@ class UserManager(BaseUserManager):
         user.is_admin = True
         user.is_superuser = True
         user.is_staff = True
-        user.tcpa_consent = tcpa_consent
         user.save(using=self._db)
         return user
 
