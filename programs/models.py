@@ -746,7 +746,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "functions": NeedFunctionsType,
             "fpl": Optional[YearDataType],
             "white_label": str,
-            "counties": CountiesType
+            "counties": CountiesType,
         },
     )
 
@@ -774,7 +774,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "functions": self._functions(),
             "fpl": self._year(),
             "white_label": need.white_label.code,
-            "counties": self._counties()
+            "counties": self._counties(),
         }
 
     def from_model_data(self, data: DataType):
