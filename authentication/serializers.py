@@ -17,7 +17,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "email_or_cell",
             "language_code",
-            "tcpa_consent",
+            "explicit_tcpa_consent",
             "send_offers",
             "send_updates",
         )
@@ -31,7 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "email_or_cell",
             "language_code",
-            "tcpa_consent",
+            "explicit_tcpa_consent",
         )
 
 

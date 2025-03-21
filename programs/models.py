@@ -191,6 +191,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
         {
             "calculator": str,
             "icon": str,
+            "tax_category": bool,
             "white_label": str,
         },
     )
@@ -200,6 +201,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
         return {
             "calculator": program_category.calculator,
             "icon": program_category.icon,
+            "tax_category": program_category.tax_category,
             "white_label": program_category.white_label.code,
         }
 
@@ -208,6 +210,8 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
 
         program_category.calculator = data["calculator"]
         program_category.icon = data["icon"]
+        if "tax_category" in data:
+            program_category.tax_category = data["tax_category"]
 
         try:
             white_label = WhiteLabel.objects.get(code=data["white_label"])
@@ -233,6 +237,7 @@ class ProgramCategory(models.Model):
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=True, null=True)
     icon = models.CharField(max_length=120, blank=False, null=False)
+    tax_category = models.BooleanField(default=False)
     name = models.ForeignKey(
         Translation,
         related_name="program_category_name",
@@ -1003,7 +1008,7 @@ class NavigatorDataController(ModelDataController["Navigator"]):
         counties = []
         for county in data["counties"]:
             try:
-                county_instance = County.objects.get(name=county["name"])
+                county_instance = County.objects.get(name=county["name"], white_label__code=data["white_label"])
                 county_instance.white_label = white_label
                 county_instance.save()
             except County.DoesNotExist:
@@ -1176,7 +1181,7 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
         counties = []
         for county in data["counties"]:
             try:
-                county_instance = County.objects.get(name=county["name"])
+                county_instance = County.objects.get(name=county["name"], white_label__code=data["white_label"])
                 county_instance.white_label = white_label
                 county_instance.save()
             except County.DoesNotExist:
@@ -1351,7 +1356,7 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
         counties = []
         for county in data["counties"]:
             try:
-                county_instance = County.objects.get(name=county["name"])
+                county_instance = County.objects.get(name=county["name"], white_label__code=data["white_label"])
                 county_instance.white_label = white_label
                 county_instance.save()
             except County.DoesNotExist:
