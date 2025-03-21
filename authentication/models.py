@@ -53,7 +53,6 @@ class User(AbstractUser):
     objects = UserManager()
 
     USERNAME_FIELD = "email_or_cell"
-    REQUIRED_FIELDS = ["tcpa_consent"]
 
     def anonomize(self, external_id: str):
         random_id = str(uuid.uuid4()).replace("-", "")
