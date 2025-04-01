@@ -27,3 +27,10 @@ class NcCountyDependency(Household):
 
     def value(self):
         return self.screen.county.replace(" ", "_").upper() + "_NC"
+
+
+class IsInPublicHousing(Household):
+    field = "is_in_public_housing"
+
+    def value(self):
+        return self.screen.has_expense(["is_in_public_housing"])

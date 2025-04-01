@@ -22,6 +22,10 @@ class Maeitc(TaxUnit):
     field = "ma_eitc"
 
 
+class MaChildFamilyCredit(TaxUnit):
+    field = "ma_child_and_family_credit"
+
+
 # WARN: this does not take into account multiple tax units
 class PellGrantPrimaryIncomeDependency(TaxUnit):
     field = "pell_grant_primary_income"

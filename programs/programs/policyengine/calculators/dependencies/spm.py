@@ -174,6 +174,10 @@ class NcTanf(SpmUnit):
     field = "nc_tanf"
 
 
+class MaTafdc(SpmUnit):
+    field = "ma_tafdc"
+
+
 class CoTanfCountableGrossIncomeDependency(SpmUnit):
     field = "co_tanf_countable_gross_earned_income"
     dependencies = (
@@ -220,6 +224,37 @@ class NcTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
 
     def value(self):
         return int(self.screen.calc_gross_income("yearly", ["unearned"]))
+
+
+class MaTanfCountableGrossEarnedIncomeDependency(SpmUnit):
+    field = "ma_tcap_gross_earned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
+
+    def value(self):
+        return int(self.screen.calc_gross_income("yearly", ["earned"]))
+
+
+class MaTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
+    field = "ma_tcap_gross_unearned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
+
+    def value(self):
+        return int(self.screen.calc_gross_income("yearly", ["unearned"], exclude=["cashAssistance"]))
+
+
+class PreSubsidyChildcareExpenses(SpmUnit):
+    field = "spm_unit_pre_subsidy_childcare_expenses"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["childCare", "dependentCare"])
 
 
 class NcScca(SpmUnit):

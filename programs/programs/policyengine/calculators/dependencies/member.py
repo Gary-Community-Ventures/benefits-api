@@ -254,6 +254,27 @@ class SnapIneligibleStudentDependency(Member):
         return snap_ineligible_student(self.screen, self.member)
 
 
+class MaTotalHoursWorked(Member):
+    field = "weekly_hours_worked"
+    dependencies = ("income_frequency",)
+
+    minimum_wage = 15
+    work_weeks_in_month = 4
+
+    def value(self):
+        hours = 0
+
+        for income in self.member.incomes.all():
+            if income.frequency == "hourly":
+                hours += int(income.hours_worked)
+                continue
+
+            # aproximate weekly hours using the minimum wage in MA
+            hours += income.monthly / self.minimum_wage / self.work_weeks_in_month
+
+        return hours
+
+
 class IncomeDependency(Member):
     dependencies = (
         "income_type",
