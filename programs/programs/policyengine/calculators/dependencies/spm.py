@@ -226,30 +226,6 @@ class NcTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
         return int(self.screen.calc_gross_income("yearly", ["unearned"]))
 
 
-class MaTanfCountableGrossEarnedIncomeDependency(SpmUnit):
-    field = "ma_tcap_gross_earned_income"
-    dependencies = (
-        "income_type",
-        "income_amount",
-        "income_frequency",
-    )
-
-    def value(self):
-        return int(self.screen.calc_gross_income("yearly", ["earned"]))
-
-
-class MaTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
-    field = "ma_tcap_gross_unearned_income"
-    dependencies = (
-        "income_type",
-        "income_amount",
-        "income_frequency",
-    )
-
-    def value(self):
-        return int(self.screen.calc_gross_income("yearly", ["unearned"], exclude=["cashAssistance"]))
-
-
 class PreSubsidyChildcareExpenses(SpmUnit):
     field = "spm_unit_pre_subsidy_childcare_expenses"
 

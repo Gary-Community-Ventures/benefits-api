@@ -264,15 +264,39 @@ class MaTotalHoursWorked(Member):
     def value(self):
         hours = 0
 
-        for income in self.member.incomes.all():
+        for income in self.member.income_streams.all():
             if income.frequency == "hourly":
                 hours += int(income.hours_worked)
                 continue
 
             # aproximate weekly hours using the minimum wage in MA
-            hours += income.monthly / self.minimum_wage / self.work_weeks_in_month
+            hours += int(income.monthly()) / self.minimum_wage / self.work_weeks_in_month
 
         return hours
+
+
+class MaTanfCountableGrossEarnedIncomeDependency(Member):
+    field = "ma_tcap_gross_earned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
+
+    def value(self):
+        return int(self.member.calc_gross_income("yearly", ["earned"]))
+
+
+class MaTanfCountableGrossUnearnedIncomeDependency(Member):
+    field = "ma_tcap_gross_unearned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
+
+    def value(self):
+        return int(self.member.calc_gross_income("yearly", ["unearned"], exclude=["cashAssistance"]))
 
 
 class IncomeDependency(Member):
