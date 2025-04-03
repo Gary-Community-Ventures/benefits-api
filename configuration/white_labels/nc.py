@@ -175,34 +175,37 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.211nc",
             "_default_message": "2-1-1 North Carolina",
         },
-        "testOrProspect": {
-            "_label": "referralOptions.testOrProspect",
-            "_default_message": "Test / Prospective Partner",
-        },
-        "searchEngine": {
-            "_label": "referralOptions.searchEngine",
-            "_default_message": "Google or other search engine",
-        },
-        "socialMedia": {
-            "_label": "referralOptions.socialMedia",
-            "_default_message": "Social Media",
-        },
-        "other": {"_label": "referralOptions.other", "_default_message": "Other"},
-        "onTrackFin": {
-            "_label": "referralOptions.onTrackFin",
-            "_default_message": "On Track Financial",
+        "blueprint": {
+            "_label": "referralOptions.blueprint",
+            "_default_message": "Blueprint NC",
         },
         "careReach": {
             "_label": "referralOptions.careReach",
             "_default_message": "Care Reach",
         },
+        "fiel": {
+            "_label": "referralOptions.fiel",
+            "_default_message": "Duke Project FIEL-NC (FIEL-NC)",
+        },
+        "elRefugio": {
+            "_label": "referralOptions.elRefugio",
+            "_default_message": "El Refugio",
+        },
+        "felp": {
+            "_label": "referralOptions.felp",
+            "_default_message": "Future Endeavors Life Program (FELP)",
+        },
+        "mda": {
+            "_label": "referralOptions.mda",
+            "_default_message": "Montagnard Dega Association",
+        },
         "mountainProjects": {
             "_label": "referralOptions.mountainProjects",
             "_default_message": "Mountain Projects",
         },
-        "pisgahLegal": {
-            "_label": "referralOptions.pisgahLegal",
-            "_default_message": "Pisgah Legal Services",
+        "mgm": {
+            "_label": "referralOptions.mgm",
+            "_default_message": "Mundeke Gospel Mission",
         },
         "nariahWay": {
             "_label": "referralOptions.nw",
@@ -211,6 +214,14 @@ class NcConfigurationData(ConfigurationData):
         "ncchwa": {
             "_label": "referralOptions.NCCHWA",
             "_default_message": "North Carolina Community Health Worker Association (NCCHWA)",
+        },
+        "onTrackFin": {
+            "_label": "referralOptions.onTrackFin",
+            "_default_message": "On Track Financial",
+        },
+        "pisgahLegal": {
+            "_label": "referralOptions.pisgahLegal",
+            "_default_message": "Pisgah Legal Services",
         },
         "rcp": {
             "_label": "referralOptions.rcp",
@@ -228,32 +239,20 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.weAreDownHome",
             "_default_message": "We Are Down Home",
         },
-        "blueprint": {
-            "_label": "referralOptions.blueprint",
-            "_default_message": "Blueprint NC",
+        "searchEngine": {
+            "_label": "referralOptions.searchEngine",
+            "_default_message": "Google or other search engine",
         },
-        "elRefugio": {
-            "_label": "referralOptions.elRefugio",
-            "_default_message": "El Refugio",
+        "socialMedia": {
+            "_label": "referralOptions.socialMedia",
+            "_default_message": "Social Media",
         },
-        "fiel": {
-            "_label": "referralOptions.fiel",
-            "_default_message": "Duke Project FIEL-NC (FIEL-NC)",
-        },
-        "felp": {
-            "_label": "referralOptions.felp",
-            "_default_message": "Future Endeavors Life Program (FELP)",
-        },
-        "mda": {
-            "_label": "referralOptions.mda",
-            "_default_message": "Montagnard Dega Association",
-        },
-        "mgm": {
-            "_label": "referralOptions.mgm",
-            "_default_message": "Mundeke Gospel Mission",
+        "other": {"_label": "referralOptions.other", "_default_message": "Other"},
+        "testOrProspect": {
+            "_label": "referralOptions.testOrProspect",
+            "_default_message": "Test / Prospective Partner",
         },
     }
-
     language_options = {
         "en-us": "English",
         "es": "Español",
