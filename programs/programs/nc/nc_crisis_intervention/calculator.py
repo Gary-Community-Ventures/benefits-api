@@ -45,3 +45,5 @@ class NCCrisisIntervention(ProgramCalculator):
                 return self.large_household_low_income_value  # $500/month
             elif gross_income <= income_limit:  # 51%+ FPL
                 return self.large_household_large_income_value  # $400/month
+
+        return 0
