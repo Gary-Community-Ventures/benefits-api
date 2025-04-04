@@ -2173,9 +2173,6 @@ class CoConfigurationData(ConfigurationData):
 
     consent_to_contact = {
         "en-us": "https://co.myfriendben.org/en/additional-terms-and-consent-to-contact",
-        "es": "https://co.myfriendben.org/es/additional-terms-and-consent-to-contact",
-        "fr": "https://co.myfriendben.org/fr/additional-terms-and-consent-to-contact",
-        "vi": "https://co.myfriendben.org/vi/additional-terms-and-consent-to-contact",
     }
 
     privacy_policy = {
