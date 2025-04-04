@@ -735,6 +735,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
     YearDataType = TypedDict("FplDataType", {"year": str, "period": str})
     CategoriesType = list[TypedDict("CategoryType", {"name": str})]
     NeedFunctionsType = list[TypedDict("NeedFunctionType", {"name": str})]
+    CountiesType = list[TypedDict("CountyType", {"name": str})]
     DataType = TypedDict(
         "DataType",
         {
@@ -745,8 +746,12 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "functions": NeedFunctionsType,
             "fpl": Optional[YearDataType],
             "white_label": str,
+            "counties": CountiesType,
         },
     )
+
+    def _counties(self) -> CountiesType:
+        return [{"name": c.name} for c in self.instance.counties.all()]
 
     def _year(self) -> Optional[YearDataType]:
         if self.instance.year is None:
@@ -769,6 +774,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "functions": self._functions(),
             "fpl": self._year(),
             "white_label": need.white_label.code,
+            "counties": self._counties(),
         }
 
     def from_model_data(self, data: DataType):
@@ -818,6 +824,16 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
                 func_instance = UrgentNeedFunction.objects.create(name=function["name"])
             functions.append(func_instance)
         need.functions.set(functions)
+
+        # get or create counties
+        counties = []
+        for county in data["counties"]:
+            try:
+                county_instance = County.objects.get(name=county["name"], white_label__code=data["white_label"])
+            except County.DoesNotExist:
+                county_instance = County.objects.create(name=county["name"], white_label=white_label)
+            counties.append(county_instance)
+        need.counties.set(counties)
 
         need.save()
 
@@ -1009,8 +1025,6 @@ class NavigatorDataController(ModelDataController["Navigator"]):
         for county in data["counties"]:
             try:
                 county_instance = County.objects.get(name=county["name"], white_label__code=data["white_label"])
-                county_instance.white_label = white_label
-                county_instance.save()
             except County.DoesNotExist:
                 county_instance = County.objects.create(name=county["name"], white_label=white_label)
 
@@ -1182,8 +1196,6 @@ class WarningMessageDataController(ModelDataController["WarningMessage"]):
         for county in data["counties"]:
             try:
                 county_instance = County.objects.get(name=county["name"], white_label__code=data["white_label"])
-                county_instance.white_label = white_label
-                county_instance.save()
             except County.DoesNotExist:
                 county_instance = County.objects.create(name=county["name"], white_label=white_label)
             counties.append(county_instance)
@@ -1357,8 +1369,6 @@ class TranslationOverrideDataController(ModelDataController["TranslationOverride
         for county in data["counties"]:
             try:
                 county_instance = County.objects.get(name=county["name"], white_label__code=data["white_label"])
-                county_instance.white_label = white_label
-                county_instance.save()
             except County.DoesNotExist:
                 county_instance = County.objects.create(name=county["name"], white_label=white_label)
             counties.append(county_instance)
