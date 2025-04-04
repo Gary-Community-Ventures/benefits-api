@@ -20,9 +20,15 @@ class NcConfigurationData(ConfigurationData):
     more_help_options = {
         "moreHelpOptions": [
             {
-                "name": {"_default_message": "2-1-1 North Carolina", "_label": "moreHelp.nc_resource_name1"},
+                "name": {
+                    "_default_message": "2-1-1 North Carolina",
+                    "_label": "moreHelp.nc_resource_name1",
+                },
                 "link": "https://nc211.org/",
-                "phone": {"_default_message": "Dial 2-1-1 or 1-888-892-1162", "_label": "moreHelp.nc_resource_phone1"},
+                "phone": {
+                    "_default_message": "Dial 2-1-1 or 1-888-892-1162",
+                    "_label": "moreHelp.nc_resource_phone1",
+                },
             }
         ]
     }
@@ -169,34 +175,37 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.211nc",
             "_default_message": "2-1-1 North Carolina",
         },
-        "testOrProspect": {
-            "_label": "referralOptions.testOrProspect",
-            "_default_message": "Test / Prospective Partner",
-        },
-        "searchEngine": {
-            "_label": "referralOptions.searchEngine",
-            "_default_message": "Google or other search engine",
-        },
-        "socialMedia": {
-            "_label": "referralOptions.socialMedia",
-            "_default_message": "Social Media",
-        },
-        "other": {"_label": "referralOptions.other", "_default_message": "Other"},
-        "onTrackFin": {
-            "_label": "referralOptions.onTrackFin",
-            "_default_message": "On Track Financial",
+        "blueprint": {
+            "_label": "referralOptions.blueprint",
+            "_default_message": "Blueprint NC",
         },
         "careReach": {
             "_label": "referralOptions.careReach",
             "_default_message": "Care Reach",
         },
+        "fiel": {
+            "_label": "referralOptions.fiel",
+            "_default_message": "Duke Project FIEL-NC (FIEL-NC)",
+        },
+        "elRefugio": {
+            "_label": "referralOptions.elRefugio",
+            "_default_message": "El Refugio",
+        },
+        "felp": {
+            "_label": "referralOptions.felp",
+            "_default_message": "Future Endeavors Life Program (FELP)",
+        },
+        "mda": {
+            "_label": "referralOptions.mda",
+            "_default_message": "Montagnard Dega Association",
+        },
         "mountainProjects": {
             "_label": "referralOptions.mountainProjects",
             "_default_message": "Mountain Projects",
         },
-        "pisgahLegal": {
-            "_label": "referralOptions.pisgahLegal",
-            "_default_message": "Pisgah Legal Services",
+        "mgm": {
+            "_label": "referralOptions.mgm",
+            "_default_message": "Mundeke Gospel Mission",
         },
         "nariahWay": {
             "_label": "referralOptions.nw",
@@ -205,6 +214,14 @@ class NcConfigurationData(ConfigurationData):
         "ncchwa": {
             "_label": "referralOptions.NCCHWA",
             "_default_message": "North Carolina Community Health Worker Association (NCCHWA)",
+        },
+        "onTrackFin": {
+            "_label": "referralOptions.onTrackFin",
+            "_default_message": "On Track Financial",
+        },
+        "pisgahLegal": {
+            "_label": "referralOptions.pisgahLegal",
+            "_default_message": "Pisgah Legal Services",
         },
         "rcp": {
             "_label": "referralOptions.rcp",
@@ -222,32 +239,20 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.weAreDownHome",
             "_default_message": "We Are Down Home",
         },
-        "blueprint": {
-            "_label": "referralOptions.blueprint",
-            "_default_message": "Blueprint NC",
+        "searchEngine": {
+            "_label": "referralOptions.searchEngine",
+            "_default_message": "Google or other search engine",
         },
-        "elRefugio": {
-            "_label": "referralOptions.elRefugio",
-            "_default_message": "El Refugio",
+        "socialMedia": {
+            "_label": "referralOptions.socialMedia",
+            "_default_message": "Social Media",
         },
-        "fiel": {
-            "_label": "referralOptions.fiel",
-            "_default_message": "Duke Project FIEL-NC (FIEL-NC)",
-        },
-        "felp": {
-            "_label": "referralOptions.felp",
-            "_default_message": "Future Endeavors Life Program (FELP)",
-        },
-        "mda": {
-            "_label": "referralOptions.mda",
-            "_default_message": "Montagnard Dega Association",
-        },
-        "mgm": {
-            "_label": "referralOptions.mgm",
-            "_default_message": "Mundeke Gospel Mission",
+        "other": {"_label": "referralOptions.other", "_default_message": "Other"},
+        "testOrProspect": {
+            "_label": "referralOptions.testOrProspect",
+            "_default_message": "Test / Prospective Partner",
         },
     }
-
     language_options = {
         "en-us": "English",
         "es": "Español",
@@ -264,7 +269,10 @@ class NcConfigurationData(ConfigurationData):
     }
 
     income_options = {
-        "wages": {"_label": "incomeOptions.wages", "_default_message": "Wages, salaries, tips"},
+        "wages": {
+            "_label": "incomeOptions.wages",
+            "_default_message": "Wages, salaries, tips",
+        },
         "selfEmployment": {
             "_label": "incomeOptions.selfEmployment",
             "_default_message": "Income from freelance, independent contractor, or self-employment work",
@@ -277,36 +285,66 @@ class NcConfigurationData(ConfigurationData):
             "_label": "incomeOptions.sSRetirement",
             "_default_message": "Social Security Retirement Benefits",
         },
-        "sSI": {"_label": "incomeOptions.sSI", "_default_message": "Supplemental Security Income (SSI)"},
-        "childSupport": {"_label": "incomeOptions.childSupport", "_default_message": "Child Support (Received)"},
+        "sSI": {
+            "_label": "incomeOptions.sSI",
+            "_default_message": "Supplemental Security Income (SSI)",
+        },
+        "childSupport": {
+            "_label": "incomeOptions.childSupport",
+            "_default_message": "Child Support (Received)",
+        },
         "pension": {
             "_label": "incomeOptions.nc_pension",
             "_default_message": "Military, Government, or Private Pension",
         },
-        "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
+        "veteran": {
+            "_label": "incomeOptions.veteran",
+            "_default_message": "Veteran's Pension or Benefits",
+        },
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
             "_default_message": "Social Security Survivor's Benefits (Widowed)",
         },
-        "unemployment": {"_label": "incomeOptions.unemployment", "_default_message": "Unemployment Benefits"},
+        "unemployment": {
+            "_label": "incomeOptions.unemployment",
+            "_default_message": "Unemployment Benefits",
+        },
         "sSDependent": {
             "_label": "incomeOptions.sSDependent",
             "_default_message": "Social Security Dependent Benefits (retirement, disability, or survivors)",
         },
-        "cashAssistance": {"_label": "incomeOptions.nc_cashAssistance", "_default_message": "Cash Assistance Grant"},
-        "gifts": {"_label": "incomeOptions.gifts", "_default_message": "Gifts/Contributions (Received)"},
+        "cashAssistance": {
+            "_label": "incomeOptions.nc_cashAssistance",
+            "_default_message": "Cash Assistance Grant",
+        },
+        "gifts": {
+            "_label": "incomeOptions.gifts",
+            "_default_message": "Gifts/Contributions (Received)",
+        },
         "investment": {
             "_label": "incomeOptions.investment",
             "_default_message": "Investment Income (interest, dividends, and profit from selling stocks)",
         },
-        "rental": {"_label": "incomeOptions.rental", "_default_message": "Rental Income"},
-        "alimony": {"_label": "incomeOptions.alimony", "_default_message": "Alimony (Received)"},
+        "rental": {
+            "_label": "incomeOptions.rental",
+            "_default_message": "Rental Income",
+        },
+        "alimony": {
+            "_label": "incomeOptions.alimony",
+            "_default_message": "Alimony (Received)",
+        },
         "deferredComp": {
             "_label": "incomeOptions.deferredComp",
             "_default_message": "Withdrawals from Deferred Compensation (IRA, Keogh, etc.)",
         },
-        "workersComp": {"_label": "incomeOptions.workersComp", "_default_message": "Worker's Compensation"},
-        "boarder": {"_label": "incomeOptions.boarder", "_default_message": "Boarder or Lodger"},
+        "workersComp": {
+            "_label": "incomeOptions.workersComp",
+            "_default_message": "Worker's Compensation",
+        },
+        "boarder": {
+            "_label": "incomeOptions.boarder",
+            "_default_message": "Boarder or Lodger",
+        },
     }
     health_insurance_options = {
         "you": {
@@ -333,14 +371,23 @@ class NcConfigurationData(ConfigurationData):
             },
             "medicaid": {
                 "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
-                "text": {"_label": "healthInsuranceOptions.nc_medicaid", "_default_message": "Medicaid"},
+                "text": {
+                    "_label": "healthInsuranceOptions.nc_medicaid",
+                    "_default_message": "Medicaid",
+                },
             },
             "medicare": {
                 "icon": {"_icon": "Medicare", "_classname": "option-card-icon"},
-                "text": {"_label": "healthInsuranceOptions.medicare", "_default_message": "Medicare"},
+                "text": {
+                    "_label": "healthInsuranceOptions.medicare",
+                    "_default_message": "Medicare",
+                },
             },
             "emergency_medicaid": {
-                "icon": {"_icon": "Emergency_medicaid", "_classname": "option-card-icon"},
+                "icon": {
+                    "_icon": "Emergency_medicaid",
+                    "_classname": "option-card-icon",
+                },
                 "text": {
                     "_label": "healthInsuranceOptions.emergency_medicaid",
                     "_default_message": "Emergency Medicaid / Reproductive Health",
@@ -355,7 +402,10 @@ class NcConfigurationData(ConfigurationData):
             },
             "va": {
                 "icon": {"_icon": "VA", "_classname": "option-card-icon"},
-                "text": {"_label": "healthInsuranceOptions.va", "_default_message": "VA health care benefits"},
+                "text": {
+                    "_label": "healthInsuranceOptions.va",
+                    "_default_message": "VA health care benefits",
+                },
             },
         },
         "them": {
@@ -382,14 +432,23 @@ class NcConfigurationData(ConfigurationData):
             },
             "medicaid": {
                 "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
-                "text": {"_label": "healthInsuranceOptions.nc_medicaid", "_default_message": "Medicaid"},
+                "text": {
+                    "_label": "healthInsuranceOptions.nc_medicaid",
+                    "_default_message": "Medicaid",
+                },
             },
             "medicare": {
                 "icon": {"_icon": "Medicare", "_classname": "option-card-icon"},
-                "text": {"_label": "healthInsuranceOptions.medicare", "_default_message": "Medicare"},
+                "text": {
+                    "_label": "healthInsuranceOptions.medicare",
+                    "_default_message": "Medicare",
+                },
             },
             "emergency_medicaid": {
-                "icon": {"_icon": "Emergency_medicaid", "_classname": "option-card-icon"},
+                "icon": {
+                    "_icon": "Emergency_medicaid",
+                    "_classname": "option-card-icon",
+                },
                 "text": {
                     "_label": "healthInsuranceOptions.emergency_medicaid",
                     "_default_message": "Emergency Medicaid / Reproductive Health",
@@ -404,7 +463,10 @@ class NcConfigurationData(ConfigurationData):
             },
             "va": {
                 "icon": {"_icon": "VA", "_classname": "option-card-icon"},
-                "text": {"_label": "healthInsuranceOptions.va", "_default_message": "VA health care benefits"},
+                "text": {
+                    "_label": "healthInsuranceOptions.va",
+                    "_default_message": "VA health care benefits",
+                },
             },
         },
     }
@@ -432,16 +494,31 @@ class NcConfigurationData(ConfigurationData):
 
     expense_options = {
         "rent": {"_label": "expenseOptions.rent", "_default_message": "Rent"},
-        "telephone": {"_label": "expenseOptions.telephone", "_default_message": "Telephone"},
-        "internet": {"_label": "expenseOptions.internet", "_default_message": "Internet"},
+        "telephone": {
+            "_label": "expenseOptions.telephone",
+            "_default_message": "Telephone",
+        },
+        "internet": {
+            "_label": "expenseOptions.internet",
+            "_default_message": "Internet",
+        },
         "autoInsurance": {
             "_label": "expenseOptions.autoInsurance",
             "_default_message": "Auto Insurance Premium &/or Payment",
         },
-        "otherUtilities": {"_label": "expenseOptions.otherUtilities", "_default_message": "Other Utilities"},
+        "otherUtilities": {
+            "_label": "expenseOptions.otherUtilities",
+            "_default_message": "Other Utilities",
+        },
         "heating": {"_label": "expenseOptions.heating", "_default_message": "Heating"},
-        "mortgage": {"_label": "expenseOptions.mortgage", "_default_message": "Mortgage"},
-        "propertyTaxes": {"_label": "expenseOptions.propertyTaxes", "_default_message": "Property Taxes"},
+        "mortgage": {
+            "_label": "expenseOptions.mortgage",
+            "_default_message": "Mortgage",
+        },
+        "propertyTaxes": {
+            "_label": "expenseOptions.propertyTaxes",
+            "_default_message": "Property Taxes",
+        },
         "associationFees": {
             "_label": "expenseOptions.associationFees",
             "_default_message": "Homeowners or Condo Association Fees and Dues",
@@ -450,13 +527,31 @@ class NcConfigurationData(ConfigurationData):
             "_label": "expenseOptions.homeownersInsurance",
             "_default_message": "Homeowners Insurance",
         },
-        "medical": {"_label": "expenseOptions.medical", "_default_message": "Medical Insurance Premium &/or Bills"},
-        "personalLoan": {"_label": "expenseOptions.personalLoan", "_default_message": "Personal Loan"},
-        "studentLoans": {"_label": "expenseOptions.studentLoans", "_default_message": "Student Loans"},
+        "medical": {
+            "_label": "expenseOptions.medical",
+            "_default_message": "Medical Insurance Premium &/or Bills",
+        },
+        "personalLoan": {
+            "_label": "expenseOptions.personalLoan",
+            "_default_message": "Personal Loan",
+        },
+        "studentLoans": {
+            "_label": "expenseOptions.studentLoans",
+            "_default_message": "Student Loans",
+        },
         "cooling": {"_label": "expenseOptions.cooling", "_default_message": "Cooling"},
-        "childCare": {"_label": "expenseOptions.childCare", "_default_message": "Child Care"},
-        "childSupport": {"_label": "expenseOptions.childSupport", "_default_message": "Child Support (Paid)"},
-        "dependentCare": {"_label": "expenseOptions.dependentCare", "_default_message": "Dependent Care"},
+        "childCare": {
+            "_label": "expenseOptions.childCare",
+            "_default_message": "Child Care",
+        },
+        "childSupport": {
+            "_label": "expenseOptions.childSupport",
+            "_default_message": "Child Support (Paid)",
+        },
+        "dependentCare": {
+            "_label": "expenseOptions.dependentCare",
+            "_default_message": "Dependent Care",
+        },
     }
 
     condition_options = {
@@ -2550,7 +2645,10 @@ class NcConfigurationData(ConfigurationData):
                     },
                 },
                 "ssi": {
-                    "name": {"_label": "cashBenefits.ssi", "_default_message": "Supplemental Security Income (SSI): "},
+                    "name": {
+                        "_label": "cashBenefits.ssi",
+                        "_default_message": "Supplemental Security Income (SSI): ",
+                    },
                     "description": {
                         "_label": "cashBenefits.ssi_desc",
                         "_default_message": "Federal cash assistance for individuals who are disabled, blind, or 65 years of age or older",
@@ -2576,7 +2674,10 @@ class NcConfigurationData(ConfigurationData):
                         "_label": "foodBenefits.snap",
                         "_default_message": "Supplemental Nutrition Assistance Program (SNAP): ",
                     },
-                    "description": {"_label": "foodBenefits.snap_desc", "_default_message": "Food assistance"},
+                    "description": {
+                        "_label": "foodBenefits.snap_desc",
+                        "_default_message": "Food assistance",
+                    },
                 },
                 "wic": {
                     "name": {
@@ -2589,14 +2690,20 @@ class NcConfigurationData(ConfigurationData):
                     },
                 },
                 "sunbucks": {
-                    "name": {"_label": "foodBenefits.sunbucks", "_default_message": "NC Sun Bucks: "},
+                    "name": {
+                        "_label": "foodBenefits.sunbucks",
+                        "_default_message": "NC Sun Bucks: ",
+                    },
                     "description": {
                         "_label": "foodBenefits.sunbucks_desc",
                         "_default_message": "Summer break food assistance for families with school age children",
                     },
                 },
             },
-            "category_name": {"_label": "food", "_default_message": "Food and Nutrition"},
+            "category_name": {
+                "_label": "food",
+                "_default_message": "Food and Nutrition",
+            },
         },
         "childCare": {
             "benefits": {
@@ -2629,7 +2736,10 @@ class NcConfigurationData(ConfigurationData):
                     },
                 },
                 "lifeline": {
-                    "name": {"_label": "housingBenefits.lifeline", "_default_message": "Lifeline: "},
+                    "name": {
+                        "_label": "housingBenefits.lifeline",
+                        "_default_message": "Lifeline: ",
+                    },
                     "description": {
                         "_label": "housingBenefits.lifeline_desc",
                         "_default_message": "Helps low-income households pay for phone and internet service",
@@ -2656,21 +2766,13 @@ class NcConfigurationData(ConfigurationData):
                     },
                 },
             },
-            "category_name": {"_label": "housing", "_default_message": "Housing and Utilities"},
+            "category_name": {
+                "_label": "housing",
+                "_default_message": "Housing and Utilities",
+            },
         },
-        "taxCredits": {
+        "healthCare": {
             "benefits": {
-                "eitc": {
-                    "name": {"_label": "taxBenefits.eitc", "_default_message": "Earned Income Tax Credit (EITC): "},
-                    "description": {
-                        "_label": "taxBenefits.eitc_desc",
-                        "_default_message": "Federal tax credit - earned income",
-                    },
-                },
-                "ctc": {
-                    "name": {"_label": "taxBenefits.ctc", "_default_message": "Child Tax Credit (CTC): "},
-                    "description": {"_label": "taxBenefits.ctc_desc", "_default_message": "Federal tax credit"},
-                },
                 "nc_aca": {
                     "name": {
                         "_label": "taxBenefits.nc_aca",
@@ -2679,6 +2781,34 @@ class NcConfigurationData(ConfigurationData):
                     "description": {
                         "_label": "taxBenefits.nc_aca_desc",
                         "_default_message": "Health insurance marketplace and premium tax credit.",
+                    },
+                }
+            },
+            "category_name": {
+                "_label": "healthCare",
+                "_default_message": "Health Care",
+            },
+        },
+        "taxCredits": {
+            "benefits": {
+                "eitc": {
+                    "name": {
+                        "_label": "taxBenefits.eitc",
+                        "_default_message": "Earned Income Tax Credit (EITC): ",
+                    },
+                    "description": {
+                        "_label": "taxBenefits.eitc_desc",
+                        "_default_message": "Federal tax credit - earned income",
+                    },
+                },
+                "ctc": {
+                    "name": {
+                        "_label": "taxBenefits.ctc",
+                        "_default_message": "Child Tax Credit (CTC): ",
+                    },
+                    "description": {
+                        "_label": "taxBenefits.ctc_desc",
+                        "_default_message": "Federal tax credit",
                     },
                 },
             },
@@ -2702,7 +2832,10 @@ class NcConfigurationData(ConfigurationData):
             "dhs": "DHS_MFBLogo",
         },
         "logoAlt": {
-            "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
+            "default": {
+                "id": "referrerHook.logoAlts.default",
+                "defaultMessage": "MyFriendBen home page button",
+            },
             "bia": {
                 "id": "referrerHook.logoAlts.bia",
                 "defaultMessage": "Benefits in Action and MyFriendBen home page button",
@@ -2719,13 +2852,22 @@ class NcConfigurationData(ConfigurationData):
                 "id": "referrerHook.logoAlts.cch",
                 "defaultMessage": "Colorado Coalition for the Homeless and MyFriendBen home page button",
             },
-            "lgs": {"id": "referrerHook.logoAlts.lgs", "defaultMessage": "Let's Get Set home page button"},
-            "gac": {"id": "referrerHook.logoAlts.gac", "defaultMessage": "Get Ahead Colorado home page button"},
+            "lgs": {
+                "id": "referrerHook.logoAlts.lgs",
+                "defaultMessage": "Let's Get Set home page button",
+            },
+            "gac": {
+                "id": "referrerHook.logoAlts.gac",
+                "defaultMessage": "Get Ahead Colorado home page button",
+            },
             "fircsummitresourcecenter": {
                 "id": "referrerHook.logoAlts.fircsummitresourcecenter",
                 "defaultMessage": "Firc Summit Resource Center",
             },
-            "coBenefits": {"id": "referrerHook.logoAlts.coBenefits", "defaultMessage": "MyFriendBen home page button"},
+            "coBenefits": {
+                "id": "referrerHook.logoAlts.coBenefits",
+                "defaultMessage": "MyFriendBen home page button",
+            },
             "dhs": {
                 "id": "referrerHook.logoAlts.dhs",
                 "defaultMessage": "Denver Human Services and MyFriendBen home page button",
@@ -2765,7 +2907,10 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": ["nc_show_211_link"], "211nc": ["no_results_more_help", "nc_show_211_link"]},
+        "featureFlags": {
+            "default": ["nc_show_211_link"],
+            "211nc": ["no_results_more_help", "nc_show_211_link"],
+        },
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
