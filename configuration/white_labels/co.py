@@ -119,7 +119,7 @@ class CoConfigurationData(ConfigurationData):
         },
         "sendOffers": {
             "_label": "signUpOptions.sendOffers",
-            "_default_message": "Please notify me when there are paid opportunities to provide feedback on MyFriendBen.",
+            "_default_message": "Please notify me about other programs or opportunities, including feedback on MyFriendBen.",
         },
     }
 
@@ -162,6 +162,7 @@ class CoConfigurationData(ConfigurationData):
         "larimercounty": "Larimer County",
         "tellercounty": "Teller County",
         "pueblo": "Pueblo County",
+        "pitkin": "Pitkin County",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
         "fircsummitresourcecenter": {
@@ -217,7 +218,7 @@ class CoConfigurationData(ConfigurationData):
         "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
-            "_default_message": "Social Security Survivor's Benefits (Widow/Widower)",
+            "_default_message": "Social Security Survivor's Benefits (Widowed)",
         },
         "unemployment": {"_label": "incomeOptions.unemployment", "_default_message": "Unemployment Benefits"},
         "sSDependent": {
@@ -2202,6 +2203,7 @@ class CoConfigurationData(ConfigurationData):
             "larimercounty": "LC_MFBLogo",
             "tellercounty": "TC_MFBLogo",
             "pueblo": "PC_MFBLogo",
+            "pitkin": "PitkinCounty_MFBLogo",
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
@@ -2260,6 +2262,10 @@ class CoConfigurationData(ConfigurationData):
                 "id": "referrerHook.logoAlts.pueblo",
                 "defaultMessage": "Pueblo County and MyFriendBen home page button",
             },
+            "pitkin": {
+                "id": "referrerHook.logoAlts.pitkin",
+                "defaultMessage": "Pitkin County and MyFriendBen home page button",
+            },
         },
         "logoFooterSource": {"default": "MFB_Logo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
@@ -2269,6 +2275,7 @@ class CoConfigurationData(ConfigurationData):
             "larimercounty": "larimercounty-logo-size",
             "tellercounty": "tellercounty-logo-size",
             "pueblo": "pueblocounty-logo-size",
+            "pitkin": "pitkincounty-logo-size",
         },
         "twoOneOneLink": {
             "default": 'https://www.211colorado.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id="211mfb"',
@@ -2325,3 +2332,5 @@ class CoConfigurationData(ConfigurationData):
         "email": "hello@myfriendben.org",
         "survey": "https://docs.google.com/forms/d/e/1FAIpQLSdnfqjvlVSBQkJuUMvhEDUp-t6oD-8tPQi67uRG2iNetXmSfA/viewform?usp=sf_link",
     }
+
+    override_text = {}

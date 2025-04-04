@@ -202,6 +202,13 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_nfp",
             "has_fatc",
             "has_section_8",
+            "has_csfp",
+            "has_ccfa",
+            "has_ma_eaedc",
+            "has_ma_ssp",
+            "has_ma_mbta",
+            "has_ma_maeitc",
+            "has_ma_macftc",
             "has_employer_hi",
             "has_private_hi",
             "has_medicaid_hi",
@@ -381,6 +388,7 @@ class ProgramCategorySerializer(serializers.Serializer):
     name = TranslationSerializer()
     description = TranslationSerializer()
     caps = ProgramCategoryCapSerializer(many=True)
+    tax_category = serializers.BooleanField()
     programs = serializers.ListField(child=serializers.IntegerField())
 
 

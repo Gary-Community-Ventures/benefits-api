@@ -151,7 +151,7 @@ class LegalStatusAdmin(ModelAdmin):
 
 
 class CountiesAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
-    search_fields = ("white_label", "name")
+    search_fields = ("name",)
 
 
 class NavigatorLanguageAdmin(ModelAdmin):
