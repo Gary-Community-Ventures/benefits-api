@@ -105,7 +105,7 @@ class MaConfigurationData(ConfigurationData):
     relationship_options = {
         "child": {"_label": "relationshipOptions.child", "_default_message": "Child"},
         "fosterChild": {
-            "_label": "relationshipOptions.fosterChildOrKinshipChild",
+            "_label": "relationshipOptions.fosterChildOrKinshipChild.ma",
             "_default_message": "Foster Child / Kinship-Guardianship Care",
         },
         "stepChild": {"_label": "relationshipOptions.stepChild", "_default_message": "Step-child"},
