@@ -2786,16 +2786,10 @@ class NcConfigurationData(ConfigurationData):
 
     privacy_policy = {
         "en-us": "https://bennc.org/privacy-policy/",
-        "es": "https://nc.myfriendben.org/es/data-privacy-policy",
-        "fr": "https://nc.myfriendben.org/fr/data-privacy-policy",
-        "vi": "https://nc.myfriendben.org/vi/data-privacy-policy",
     }
 
     consent_to_contact = {
-        "en-us": "https://bennc.org/additional-terms-and-consent-to-contact/",
-        "es": "https://nc.myfriendben.org/es/additional-terms-and-consent-to-contact",
-        "fr": "https://nc.myfriendben.org/fr/additional-terms-and-consent-to-contact",
-        "vi": "https://nc.myfriendben.org/vi/additional-terms-and-consent-to-contact",
+        "en-us": "https://bennc.org/terms-and-conditions/",
     }
 
     feedback_links = {
