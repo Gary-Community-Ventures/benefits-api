@@ -43,7 +43,7 @@ class Command(BaseCommand):
         unsynced = (
             User.objects.filter(Q(send_offers=True) | Q(send_updates=True))
             .filter(external_id__isnull=True)
-            .filter(tcpa_consent=True)
+            .filter(Q(tcpa_consent=True) | Q(explicit_tcpa_consent=True))
         )
 
         for user in unsynced:
