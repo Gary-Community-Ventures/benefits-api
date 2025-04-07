@@ -7,22 +7,22 @@ from programs.programs.federal.pe.spm import Snap
 class MaSnap(Snap):
     pe_inputs = [
         *Snap.pe_inputs,
-        dependency.household.MaStateCode,
+        dependency.household.MaStateCodeDependency,
     ]
 
 
 class MaTafdc(PolicyEngineSpmCalulator):
     pe_name = "ma_tafdc"
     pe_inputs = [
-        dependency.spm.PreSubsidyChildcareExpenses,
+        dependency.spm.PreSubsidyChildcareExpensesDependency,
         dependency.member.MaTanfCountableGrossEarnedIncomeDependency,
         dependency.member.MaTanfCountableGrossUnearnedIncomeDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.member.MaTotalHoursWorked,
+        dependency.member.MaTotalHoursWorkedDependency,
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
-        dependency.household.IsInPublicHousing,
-        dependency.household.MaStateCode,
+        dependency.household.IsInPublicHousingDependency,
+        dependency.household.MaStateCodeDependency,
     ]
 
     pe_outputs = [dependency.spm.MaTafdc]
@@ -31,9 +31,9 @@ class MaTafdc(PolicyEngineSpmCalulator):
 class MaEaedc(PolicyEngineSpmCalulator):
     pe_name = "ma_eaedc"
     pe_inputs = [
-        dependency.spm.MaEaedcLivingArangement,
-        dependency.spm.CashAssets,
-        dependency.spm.PreSubsidyChildcareExpenses,
+        dependency.spm.MaEaedcLivingArangementDependency,
+        dependency.spm.CashAssetsDependency,
+        dependency.spm.PreSubsidyChildcareExpensesDependency,
         dependency.member.EmploymentIncomeDependency,
         dependency.member.SelfEmploymentIncomeDependency,
         dependency.member.InvestmentIncomeDependency,
@@ -43,7 +43,7 @@ class MaEaedc(PolicyEngineSpmCalulator):
         dependency.member.TaxUnitHeadDependency,
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.member.MaTotalHoursWorked,
+        dependency.member.MaTotalHoursWorkedDependency,
         dependency.member.IsDisabledDependency,
         *Ssi.pe_inputs,
     ]

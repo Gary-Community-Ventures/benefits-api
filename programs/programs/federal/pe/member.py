@@ -127,7 +127,7 @@ class Ccdf(PolicyEngineMembersCalculator):
     pe_name = "is_ccdf_eligible"
     pe_inputs = [
         dependency.spm.AssetsDependency,
-        dependency.member.CcdfReasonCareEligible,
+        dependency.member.CcdfReasonCareEligibleDependency,
         dependency.member.EmploymentIncomeDependency,
         dependency.member.SelfEmploymentIncomeDependency,
         dependency.member.PensionIncomeDependency,

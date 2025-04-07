@@ -230,7 +230,7 @@ class NcTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
         )
 
 
-class PreSubsidyChildcareExpenses(SpmUnit):
+class PreSubsidyChildcareExpensesDependency(SpmUnit):
     field = "spm_unit_pre_subsidy_childcare_expenses"
 
     def value(self):
@@ -241,7 +241,7 @@ class NcScca(SpmUnit):
     field = "nc_scca"
 
 
-class NcSccaCountableIncome(SpmUnit):
+class NcSccaCountableIncomeDependency(SpmUnit):
     field = "nc_scca_countable_income"
     income_types = [
         "wages",
@@ -304,7 +304,7 @@ class MaEaedc(SpmUnit):
 
 
 # NOTE: PE has an open issue to calculate this: https://github.com/PolicyEngine/policyengine-us/issues/5768
-class MaEaedcLivingArangement(SpmUnit):
+class MaEaedcLivingArangementDependency(SpmUnit):
     field = "ma_eaedc_living_arrangement"
 
     def value(self):
@@ -315,7 +315,7 @@ class MaEaedc(SpmUnit):
     field = "ma_eaedc"
 
 
-class CashAssets(SpmUnit):
+class CashAssetsDependency(SpmUnit):
     field = "spm_unit_cash_assets"
 
     def value(self):

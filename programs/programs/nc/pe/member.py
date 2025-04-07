@@ -6,7 +6,7 @@ from programs.programs.federal.pe.member import Wic
 class NcMedicaid(Medicaid):
     pe_inputs = [
         *Medicaid.pe_inputs,
-        dependency.household.NcStateCode,
+        dependency.household.NcStateCodeDependency,
         dependency.member.IsDisabledDependency,
     ]
 
@@ -36,5 +36,5 @@ class NcWic(Wic):
     }
     pe_inputs = [
         *Wic.pe_inputs,
-        dependency.household.NcStateCode,
+        dependency.household.NcStateCodeDependency,
     ]

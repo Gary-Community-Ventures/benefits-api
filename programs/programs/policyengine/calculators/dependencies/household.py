@@ -10,15 +10,15 @@ class StateCode(Household):
         return self.state
 
 
-class CoStateCode(StateCode):
+class CoStateCodeDependency(StateCode):
     state = "CO"
 
 
-class NcStateCode(StateCode):
+class NcStateCodeDependency(StateCode):
     state = "NC"
 
 
-class MaStateCode(StateCode):
+class MaStateCodeDependency(StateCode):
     state = "MA"
 
 
@@ -29,7 +29,23 @@ class NcCountyDependency(Household):
         return self.screen.county.replace(" ", "_").upper() + "_NC"
 
 
-class IsInPublicHousing(Household):
+class NcCountyDependency(Household):
+    field = "county_str"
+    dependencies = ["county"]
+
+    def value(self):
+        return self.screen.county.replace(" ", "_").upper() + "_NC"
+
+
+class ZipCode(Household):
+    field = "zip_code"
+    dependencies = ["zipcode"]
+
+    def value(self):
+        return self.screen.zipcode
+
+
+class IsInPublicHousingDependency(Household):
     field = "is_in_public_housing"
 
     def value(self):

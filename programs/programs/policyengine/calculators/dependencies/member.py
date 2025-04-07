@@ -121,6 +121,7 @@ class IsDisabledDependency(Member):
 # by the total number of elderly or disabled members.
 class MedicalExpenseDependency(Member):
     field = "medical_out_of_pocket_expenses"
+    dependencies = ["age"]
 
     def value(self):
         elderly_or_disabled_members = [
@@ -136,6 +137,7 @@ class MedicalExpenseDependency(Member):
 
 class PropertyTaxExpenseDependency(Member):
     field = "real_estate_taxes"
+    dependencies = ["age"]
 
     def value(self):
         if self.member.age >= 18:
@@ -148,7 +150,7 @@ class IsBlindDependency(Member):
     field = "is_blind"
 
     def value(self):
-        return self.member.visually_impaired
+        return self.member.visually_impaired or False
 
 
 class SsiReportedDependency(Member):
@@ -216,7 +218,7 @@ class PellGrantCountableAssetsDependency(Member):
 
 class CostOfAttendingCollegeDependency(Member):
     field = "cost_of_attending_college"
-    dependencies = ("age",)
+    dependencies = ("age", "student")
 
     def value(self):
         return 22_288 * (self.member.age >= 16 and self.member.student)
@@ -239,6 +241,7 @@ class CommoditySupplementalFoodProgram(Member):
 
 class SnapChildSupportDependency(Member):
     field = "child_support_expense"
+    dependencies = ("age", "household_size")
 
     def value(self):
         return self.screen.calc_expenses("yearly", ["childSupport"]) / self.screen.household_size
@@ -246,7 +249,6 @@ class SnapChildSupportDependency(Member):
 
 class SnapIneligibleStudentDependency(Member):
     field = "is_snap_ineligible_student"
-
     dependencies = ("age",)
 
     # PE does not take the age of the children into acount, so we calculate this ourselves
@@ -254,7 +256,7 @@ class SnapIneligibleStudentDependency(Member):
         return snap_ineligible_student(self.screen, self.member)
 
 
-class TotalHoursWorked(Member):
+class TotalHoursWorkedDependency(Member):
     field = "weekly_hours_worked_before_lsr"
     dependencies = ("income_frequency",)
 
@@ -275,7 +277,7 @@ class TotalHoursWorked(Member):
         return hours
 
 
-class MaTotalHoursWorked(TotalHoursWorked):
+class MaTotalHoursWorkedDependency(TotalHoursWorkedDependency):
     minimum_wage = 15
 
 
@@ -323,7 +325,7 @@ class Ccdf(Member):
     field = "is_ccdf_eligible"
 
 
-class CcdfReasonCareEligible(Member):
+class CcdfReasonCareEligibleDependency(Member):
     field = "is_ccdf_reason_for_care_eligible"
 
     def value(self):

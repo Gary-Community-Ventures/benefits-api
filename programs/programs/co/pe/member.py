@@ -21,7 +21,7 @@ class CoMedicaid(Medicaid):
     }
     pe_inputs = [
         *Medicaid.pe_inputs,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
     ]
 
 
@@ -38,7 +38,7 @@ class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitHeadDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
     ]
     pe_outputs = [dependency.member.Andcs]
 
@@ -53,7 +53,7 @@ class OldAgePension(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitHeadDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
     ]
     pe_outputs = [dependency.member.Oap]
 
@@ -64,7 +64,7 @@ class Chp(PolicyEngineMembersCalculator):
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
         dependency.member.ExpectedChildrenPregnancyDependency,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
         *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.member.ChpEligible]
@@ -85,7 +85,7 @@ class FamilyAffordabilityTaxCredit(PolicyEngineMembersCalculator):
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
         dependency.member.TaxUnitSpouseDependency,
         *dependency.irs_gross_income,
     ]
@@ -103,7 +103,7 @@ class CoWic(Wic):
     }
     pe_inputs = [
         *Wic.pe_inputs,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
     ]
 
 

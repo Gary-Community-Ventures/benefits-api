@@ -7,7 +7,7 @@ class Coeitc(PolicyEngineTaxUnitCalulator):
     pe_name = "co_eitc"
     pe_inputs = [
         *Eitc.pe_inputs,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
     ]
     pe_outputs = [dependency.tax.Coeitc]
 
@@ -16,6 +16,6 @@ class Coctc(PolicyEngineTaxUnitCalulator):
     pe_name = "co_ctc"
     pe_inputs = [
         *Ctc.pe_inputs,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
     ]
     pe_outputs = [dependency.tax.Coctc]

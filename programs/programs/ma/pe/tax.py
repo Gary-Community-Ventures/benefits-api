@@ -5,7 +5,7 @@ from programs.programs.policyengine.calculators.base import PolicyEngineTaxUnitC
 
 class Maeitc(PolicyEngineTaxUnitCalulator):
     pe_name = "ma_eitc"
-    pe_inputs = [*Eitc.dependencies, dependency.household.MaStateCode]
+    pe_inputs = [*Eitc.dependencies, dependency.household.MaStateCodeDependency]
     pe_outputs = [dependency.tax.Maeitc]
 
 
@@ -15,7 +15,7 @@ class MaChildFamilyCredit(PolicyEngineTaxUnitCalulator):
         dependency.member.TaxUnitDependentDependency,
         dependency.member.AgeDependency,
         dependency.member.IsDisabledDependency,
-        dependency.household.MaStateCode,
+        dependency.household.MaStateCodeDependency,
         *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.tax.MaChildFamilyCredit]
