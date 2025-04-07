@@ -81,20 +81,6 @@ class Medicaid(PolicyEngineMembersCalculator):
         return self.medicaid_categories[medicaid_category] * 12
 
 
-class Aca(PolicyEngineMembersCalculator):
-    pe_name = "aca_ptc"
-    pe_inputs = [
-        dependency.member.TaxUnitDependentDependency,
-        dependency.member.TaxUnitHeadDependency,
-        dependency.member.TaxUnitSpouseDependency,
-        dependency.member.AgeDependency,
-        dependency.member.IsDisabledDependency,
-        *dependency.irs_gross_income,
-        *Medicaid.pe_inputs,
-    ]
-    pe_outputs = []
-
-
 class PellGrant(PolicyEngineMembersCalculator):
     pe_name = "pell_grant"
     pe_inputs = [
@@ -169,7 +155,8 @@ class Aca(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitHeadDependency,
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.AgeDependency,
+        dependency.member.IsDisabledDependency,
         *dependency.irs_gross_income,
         # NOTE: Need to add state and county dependencies per state
     ]
-    pe_outputs = []
+    pe_outputs = [dependency.member]
