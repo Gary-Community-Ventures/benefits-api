@@ -4,7 +4,7 @@ import programs.programs.messages as messages
 
 class NCLieap(ProgramCalculator):
     fpl_percent = 1.3
-    expenses = ["rent", "mortgage", "heating"]
+    expenses = ["heating"]
     dependencies = [
         "income_frequency",
         "income_amount",
