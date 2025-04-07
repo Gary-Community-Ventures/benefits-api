@@ -159,3 +159,17 @@ class Ccdf(PolicyEngineMembersCalculator):
             return 0
 
         return self.child_care_cost(member)
+
+
+class Aca(PolicyEngineMembersCalculator):
+    pe_name = "aca_ptc"
+    pe_inputs = [
+        *Medicaid.pe_inputs,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.member.TaxUnitHeadDependency,
+        dependency.member.TaxUnitSpouseDependency,
+        dependency.member.AgeDependency,
+        *dependency.irs_gross_income,
+        # NOTE: Need to add state and county dependencies per state
+    ]
+    pe_outputs = []

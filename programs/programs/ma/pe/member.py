@@ -5,8 +5,8 @@ from .spm import MaSnap, MaTafdc, MaEaedc
 from screener.models import HouseholdMember
 
 
-# NOTE: MassHealth is Medicaid in MA
-class MaMassHealth(Medicaid):
+# NOTE: This is the MA Emergency Medicaid
+class MaMassHealthLimited(Medicaid):
     pe_inputs = [
         *Medicaid.pe_inputs,
         dependency.household.MaStateCode,
