@@ -1,6 +1,6 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineMembersCalculator
 import programs.programs.policyengine.calculators.dependencies as dependency
-from programs.programs.federal.pe.member import Aca, Ccdf, Medicaid, Wic
+from programs.programs.federal.pe.member import Ccdf, Medicaid, Wic
 from .spm import MaSnap, MaTafdc, MaEaedc
 from screener.models import HouseholdMember
 
@@ -47,14 +47,6 @@ class MaMassHealthLimited(Medicaid):
         "AGED": 0,
         "DISABLED": 0,
     }
-
-
-class MaAca(Aca):
-    pe_inputs = [
-        *Aca.pe_inputs,
-        dependency.household.MaStateCodeDependency,
-        dependency.household.MaCountyDependency,
-    ]
 
 
 class MaWic(Wic):

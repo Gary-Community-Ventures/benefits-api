@@ -37,7 +37,7 @@ class NcCountyDependency(Household):
         return self.screen.county.replace(" ", "_").upper() + "_NC"
 
 
-class ZipCode(Household):
+class ZipCodeDependency(Household):
     field = "zip_code"
     dependencies = ["zipcode"]
 

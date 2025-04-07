@@ -16,6 +16,7 @@ ma_member_calculators = {
 ma_tax_unit_calculators = {
     "ma_maeitc": tax.Maeitc,
     "ma_cfc": tax.MaChildFamilyCredit,
+    "ma_aca": tax.MaAca,
 }
 
 ma_spm_calculators = {

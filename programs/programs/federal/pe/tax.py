@@ -1,3 +1,4 @@
+from programs.programs.federal.pe.member import Medicaid
 from programs.programs.policyengine.calculators.base import PolicyEngineTaxUnitCalulator
 from programs.programs.policyengine.calculators.constants import ALL_TAX_UNITS
 import programs.programs.policyengine.calculators.dependencies as dependency
@@ -23,3 +24,18 @@ class Ctc(PolicyEngineTaxUnitCalulator):
         *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.tax.Ctc]
+
+
+class Aca(PolicyEngineTaxUnitCalulator):
+    pe_name = "aca_ptc"
+    pe_inputs = [
+        *Medicaid.pe_inputs,
+        dependency.member.TaxUnitDependentDependency,
+        dependency.member.TaxUnitHeadDependency,
+        dependency.member.TaxUnitSpouseDependency,
+        dependency.member.AgeDependency,
+        dependency.member.IsDisabledDependency,
+        dependency.household.ZipCodeDependency,
+        *dependency.irs_gross_income,
+    ]
+    pe_outputs = [dependency.tax.Aca]
