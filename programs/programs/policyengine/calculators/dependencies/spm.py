@@ -297,3 +297,27 @@ class AssetsDependency(SpmUnit):
     def value(self):
         assets = self.screen.household_assets or 0
         return int(assets)
+
+
+class MaEaedc(SpmUnit):
+    field = "ma_eaedc"
+
+
+# NOTE: PE has an open issue to calculate this: https://github.com/PolicyEngine/policyengine-us/issues/5768
+class MaEaedcLivingArangement(SpmUnit):
+    field = "ma_eaedc_living_arrangement"
+
+    def value(self):
+        return "A"
+
+
+class MaEaedc(SpmUnit):
+    field = "ma_eaedc"
+
+
+class CashAssets(SpmUnit):
+    field = "spm_unit_cash_assets"
+
+    def value(self):
+        assets = self.screen.household_assets or 0
+        return int(assets)

@@ -1,7 +1,7 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineMembersCalculator
 import programs.programs.policyengine.calculators.dependencies as dependency
 from programs.programs.federal.pe.member import Ccdf, Medicaid, Wic
-from .spm import MaSnap, MaTafdc
+from .spm import MaSnap, MaTafdc, MaEaedc
 from screener.models import HouseholdMember
 
 
@@ -40,7 +40,7 @@ class MaMassHealthLimited(Medicaid):
         "INFANT": 239,
         "YOUNG_CHILD": 239,
         "OLDER_CHILD": 239,
-        "PREGNANT": 0,
+        "PREGNANT": 419,
         "YOUNG_ADULT": 0,
         "PARENT": 0,
         "SSI_RECIPIENT": 0,
@@ -87,7 +87,7 @@ class MaMbta(PolicyEngineMembersCalculator):
         *MaSnap.pe_inputs,
         *MaTafdc.pe_inputs,
         *MaMassHealth.pe_inputs,
-        # TODO: MAEADC
+        *MaEaedc.pe_inputs,
     ]
     pe_outputs = [
         dependency.member.MaMbtaProgramsEligible,
@@ -100,10 +100,12 @@ class MaMbta(PolicyEngineMembersCalculator):
 
     def member_value(self, member: HouseholdMember):
         mbta_programs_eligible = self.get_member_dependency_value(dependency.member.MaMbtaProgramsEligible, member.id)
-        mbta_age_eligible = self.get_member_dependency_value(dependency.member.MaMbtaProgramsEligible, member.id)
+        mbta_age_eligible = self.get_member_dependency_value(dependency.member.MaMbtaAgeEligible, member.id)
         mbta_eligible = mbta_programs_eligible and mbta_age_eligible
-        senior_charlie_eligible = self.get_member_dependency_value(dependency.member.MaMbtaProgramsEligible, member.id)
-        tap_charlie_eligible = self.get_member_dependency_value(dependency.member.MaMbtaProgramsEligible, member.id)
+        senior_charlie_eligible = self.get_member_dependency_value(
+            dependency.member.MaSeniorCharlieCardEligible, member.id
+        )
+        tap_charlie_eligible = self.get_member_dependency_value(dependency.member.MaTapCharlieCardEligible, member.id)
 
         if mbta_eligible or tap_charlie_eligible or senior_charlie_eligible:
             return self.amount

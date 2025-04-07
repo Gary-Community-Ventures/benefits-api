@@ -254,11 +254,11 @@ class SnapIneligibleStudentDependency(Member):
         return snap_ineligible_student(self.screen, self.member)
 
 
-class MaTotalHoursWorked(Member):
-    field = "weekly_hours_worked"
+class TotalHoursWorked(Member):
+    field = "weekly_hours_worked_before_lsr"
     dependencies = ("income_frequency",)
 
-    minimum_wage = 15
+    minimum_wage = 7.25
     work_weeks_in_month = 4
 
     def value(self):
@@ -273,6 +273,10 @@ class MaTotalHoursWorked(Member):
             hours += int(income.monthly()) / self.minimum_wage / self.work_weeks_in_month
 
         return hours
+
+
+class MaTotalHoursWorked(TotalHoursWorked):
+    minimum_wage = 15
 
 
 class MaTanfCountableGrossEarnedIncomeDependency(Member):
@@ -299,19 +303,19 @@ class MaTanfCountableGrossUnearnedIncomeDependency(Member):
         return int(self.member.calc_gross_income("yearly", ["unearned"], exclude=["cashAssistance"]))
 
 
-class MaTapCharlieCardEligible:
+class MaTapCharlieCardEligible(Member):
     field = "ma_mbta_tap_charlie_card_eligible"
 
 
-class MaSeniorCharlieCardEligible:
+class MaSeniorCharlieCardEligible(Member):
     field = "ma_mbta_senior_charlie_card_eligible"
 
 
-class MaMbtaProgramsEligible:
+class MaMbtaProgramsEligible(Member):
     field = "ma_mbta_enrolled_in_applicable_programs"
 
 
-class MaMbtaAgeEligible:
+class MaMbtaAgeEligible(Member):
     field = "ma_mbta_income_eligible_reduced_fare_eligible"
 
 
@@ -368,14 +372,14 @@ class InvestmentIncomeDependency(IncomeDependency):
     income_types = ["investment"]
 
 
-class RentalIncomeDependency(IncomeDependency):
-    field = "capital_gains"
-    income_types = ["rental"]
-
-
 class MiscellaneousIncomeDependency(IncomeDependency):
     field = "miscellaneous_income"
     income_types = ["gifts"]
+
+
+class UnemploymentIncomeDependency(IncomeDependency):
+    field = "unemployment_compensation"
+    income_types = ["unemployment"]
 
 
 class SsiEarnedIncomeDependency(IncomeDependency):
