@@ -6,8 +6,11 @@ from programs.programs.policyengine.calculators.base import PolicyEngineCalulato
 
 
 ma_member_calculators = {
-    "ma_medicaid": member.MaMedicaid,
     "ma_wic": member.MaWic,
+    "ma_ccdf": member.MaCcdf,
+    "ma_mass_health": member.MaMassHealth,
+    "ma_mass_health_limited": member.MaMassHealthLimited,
+    "ma_mbta": member.MaMbta,
 }
 
 ma_tax_unit_calculators = {

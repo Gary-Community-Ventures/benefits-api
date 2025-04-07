@@ -77,7 +77,6 @@ class PrivateApiSim(ApiSim):
 
         res = requests.post(self.pe_url, json=data, headers=headers)
 
-        self.data = res.json()["result"]
         # FIXME:
         import subprocess
 
@@ -90,7 +89,9 @@ class PrivateApiSim(ApiSim):
             encoding="utf-8",
         )
 
-        process.communicate(input=str(self.data))
+        process.communicate(input=str(res.json()))
+
+        self.data = res.json()["result"]
 
 
 pe_engines: list[Sim] = [PrivateApiSim, ApiSim]

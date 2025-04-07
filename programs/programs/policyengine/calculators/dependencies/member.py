@@ -299,6 +299,33 @@ class MaTanfCountableGrossUnearnedIncomeDependency(Member):
         return int(self.member.calc_gross_income("yearly", ["unearned"], exclude=["cashAssistance"]))
 
 
+class MaTapCharlieCardEligible:
+    field = "ma_mbta_tap_charlie_card_eligible"
+
+
+class MaSeniorCharlieCardEligible:
+    field = "ma_mbta_senior_charlie_card_eligible"
+
+
+class MaMbtaProgramsEligible:
+    field = "ma_mbta_enrolled_in_applicable_programs"
+
+
+class MaMbtaAgeEligible:
+    field = "ma_mbta_income_eligible_reduced_fare_eligible"
+
+
+class Ccdf(Member):
+    field = "is_ccdf_eligible"
+
+
+class CcdfReasonCareEligible(Member):
+    field = "is_ccdf_reason_for_care_eligible"
+
+    def value(self):
+        return True
+
+
 class IncomeDependency(Member):
     dependencies = (
         "income_type",
@@ -334,6 +361,21 @@ class PensionIncomeDependency(IncomeDependency):
 class SocialSecurityIncomeDependency(IncomeDependency):
     field = "social_security"
     income_types = ["sSDisability", "sSSurvivor", "sSRetirement", "sSDependent"]
+
+
+class InvestmentIncomeDependency(IncomeDependency):
+    field = "capital_gains"
+    income_types = ["investment"]
+
+
+class RentalIncomeDependency(IncomeDependency):
+    field = "capital_gains"
+    income_types = ["rental"]
+
+
+class MiscellaneousIncomeDependency(IncomeDependency):
+    field = "miscellaneous_income"
+    income_types = ["gifts"]
 
 
 class SsiEarnedIncomeDependency(IncomeDependency):

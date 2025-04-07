@@ -285,3 +285,11 @@ class SchoolMealCountableIncomeDependency(SpmUnit):
 
     def value(self):
         return self.screen.calc_gross_income("yearly", self.income_types)
+
+
+class AssetsDependency(SpmUnit):
+    field = "spm_unit_assets"
+
+    def value(self):
+        assets = self.screen.household_assets or 0
+        return int(assets)

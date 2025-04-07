@@ -561,6 +561,14 @@ class HouseholdMember(models.Model):
 
         return today.year - birth_year_month.year - 1
 
+    def fraction_age(self) -> float:
+        today = datetime.now()
+
+        current_year = today.year + today.month / 12
+        birth_year = self.birth_year_month.year + self.birth_year_month.month / 12
+
+        return current_year - birth_year
+
     def missing_fields(self):
         member_fields = (
             "relationship",

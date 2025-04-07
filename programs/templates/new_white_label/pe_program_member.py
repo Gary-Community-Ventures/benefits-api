@@ -7,10 +7,21 @@ from programs.programs.federal.pe.member import Medicaid
 
 # NOTE: here is a possible implentation of Medicaid for {{name}}
 class {{code_capitalize}}Medicaid(Medicaid):
-    child_medicaid_average = 200 * 12  # TODO: add state specific values
-    adult_medicaid_average = 310 * 12
-    aged_medicaid_average = 170 * 12
     pe_inputs = [
         *Medicaid.pe_inputs,
         dependency.household.{{code_capitalize}}StateCode,
     ]
+
+    medicaid_categories = {  # TODO: add state specific values
+        "NONE": 0,
+        "ADULT": 0,
+        "INFANT": 0,
+        "YOUNG_CHILD": 0,
+        "OLDER_CHILD": 0,
+        "PREGNANT": 0,
+        "YOUNG_ADULT": 0,
+        "PARENT": 0,
+        "SSI_RECIPIENT": 0,
+        "AGED": 0,
+        "DISABLED": 0,
+    }

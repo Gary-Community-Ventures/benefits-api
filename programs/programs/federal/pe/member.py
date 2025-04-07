@@ -25,7 +25,7 @@ class Wic(PolicyEngineMembersCalculator):
         if self.get_member_variable(member.id) <= 0:
             return 0
 
-        wic_category = self.sim.value("people", str(member.id), "wic_category", self.pe_period)
+        wic_category = self.get_member_dependency_value(dependency.member.WicCategory, member.id)
         return self.wic_categories[wic_category] * 12
 
 
@@ -35,6 +35,7 @@ class Medicaid(PolicyEngineMembersCalculator):
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
         dependency.member.SsiCountableResourcesDependency,
+        dependency.member.IsDisabledDependency,
         *dependency.irs_gross_income,
     ]
     pe_outputs = [
@@ -44,35 +45,40 @@ class Medicaid(PolicyEngineMembersCalculator):
         dependency.member.MedicaidSeniorOrDisabled,
     ]
 
-    child_medicaid_average = 0
-    adult_medicaid_average = 0
-    aged_medicaid_average = 0
+    # NOTE: Monthly
+    medicaid_categories = {
+        "NONE": 0,
+        "ADULT": 0,
+        "INFANT": 0,
+        "YOUNG_CHILD": 0,
+        "OLDER_CHILD": 0,
+        "PREGNANT": 0,
+        "YOUNG_ADULT": 0,
+        "PARENT": 0,
+        "SSI_RECIPIENT": 0,
+        "AGED": 0,
+        "DISABLED": 0,
+    }
 
-    def _value_by_age(self, age: int):
-        # here we need to adjust for children as policy engine
-        # just uses the average which skews very high for adults and
-        # aged adults
-
-        if age <= 18:
-            return self.child_medicaid_average
-        elif age > 18 and age < 65:
-            return self.adult_medicaid_average
-        elif age >= 65:
-            return self.aged_medicaid_average
-
-        return 0
+    aged_min_age = 65
 
     def member_value(self, member: HouseholdMember):
         if self.get_member_variable(member.id) <= 0:
             return 0
 
-        # here we need to adjust for children as policy engine
-        # just uses the average which skews very high for adults and
-        # aged adults
-        return self._value_by_age(self._get_age(member.id))
+        # In Policy Engine, senior and disabled are not included in the medicaid categories variable.
+        # Instead, a separate variable is used to determine the medicaid eligiblity for a senior or disabled member.
+        is_senior_or_disabled = self.get_member_dependency_value(dependency.member.MedicaidSeniorOrDisabled, member.id)
 
-    def _get_age(self, member_id: int) -> int:
-        return self.sim.value(self.pe_category, str(member_id), "age", self.pe_period)
+        if is_senior_or_disabled:
+            if member.has_disability():
+                return self.medicaid_categories["DISABLED"] * 12
+            elif member.age >= self.aged_min_age:
+                return self.medicaid_categories["AGED"] * 12
+
+        medicaid_category = self.get_member_dependency_value(dependency.member.MedicaidCategory, member.id)
+
+        return self.medicaid_categories[medicaid_category] * 12
 
 
 class PellGrant(PolicyEngineMembersCalculator):
@@ -115,3 +121,27 @@ class CommoditySupplementalFoodProgram(PolicyEngineMembersCalculator):
         dependency.spm.SchoolMealCountableIncomeDependency,
     ]
     pe_outputs = [dependency.member.CommoditySupplementalFoodProgram]
+
+
+class Ccdf(PolicyEngineMembersCalculator):
+    pe_name = "is_ccdf_eligible"
+    pe_inputs = [
+        dependency.spm.AssetsDependency,
+        dependency.member.CcdfReasonCareEligible,
+        dependency.member.EmploymentIncomeDependency,
+        dependency.member.SelfEmploymentIncomeDependency,
+        dependency.member.PensionIncomeDependency,
+        dependency.member.InvestmentIncomeDependency,
+        dependency.member.RentalIncomeDependency,
+        dependency.member.MiscellaneousIncomeDependency,
+    ]
+    pe_outputs = [dependency.member.Ccdf]
+
+    def child_care_cost(self, member: HouseholdMember) -> int:
+        raise NotImplemented("Please define the 'child_care_cost' method")
+
+    def member_value(self, member: HouseholdMember):
+        if not self.get_member_variable(member.id):
+            return 0
+
+        return self.child_care_cost(member)
