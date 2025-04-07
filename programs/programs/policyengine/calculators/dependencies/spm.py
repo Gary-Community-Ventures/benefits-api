@@ -223,7 +223,11 @@ class NcTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
     )
 
     def value(self):
-        return int(self.screen.calc_gross_income("yearly", ["unearned"]))
+        return int(
+            self.screen.calc_gross_income(
+                "yearly", ["unearned"], exclude=["sSI", "gifts", "cashAssistance", "cOSDisability"]
+            )
+        )
 
 
 class PreSubsidyChildcareExpenses(SpmUnit):

@@ -36,7 +36,7 @@ class Command(BaseCommand):
 
         source_screens: list[Screen] = (
             Screen.objects.using(self.MIGRATION_SOURCE_DB)
-            .all()
+            .filter(validations__isnull=True)
             .prefetch_related(
                 Prefetch("user", queryset=User.objects.order_by("pk")),
                 Prefetch("white_label", queryset=WhiteLabel.objects.order_by("pk")),

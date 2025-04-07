@@ -22,25 +22,14 @@ class NcConfigurationData(ConfigurationData):
             {
                 "name": {
                     "_default_message": "2-1-1 North Carolina",
-                    "_label": "moreHelp.resource_name1",
+                    "_label": "moreHelp.nc_resource_name1",
                 },
                 "link": "https://nc211.org/",
                 "phone": {
-                    "_default_message": "Dial 2-1-1 or 866.760.6489",
-                    "_label": "moreHelp.resource_phone1",
+                    "_default_message": "Dial 2-1-1 or 1-888-892-1162",
+                    "_label": "moreHelp.nc_resource_phone1",
                 },
-            },
-            {
-                "name": {
-                    "_default_message": "NCCARE360",
-                    "_label": "moreHelp.resource_name2",
-                },
-                "description": {
-                    "_default_message": "NCCARE360 is the first statewide coordinated care network that better connects individuals to local services and resources. NCCARE360 provides a solution to a fragmented health and human services system by connecting providers and organizations across sectors in a shared technology network. In the NCCARE360 network, providers can electronically connect individuals and families who have unmet social needs to community resources. NCCARE360 also allows for easy feedback and follow-up to help close the care loop for individuals and families seeking help.",
-                    "_label": "moreHelp.resource_description1",
-                },
-                "link": "https://nccare360.org/request-assistance/",
-            },
+            }
         ]
     }
 
@@ -117,7 +106,7 @@ class NcConfigurationData(ConfigurationData):
         },
         "sendOffers": {
             "_label": "signUpOptions.sendOffers",
-            "_default_message": "Please notify me when there are paid opportunities to provide feedback on this screener.",
+            "_default_message": "Please notify me about other programs or opportunities, including feedback on MyFriendBen.",
         },
     }
 
@@ -186,34 +175,37 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.211nc",
             "_default_message": "2-1-1 North Carolina",
         },
-        "testOrProspect": {
-            "_label": "referralOptions.testOrProspect",
-            "_default_message": "Test / Prospective Partner",
-        },
-        "searchEngine": {
-            "_label": "referralOptions.searchEngine",
-            "_default_message": "Google or other search engine",
-        },
-        "socialMedia": {
-            "_label": "referralOptions.socialMedia",
-            "_default_message": "Social Media",
-        },
-        "other": {"_label": "referralOptions.other", "_default_message": "Other"},
-        "onTrackFin": {
-            "_label": "referralOptions.onTrackFin",
-            "_default_message": "On Track Financial",
+        "blueprint": {
+            "_label": "referralOptions.blueprint",
+            "_default_message": "Blueprint NC",
         },
         "careReach": {
             "_label": "referralOptions.careReach",
             "_default_message": "Care Reach",
         },
+        "fiel": {
+            "_label": "referralOptions.fiel",
+            "_default_message": "Duke Project FIEL-NC (FIEL-NC)",
+        },
+        "elRefugio": {
+            "_label": "referralOptions.elRefugio",
+            "_default_message": "El Refugio",
+        },
+        "felp": {
+            "_label": "referralOptions.felp",
+            "_default_message": "Future Endeavors Life Program (FELP)",
+        },
+        "mda": {
+            "_label": "referralOptions.mda",
+            "_default_message": "Montagnard Dega Association",
+        },
         "mountainProjects": {
             "_label": "referralOptions.mountainProjects",
             "_default_message": "Mountain Projects",
         },
-        "pisgahLegal": {
-            "_label": "referralOptions.pisgahLegal",
-            "_default_message": "Pisgah Legal Services",
+        "mgm": {
+            "_label": "referralOptions.mgm",
+            "_default_message": "Mundeke Gospel Mission",
         },
         "nariahWay": {
             "_label": "referralOptions.nw",
@@ -222,6 +214,14 @@ class NcConfigurationData(ConfigurationData):
         "ncchwa": {
             "_label": "referralOptions.NCCHWA",
             "_default_message": "North Carolina Community Health Worker Association (NCCHWA)",
+        },
+        "onTrackFin": {
+            "_label": "referralOptions.onTrackFin",
+            "_default_message": "On Track Financial",
+        },
+        "pisgahLegal": {
+            "_label": "referralOptions.pisgahLegal",
+            "_default_message": "Pisgah Legal Services",
         },
         "rcp": {
             "_label": "referralOptions.rcp",
@@ -239,32 +239,20 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.weAreDownHome",
             "_default_message": "We Are Down Home",
         },
-        "blueprint": {
-            "_label": "referralOptions.blueprint",
-            "_default_message": "Blueprint NC",
+        "searchEngine": {
+            "_label": "referralOptions.searchEngine",
+            "_default_message": "Google or other search engine",
         },
-        "elRefugio": {
-            "_label": "referralOptions.elRefugio",
-            "_default_message": "El Refugio",
+        "socialMedia": {
+            "_label": "referralOptions.socialMedia",
+            "_default_message": "Social Media",
         },
-        "fiel": {
-            "_label": "referralOptions.fiel",
-            "_default_message": "Duke Project FIEL-NC (FIEL-NC)",
-        },
-        "felp": {
-            "_label": "referralOptions.felp",
-            "_default_message": "Future Endeavors Life Program (FELP)",
-        },
-        "mda": {
-            "_label": "referralOptions.mda",
-            "_default_message": "Montagnard Dega Association",
-        },
-        "mgm": {
-            "_label": "referralOptions.mgm",
-            "_default_message": "Mundeke Gospel Mission",
+        "other": {"_label": "referralOptions.other", "_default_message": "Other"},
+        "testOrProspect": {
+            "_label": "referralOptions.testOrProspect",
+            "_default_message": "Test / Prospective Partner",
         },
     }
-
     language_options = {
         "en-us": "English",
         "es": "Español",
@@ -277,6 +265,7 @@ class NcConfigurationData(ConfigurationData):
         "my": "မြန်မာဘာသာစကား",
         "zh": "中文",
         "ar": "عربي",
+        "sw": "Kiswahili",
     }
 
     income_options = {
@@ -305,7 +294,7 @@ class NcConfigurationData(ConfigurationData):
             "_default_message": "Child Support (Received)",
         },
         "pension": {
-            "_label": "incomeOptions.pension",
+            "_label": "incomeOptions.nc_pension",
             "_default_message": "Military, Government, or Private Pension",
         },
         "veteran": {
@@ -325,7 +314,7 @@ class NcConfigurationData(ConfigurationData):
             "_default_message": "Social Security Dependent Benefits (retirement, disability, or survivors)",
         },
         "cashAssistance": {
-            "_label": "incomeOptions.cashAssistance",
+            "_label": "incomeOptions.nc_cashAssistance",
             "_default_message": "Cash Assistance Grant",
         },
         "gifts": {
@@ -357,7 +346,6 @@ class NcConfigurationData(ConfigurationData):
             "_default_message": "Boarder or Lodger",
         },
     }
-
     health_insurance_options = {
         "you": {
             "none": {
@@ -384,8 +372,8 @@ class NcConfigurationData(ConfigurationData):
             "medicaid": {
                 "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.medicaid",
-                    "_default_message": "Health First Colorado (Full Medicaid)",
+                    "_label": "healthInsuranceOptions.nc_medicaid",
+                    "_default_message": "Medicaid",
                 },
             },
             "medicare": {
@@ -393,6 +381,16 @@ class NcConfigurationData(ConfigurationData):
                 "text": {
                     "_label": "healthInsuranceOptions.medicare",
                     "_default_message": "Medicare",
+                },
+            },
+            "emergency_medicaid": {
+                "icon": {
+                    "_icon": "Emergency_medicaid",
+                    "_classname": "option-card-icon",
+                },
+                "text": {
+                    "_label": "healthInsuranceOptions.emergency_medicaid",
+                    "_default_message": "Emergency Medicaid / Reproductive Health",
                 },
             },
             "family_planning": {
@@ -435,8 +433,8 @@ class NcConfigurationData(ConfigurationData):
             "medicaid": {
                 "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.medicaid",
-                    "_default_message": "Health First Colorado (Full Medicaid)",
+                    "_label": "healthInsuranceOptions.nc_medicaid",
+                    "_default_message": "Medicaid",
                 },
             },
             "medicare": {
@@ -444,6 +442,16 @@ class NcConfigurationData(ConfigurationData):
                 "text": {
                     "_label": "healthInsuranceOptions.medicare",
                     "_default_message": "Medicare",
+                },
+            },
+            "emergency_medicaid": {
+                "icon": {
+                    "_icon": "Emergency_medicaid",
+                    "_classname": "option-card-icon",
+                },
+                "text": {
+                    "_label": "healthInsuranceOptions.emergency_medicaid",
+                    "_default_message": "Emergency Medicaid / Reproductive Health",
                 },
             },
             "family_planning": {
@@ -503,10 +511,6 @@ class NcConfigurationData(ConfigurationData):
             "_default_message": "Other Utilities",
         },
         "heating": {"_label": "expenseOptions.heating", "_default_message": "Heating"},
-        "creditCard": {
-            "_label": "expenseOptions.creditCard",
-            "_default_message": "Credit Card Debt",
-        },
         "mortgage": {
             "_label": "expenseOptions.mortgage",
             "_default_message": "Mortgage",
@@ -671,6 +675,7 @@ class NcConfigurationData(ConfigurationData):
         "27027": {"Rockingham County": "Rockingham County"},
         "27028": {"Davie County": "Davie County", "Iredell County": "Iredell County"},
         "27030": {"Surry County": "Surry County", "Stokes County": "Stokes County"},
+        "27031": {"Surry County": "Surry County"},
         "27040": {"Forsyth County": "Forsyth County"},
         "27041": {"Surry County": "Surry County", "Stokes County": "Stokes County"},
         "27042": {"Stokes County": "Stokes County"},
@@ -695,6 +700,7 @@ class NcConfigurationData(ConfigurationData):
             "Iredell County": "Iredell County",
         },
         "27094": {"Forsyth County": "Forsyth County"},
+        "27098": {"Forsyth County": "Forsyth County"},
         "27099": {"Forsyth County": "Forsyth County"},
         "27101": {"Forsyth County": "Forsyth County"},
         "27102": {"Forsyth County": "Forsyth County"},
@@ -725,10 +731,12 @@ class NcConfigurationData(ConfigurationData):
         "27152": {"Forsyth County": "Forsyth County"},
         "27155": {"Forsyth County": "Forsyth County"},
         "27157": {"Forsyth County": "Forsyth County"},
+        "27198": {"Forsyth County": "Forsyth County"},
         "27199": {"Forsyth County": "Forsyth County"},
         "27201": {"Alamance County": "Alamance County"},
         "27202": {"Alamance County": "Alamance County"},
         "27203": {"Randolph County": "Randolph County"},
+        "27204": {"Randolph County": "Randolph County"},
         "27205": {"Randolph County": "Randolph County"},
         "27207": {"Chatham County": "Chatham County"},
         "27208": {
@@ -755,6 +763,7 @@ class NcConfigurationData(ConfigurationData):
             "Alamance County": "Alamance County",
             "Caswell County": "Caswell County",
         },
+        "27228": {"Chatham County": "Chatham County"},
         "27229": {
             "Montgomery County": "Montgomery County",
             "Richmond County": "Richmond County",
@@ -770,6 +779,7 @@ class NcConfigurationData(ConfigurationData):
             "Guilford County": "Guilford County",
         },
         "27235": {"Guilford County": "Guilford County"},
+        "27237": {"Lee County": "Lee County"},
         "27239": {
             "Davidson County": "Davidson County",
             "Randolph County": "Randolph County",
@@ -938,6 +948,7 @@ class NcConfigurationData(ConfigurationData):
             "Davidson County": "Davidson County",
             "Randolph County": "Randolph County",
         },
+        "27361": {"Davidson County": "Davidson County"},
         "27370": {"Randolph County": "Randolph County"},
         "27371": {
             "Montgomery County": "Montgomery County",
@@ -1576,6 +1587,11 @@ class NcConfigurationData(ConfigurationData):
             "Union County": "Union County",
             "Mecklenburg County": "Mecklenburg County",
         },
+        "28105": {
+            "Mecklenburg County": "Mecklenburg County",
+            "Union County": "Union County",
+        },
+        "28106": {"Mecklenburg County": "Mecklenburg County"},
         "28107": {
             "Union County": "Union County",
             "Stanly County": "Stanly County",
@@ -1839,6 +1855,7 @@ class NcConfigurationData(ConfigurationData):
             "Scotland County": "Scotland County",
         },
         "28345": {"Richmond County": "Richmond County", "Moore County": "Moore County"},
+        "28347": {"Richmond County": "Richmond County", "Moore County": "Moore County"},
         "28348": {"Cumberland County": "Cumberland County"},
         "28349": {"Duplin County": "Duplin County"},
         "28350": {"Moore County": "Moore County"},
@@ -2619,75 +2636,72 @@ class NcConfigurationData(ConfigurationData):
             "benefits": {
                 "tanf": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.tanf",
-                        "_default_message": "Work First Family Assistance (Temporary Assistance for Needy Families (TANF)):  ",
+                        "_label": "cashBenefits.nc_tanf",
+                        "_default_message": "Work First Family Assistance (Temporary Assistance for Needy Families (TANF)): ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.tanf_desc",
+                        "_label": "cashBenefits.nc_tanf_desc",
                         "_default_message": "Cash assistance and work support",
                     },
                 },
                 "ssi": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.ssi",
+                        "_label": "cashBenefits.ssi",
                         "_default_message": "Supplemental Security Income (SSI): ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.ssi_desc",
+                        "_label": "cashBenefits.ssi_desc",
                         "_default_message": "Federal cash assistance for individuals who are disabled, blind, or 65 years of age or older",
                     },
                 },
                 "ssdi": {
                     "name": {
-                        "_label": "cashAssistanceBenefits.ssdi",
+                        "_label": "cashBenefits.ssdi",
                         "_default_message": "Social Security Disability Insurance (SSDI): ",
                     },
                     "description": {
-                        "_label": "cashAssistanceBenefits.ssdi_desc",
+                        "_label": "cashBenefits.ssdi_desc",
                         "_default_message": "Social security benefit for people with disabilities",
                     },
                 },
             },
-            "category_name": {
-                "_label": "cashAssistance",
-                "_default_message": "Cash Assistance",
-            },
+            "category_name": {"_label": "cash", "_default_message": "Cash Assistance"},
         },
         "foodAndNutrition": {
             "benefits": {
                 "snap": {
                     "name": {
-                        "_label": "foodAndNutritionBenefits.snap",
+                        "_label": "foodBenefits.snap",
                         "_default_message": "Supplemental Nutrition Assistance Program (SNAP): ",
                     },
                     "description": {
-                        "_label": "foodAndNutritionBenefits.snap_desc",
+                        "_label": "foodBenefits.snap_desc",
                         "_default_message": "Food assistance",
                     },
                 },
                 "wic": {
                     "name": {
-                        "_label": "foodAndNutritionBenefits.wic",
+                        "_label": "foodBenefits.nc_wic",
                         "_default_message": "Special Supplemental Nutrition Program for Women, Infants, and Children (WIC): ",
                     },
                     "description": {
-                        "_label": "foodAndNutritionBenefits.wic_desc",
+                        "_label": "foodBenefits.nc_wic_desc",
                         "_default_message": "Food and breastfeeding assistance",
                     },
                 },
-                "nslp": {
+                "sunbucks": {
                     "name": {
-                        "_label": "foodAndNutritionBenefits.nslp",
-                        "_default_message": "National School Lunch Program: ",
+                        "_label": "foodBenefits.sunbucks",
+                        "_default_message": "NC Sun Bucks: ",
                     },
                     "description": {
-                        "_label": "foodAndNutritionBenefits.nslp_desc",
-                        "_default_message": "Free school meals",
+                        "_label": "foodBenefits.sunbucks_desc",
+                        "_default_message": "Summer break food assistance for families with school age children",
                     },
                 },
             },
             "category_name": {
-                "_label": "foodAndNutrition",
+                "_label": "food",
                 "_default_message": "Food and Nutrition",
             },
         },
@@ -2695,34 +2709,14 @@ class NcConfigurationData(ConfigurationData):
             "benefits": {
                 "cccap": {
                     "name": {
-                        "_label": "childCareBenefits.cccap",
-                        "_default_message": "NC Child Care Subsidy (CCCAP): ",
+                        "_label": "childCareBenefits.nc_scca",
+                        "_default_message": "NC Subsidized Child Care Assistance: ",
                     },
                     "description": {
-                        "_label": "childCareBenefits.cccap_desc",
+                        "_label": "childCareBenefits.nc_scca_desc",
                         "_default_message": "Help with child care costs",
                     },
-                },
-                "coheadstart": {
-                    "name": {
-                        "_label": "childCareBenefits.coheadstart",
-                        "_default_message": "NC Pre-K Program: ",
-                    },
-                    "description": {
-                        "_label": "childCareBenefits.coheadstart_desc",
-                        "_default_message": "Free early child care and preschool",
-                    },
-                },
-                "pell": {
-                    "name": {
-                        "_label": "childCareBenefits.pell",
-                        "_default_message": "Pell Grant: ",
-                    },
-                    "description": {
-                        "_label": "childCareBenefits.pell_desc",
-                        "_default_message": "Federal grant to help with the cost of college or technical school",
-                    },
-                },
+                }
             },
             "category_name": {
                 "_label": "childCareYouthAndEducation",
@@ -2731,89 +2725,94 @@ class NcConfigurationData(ConfigurationData):
         },
         "housingAndUtilities": {
             "benefits": {
-                "acp": {
+                "ncwap": {
                     "name": {
-                        "_label": "housingAndUtilities.acp",
-                        "_default_message": "Affordable Connectivity Program (ACP): ",
+                        "_label": "housingBenefits.ncwap",
+                        "_default_message": "NC Weatherization Assistance Program: ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.acp_desc",
-                        "_default_message": "Home internet discount",
+                        "_label": "housingBenefits.ncwap_desc",
+                        "_default_message": "Helps low-income homeowners and renters save money by improving home energy efficiency",
                     },
                 },
                 "lifeline": {
                     "name": {
-                        "_label": "housingAndUtilities.lifeline",
+                        "_label": "housingBenefits.lifeline",
                         "_default_message": "Lifeline: ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.lifeline_desc",
-                        "_default_message": "Phone or internet discount",
+                        "_label": "housingBenefits.lifeline_desc",
+                        "_default_message": "Helps low-income households pay for phone and internet service",
                     },
                 },
-                "nc_lieap": {
+                "leap": {
                     "name": {
-                        "_label": "housingAndUtilities.nc_lieap",
-                        "_default_message": "Low Income Energy Assistance Program (LIEAP): ",
+                        "_label": "housingBenefits.nc_lieap",
+                        "_default_message": "NC LIEAP (Low-Income Energy Assistance Program): ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.nc_lieap_desc",
+                        "_label": "housingBenefits.nc_lieap_desc",
                         "_default_message": "Help with winter heating bills",
                     },
                 },
                 "nccip": {
                     "name": {
-                        "_label": "housingAndUtilities.nccip",
-                        "_default_message": "NC Crisis Intervention Program (CIP): ",
+                        "_label": "housingBenefits.nccip",
+                        "_default_message": "Crisis Intervention Program (CIP): ",
                     },
                     "description": {
-                        "_label": "housingAndUtilities.nccip_desc",
-                        "_default_message": "Help with heating or cooling expense",
-                    },
-                },
-                "ncwap": {
-                    "name": {
-                        "_label": "housingAndUtilities.ncwap",
-                        "_default_message": "Weatherization Assistance Program: ",
-                    },
-                    "description": {
-                        "_label": "housingAndUtilities.ncwap_desc",
-                        "_default_message": "Free home energy upgrades",
+                        "_label": "housingBenefits.nccip_desc",
+                        "_default_message": "Assistance with heating or cooling expenses",
                     },
                 },
             },
             "category_name": {
-                "_label": "housingAndUtilities",
+                "_label": "housing",
                 "_default_message": "Housing and Utilities",
+            },
+        },
+        "healthCare": {
+            "benefits": {
+                "nc_aca": {
+                    "name": {
+                        "_label": "taxBenefits.nc_aca",
+                        "_default_message": "ACA (Affordable Care Act) Subsidies: ",
+                    },
+                    "description": {
+                        "_label": "taxBenefits.nc_aca_desc",
+                        "_default_message": "Health insurance marketplace and premium tax credit.",
+                    },
+                }
+            },
+            "category_name": {
+                "_label": "healthCare",
+                "_default_message": "Health Care",
             },
         },
         "taxCredits": {
             "benefits": {
                 "eitc": {
                     "name": {
-                        "_label": "taxCreditBenefits.eitc",
+                        "_label": "taxBenefits.eitc",
                         "_default_message": "Earned Income Tax Credit (EITC): ",
                     },
                     "description": {
-                        "_label": "taxCreditBenefits.eitc_desc",
+                        "_label": "taxBenefits.eitc_desc",
                         "_default_message": "Federal tax credit - earned income",
                     },
                 },
                 "ctc": {
                     "name": {
-                        "_label": "taxCreditBenefits.ctc",
+                        "_label": "taxBenefits.ctc",
                         "_default_message": "Child Tax Credit (CTC): ",
                     },
                     "description": {
-                        "_label": "taxCreditBenefits.ctc_desc",
+                        "_label": "taxBenefits.ctc_desc",
                         "_default_message": "Federal tax credit",
                     },
                 },
             },
-            "category_name": {
-                "_label": "taxCredits",
-                "_default_message": "Tax Credits",
-            },
+            "category_name": {"_label": "tax", "_default_message": "Tax Credits"},
         },
     }
 
@@ -2879,16 +2878,15 @@ class NcConfigurationData(ConfigurationData):
         "logoClass": {"default": "logo"},
         "footerLogoClass": {"default": "footer-logo-nc"},
         "twoOneOneLink": {
-            "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb",
+            "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"
         },
         "shareLink": {
-            "default": "https://screener.myfriendben.org",
-            "211nc": "https://screener.myfriendben.org?referrer=211nc",
+            "default": "https://screener.myfriendben.org/nc",
+            "211nc": "https://screener.myfriendben.org/nc?referrer=211nc",
         },
         "stepDirectory": {
             "default": [
                 "zipcode",
-                # the hhSize and hhData have to be consecutive
                 "householdSize",
                 "householdData",
                 "hasExpenses",
@@ -2909,12 +2907,15 @@ class NcConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": ["nc_show_211_link"], "211nc": ["no_results_more_help", "nc_show_211_link"]},
+        "featureFlags": {
+            "default": ["nc_show_211_link"],
+            "211nc": ["no_results_more_help", "nc_show_211_link"],
+        },
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
                 "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
-            },
+            }
         },
     }
 
@@ -2930,16 +2931,10 @@ class NcConfigurationData(ConfigurationData):
 
     privacy_policy = {
         "en-us": "https://bennc.org/privacy-policy/",
-        "es": "https://nc.myfriendben.org/es/data-privacy-policy",
-        "fr": "https://nc.myfriendben.org/fr/data-privacy-policy",
-        "vi": "https://nc.myfriendben.org/vi/data-privacy-policy",
     }
 
     consent_to_contact = {
-        "en-us": "https://bennc.org/additional-terms-and-consent-to-contact/",
-        "es": "https://nc.myfriendben.org/es/additional-terms-and-consent-to-contact",
-        "fr": "https://nc.myfriendben.org/fr/additional-terms-and-consent-to-contact",
-        "vi": "https://nc.myfriendben.org/vi/additional-terms-and-consent-to-contact",
+        "en-us": "https://bennc.org/terms-and-conditions/",
     }
 
     feedback_links = {

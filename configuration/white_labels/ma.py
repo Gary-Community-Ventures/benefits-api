@@ -7,6 +7,8 @@ class MaConfigurationData(ConfigurationData):
     def get_white_label(self) -> WhiteLabel:
         return WhiteLabel.objects.get(code="ma")
 
+    state = {"name": "Massachusetts"}
+
     public_charge_rule = {
         "link": "https://www.mass.gov/info-details/information-about-the-public-charge-rule-and-how-it-may-impact-you#information-about-the-public-charge-rule-",
         "text": {
@@ -105,7 +107,7 @@ class MaConfigurationData(ConfigurationData):
     relationship_options = {
         "child": {"_label": "relationshipOptions.child", "_default_message": "Child"},
         "fosterChild": {
-            "_label": "relationshipOptions.fosterChildOrKinshipChild",
+            "_label": "relationshipOptions.fosterChildOrKinshipChild.ma",
             "_default_message": "Foster Child / Kinship-Guardianship Care",
         },
         "stepChild": {"_label": "relationshipOptions.stepChild", "_default_message": "Step-child"},
@@ -177,7 +179,7 @@ class MaConfigurationData(ConfigurationData):
         "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
-            "_default_message": "Social Security Survivor's Benefits (Widow/Widower)",
+            "_default_message": "Social Security Survivor's Benefits (Widowed)",
         },
         "unemployment": {"_label": "incomeOptions.unemployment", "_default_message": "Unemployment Benefits"},
         "sSDependent": {

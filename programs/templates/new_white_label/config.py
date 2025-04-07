@@ -95,7 +95,7 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
         },
         "sendOffers": {
             "_label": "signUpOptions.sendOffers",
-            "_default_message": "Please notify me when there are paid opportunities to provide feedback on MyFriendBen.",
+            "_default_message": "Please notify me about other programs or opportunities, including feedback on MyFriendBen.",
         },
     }
 
