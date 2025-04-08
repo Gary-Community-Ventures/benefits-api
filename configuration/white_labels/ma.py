@@ -1259,7 +1259,7 @@ class MaConfigurationData(ConfigurationData):
         },
         "childCare": {
             "benefits": {
-                "ccfa": {
+                "ccdf": {
                     "name": {
                         "_label": "childCareBenefits.ma_ccfa",
                         "_default_message": "Child Care Financial Assistance Program (CCFA): ",
@@ -1328,7 +1328,7 @@ class MaConfigurationData(ConfigurationData):
                         "_default_message": "State tax credit - earned income",
                     },
                 },
-                "ma_macftc": {
+                "ma_macfc": {
                     "name": {
                         "_label": "taxCreditBenefits.ma_macftc",
                         "_default_message": "Massachusetts Child and Family Tax Credit: ",
