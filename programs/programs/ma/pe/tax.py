@@ -5,7 +5,10 @@ from programs.programs.policyengine.calculators.base import PolicyEngineTaxUnitC
 
 class Maeitc(PolicyEngineTaxUnitCalulator):
     pe_name = "ma_eitc"
-    pe_inputs = [*Eitc.dependencies, dependency.household.MaStateCodeDependency]
+    pe_inputs = [
+        *Eitc.pe_inputs,
+        dependency.household.MaStateCodeDependency,
+    ]
     pe_outputs = [dependency.tax.Maeitc]
 
 
