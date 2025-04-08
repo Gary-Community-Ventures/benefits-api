@@ -7,7 +7,6 @@ class NcMedicaid(Medicaid):
     pe_inputs = [
         *Medicaid.pe_inputs,
         dependency.household.NcStateCodeDependency,
-        dependency.member.IsDisabledDependency,
     ]
 
     medicaid_categories = {
