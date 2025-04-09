@@ -22,7 +22,7 @@ from django.db import transaction
 class Command(BaseCommand):
     MIGRATION_SOURCE_DB = "migration_source"
     PROGRESS_TITLE_WIDTH = 13
-    CHUNK_SIZE = 5_000
+    CHUNK_SIZE = 1_000
 
     help = f"Pull screens from the '{MIGRATION_SOURCE_DB}' database"
 
