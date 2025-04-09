@@ -1751,8 +1751,8 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "featureFlags": {"default": ["energy_calculator", "powered_by_mfb_footer", "no_zipcode_change_state"]},
         "noResultMessage": {
             "default": {
-                "_label": "noResultMessage",
-                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+                "_label": "noResultMessage.coEnergy",
+                "_default_message": 'It looks like you may not qualify for programs in this tool at this time. To see other resources, click the "More Help" link below.',
             },
         },
     }
