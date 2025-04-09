@@ -13,7 +13,19 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract."
     }
 
-    more_help_options = {"moreHelpOptions": []}
+    more_help_options = {
+        "moreHelpOptions": [
+            {
+                "name": {"_default_message": "2-1-1 Colorado", "_label": "moreHelp.resource_name1"},
+                "link": "https://www.211colorado.org",
+                "phone": {"_default_message": "Dial 2-1-1 or 866.760.6489", "_label": "moreHelp.resource_phone1"},
+            },
+            {
+                "name": {"_default_message": "MyFriendBen", "_label": "moreHelp.myfriendben"},
+                "link": "https://screener.myfriendben.org/co/step-1?referrer=energy_calculator",
+            },
+        ]
+    }
 
     acute_condition_options = {}
 
