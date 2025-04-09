@@ -118,6 +118,7 @@ class Screen(models.Model):
     needs_job_resources = models.BooleanField(default=False, blank=True, null=True)
     needs_dental_care = models.BooleanField(default=False, blank=True, null=True)
     needs_legal_services = models.BooleanField(default=False, blank=True, null=True)
+    needs_veteran_services = models.BooleanField(default=False, blank=True, null=True)
 
     @property
     def frozen(self):

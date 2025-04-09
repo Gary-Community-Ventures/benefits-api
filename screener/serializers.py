@@ -226,6 +226,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "needs_job_resources",
             "needs_dental_care",
             "needs_legal_services",
+            "needs_veteran_services",
         )
         read_only_fields = (
             "id",
