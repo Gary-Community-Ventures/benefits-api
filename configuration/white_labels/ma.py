@@ -27,7 +27,7 @@ class MaConfigurationData(ConfigurationData):
         ]
     }
 
-    acute_condition_options = {  # TODO: add/remove urgent need options set to and empty list if none
+    acute_condition_options = {
         "food": {
             "icon": {"_icon": "Food", "_classname": "option-card-icon"},
             "text": {
@@ -89,6 +89,13 @@ class MaConfigurationData(ConfigurationData):
             "text": {
                 "_label": "acuteConditionOptions.legalServices",
                 "_default_message": "Free or low-cost help with civil legal needs or IDs",
+            },
+        },
+        "veteranServices": {
+            "icon": {"_icon": "Legal_services", "_classname": "option-card-icon"},  # TODO: icon
+            "text": {
+                "_label": "acuteConditionOptions.veteranServices",
+                "_default_message": "Resources for veterans and their families",
             },
         },
     }
