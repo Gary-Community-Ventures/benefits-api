@@ -1748,7 +1748,14 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 ],
             }
         },
-        "featureFlags": {"default": ["energy_calculator", "powered_by_mfb_footer", "no_zipcode_change_state"]},
+        "featureFlags": {
+            "default": [
+                "energy_calculator",
+                "powered_by_mfb_footer",
+                "no_zipcode_change_state",
+                "no_confirmation_return_zipcode",
+            ]
+        },
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage.coEnergy",
