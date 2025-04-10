@@ -209,6 +209,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_ma_mbta",
             "has_ma_maeitc",
             "has_ma_macftc",
+            "has_co_ab",
             "has_employer_hi",
             "has_private_hi",
             "has_medicaid_hi",

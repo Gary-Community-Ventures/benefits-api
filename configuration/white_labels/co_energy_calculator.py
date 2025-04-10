@@ -1611,6 +1611,13 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                         "_default_message": "State cash assistance for individuals 60 years of age or older",
                     },
                 },
+                "co_ab": {
+                    "name": {"_label": "cashAssistanceBenefits.co_ab", "_default_message": "Aid to the Blind (AB): "},
+                    "description": {
+                        "_label": "cashAssistanceBenefits.co_ab_desc",
+                        "_default_message": "Interim state cash aid for blind individuals under 60 awaiting SSI",
+                    },
+                },
             },
             "category_name": {"_label": "cashAssistance", "_default_message": "Cash Assistance"},
         },

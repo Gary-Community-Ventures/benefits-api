@@ -101,6 +101,7 @@ class Screen(models.Model):
     has_ma_mbta = models.BooleanField(default=False, blank=True, null=True)
     has_ma_maeitc = models.BooleanField(default=False, blank=True, null=True)
     has_ma_macftc = models.BooleanField(default=False, blank=True, null=True)
+    has_co_ab = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -360,6 +361,7 @@ class Screen(models.Model):
             "medicare": self.has_medicare_hi,
             "chp": self.has_chp or self.has_chp_hi,
             "va": self.has_va,
+            "co_ab": self.has_co_ab,
         }
 
         has_insurance = self.has_insurance_types((name_abbreviated,), strict=False)
