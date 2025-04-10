@@ -64,11 +64,7 @@ class HubSpotIntegration(CmsIntegration):
             return False
         if self.user is None or self.screen.is_test_data is None:
             return False
-        should_upsert_user = (
-            (self.user.send_offers or self.user.send_updates)
-            and self.user.external_id is None
-            and (self.user.explicit_tcpa_consent or self.user.tcpa_consent)
-        )
+        should_upsert_user = (self.user.send_offers or self.user.send_updates) and self.user.external_id is None
         if not should_upsert_user or self.screen.is_test_data:
             return False
         return True
@@ -166,11 +162,7 @@ class BrevoIntegration(CmsIntegration):
             return False
         if self.user is None or self.screen.is_test_data is None:
             return False
-        should_upsert_user = (
-            (self.user.send_offers or self.user.send_updates)
-            and self.user.external_id is None
-            and (self.user.explicit_tcpa_consent or self.user.tcpa_consent)
-        )
+        should_upsert_user = (self.user.send_offers or self.user.send_updates) and self.user.external_id is None
         if not should_upsert_user or self.screen.is_test_data:
             return False
 
