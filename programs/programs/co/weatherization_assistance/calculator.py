@@ -27,7 +27,7 @@ class WeatherizationAssistance(ProgramCalculator):
     income_limits = IncomeLimitsCache()
     presumptive_eligibility = ("andcs", "ssi", "snap", "leap", "tanf")
     amount = 350
-    dependencies = ["household_size", "income_amount", "income_frequency"]
+    dependencies = ["household_size", "income_amount", "income_frequency", "zipcode"]
 
     def household_eligible(self, e: Eligibility):
         # income condition
