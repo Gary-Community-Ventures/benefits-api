@@ -2109,37 +2109,57 @@ class CoConfigurationData(ConfigurationData):
         },
         "healthCare": {
             "benefits": {
+                "connect_for_health_premium_tax_credit": {
+                    "name": {
+                        "_label": "healthCareBenefits.connect_for_health",
+                        "_default_message": "Connect for Health Colorado / Premium Tax Credit: "
+                    },
+                    "description": {
+                        "_label": "healthCareBenefits.connect_for_health_desc",
+                        "_default_message": "Help paying for health insurance"
+                    }
+                },
                 "dentallowincseniors": {
                     "name": {
                         "_label": "healthCareBenefits.dentallowincseniors",
-                        "_default_message": "Colorado Dental Health Program for Low-Income Seniors: ",
+                        "_default_message": "Colorado Dental Health Program for Low-Income Seniors: "
                     },
                     "description": {
                         "_label": "healthCareBenefits.dentallowincseniors_desc",
-                        "_default_message": "Low-cost dental care for people 60 years of age or older",
-                    },
+                        "_default_message": "Low-cost dental care for people 60 years of age or older"
+                    }
                 },
                 "nfp": {
                     "name": {"_label": "healthCareBenefits.nfp", "_default_message": "Nurse-Family Partnership: "},
                     "description": {
                         "_label": "healthCareBenefits.nfp_desc",
-                        "_default_message": "Personalized support for first-time parents",
-                    },
-                },
+                        "_default_message": "Personalized support for first-time parents"
+                    }
+                }
             },
-            "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
+            "category_name": {"_label": "healthCare", "_default_message": "Health Care"}
         },
         "taxCredits": {
             "benefits": {
+                "senior_housing_income_tax_credit": {
+                    "name": {
+                        "_label": "taxCreditBenefits.senior_housing_credit",
+                        "_default_message": "Senior Housing Income Tax Credit: "
+                    },
+                    "description": {
+                        "_label": "taxCreditBenefits.senior_housing_credit_desc",
+                        "_default_message": "Tax credit for seniors to help with housing costs"
+                    }
+                },
                 "eitc": {
                     "name": {
                         "_label": "taxCreditBenefits.eitc",
-                        "_default_message": "Earned Income Tax Credit (EITC): ",
+                        "_default_message": "Earned Income Tax Credit (EITC): "
                     },
                     "description": {
                         "_label": "taxCreditBenefits.eitc_desc",
-                        "_default_message": "Federal tax credit - earned income",
-                    },
+                        "_default_message": "Federal tax credit - earned income"
+                    }
                 },
                 "ctc": {
                     "name": {"_label": "taxCreditBenefits.ctc", "_default_message": "Child Tax Credit (CTC): "},
@@ -2148,12 +2168,12 @@ class CoConfigurationData(ConfigurationData):
                 "coeitc": {
                     "name": {
                         "_label": "taxCreditBenefits.coeitc",
-                        "_default_message": "Colorado Earned Income Tax Credit/Expanded Earned Income Tax Credit: ",
+                        "_default_message": "Colorado Earned Income Tax Credit/Expanded Earned Income Tax Credit: "
                     },
                     "description": {
                         "_label": "taxCreditBenefits.coeitc_desc",
-                        "_default_message": "State tax credit - earned income",
-                    },
+                        "_default_message": "State tax credit - earned income"
+                    }
                 },
                 "coctc": {
                     "name": {"_label": "taxCreditBenefits.coctc", "_default_message": "Colorado Child Tax Credit: "},
@@ -2162,7 +2182,7 @@ class CoConfigurationData(ConfigurationData):
                 "fatc": {
                     "name": {
                         "_label": "taxCreditBenefits.fatc",
-                        "_default_message": "Family Affordability Tax Credit: ",
+                        "_default_message": "Family Affordability Tax Credit: "
                     },
                     "description": {"_label": "taxCreditBenefits.fatc_desc", "_default_message": "State tax credit"},
                 },
@@ -2191,7 +2211,10 @@ class CoConfigurationData(ConfigurationData):
             "cch": "CCH_MFBLogo",
             "lgs": "LGS_Logo",
             "gac": "GAC_Logo",
-            "fircsummitresourcecenter": "FIRC_Logo",
+            "fircsummitresourcecenter": {
+                "_label": "referralOptions.fircsummitresourcecenter",
+                "_default_message": "FIRC Summit Resource Center",
+            },
             "coBenefits": "CO_MFBLogo",
             "dhs": "DHS_MFBLogo",
             "ccig": "CCIG_Logo",
