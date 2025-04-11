@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.db.models import Prefetch
-from tqdm import trange
+from tqdm import tqdm
 from authentication.models import User
 from screener.models import (
     EligibilitySnapshot,
@@ -22,6 +22,7 @@ from django.db import transaction
 class Command(BaseCommand):
     MIGRATION_SOURCE_DB = "migration_source"
     PROGRESS_TITLE_WIDTH = 13
+    CHUNK_SIZE = 1_000
 
     help = f"Pull screens from the '{MIGRATION_SOURCE_DB}' database"
 
@@ -58,8 +59,11 @@ class Command(BaseCommand):
         )
         main_checks = self._key_checks()
 
-        for i in trange(len(source_screens), desc="Screens".ljust(self.PROGRESS_TITLE_WIDTH)):
-            screen = source_screens[i]
+        for screen in tqdm(
+            source_screens.iterator(chunk_size=self.CHUNK_SIZE),
+            desc="Screens".ljust(self.PROGRESS_TITLE_WIDTH),
+            total=source_screens.count(),
+        ):
             baseline_screen_check = self._screen_key_checks(screen)
             user = screen.user
             if user is not None:
@@ -179,8 +183,11 @@ class Command(BaseCommand):
             )
         )
 
-        for i in trange(len(screens), desc="Making Tests".ljust(self.PROGRESS_TITLE_WIDTH)):
-            screen = screens[i]
+        for screen in tqdm(
+            screens.iterator(chunk_size=self.CHUNK_SIZE),
+            desc="Making Tests".ljust(self.PROGRESS_TITLE_WIDTH),
+            total=screens.count(),
+        ):
             checks.append(self._screen_key_checks(screen))
 
         return checks
@@ -192,8 +199,7 @@ class Command(BaseCommand):
 
         i = 0
         screens = list(zip(baseline_screens, checking_screens))
-        for i in trange(len(screens), desc="Running Tests".ljust(self.PROGRESS_TITLE_WIDTH)):
-            baseline, checking = screens[i]
+        for baseline, checking in tqdm(screens, desc="Running Tests".ljust(self.PROGRESS_TITLE_WIDTH)):
             self._check_screen(baseline, checking)
             i += 1
 
