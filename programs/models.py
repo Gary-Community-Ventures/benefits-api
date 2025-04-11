@@ -749,7 +749,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "functions": NeedFunctionsType,
             "fpl": Optional[YearDataType],
             "white_label": str,
-            "counties": Optional[CountiesType],
+            "counties": CountiesType,
         },
     )
 
@@ -829,15 +829,14 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
         need.functions.set(functions)
 
         # get or create counties
-        if "counties" in data:
-            counties = []
-            for county in data["counties"]:
-                try:
-                    county_instance = County.objects.get(name=county["name"], white_label__code=data["white_label"])
-                except County.DoesNotExist:
-                    county_instance = County.objects.create(name=county["name"], white_label=white_label)
-                counties.append(county_instance)
-            need.counties.set(counties)
+        counties = []
+        for county in data["counties"]:
+            try:
+                county_instance = County.objects.get(name=county["name"], white_label__code=data["white_label"])
+            except County.DoesNotExist:
+                county_instance = County.objects.create(name=county["name"], white_label=white_label)
+            counties.append(county_instance)
+        need.counties.set(counties)
 
         need.save()
 
