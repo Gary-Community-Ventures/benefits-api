@@ -1,11 +1,16 @@
 from django.test import TestCase
-from programs.programs.head_start.calculator import HeadStart
-from screener.models import Screen, HouseholdMember, IncomeStream
+from programs.programs.federal.head_start.calculator import HeadStart
+from screener.models import Screen, HouseholdMember, IncomeStream, WhiteLabel
 
 
 class TestHeadStartPension(TestCase):
     def setUp(self):
+        # Create a WhiteLabel entry for tests
+        self.white_label = WhiteLabel.objects.create(name="Test Label", code="test")
+
         self.screen1 = Screen.objects.create(
+            white_label=self.white_label,
+            completed=False,
             agree_to_tos=True,
             zipcode="80205",
             county="Denver County",
@@ -44,8 +49,8 @@ class TestHeadStartPension(TestCase):
         )
 
     def test_head_start_visually_impaired_is_eligible(self):
-        chs = HeadStart(self.screen1)
-        eligibility = chs.eligibility
+        chs = HeadStart(self.screen1, None, None, None)
+        eligibility = chs.household_eligible()
 
         self.assertTrue(eligibility["eligible"])
 
@@ -57,7 +62,7 @@ class TestHeadStartPension(TestCase):
         self.person2.age = 6
         self.person2.save()
 
-        chs = HeadStart(self.screen1)
-        eligibility = chs.eligibility
+        chs = HeadStart(self.screen1, None, None, None)
+        eligibility = chs.household_eligible()
 
         self.assertFalse(eligibility["eligible"])

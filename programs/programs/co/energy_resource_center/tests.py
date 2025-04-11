@@ -1,11 +1,16 @@
 from django.test import TestCase
-from programs.programs.energy_resource_center.calculator import EnergyResourceCenter
-from screener.models import Screen, HouseholdMember, IncomeStream
+from programs.programs.co.energy_resource_center.calculator import EnergyResourceCenter
+from screener.models import Screen, HouseholdMember, IncomeStream, WhiteLabel
 
 
 class TestEnergyResourceCenterPension(TestCase):
     def setUp(self):
+        # Create a WhiteLabel entry for tests
+        self.white_label = WhiteLabel.objects.create(name="Test Label", code="test")
+        
         self.screen1 = Screen.objects.create(
+            white_label=self.white_label,
+            completed=False,
             agree_to_tos=True,
             zipcode="80205",
             county="Denver County",

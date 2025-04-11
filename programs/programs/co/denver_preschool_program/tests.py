@@ -1,12 +1,20 @@
 from django.test import TestCase
-from programs.programs.denver_preschool_program.calculator import DenverPreschoolProgram
-from screener.models import Screen, HouseholdMember
+from programs.programs.co.denver_preschool_program.calculator import DenverPreschoolProgram
+from screener.models import Screen, HouseholdMember, WhiteLabel
 
 
 class TestDenverPreschoolProgram(TestCase):
     def setUp(self):
+        # Create a WhiteLabel entry for tests
+        self.white_label = WhiteLabel.objects.create(name="Test Label", code="test")
+        
         self.screen1 = Screen.objects.create(
-            agree_to_tos=True, zipcode="80205", county="Denver County", household_size=2
+            white_label=self.white_label,
+            completed=False,
+            agree_to_tos=True, 
+            zipcode="80205", 
+            county="Denver County", 
+            household_size=2
         )
         self.person1 = HouseholdMember.objects.create(
             screen=self.screen1,

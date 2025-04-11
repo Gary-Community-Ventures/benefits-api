@@ -1,11 +1,16 @@
 from django.test import TestCase
-from programs.programs.dental_health_care_seniors.calculator import DentalHealthCareSeniors
-from screener.models import Screen, HouseholdMember, IncomeStream
+from programs.programs.co.dental_health_care_seniors.calculator import DentalHealthCareSeniors
+from screener.models import Screen, HouseholdMember, IncomeStream, WhiteLabel
 
 
 class TestDentalHealthCareSeniorsPension(TestCase):
     def setUp(self):
+        # Create a WhiteLabel entry for tests
+        self.white_label = WhiteLabel.objects.create(name="Test Label", code="test")
+        
         self.screen1 = Screen.objects.create(
+            white_label=self.white_label,
+            completed=False,
             agree_to_tos=True,
             zipcode="80205",
             county="Denver County",
