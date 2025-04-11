@@ -6,7 +6,7 @@ from programs.programs.federal.pe.spm import Snap, Tanf
 class NcSnap(Snap):
     pe_inputs = [
         *Snap.pe_inputs,
-        dependency.household.NcStateCode,
+        dependency.household.NcStateCodeDependency,
     ]
 
 
@@ -14,7 +14,7 @@ class NcTanf(Tanf):
     pe_name = "nc_tanf"
     pe_inputs = [
         *Tanf.pe_inputs,
-        dependency.household.NcStateCode,
+        dependency.household.NcStateCodeDependency,
         dependency.spm.NcTanfCountableEarnedIncomeDependency,
         dependency.spm.NcTanfCountableGrossUnearnedIncomeDependency,
     ]
@@ -25,10 +25,10 @@ class NcTanf(Tanf):
 class NcScca(PolicyEngineSpmCalulator):
     pe_name = "nc_scca"
     pe_inputs = [
-        dependency.household.NcStateCode,
+        dependency.household.NcStateCodeDependency,
         dependency.member.AgeDependency,
         dependency.member.IsDisabledDependency,
-        dependency.spm.NcSccaCountableIncome,
+        dependency.spm.NcSccaCountableIncomeDependency,
         dependency.household.NcCountyDependency,
     ]
 

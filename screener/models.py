@@ -95,12 +95,12 @@ class Screen(models.Model):
     has_fatc = models.BooleanField(default=False, blank=True, null=True)
     has_section_8 = models.BooleanField(default=False, blank=True, null=True)
     has_csfp = models.BooleanField(default=False, blank=True, null=True)
-    has_ccfa = models.BooleanField(default=False, blank=True, null=True)
+    has_ccdf = models.BooleanField(default=False, blank=True, null=True)
     has_ma_eaedc = models.BooleanField(default=False, blank=True, null=True)
     has_ma_ssp = models.BooleanField(default=False, blank=True, null=True)
     has_ma_mbta = models.BooleanField(default=False, blank=True, null=True)
     has_ma_maeitc = models.BooleanField(default=False, blank=True, null=True)
-    has_ma_macftc = models.BooleanField(default=False, blank=True, null=True)
+    has_ma_macfc = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -118,6 +118,7 @@ class Screen(models.Model):
     needs_job_resources = models.BooleanField(default=False, blank=True, null=True)
     needs_dental_care = models.BooleanField(default=False, blank=True, null=True)
     needs_legal_services = models.BooleanField(default=False, blank=True, null=True)
+    needs_veteran_services = models.BooleanField(default=False, blank=True, null=True)
 
     @property
     def frozen(self):
@@ -360,6 +361,15 @@ class Screen(models.Model):
             "medicare": self.has_medicare_hi,
             "chp": self.has_chp or self.has_chp_hi,
             "va": self.has_va,
+            "ma_mbta": self.has_ma_mbta,
+            "ma_snap": self.has_snap,
+            "ma_ccdf": self.has_ccdf,
+            "ma_wic": self.has_wic,
+            "ma_eaedc": self.has_ma_eaedc,
+            "ma_maeitc": self.has_ma_maeitc,
+            "ma_macfc": self.has_ma_macfc,
+            "ma_tafdc": self.has_tanf,
+            "ma_mass_health": self.has_medicaid or self.has_medicaid_hi,
         }
 
         has_insurance = self.has_insurance_types((name_abbreviated,), strict=False)
@@ -561,6 +571,14 @@ class HouseholdMember(models.Model):
 
         return today.year - birth_year_month.year - 1
 
+    def fraction_age(self) -> float:
+        today = datetime.now()
+
+        current_year = today.year + today.month / 12
+        birth_year = self.birth_year_month.year + self.birth_year_month.month / 12
+
+        return current_year - birth_year
+
     def missing_fields(self):
         member_fields = (
             "relationship",
@@ -735,6 +753,7 @@ class Insurance(models.Model):
             "medicaid": self.medicaid,
             "nc_medicaid": self.medicaid,
             "co_medicaid": self.medicaid,
+            "ma_mass_health": self.mass_health or self.medicaid,
             "medicare": self.medicare,
             "emergency_medicaid": self.emergency_medicaid,
             "family_planning": self.family_planning,

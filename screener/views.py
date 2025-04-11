@@ -517,6 +517,7 @@ def urgent_need_results(screen: Screen, data):
         "job resources": screen.needs_job_resources,
         "dental care": screen.needs_dental_care,
         "legal services": screen.needs_legal_services,
+        "veteran services": screen.needs_veteran_services,
     }
 
     missing_dependencies = screen.missing_fields()
