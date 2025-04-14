@@ -121,6 +121,7 @@ class IsDisabledDependency(Member):
 # by the total number of elderly or disabled members.
 class MedicalExpenseDependency(Member):
     field = "medical_out_of_pocket_expenses"
+    dependencies = ["age"]
 
     def value(self):
         elderly_or_disabled_members = [
@@ -136,6 +137,7 @@ class MedicalExpenseDependency(Member):
 
 class PropertyTaxExpenseDependency(Member):
     field = "real_estate_taxes"
+    dependencies = ["age"]
 
     def value(self):
         if self.member.age >= 18:
@@ -148,7 +150,7 @@ class IsBlindDependency(Member):
     field = "is_blind"
 
     def value(self):
-        return self.member.visually_impaired
+        return self.member.visually_impaired or False
 
 
 class SsiReportedDependency(Member):
@@ -216,7 +218,7 @@ class PellGrantCountableAssetsDependency(Member):
 
 class CostOfAttendingCollegeDependency(Member):
     field = "cost_of_attending_college"
-    dependencies = ("age",)
+    dependencies = ("age", "student")
 
     def value(self):
         return 22_288 * (self.member.age >= 16 and self.member.student)
@@ -239,6 +241,7 @@ class CommoditySupplementalFoodProgram(Member):
 
 class SnapChildSupportDependency(Member):
     field = "child_support_expense"
+    dependencies = ("age", "household_size")
 
     def value(self):
         return self.screen.calc_expenses("yearly", ["childSupport"]) / self.screen.household_size
@@ -246,12 +249,87 @@ class SnapChildSupportDependency(Member):
 
 class SnapIneligibleStudentDependency(Member):
     field = "is_snap_ineligible_student"
-
     dependencies = ("age",)
 
     # PE does not take the age of the children into acount, so we calculate this ourselves
     def value(self):
         return snap_ineligible_student(self.screen, self.member)
+
+
+class TotalHoursWorkedDependency(Member):
+    field = "weekly_hours_worked_before_lsr"
+    dependencies = ("income_frequency",)
+
+    minimum_wage = 7.25
+    work_weeks_in_month = 4
+
+    def value(self):
+        hours = 0
+
+        for income in self.member.income_streams.all():
+            if income.frequency == "hourly":
+                hours += int(income.hours_worked)
+                continue
+
+            # aproximate weekly hours using the minimum wage in MA
+            hours += int(income.monthly()) / self.minimum_wage / self.work_weeks_in_month
+
+        return hours
+
+
+class MaTotalHoursWorkedDependency(TotalHoursWorkedDependency):
+    minimum_wage = 15
+
+
+class MaTanfCountableGrossEarnedIncomeDependency(Member):
+    field = "ma_tcap_gross_earned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
+
+    def value(self):
+        return int(self.member.calc_gross_income("yearly", ["earned"]))
+
+
+class MaTanfCountableGrossUnearnedIncomeDependency(Member):
+    field = "ma_tcap_gross_unearned_income"
+    dependencies = (
+        "income_type",
+        "income_amount",
+        "income_frequency",
+    )
+
+    def value(self):
+        return int(self.member.calc_gross_income("yearly", ["unearned"], exclude=["cashAssistance"]))
+
+
+class MaTapCharlieCardEligible(Member):
+    field = "ma_mbta_tap_charlie_card_eligible"
+
+
+class MaSeniorCharlieCardEligible(Member):
+    field = "ma_mbta_senior_charlie_card_eligible"
+
+
+class MaMbtaProgramsEligible(Member):
+    field = "ma_mbta_enrolled_in_applicable_programs"
+
+
+class MaMbtaAgeEligible(Member):
+    field = "ma_mbta_income_eligible_reduced_fare_eligible"
+
+
+class Ccdf(Member):
+    field = "is_ccdf_eligible"
+
+
+class CcdfReasonCareEligibleDependency(Member):
+    field = "is_ccdf_reason_for_care_eligible"
+
+    def value(self):
+        return True
 
 
 class IncomeDependency(Member):
@@ -289,6 +367,21 @@ class PensionIncomeDependency(IncomeDependency):
 class SocialSecurityIncomeDependency(IncomeDependency):
     field = "social_security"
     income_types = ["sSDisability", "sSSurvivor", "sSRetirement", "sSDependent"]
+
+
+class InvestmentIncomeDependency(IncomeDependency):
+    field = "capital_gains"
+    income_types = ["investment"]
+
+
+class MiscellaneousIncomeDependency(IncomeDependency):
+    field = "miscellaneous_income"
+    income_types = ["gifts"]
+
+
+class UnemploymentIncomeDependency(IncomeDependency):
+    field = "unemployment_compensation"
+    income_types = ["unemployment"]
 
 
 class SsiEarnedIncomeDependency(IncomeDependency):

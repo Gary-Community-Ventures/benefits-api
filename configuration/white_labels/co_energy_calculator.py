@@ -13,7 +13,19 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract."
     }
 
-    more_help_options = {"moreHelpOptions": []}
+    more_help_options = {
+        "moreHelpOptions": [
+            {
+                "name": {"_default_message": "2-1-1 Colorado", "_label": "moreHelp.resource_name1"},
+                "link": "https://www.211colorado.org",
+                "phone": {"_default_message": "Dial 2-1-1 or 866.760.6489", "_label": "moreHelp.resource_phone1"},
+            },
+            {
+                "name": {"_default_message": "MyFriendBen", "_label": "moreHelp.myfriendben"},
+                "link": "https://screener.myfriendben.org/co/step-1?referrer=energy_calculator",
+            },
+        ]
+    }
 
     acute_condition_options = {}
 
@@ -1746,11 +1758,18 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 ],
             }
         },
-        "featureFlags": {"default": ["energy_calculator", "powered_by_mfb_footer", "no_zipcode_change_state"]},
+        "featureFlags": {
+            "default": [
+                "energy_calculator",
+                "powered_by_mfb_footer",
+                "no_zipcode_change_state",
+                "no_confirmation_return_zipcode",
+            ]
+        },
         "noResultMessage": {
             "default": {
-                "_label": "noResultMessage",
-                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+                "_label": "noResultMessage.coEnergy",
+                "_default_message": 'It looks like you may not qualify for programs in this tool at this time. To see other resources, click the "More Help" link below.',
             },
         },
     }

@@ -38,12 +38,10 @@ class WhiteLabelModelAdminMixin(ModelAdmin):
     # limit the objects the user can select to
     # the objects with the same white label as the object the admin is editing
     def render_change_form(self, request, context, add=False, change=False, form_url="", obj=None):
-        if request.user.is_superuser:
-            return super().render_change_form(request, context, add, change, form_url, obj)
-
         user_white_labels = request.user.white_labels.all()
 
         white_label_input = context["adminform"].form.fields["white_label"]
+        original_white_label_queryset = white_label_input.queryset
         white_label_input.queryset = white_label_input.queryset.filter(id__in=user_white_labels)
 
         if obj is None:
@@ -58,6 +56,10 @@ class WhiteLabelModelAdminMixin(ModelAdmin):
                 restricted_query_set = restricted_query_set.filter(white_label__in=user_white_labels)
 
             form_field.queryset = restricted_query_set
+
+        if request.user.is_superuser:
+            white_label_input.queryset = original_white_label_queryset
+            return super().render_change_form(request, context, add=add, change=change, form_url=form_url, obj=obj)
 
         return super().render_change_form(request, context, add=add, change=change, form_url=form_url, obj=obj)
 

@@ -203,12 +203,12 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_fatc",
             "has_section_8",
             "has_csfp",
-            "has_ccfa",
+            "has_ccdf",
             "has_ma_eaedc",
             "has_ma_ssp",
             "has_ma_mbta",
             "has_ma_maeitc",
-            "has_ma_macftc",
+            "has_ma_macfc",
             "has_co_andso",
             "has_employer_hi",
             "has_private_hi",
@@ -227,6 +227,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "needs_job_resources",
             "needs_dental_care",
             "needs_legal_services",
+            "needs_veteran_services",
         )
         read_only_fields = (
             "id",
