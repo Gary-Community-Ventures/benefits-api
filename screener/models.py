@@ -101,7 +101,7 @@ class Screen(models.Model):
     has_ma_mbta = models.BooleanField(default=False, blank=True, null=True)
     has_ma_maeitc = models.BooleanField(default=False, blank=True, null=True)
     has_ma_macftc = models.BooleanField(default=False, blank=True, null=True)
-    has_co_ab = models.BooleanField(default=False, blank=True, null=True)
+    has_co_andso = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)

@@ -36,7 +36,7 @@ class AffordableResidentialEnergy(ProgramCalculator):
         "co-black-hills-energy",
         "co-colorado-natural-gas",
     ]
-    presumptive_eligibility = ["leap", "section_8", "co_tanf", "andcs", "oap", "co_snap", "co_wic", "co_ab"]
+    presumptive_eligibility = ["leap", "section_8", "co_tanf", "andcs", "oap", "co_snap", "co_wic", "co_andso", "ssi"]
     ineligible_counties = [
         "Baca County",
         "Bent County",
