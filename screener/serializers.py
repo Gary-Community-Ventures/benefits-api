@@ -380,7 +380,8 @@ class EligibilityTranslationSerializer(serializers.Serializer):
 
 class ProgramCategoryCapSerializer(serializers.Serializer):
     programs = serializers.ListSerializer(child=serializers.CharField())
-    cap = serializers.IntegerField()
+    household_cap = serializers.IntegerField()
+    member_caps = serializers.DictField()
 
 
 class ProgramCategorySerializer(serializers.Serializer):
