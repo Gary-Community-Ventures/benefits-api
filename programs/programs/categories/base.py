@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from typing import Optional
 from programs.programs.calc import Eligibility
 from dataclasses import dataclass
 
@@ -8,6 +9,13 @@ class CategoryCap:
     programs: list[str]
     cap: int = 0
     member_cap: bool = False
+
+
+@dataclass
+class ReturnCategoryCap:
+    programs: list[str]
+    household_cap: int = 0
+    member_caps: Optional[dict[str, int]] = None
 
 
 class ProgramCategoryCapCalculator:
@@ -23,7 +31,7 @@ class ProgramCategoryCapCalculator:
     def __init__(self, eligibility: dict[str, Eligibility]):
         self.eligibility = eligibility
 
-    def caps(self) -> list[CategoryCap]:
+    def caps(self) -> list[ReturnCategoryCap]:
         static_caps = self._handle_caps(self.static_caps, self.calc_static_cap)
         max_caps = self._handle_caps(self.max_caps, self.calc_max_cap)
         average_caps = self._handle_caps(self.average_caps, self.calc_average_cap)
@@ -36,16 +44,16 @@ class ProgramCategoryCapCalculator:
         """
         return []
 
-    def calc_static_cap(self, cap: CategoryCap, values: list[int]):
+    def calc_static_cap(self, cap: CategoryCap, values: list[int]) -> ReturnCategoryCap:
         if any(v > 0 for v in values):
             return cap.cap
 
         return 0
 
-    def calc_max_cap(self, cap: CategoryCap, values: list[int]):
+    def calc_max_cap(self, cap: CategoryCap, values: list[int]) -> ReturnCategoryCap:
         return max(*values)
 
-    def calc_average_cap(self, cap: CategoryCap, values: list[int]):
+    def calc_average_cap(self, cap: CategoryCap, values: list[int]) -> ReturnCategoryCap:
         non_0_values = [v for v in values if v > 0]
 
         if len(non_0_values) == 0:
@@ -53,7 +61,9 @@ class ProgramCategoryCapCalculator:
 
         return sum(non_0_values) / len(non_0_values)
 
-    def _handle_caps(self, caps: list[CategoryCap], func: Callable[[CategoryCap, list[int]], int]) -> list[CategoryCap]:
+    def _handle_caps(
+        self, caps: list[CategoryCap], func: Callable[[CategoryCap, list[int]], int]
+    ) -> list[ReturnCategoryCap]:
         """
         Take a caps and a function and calculate the category caps with that function
         """
@@ -68,13 +78,13 @@ class ProgramCategoryCapCalculator:
 
         return calculated_caps
 
-    def _handle_member_cap(self, cap: CategoryCap, func: Callable[[CategoryCap, list[int]], int]) -> CategoryCap:
+    def _handle_member_cap(self, cap: CategoryCap, func: Callable[[CategoryCap, list[int]], int]) -> ReturnCategoryCap:
         """
         Take a cap and a function and calculate the category cap for each member with that function
         """
-        member_values: dict[int, list[int]] = {}
+        member_values: dict[str, list[int]] = {}
 
-        new_cap = CategoryCap(cap.programs.copy())
+        new_cap = ReturnCategoryCap(cap.programs.copy(), member_caps={})
 
         for program in cap.programs:
             if program not in self.eligibility:
@@ -83,33 +93,35 @@ class ProgramCategoryCapCalculator:
 
             eligibility = self.eligibility[program]
             for member_eligibility in eligibility.eligible_members:
-                member_id = member_eligibility.member.id
+                member_id = str(member_eligibility.member.frontend_id)
 
                 if member_id not in member_values:
                     member_values[member_id] = []
 
                 member_values[member_id].append(member_eligibility.value)
 
-        for values in member_values.values():
-            new_cap.cap += func(cap, values)
+        for member_id, values in member_values.items():
+            new_cap.member_caps[member_id] = func(cap, values)
 
         return new_cap
 
-    def _handle_household_cap(self, cap: CategoryCap, func: Callable[[CategoryCap, list[int]], int]) -> CategoryCap:
+    def _handle_household_cap(
+        self, cap: CategoryCap, func: Callable[[CategoryCap, list[int]], int]
+    ) -> ReturnCategoryCap:
         """
         Take a cap and a function and calculate the category cap for the household with that function
         """
         values: list[int] = []
 
-        new_cap = CategoryCap(cap.programs.copy())
+        new_cap = ReturnCategoryCap(cap.programs.copy(), household_cap=0)
 
         for program in cap.programs:
             if program not in self.eligibility:
                 new_cap.programs.remove(program)
                 continue
 
-            values.append(self.eligibility[program])
+            values.append(self.eligibility[program].value)
 
-        new_cap.cap = func(cap, values)
+        new_cap.household_cap = func(cap, values)
 
         return new_cap

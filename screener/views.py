@@ -441,7 +441,7 @@ def eligibility_results(screen: Screen, batch=False):
 
         caps = []
         for cap in calculator.caps():
-            caps.append({"programs": cap.programs, "cap": cap.cap})
+            caps.append({"programs": cap.programs, "household_cap": cap.household_cap, "member_caps": cap.member_caps})
 
         category_map[category.id] = {
             "external_name": category.external_name,
