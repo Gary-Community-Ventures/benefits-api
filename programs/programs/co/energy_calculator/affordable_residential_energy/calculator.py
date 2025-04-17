@@ -43,7 +43,6 @@ class AffordableResidentialEnergy(ProgramCalculator):
         "Cheyenne County",
         "Crowley County",
         "Custer County",
-        "Gilpin County",
         "Huerfano County",
         "Kiowa County",
         "Kit Carson County",
