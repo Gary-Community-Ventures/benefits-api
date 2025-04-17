@@ -2109,7 +2109,7 @@ class CoConfigurationData(ConfigurationData):
         },
         "healthCare": {
             "benefits": {
-                "connect_for_health_premium_tax_credit": {
+                "co_connect_for_health_premium_tax_credit": {
                     "name": {
                         "_label": "healthCareBenefits.connect_for_health",
                         "_default_message": "Connect for Health Colorado / Premium Tax Credit: "
@@ -2141,14 +2141,14 @@ class CoConfigurationData(ConfigurationData):
         },
         "taxCredits": {
             "benefits": {
-                "senior_housing_income_tax_credit": {
+                "co_shitc": {
                     "name": {
-                        "_label": "taxCreditBenefits.senior_housing_credit",
-                        "_default_message": "Senior Housing Income Tax Credit: "
+                        "_label": "taxCreditBenefits.co_shitc",
+                        "_default_message": "Senior Housing Income Tax Credit (SHITC): "
                     },
                     "description": {
-                        "_label": "taxCreditBenefits.senior_housing_credit_desc",
-                        "_default_message": "Tax credit for seniors to help with housing costs"
+                        "_label": "taxCreditBenefits.co_shitc_desc",
+                        "_default_message": "State tax credit - senior housing"
                     }
                 },
                 "eitc": {
