@@ -445,7 +445,7 @@ class ConfigurationData:
         "state": "",
         "zip_code": "",
         "email": "",
-        "privacy_policy_link": "",
+        # "privacy_policy_link": "",
     }
 
     feedback_links = {

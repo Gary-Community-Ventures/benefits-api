@@ -1701,11 +1701,13 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     }
 
     consent_to_contact = {
-        "en-us": "https://co.myfriendben.org/en/additional-terms-and-consent-to-contact",
+        "en-us": "https://www.myfriendben.org/terms-and-conditions/",
+        "es": "https://www.myfriendben.org/terminos-condiciones/",
     }
 
     privacy_policy = {
-        "en-us": "https://co.myfriendben.org/privacy-policy/",
+        "en-us": "https://www.myfriendben.org/privacy-policy/",
+        "es": "https://www.myfriendben.org/privacidad/",
     }
 
     referrer_data = {
@@ -1771,7 +1773,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "state": "CO",
         "zip_code": "80202",
         "email": "myfriendben@garycommunity.org",
-        "privacy_policy_link": "https://co.myfriendben.org/privacy-policy/",
+        "privacy_policy_link": "https://www.myfriendben.org/privacy-policy/",
     }
 
     feedback_links = {
