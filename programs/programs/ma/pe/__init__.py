@@ -11,6 +11,7 @@ ma_member_calculators = {
     "ma_mass_health": member.MaMassHealth,
     "ma_mass_health_limited": member.MaMassHealthLimited,
     "ma_mbta": member.MaMbta,
+    "ma_ssp": member.MaStateSupplementProgram,
 }
 
 ma_tax_unit_calculators = {

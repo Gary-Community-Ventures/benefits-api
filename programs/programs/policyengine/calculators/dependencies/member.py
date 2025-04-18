@@ -332,6 +332,10 @@ class CcdfReasonCareEligibleDependency(Member):
         return True
 
 
+class MaStateSupplementProgram(Member):
+    field = "ma_state_supplement"
+
+
 class IncomeDependency(Member):
     dependencies = (
         "income_type",
