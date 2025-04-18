@@ -63,9 +63,6 @@ class Medicaid(PolicyEngineMembersCalculator):
     aged_min_age = 65
 
     def member_value(self, member: HouseholdMember):
-        if self.get_member_variable(member.id) <= 0:
-            return 0
-
         # In Policy Engine, senior and disabled are not included in the medicaid categories variable.
         # Instead, a separate variable is used to determine the medicaid eligiblity for a senior or disabled member.
         is_senior_or_disabled = self.get_member_dependency_value(dependency.member.MedicaidSeniorOrDisabled, member.id)
@@ -76,9 +73,35 @@ class Medicaid(PolicyEngineMembersCalculator):
             elif member.age >= self.aged_min_age:
                 return self.medicaid_categories["AGED"] * 12
 
+        if self.get_member_variable(member.id) <= 0:
+            return 0
+
         medicaid_category = self.get_member_dependency_value(dependency.member.MedicaidCategory, member.id)
 
         return self.medicaid_categories[medicaid_category] * 12
+
+
+class Chip(PolicyEngineMembersCalculator):
+    pe_name = "chip"
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.PregnancyDependency,
+        *Medicaid.pe_inputs,
+    ]
+    pe_outputs = [dependency.member.ChipCategory]
+
+    # NOTE: Monthly
+    chip_values = {
+        "CHILD": 0,
+        "PREGNANT_STANDARD": 0,
+        "PREGNANT_FCEP": 0,
+        "NONE": 0,
+    }
+
+    def member_value(self, member: HouseholdMember):
+        chip_category = self.get_member_dependency_value(dependency.member.ChipCategory, member.id)
+
+        return self.medicaid_categories[chip_category] * 12
 
 
 class PellGrant(PolicyEngineMembersCalculator):
