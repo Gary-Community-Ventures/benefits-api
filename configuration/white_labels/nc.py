@@ -2926,15 +2926,17 @@ class NcConfigurationData(ConfigurationData):
         "state": "NC",
         "zip_code": 27701,
         "email": "myfriendben@codethedream.org",
-        "privacy_policy_link": "https://bennc.org/privacy-policy/",
+        # "privacy_policy_link": "https://www.myfriendben.org/privacy-policy/",
     }
 
     privacy_policy = {
-        "en-us": "https://bennc.org/privacy-policy/",
+        "en-us": "https://www.myfriendben.org/privacy-policy/",
+        "es": "https://www.myfriendben.org/privacidad/",
     }
 
     consent_to_contact = {
-        "en-us": "https://bennc.org/terms-and-conditions/",
+        "en-us": "https://www.myfriendben.org/terms-and-conditions/",
+        "es": "https://www.myfriendben.org/terminos-condiciones/",
     }
 
     feedback_links = {

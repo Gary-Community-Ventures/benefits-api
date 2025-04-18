@@ -525,7 +525,6 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
         "state": "",
         "zip_code": "",
         "email": "",
-        "privacy_policy_link": "",
     }
 
     feedback_links = {  # TODO: add links where the user can provide feedback

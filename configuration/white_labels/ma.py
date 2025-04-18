@@ -1350,12 +1350,14 @@ class MaConfigurationData(ConfigurationData):
         },
     }
 
-    consent_to_contact = {  # TODO: add consent to contact links
-        "en-us": "https://google.com",
+    consent_to_contact = {
+        "en-us": "https://www.myfriendben.org/terms-and-conditions/",
+        "es": "https://www.myfriendben.org/terminos-condiciones/",
     }
 
-    privacy_policy = {  # TODO: add privacy policy links
-        "en-us": "https://google.com",
+    privacy_policy = {
+        "en-us": "https://www.myfriendben.org/privacy-policy/",
+        "es": "https://www.myfriendben.org/privacidad/",
     }
 
     referrer_data = {
@@ -1404,7 +1406,7 @@ class MaConfigurationData(ConfigurationData):
         "state": "CO",
         "zip_code": "80202",
         "email": "hello@myfriendben.org",
-        "privacy_policy_link": "https://google.com",  # FIXME:
+        # "privacy_policy_link": "https://www.myfriendben.org/privacy-policy/",
     }
 
     feedback_links = {  # TODO: add links where the user can provide feedback
