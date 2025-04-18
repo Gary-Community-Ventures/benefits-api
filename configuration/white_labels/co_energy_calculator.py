@@ -1616,13 +1616,6 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                         "_default_message": "State cash assistance for individuals who are disabled and receiving SSI",
                     },
                 },
-                "oap": {
-                    "name": {"_label": "cashAssistanceBenefits.oap", "_default_message": "Old Age Pension (OAP): "},
-                    "description": {
-                        "_label": "cashAssistanceBenefits.oap_desc",
-                        "_default_message": "State cash assistance for individuals 60 years of age or older",
-                    },
-                },
                 "co_andso": {
                     "name": {
                         "_label": "cashAssistanceBenefits.co_andso",
@@ -1631,6 +1624,13 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     "description": {
                         "_label": "cashAssistanceBenefits.co_andso_desc",
                         "_default_message": "State cash assistance for individuals who are disabled and not yet receiving SSI",
+                    },
+                },
+                "oap": {
+                    "name": {"_label": "cashAssistanceBenefits.oap", "_default_message": "Old Age Pension (OAP): "},
+                    "description": {
+                        "_label": "cashAssistanceBenefits.oap_desc",
+                        "_default_message": "State cash assistance for individuals 60 years of age or older",
                     },
                 },
             },
