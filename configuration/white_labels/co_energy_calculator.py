@@ -1616,6 +1616,16 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                         "_default_message": "State cash assistance for individuals who are disabled and receiving SSI",
                     },
                 },
+                "co_andso": {
+                    "name": {
+                        "_label": "cashAssistanceBenefits.co_andso",
+                        "_default_message": "Aid to the Needy Disabled - State Only (AND-SO): ",
+                    },
+                    "description": {
+                        "_label": "cashAssistanceBenefits.co_andso_desc",
+                        "_default_message": "State cash assistance for individuals who are disabled and not yet receiving SSI",
+                    },
+                },
                 "oap": {
                     "name": {"_label": "cashAssistanceBenefits.oap", "_default_message": "Old Age Pension (OAP): "},
                     "description": {

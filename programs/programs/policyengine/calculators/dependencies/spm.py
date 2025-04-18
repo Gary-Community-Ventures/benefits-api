@@ -174,6 +174,10 @@ class NcTanf(SpmUnit):
     field = "nc_tanf"
 
 
+class MaTafdc(SpmUnit):
+    field = "ma_tafdc"
+
+
 class CoTanfCountableGrossIncomeDependency(SpmUnit):
     field = "co_tanf_countable_gross_earned_income"
     dependencies = (
@@ -226,11 +230,18 @@ class NcTanfCountableGrossUnearnedIncomeDependency(SpmUnit):
         )
 
 
+class PreSubsidyChildcareExpensesDependency(SpmUnit):
+    field = "spm_unit_pre_subsidy_childcare_expenses"
+
+    def value(self):
+        return self.screen.calc_expenses("yearly", ["childCare", "dependentCare"])
+
+
 class NcScca(SpmUnit):
     field = "nc_scca"
 
 
-class NcSccaCountableIncome(SpmUnit):
+class NcSccaCountableIncomeDependency(SpmUnit):
     field = "nc_scca_countable_income"
     income_types = [
         "wages",
@@ -278,3 +289,35 @@ class SchoolMealCountableIncomeDependency(SpmUnit):
 
     def value(self):
         return self.screen.calc_gross_income("yearly", self.income_types)
+
+
+class AssetsDependency(SpmUnit):
+    field = "spm_unit_assets"
+
+    def value(self):
+        assets = self.screen.household_assets or 0
+        return int(assets)
+
+
+class MaEaedc(SpmUnit):
+    field = "ma_eaedc"
+
+
+# NOTE: PE has an open issue to calculate this: https://github.com/PolicyEngine/policyengine-us/issues/5768
+class MaEaedcLivingArangementDependency(SpmUnit):
+    field = "ma_eaedc_living_arrangement"
+
+    def value(self):
+        return "A"
+
+
+class MaEaedc(SpmUnit):
+    field = "ma_eaedc"
+
+
+class CashAssetsDependency(SpmUnit):
+    field = "spm_unit_cash_assets"
+
+    def value(self):
+        assets = self.screen.household_assets or 0
+        return int(assets)

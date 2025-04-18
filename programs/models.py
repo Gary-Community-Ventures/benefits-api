@@ -733,7 +733,6 @@ class UrgentNeedManager(models.Manager):
 
 class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
     _model_name = "UrgentNeed"
-    dependencies = ["County", "Document", "ProgramCategory"]
 
     YearDataType = TypedDict("FplDataType", {"year": str, "period": str})
     CategoriesType = list[TypedDict("CategoryType", {"name": str})]

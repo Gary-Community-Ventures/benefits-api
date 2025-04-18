@@ -6,12 +6,22 @@ from screener.models import HouseholdMember
 
 
 class CoMedicaid(Medicaid):
-    child_medicaid_average = 200 * 12
-    adult_medicaid_average = 310 * 12
-    aged_medicaid_average = 170 * 12
+    medicaid_categories = {
+        "NONE": 0,
+        "ADULT": 310,
+        "INFANT": 200,
+        "YOUNG_CHILD": 200,
+        "OLDER_CHILD": 200,
+        "PREGNANT": 310,
+        "YOUNG_ADULT": 310,
+        "PARENT": 310,
+        "SSI_RECIPIENT": 310,
+        "AGED": 170,
+        "DISABLED": 310,
+    }
     pe_inputs = [
         *Medicaid.pe_inputs,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
     ]
 
 
@@ -28,7 +38,7 @@ class AidToTheNeedyAndDisabled(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitHeadDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
     ]
     pe_outputs = [dependency.member.Andcs]
 
@@ -43,7 +53,7 @@ class OldAgePension(PolicyEngineMembersCalculator):
         dependency.member.TaxUnitSpouseDependency,
         dependency.member.TaxUnitHeadDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
     ]
     pe_outputs = [dependency.member.Oap]
 
@@ -54,7 +64,7 @@ class Chp(PolicyEngineMembersCalculator):
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
         dependency.member.ExpectedChildrenPregnancyDependency,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
         *dependency.irs_gross_income,
     ]
     pe_outputs = [dependency.member.ChpEligible]
@@ -62,7 +72,7 @@ class Chp(PolicyEngineMembersCalculator):
     amount = 200 * 12
 
     def member_value(self, member: HouseholdMember):
-        chp_eligible = self.sim.value(self.pe_category, str(member.id), "co_chp_eligible", self.pe_period) > 0
+        chp_eligible = self.get_member_dependency_value(dependency.member.ChpEligible, member.id) > 0
 
         if chp_eligible and self.screen.has_insurance_types(("none",)):
             return self.amount
@@ -75,7 +85,7 @@ class FamilyAffordabilityTaxCredit(PolicyEngineMembersCalculator):
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.TaxUnitDependentDependency,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
         dependency.member.TaxUnitSpouseDependency,
         *dependency.irs_gross_income,
     ]
@@ -93,7 +103,7 @@ class CoWic(Wic):
     }
     pe_inputs = [
         *Wic.pe_inputs,
-        dependency.household.CoStateCode,
+        dependency.household.CoStateCodeDependency,
     ]
 
 
@@ -101,7 +111,7 @@ class EveryDayEats(CommoditySupplementalFoodProgram):
     amount = 600
 
     def member_value(self, member: HouseholdMember):
-        ede_eligible = self.sim.value(self.pe_category, str(member.id), self.pe_name, self.pe_period) > 0
+        ede_eligible = self.get_member_variable(member.id) > 0
 
         if ede_eligible:
             return self.amount

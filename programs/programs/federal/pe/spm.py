@@ -49,7 +49,7 @@ class SchoolLunch(PolicyEngineSpmCalulator):
         num_children = self.screen.num_children(3, 18)
 
         if self.get_variable() > 0 and num_children > 0:
-            if self.sim.value(self.pe_category, self.pe_sub_category, "school_meal_tier", self.pe_period) != "PAID":
+            if self.get_dependency_value(dependency.spm.SchoolMealTier) != "PAID":
                 value = SchoolLunch.amount * num_children
 
         return value
