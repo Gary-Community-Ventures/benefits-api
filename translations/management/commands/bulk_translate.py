@@ -52,6 +52,9 @@ class Command(BaseCommand):
             temp_count += 1
             total_count += 1
 
+            # Skip empty or whitespace-only texts
+            if not text.strip():
+                continue
             if text not in texts:
                 texts[text] = []
             texts[text].append(translation)
