@@ -1783,7 +1783,6 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "state": "CO",
         "zip_code": "80202",
         "email": "myfriendben@garycommunity.org",
-        "privacy_policy_link": "https://www.myfriendben.org/privacy-policy/",
     }
 
     feedback_links = {

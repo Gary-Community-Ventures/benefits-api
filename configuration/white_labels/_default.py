@@ -51,8 +51,7 @@ class DefaultConfigurationData(ConfigurationData):
         "city": "Denver",
         "state": "CO",
         "zip_code": "80202",
-        "email": "hello@myfriendben.org",
-        # "privacy_policy_link": "https://www.myfriendben.org/privacy-policy/",
+        "email": "hello@myfriendben.org",      
     }
 
     language_options = {

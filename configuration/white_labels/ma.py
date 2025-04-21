@@ -1406,7 +1406,6 @@ class MaConfigurationData(ConfigurationData):
         "state": "CO",
         "zip_code": "80202",
         "email": "hello@myfriendben.org",
-        # "privacy_policy_link": "https://www.myfriendben.org/privacy-policy/",
     }
 
     feedback_links = {  # TODO: add links where the user can provide feedback

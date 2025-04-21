@@ -2926,7 +2926,6 @@ class NcConfigurationData(ConfigurationData):
         "state": "NC",
         "zip_code": 27701,
         "email": "myfriendben@codethedream.org",
-        # "privacy_policy_link": "https://www.myfriendben.org/privacy-policy/",
     }
 
     privacy_policy = {
