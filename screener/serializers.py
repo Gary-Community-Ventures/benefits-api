@@ -209,6 +209,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_ma_mbta",
             "has_ma_maeitc",
             "has_ma_macfc",
+            "has_co_andso",
             "has_employer_hi",
             "has_private_hi",
             "has_medicaid_hi",
@@ -380,7 +381,8 @@ class EligibilityTranslationSerializer(serializers.Serializer):
 
 class ProgramCategoryCapSerializer(serializers.Serializer):
     programs = serializers.ListSerializer(child=serializers.CharField())
-    cap = serializers.IntegerField()
+    household_cap = serializers.IntegerField()
+    member_caps = serializers.DictField()
 
 
 class ProgramCategorySerializer(serializers.Serializer):
