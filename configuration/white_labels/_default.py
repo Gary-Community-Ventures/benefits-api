@@ -52,7 +52,6 @@ class DefaultConfigurationData(ConfigurationData):
         "state": "CO",
         "zip_code": "80202",
         "email": "hello@myfriendben.org",
-        "privacy_policy_link": "https://co.myfriendben.org/privacy-policy/",
     }
 
     language_options = {
@@ -76,3 +75,13 @@ class DefaultConfigurationData(ConfigurationData):
     }
 
     override_text = {}
+
+    consent_to_contact = {
+        "en-us": "https://www.myfriendben.org/terms-and-conditions/",
+        "es": "https://www.myfriendben.org/terminos-condiciones/",
+    }
+
+    privacy_policy = {
+        "en-us": "https://www.myfriendben.org/privacy-policy/",
+        "es": "https://www.myfriendben.org/privacidad/",
+    }
