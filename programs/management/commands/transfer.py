@@ -4,6 +4,8 @@ from django.db import transaction
 from programs.models import Program
 from screener.models import WhiteLabel
 from configuration.white_labels import white_label_config
+from typing import Dict
+from translations.models import Translation
 
 
 class Command(BaseCommand):
@@ -16,7 +18,7 @@ class Command(BaseCommand):
             help="The white label code to transfer programs to target whilte label",
         )
         parser.add_argument(
-            "external_names",
+            "names_abbreviated",
             nargs="+",
             type=str,
             help="External names of programs to transfer",
@@ -48,7 +50,7 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
         target_code = options["target_white_label"]
-        external_names = options["external_names"]
+        names_abbreviated = options["names_abbreviated"]
 
         # Validate white label exists
         if not self.validate_white_label(target_code):
@@ -56,16 +58,40 @@ class Command(BaseCommand):
 
         target_white_label = WhiteLabel.objects.get(code=target_code)
 
-        for external_name in external_names:
+        for name_abbreviated in names_abbreviated:
             try:
                 # Get source program
-                source_program = Program.objects.get(external_name=external_name)
+                source_program = Program.objects.get(name_abbreviated=name_abbreviated)
 
-                # Check if program already exists
-                new_external_name = f"{target_code}_{external_name.split('_')[-1]}"
-                if Program.objects.filter(white_label=target_white_label, external_name=new_external_name).exists():
-                    print(f"Program already exists in {target_code} with name {new_external_name}")
-                    continue
+                # Store translations before creating new program
+                translation_mapping: Dict[str, Translation] = {}
+
+                # Get all translation fields from Program model
+                translated_fields = Program.objects.translated_fields
+
+                # Create copies of all translations
+                for field in translated_fields:
+                    source_translation = getattr(source_program, field)
+                    if source_translation:
+
+                        # Create new translation with same text
+                        new_translation = Translation.objects.add_translation(
+                            label=f"program.{name_abbreviated}_{source_program.id}-{field}",
+                            default_message=source_translation.default_message,
+                            active=source_translation.active,
+                            no_auto=source_translation.no_auto,
+                        )
+
+                        # Copy translations for all languages
+                        for translation in source_translation.translations.all():
+                            Translation.objects.edit_translation_by_id(
+                                new_translation.id,
+                                translation.language_code,
+                                translation.text,
+                                translation.edited,
+                            )
+
+                        translation_mapping[field] = new_translation
 
                 legal_statuses = source_program.legal_status_required.all()
 
@@ -73,18 +99,29 @@ class Command(BaseCommand):
                 new_program = source_program
                 new_program.pk = None
                 new_program.white_label = target_white_label
-                new_program.external_name = new_external_name
                 new_program.year = source_program.year
+                new_program.external_name = None
+                new_program.category = None
+                # new_program.documents = None
+                # new_program.required_programs = None
+
+                # Set the new translations
+                for field, translation in translation_mapping.items():
+                    setattr(new_program, field, translation)
 
                 # Save new program
                 new_program.save()
 
                 # Then set the many-to-many relationship
+
+                new_program.required_programs.set([])
+                new_program.documents.set([])
                 new_program.legal_status_required.set(legal_statuses)
+                self.stdout.write("Reminder: Please add external names to the transferred programs.")
 
             except Program.DoesNotExist:
-                print(f"Error: Program '{external_name}' not found")
+                self.stdout.write(self.style.ERROR(f"Error: Program '{name_abbreviated}' not found"))
                 continue
             except Exception as e:
-                print(f"Error during transfer: {str(e)}")
+                self.stdout.write(self.style.ERROR(f"Error during transfer: {str(e)}"))
                 continue
