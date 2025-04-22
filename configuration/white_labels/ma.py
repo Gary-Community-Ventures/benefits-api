@@ -92,7 +92,7 @@ class MaConfigurationData(ConfigurationData):
             },
         },
         "veteranServices": {
-            "icon": {"_icon": "Legal_services", "_classname": "option-card-icon"},  # TODO: icon
+            "icon": {"_icon": "Military", "_classname": "option-card-icon"},
             "text": {
                 "_label": "acuteConditionOptions.veteranServices",
                 "_default_message": "Resources for veterans and their families",
@@ -1423,9 +1423,9 @@ class MaConfigurationData(ConfigurationData):
         "email": "hello@myfriendben.org",
     }
 
-    feedback_links = {  # TODO: add links where the user can provide feedback
-        "email": "https://google.com",
-        "survey": "https://google.com",
+    feedback_links = {
+        "email": "hello@myfriendben.org",
+        "survey": "https://docs.google.com/forms/d/e/1FAIpQLSdnfqjvlVSBQkJuUMvhEDUp-t6oD-8tPQi67uRG2iNetXmSfA/viewform?usp=sf_link",
     }
 
     override_text = {
