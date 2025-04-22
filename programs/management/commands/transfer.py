@@ -21,7 +21,7 @@ class Command(BaseCommand):
             "names_abbreviated",
             nargs="+",
             type=str,
-            help="External names of programs to transfer",
+            help="Abbreviated names of programs to transfer",
         )
 
     def validate_white_label(self, white_label_code):
