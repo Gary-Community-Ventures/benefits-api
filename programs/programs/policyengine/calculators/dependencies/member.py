@@ -336,6 +336,10 @@ class MaStateSupplementProgram(Member):
     field = "ma_state_supplement"
 
 
+class ChipCategory(Member):
+    field = "chip_category"
+
+
 class IncomeDependency(Member):
     dependencies = (
         "income_type",
