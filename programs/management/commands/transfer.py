@@ -2,6 +2,7 @@ from django.core.management.base import BaseCommand
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import transaction
 from programs.models import Program
+import uuid
 from screener.models import WhiteLabel
 from configuration.white_labels import white_label_config
 from typing import Dict
@@ -18,10 +19,10 @@ class Command(BaseCommand):
             help="The white label code to transfer programs to target whilte label",
         )
         parser.add_argument(
-            "names_abbreviated",
+            "external_names",
             nargs="+",
             type=str,
-            help="Abbreviated names of programs to transfer",
+            help="External names of programs to transfer",
         )
 
     def validate_white_label(self, white_label_code):
@@ -50,7 +51,7 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
         target_code = options["target_white_label"]
-        names_abbreviated = options["names_abbreviated"]
+        external_names = options["external_names"]
 
         # Validate white label exists
         if not self.validate_white_label(target_code):
@@ -58,10 +59,10 @@ class Command(BaseCommand):
 
         target_white_label = WhiteLabel.objects.get(code=target_code)
 
-        for name_abbreviated in names_abbreviated:
+        for external_name in external_names:
             try:
                 # Get source program
-                source_program = Program.objects.get(name_abbreviated=name_abbreviated)
+                source_program = Program.objects.get(external_name=external_name)
 
                 # Store translations before creating new program
                 translation_mapping: Dict[str, Translation] = {}
@@ -76,7 +77,7 @@ class Command(BaseCommand):
 
                         # Create new translation with same text
                         new_translation = Translation.objects.add_translation(
-                            label=f"program.{name_abbreviated}_{source_program.id}-{field}",
+                            label=f"program.{source_program.external_name}_{source_program.id}-{field}-{str(uuid.uuid4())}",
                             default_message=source_translation.default_message,
                             active=source_translation.active,
                             no_auto=source_translation.no_auto,
@@ -118,7 +119,7 @@ class Command(BaseCommand):
                 self.stdout.write("Reminder: Please add external names to the transferred programs.")
 
             except Program.DoesNotExist:
-                self.stdout.write(self.style.ERROR(f"Error: Program '{name_abbreviated}' not found"))
+                self.stdout.write(self.style.ERROR(f"Error: Program '{external_name}' not found"))
                 continue
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Error during transfer: {str(e)}"))
