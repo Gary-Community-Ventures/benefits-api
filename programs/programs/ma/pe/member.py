@@ -1,6 +1,6 @@
 from programs.programs.policyengine.calculators.base import PolicyEngineMembersCalculator
 import programs.programs.policyengine.calculators.dependencies as dependency
-from programs.programs.federal.pe.member import Ccdf, Chip, Medicaid, Wic
+from programs.programs.federal.pe.member import Ccdf, Chip, Medicaid, Wic, Ssi
 from .spm import MaSnap, MaTafdc, MaEaedc
 from screener.models import HouseholdMember
 
@@ -132,3 +132,15 @@ class MaMbta(PolicyEngineMembersCalculator):
             return self.amount
 
         return 0
+
+
+class MaStateSupplementProgram(PolicyEngineMembersCalculator):
+    pe_name = "ma_state_supplement"
+    pe_inputs = [
+        dependency.member.AgeDependency,
+        dependency.member.IsDisabledDependency,
+        dependency.member.IsBlindDependency,
+        dependency.member.SsiCountableResourcesDependency,
+        *Ssi.pe_inputs,
+    ]
+    pe_outputs = [dependency.member.MaStateSupplementProgram]
