@@ -82,7 +82,7 @@ class Medicaid(PolicyEngineMembersCalculator):
 
 
 class Chip(PolicyEngineMembersCalculator):
-    pe_name = "chip"
+    pe_name = "chip_category"
     pe_inputs = [
         dependency.member.AgeDependency,
         dependency.member.PregnancyDependency,
@@ -91,7 +91,7 @@ class Chip(PolicyEngineMembersCalculator):
     pe_outputs = [dependency.member.ChipCategory]
 
     # NOTE: Monthly
-    chip_values = {
+    chip_categories = {
         "CHILD": 0,
         "PREGNANT_STANDARD": 0,
         "PREGNANT_FCEP": 0,
@@ -101,7 +101,7 @@ class Chip(PolicyEngineMembersCalculator):
     def member_value(self, member: HouseholdMember):
         chip_category = self.get_member_dependency_value(dependency.member.ChipCategory, member.id)
 
-        return self.medicaid_categories[chip_category] * 12
+        return self.chip_categories[chip_category] * 12
 
 
 class PellGrant(PolicyEngineMembersCalculator):
