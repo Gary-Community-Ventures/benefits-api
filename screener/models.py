@@ -12,6 +12,7 @@ from django.conf import settings
 class WhiteLabel(models.Model):
     name = models.CharField(max_length=120, blank=False, null=False)
     code = models.CharField(max_length=32, blank=False, null=False)
+    state_code = models.CharField(max_length=8, blank=True, null=True)
     cms_method = models.CharField(max_length=32, blank=True, null=True)
 
     def __str__(self):

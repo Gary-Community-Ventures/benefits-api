@@ -4,13 +4,13 @@ from screener.models import Screen
 
 class Ami(GoogleSheetsCache):
     sheet_id = "1ZnOg_IuT7TYz2HeF31k_FSPcA-nraaMG3RUWJFUIIb8"
-    range_name = "current!A2:N"
+    range_name = "current!A2:BJ"
     default = {}
 
     YEAR_INDEX = 0
     STATE_INDEX = 1
     COUNTY_INDEX = 2
-    HOUSEHOLD_SIZE_START_INDEX = 6
+    LIMITS_START_INDEX = 6
     MAX_HOUSEHOLD_SIZE = 8
 
     def update(self):
@@ -25,15 +25,22 @@ class Ami(GoogleSheetsCache):
 
             values = {}
             continue_outer = False
-            for i in range(self.HOUSEHOLD_SIZE_START_INDEX, self.MAX_HOUSEHOLD_SIZE + self.HOUSEHOLD_SIZE_START_INDEX):
-                try:
-                    # handle rows with errors
-                    value = int(row[i])
-                except ValueError:
-                    continue_outer = True
-                    break
+            percent = 80
+            for j in range(self.LIMITS_START_INDEX, self.MAX_HOUSEHOLD_SIZE * 7, 8):
+                print(j)
+                income_limit_values = {}
+                for i in range(j, self.MAX_HOUSEHOLD_SIZE + j):
+                    try:
+                        # handle rows with errors
+                        value = int(float(row[i]))
+                    except ValueError:
+                        continue_outer = True
+                        break
 
-                values[i - self.HOUSEHOLD_SIZE_START_INDEX + 1] = value
+                    income_limit_values[i - j + 1] = value
+
+                values[str(percent) + "%"] = income_limit_values
+                percent -= 10
 
             if continue_outer:
                 continue
@@ -47,10 +54,16 @@ class Ami(GoogleSheetsCache):
 
         return ami
 
-    def get_screen_ami(self, screen: Screen, year: int):
+    def get_screen_ami(
+        self,
+        screen: Screen,
+        percent: str,
+        year: int,
+    ):
         data = self.fetch()
 
-        return data[year][screen.white_label][screen.county][screen.household_size]
+        print(data[year][screen.white_label.state_code][screen.county])
+        return data[year][screen.white_label.state_code][screen.county][percent][screen.household_size]
 
 
 ami = Ami()
