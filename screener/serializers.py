@@ -204,6 +204,7 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_section_8",
             "has_csfp",
             "has_ccdf",
+            "has_aca",
             "has_ma_eaedc",
             "has_ma_ssp",
             "has_ma_mbta",
