@@ -7,16 +7,10 @@ class FamilyShelter(UrgentNeedFunction):
     asset_limit = 5_000
 
     def eligible(self):
-        """
-        Return True if the household is SNAP eligible and lives in Denver
-        """
         # income
         income_limit = self.urgent_need.year.as_dict()[self.screen.household_size - 1] * self.fpl_percent
         income = self.screen.calc_gross_income("yearly", ["all"])
-        # income
-        income_limit = self.urgent_need.year.as_dict()[self.screen.household_size - 1] * self.fpl_percent
-        income = self.screen.calc_gross_income("yearly", ["all"])
-        income_eligible = income < income_limit
+        income_eligible = income <= income_limit
 
         # assets
         asset_eligible = int(self.screen.household_assets) < self.asset_limit
