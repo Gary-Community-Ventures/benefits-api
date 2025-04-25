@@ -1,3 +1,4 @@
+from typing import Literal, Union
 from integrations.services.sheets.sheets import GoogleSheetsCache
 from screener.models import Screen
 
@@ -27,7 +28,6 @@ class Ami(GoogleSheetsCache):
             continue_outer = False
             percent = 80
             for j in range(self.LIMITS_START_INDEX, self.MAX_HOUSEHOLD_SIZE * 7, 8):
-                print(j)
                 income_limit_values = {}
                 for i in range(j, self.MAX_HOUSEHOLD_SIZE + j):
                     try:
@@ -57,12 +57,19 @@ class Ami(GoogleSheetsCache):
     def get_screen_ami(
         self,
         screen: Screen,
-        percent: str,
+        percent: Union[
+            Literal["80%"],
+            Literal["70%"],
+            Literal["60%"],
+            Literal["50%"],
+            Literal["40%"],
+            Literal["30%"],
+            Literal["20%"],
+        ],
         year: int,
     ):
         data = self.fetch()
 
-        print(data[year][screen.white_label.state_code][screen.county])
         return data[year][screen.white_label.state_code][screen.county][percent][screen.household_size]
 
 
