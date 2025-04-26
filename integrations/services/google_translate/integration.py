@@ -6,9 +6,6 @@ from google.cloud import translate_v2 as translate
 import html
 
 
-import re
-
-
 class Translate:
     """
     Google Translate integration for the benefits API.
@@ -32,7 +29,7 @@ class Translate:
         # Normalize newlines
         normalized = text.replace("\r\n", "\n").replace("\r", "\n")
         # Split on two or more newlines
-        paragraphs = re.split(r"\n{2,}", normalized)
+        paragraphs = normalized.split("\n")
         return paragraphs
 
     @staticmethod
@@ -40,7 +37,7 @@ class Translate:
         """
         Joins paragraphs with two newlines to preserve paragraph breaks.
         """
-        return "\n\n".join(paragraphs)
+        return "\n".join(paragraphs)
 
     def __init__(self):
         info = json.loads(config("GOOGLE_APPLICATION_CREDENTIALS"))
@@ -54,21 +51,13 @@ class Translate:
         if lang not in Translate.languages:
             raise Exception(f"{lang} is not configured in settings, or is the default language")
 
-        paragraphs = self.split_paragraphs(text)
-        # Google Translate API supports translating a list of strings
-        logger = logging.getLogger(__name__)
-        try:
-            results = self.client.translate(paragraphs, target_language=lang, source_language=Translate.main_language)
-        except Exception as e:
-            logger.error(f"Google Translate API error for lang '{lang}': {e}", exc_info=True)
-            raise
+        # Short-circuit for empty string
+        if text == "":
+            return ""
 
-        # If only one paragraph, results is a dict; otherwise, it's a list of dicts
-        if isinstance(results, dict):
-            translated_paragraphs = [self.format_text(results)]
-        else:
-            translated_paragraphs = [self.format_text(res) for res in results]
-        return self.join_paragraphs(translated_paragraphs)
+        # Delegate to bulk_translate for consistency and DRYness
+        result = self.bulk_translate([lang], [text])
+        return result[text][lang]
 
     def bulk_translate(self, langs: list[str], texts: list[str]):
         """
@@ -86,17 +75,13 @@ class Translate:
             # For each text, split into paragraphs, translate, and rejoin
             for text in texts:
                 paragraphs = self.split_paragraphs(text)
-                import logging
 
-                logger = logging.getLogger(__name__)
                 try:
                     results = self.client.translate(
                         paragraphs, target_language=lang, source_language=Translate.main_language
                     )
                 except Exception as e:
-                    logger.error(
-                        f"Google Translate API error for lang '{lang}' (text: {repr(text[:40])}...): {e}", exc_info=True
-                    )
+                    capture_exception(e, level="error")
                     raise
                 if isinstance(results, dict):
                     translated_paragraphs = [self.format_text(results)]
@@ -106,6 +91,9 @@ class Translate:
         return translations
 
     def format_text(self, result):
+        # If the input is whitespace-only, return it unchanged
+        if result["input"].strip() == "":
+            return result["input"]
         leading_spaces = len(result["input"]) - len(result["input"].lstrip(" "))
         trailing_spaces = len(result["input"]) - len(result["input"].rstrip(" "))
-        return " " * leading_spaces + html.unescape(result["translatedText"]) + " " * trailing_spaces
+        return " " * leading_spaces + html.unescape(result["translatedText"]).strip() + " " * trailing_spaces
