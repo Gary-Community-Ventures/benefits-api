@@ -2,7 +2,7 @@ from ..base import UrgentNeedFunction
 
 
 class Chapter115Veteran(UrgentNeedFunction):
-    dependencies = ["household_assets", "income_amount", "income_frequency"]
+    dependencies = ["household_assets", "income_amount", "income_frequency", "household_size"]
     fpl_percent = 2
     asset_limit_indv = 8_400
     asset_limit_joint = 16_600

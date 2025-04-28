@@ -5,6 +5,7 @@ class FamilySupportCenters(UrgentNeedFunction):
     def eligible(self):
         # disability
         for member in self.screen.household_members.all():
+            print(member.has_disability())
             if member.has_disability():
                 return True
         return False

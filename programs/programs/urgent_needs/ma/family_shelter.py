@@ -2,7 +2,7 @@ from ..base import UrgentNeedFunction
 
 
 class FamilyShelter(UrgentNeedFunction):
-    dependencies = ["household_assets", "income_amount", "income_frequency", "age"]
+    dependencies = ["household_assets", "income_amount", "income_frequency", "household_size", "age"]
     fpl_percent = 1.15
     asset_limit = 5_000
 
