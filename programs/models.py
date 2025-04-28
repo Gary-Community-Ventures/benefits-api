@@ -544,6 +544,7 @@ class Program(models.Model):
         on_delete=models.SET_NULL,
     )
     required_programs = models.ManyToManyField("self", related_name="dependent_programs", symmetrical=False, blank=True)
+    value_format = models.CharField(max_length=120, blank=True, null=True)
 
     description_short = models.ForeignKey(
         Translation,
