@@ -3,6 +3,8 @@ from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
+
+from google.auth import default
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
@@ -97,6 +99,7 @@ class Screen(models.Model):
     has_section_8 = models.BooleanField(default=False, blank=True, null=True)
     has_csfp = models.BooleanField(default=False, blank=True, null=True)
     has_ccdf = models.BooleanField(default=False, blank=True, null=True)
+    has_aca = models.BooleanField(default=False, blank=True, null=True)
     has_ma_eaedc = models.BooleanField(default=False, blank=True, null=True)
     has_ma_ssp = models.BooleanField(default=False, blank=True, null=True)
     has_ma_mbta = models.BooleanField(default=False, blank=True, null=True)
@@ -363,6 +366,8 @@ class Screen(models.Model):
             "medicare": self.has_medicare_hi,
             "chp": self.has_chp or self.has_chp_hi,
             "va": self.has_va,
+            "nc_aca": self.has_aca,
+            "ma_aca": self.has_aca,
             "ma_mbta": self.has_ma_mbta,
             "ma_snap": self.has_snap,
             "ma_ccdf": self.has_ccdf,

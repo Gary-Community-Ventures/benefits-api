@@ -13,7 +13,7 @@ class MaConfigurationData(ConfigurationData):
         "link": "https://www.mass.gov/info-details/information-about-the-public-charge-rule-and-how-it-may-impact-you#information-about-the-public-charge-rule-",
         "text": {
             "_label": "landingPage.publicChargeLinkMA",
-            "_default_message": "mass.gov",
+            "_default_message": "Massachusetts Department of Health and Human Services website",
         },
     }
 
@@ -92,7 +92,7 @@ class MaConfigurationData(ConfigurationData):
             },
         },
         "veteranServices": {
-            "icon": {"_icon": "Legal_services", "_classname": "option-card-icon"},  # TODO: icon
+            "icon": {"_icon": "Military", "_classname": "option-card-icon"},
             "text": {
                 "_label": "acuteConditionOptions.veteranServices",
                 "_default_message": "Resources for veterans and their families",
@@ -180,8 +180,8 @@ class MaConfigurationData(ConfigurationData):
         "sSI": {"_label": "incomeOptions.sSI", "_default_message": "Supplemental Security Income (SSI)"},
         "childSupport": {"_label": "incomeOptions.childSupport", "_default_message": "Child Support (Received)"},
         "pension": {
-            "_label": "incomeOptions.pension",
-            "_default_message": "Military, Government, or Private Pension (including PERA)",
+            "_label": "incomeOptions.pension.ma",
+            "_default_message": "Military, Government, or Private Pension",
         },
         "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
         "sSSurvivor": {
@@ -202,9 +202,9 @@ class MaConfigurationData(ConfigurationData):
             "_label": "incomeOptions.investment",
             "_default_message": "Investment Income (interest, dividends, and profit from selling stocks)",
         },
-        "cOSDisability": {
-            "_label": "incomeOptions.cOSDisability",
-            "_default_message": "Colorado State Disability Benefits",
+        "stateDisability": {
+            "_label": "incomeOptions.stateDisability.ma",
+            "_default_message": "State Disability Benefits",
         },
         "rental": {"_label": "incomeOptions.rental", "_default_message": "Rental Income"},
         "alimony": {"_label": "incomeOptions.alimony", "_default_message": "Alimony (Received)"},
@@ -1203,7 +1203,7 @@ class MaConfigurationData(ConfigurationData):
                     },
                     "description": {
                         "_label": "cashAssistanceBenefits.ma_ssp_desc",
-                        "_default_message": "State cash assistance for people with disabilities or 65 years+",
+                        "_default_message": "State cash assistance for people with disabilities or 65 years of age or older",
                     },
                 },
                 "ssdi": {
@@ -1258,7 +1258,7 @@ class MaConfigurationData(ConfigurationData):
                     },
                     "description": {
                         "_label": "foodAndNutritionBenefits.csfp_desc",
-                        "_default_message": "Food support for people 60 years+",
+                        "_default_message": "Food support for people 60 years of age or older",
                     },
                 },
             },
@@ -1308,6 +1308,21 @@ class MaConfigurationData(ConfigurationData):
                 }
             },
             "category_name": {"_label": "transportation", "_default_message": "Transportation"},
+        },
+        "healthCare": {
+            "benefits": {
+                "aca": {
+                    "name": {
+                        "_label": "healthCareBenefits.aca.ma",
+                        "_default_message": "Massachusetts Health Connector/Premium Tax Credit: ",
+                    },
+                    "description": {
+                        "_label": "healthCareBenefits.aca_desc.ma",
+                        "_default_message": "Health insurance marketplace premium tax credit",
+                    },
+                },
+            },
+            "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
         },
         "taxCredits": {
             "benefits": {
@@ -1408,17 +1423,12 @@ class MaConfigurationData(ConfigurationData):
         "email": "hello@myfriendben.org",
     }
 
-    feedback_links = {  # TODO: add links where the user can provide feedback
-        "email": "https://google.com",
-        "survey": "https://google.com",
+    feedback_links = {
+        "email": "hello@myfriendben.org",
+        "survey": "https://docs.google.com/forms/d/e/1FAIpQLSdnfqjvlVSBQkJuUMvhEDUp-t6oD-8tPQi67uRG2iNetXmSfA/viewform?usp=sf_link",
     }
 
     override_text = {
-        # NOTE: Text before public charge link is different
-        "landingPage.publicCharge": {
-            "_label": "landingPage.publicCharge.ma",
-            "_default_message": "Some benefits are available to Non-U.S. citizens. Non-U.S. citizens planning to apply for legal permanent residency or a visa should consider how applying for any benefits may affect their immigration status. To learn more, please see this information from ",
-        },
         # NOTE: MA uses cities instead of counties
         "questions.zipcode-a": {
             "_label": "questions.zipcode.city.question.ma",
