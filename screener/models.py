@@ -359,9 +359,6 @@ class Screen(models.Model):
             "cowap": self.has_cowap,
             "ncwap": self.has_ncwap,
             "ubp": self.has_ubp,
-            "co_medicaid": self.has_medicaid or self.has_medicaid_hi,
-            "nc_medicaid": self.has_medicaid or self.has_medicaid_hi,
-            "medicaid": self.has_medicaid or self.has_medicaid_hi,
             "medicare": self.has_medicare_hi,
             "chp": self.has_chp or self.has_chp_hi,
             "va": self.has_va,
@@ -548,6 +545,20 @@ class HouseholdMember(models.Model):
 
     def is_in_tax_unit(self):
         return self.is_head() or self.is_spouse() or self.is_dependent()
+
+    def has_benefit(self, name_abbreviated: str):
+        name_map = {
+            "nc_medicaid": self.insurance.medicaid,
+            "co_medicaid": self.insurance.medicaid,
+            "medicaid": self.insurance.medicaid,
+        }
+        
+        if name_abbreviated in name_map:
+            has_benefit = name_map[name_abbreviated]
+        else:
+            has_benefit = False
+
+        return has_benefit
 
     @property
     def birth_year(self) -> Optional[int]:
