@@ -63,7 +63,7 @@ class MaMassHealthLimited(Medicaid):
         "OLDER_CHILD": 255,
         "PREGNANT": 255,
         "YOUNG_ADULT": 0,
-        "PARENT": 0,
+        "PARENT": 255,
         "SSI_RECIPIENT": 0,
         "AGED": 0,
         "DISABLED": 0,
