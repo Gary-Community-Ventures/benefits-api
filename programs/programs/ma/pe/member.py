@@ -85,10 +85,10 @@ class MaWic(Wic):
 class MaCcdf(Ccdf):
     cost_by_age = (
         # cost, age
-        (22_813, 2),
-        (20_535, 3),
-        (16_254, 4.5),
-        (11_942, 14),
+        (23_191, 2),
+        (21_125, 3),
+        (16_572, 4.5),
+        (12_632, 14),
     )
 
     def child_care_cost(self, member: HouseholdMember):
