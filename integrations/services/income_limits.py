@@ -107,7 +107,7 @@ class Smi(GoogleSheetsCache):
     def get_screen_smi(self, screen: Screen, year: int):
         data = self.fetch()
 
-        return data[year][screen.white_label.state]
+        return data[year][screen.white_label.state_code][screen.household_size]
 
 
 smi = Smi()

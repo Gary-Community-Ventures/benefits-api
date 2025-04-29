@@ -3,8 +3,6 @@ from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
-
-from google.auth import default
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
