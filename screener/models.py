@@ -552,7 +552,7 @@ class HouseholdMember(models.Model):
             "co_medicaid": self.insurance.medicaid,
             "medicaid": self.insurance.medicaid,
         }
-        
+
         if name_abbreviated in name_map:
             has_benefit = name_map[name_abbreviated]
         else:
