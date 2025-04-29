@@ -243,6 +243,7 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.weAreDownHome",
             "_default_message": "We Are Down Home",
         },
+        "wrcgso": {"_label": "referralOptions.wrcgso", "_default_message": "Women's Resource Center of Greensboro"},
         "searchEngine": {
             "_label": "referralOptions.searchEngine",
             "_default_message": "Google or other search engine",
