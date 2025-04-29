@@ -1405,7 +1405,7 @@ class MaConfigurationData(ConfigurationData):
                 "signUpInfo",
             ],
         },
-        "featureFlags": {"default": []},
+        "featureFlags": {"default": ["no_results_more_help"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
