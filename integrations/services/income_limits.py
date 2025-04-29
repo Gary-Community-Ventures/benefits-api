@@ -74,3 +74,40 @@ class Ami(GoogleSheetsCache):
 
 
 ami = Ami()
+
+
+class Smi(GoogleSheetsCache):
+    sheet_id = "1kH--2b_VMY6lG_DXe2Xdhps3Flfi_ZIqc9oViWcxndE"
+    range_name = "SMI!A2:J"
+    default = {}
+
+    YEAR_INDEX = 0
+    STATE_INDEX = 1
+    LIMITS_START_INDEX = 2
+
+    def update(self):
+        data = super().update()
+
+        smi = {}
+        for row in data:
+            year = row[self.YEAR_INDEX]
+            state = row[self.STATE_INDEX]
+
+            limits = {}
+            for i, limit in enumerate(row[self.LIMITS_START_INDEX :]):
+                limits[i + 1] = int(float(limit))
+
+            if year not in smi:
+                smi[year] = {}
+
+            smi[year][state] = limits
+
+        return smi
+
+    def get_screen_smi(self, screen: Screen, year: int):
+        data = self.fetch()
+
+        return data[year][screen.white_label.state]
+
+
+smi = Smi()
