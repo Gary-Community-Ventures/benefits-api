@@ -1423,10 +1423,7 @@ class NcConfigurationData(ConfigurationData):
         "27947": {"Currituck County": "Currituck County"},
         "27948": {"Dare County": "Dare County"},
         "27949": {"Dare County": "Dare County"},
-        "27950": {
-            "Currituck County": "Currituck County",
-            "Virginia Beach County": "Virginia Beach County",
-        },
+        "27950": {"Currituck County": "Currituck County"},
         "27953": {"Dare County": "Dare County"},
         "27954": {"Dare County": "Dare County"},
         "27956": {"Currituck County": "Currituck County"},
@@ -2377,7 +2374,7 @@ class NcConfigurationData(ConfigurationData):
         "28674": {"Wilkes County": "Wilkes County"},
         "28675": {
             "Alleghany County": "Alleghany County",
-            "Grayson County": "Grayson County",
+            "Ashe County": "Ashe County",
             "Wilkes County": "Wilkes County",
         },
         "28676": {
@@ -2577,7 +2574,7 @@ class NcConfigurationData(ConfigurationData):
         },
         "28774": {
             "Jackson County": "Jackson County",
-            "Transylvania County": "Transylvania Count",
+            "Transylvania County": "Transylvania County",
         },
         "28775": {"Macon County": "Macon County"},
         "28776": {"Buncombe County": "Buncombe County"},
