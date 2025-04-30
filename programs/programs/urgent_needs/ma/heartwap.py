@@ -13,12 +13,6 @@ class Heartwap(UrgentNeedFunction):
         income_eligible = income <= income_limit
 
         # expenses
-        has_expense = self.screen.has_expense(['rent', 'mortgage', 'subsidizedRent'])
-
-        print(f"income_limit: {income_limit}")
-        print(f"income: {income}")
-        print(f"income_eligible: {income_eligible}")
-        print(f"has_expense: {has_expense}")
-
+        has_expense = self.screen.has_expense(["rent", "mortgage", "subsidizedRent"])
 
         return income_eligible and has_expense
