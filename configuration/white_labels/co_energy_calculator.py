@@ -1721,9 +1721,9 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     }
 
     referrer_data = {
-        "theme": {"default": "default"},
+        "theme": {"default": "co_energy"},
         "logoSource": {
-            "default": "MFB_COLogo",
+            "default": "MFB_COEnergyLogo",
         },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
