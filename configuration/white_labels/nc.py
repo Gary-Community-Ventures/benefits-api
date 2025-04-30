@@ -2773,7 +2773,7 @@ class NcConfigurationData(ConfigurationData):
         },
         "healthCare": {
             "benefits": {
-                "nc_aca": {
+                "aca": {
                     "name": {
                         "_label": "taxBenefits.nc_aca",
                         "_default_message": "ACA (Affordable Care Act) Subsidies: ",
