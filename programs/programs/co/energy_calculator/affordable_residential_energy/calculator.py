@@ -1,22 +1,11 @@
-from integrations.services.sheets.sheets import GoogleSheetsCache
+from integrations.services.income_limits import ami
 from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import Eligibility, ProgramCalculator
 
 
-class AffordableResidentialEnergyIncomeLimitCache(GoogleSheetsCache):
-    default = {}
-    sheet_id = "1T4RSc9jXRV5kzdhbK5uCQXqgtLDWt-wdh2R4JVsK33o"  # same sheet as Energy Outreach Colorado
-    range_name = "'current'!A2:I65"
-
-    def update(self):
-        data = super().update()
-
-        return {d[0].strip() + " County": [int(v.replace(",", "")) for v in d[1:]] for d in data}
-
-
 class AffordableResidentialEnergy(ProgramCalculator):
     amount = 1
-    dependencies = ["household_size", "energy_calculator", "income_amount", "income_frequency"]
+    dependencies = ["household_size", "energy_calculator", "income_amount", "income_frequency", "county"]
     electricity_providers = [
         "co-city-of-gunnison",
         "co-gunnison-county-electric-association",
@@ -52,7 +41,7 @@ class AffordableResidentialEnergy(ProgramCalculator):
         "Otero County",
         "Prowers County",
     ]
-    income_limits = AffordableResidentialEnergyIncomeLimitCache()
+    ami_percent = "80%"
 
     def household_eligible(self, e: Eligibility):
         # utility providers
@@ -69,6 +58,5 @@ class AffordableResidentialEnergy(ProgramCalculator):
 
         # income
         income = self.screen.calc_gross_income("yearly", ["all"])
-        county = counties_from_screen(self.screen)[0]
-        income_limit = self.income_limits.fetch()[county][self.screen.household_size - 1]
+        income_limit = ami.get_screen_ami(self.screen, self.ami_percent, self.program.category.year)
         e.condition(income < income_limit)
