@@ -3,8 +3,6 @@ from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
-
-from google.auth import default
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
@@ -14,6 +12,7 @@ from django.conf import settings
 class WhiteLabel(models.Model):
     name = models.CharField(max_length=120, blank=False, null=False)
     code = models.CharField(max_length=32, blank=False, null=False)
+    state_code = models.CharField(max_length=8, blank=True, null=True)
     cms_method = models.CharField(max_length=32, blank=True, null=True)
 
     def __str__(self):

@@ -1,27 +1,12 @@
-from integrations.services.sheets.sheets import GoogleSheetsCache
+from integrations.services.income_limits import ami
 from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import Eligibility, ProgramCalculator, MemberEligibility
 import programs.programs.messages as messages
 
 
-class IncomeLimitsCache(GoogleSheetsCache):
-    sheet_id = "1dahRu8UVdWBBU1jMiGiWehY4kOUkzcOmKRPJ-GfcfGo"
-    range_name = "B2:I"
-    default = {}
-
-    def update(self):
-        data = super().update()
-
-        return self._format_amounts(data[0])
-
-    @staticmethod
-    def _format_amounts(amounts: list[str]):
-        return [float(a.strip().replace(",", "")) for a in amounts]
-
-
 class DenverSidewalkRebate(ProgramCalculator):
     county = "Denver County"
-    income_limits = IncomeLimitsCache()
+    ami_percent = "60%"
     presumptive_eligibility = ["snap", "tanf", "cccap"]
     amount = 150
     dependencies = ["household_size", "income_amount", "income_frequency", "zipcode"]
@@ -32,7 +17,7 @@ class DenverSidewalkRebate(ProgramCalculator):
         e.condition(DenverSidewalkRebate.county in counties, messages.location())
 
         # income condition
-        income_limit = DenverSidewalkRebate.income_limits.fetch()[self.screen.household_size - 1]
+        income_limit = ami.get_screen_ami(self.screen, self.ami_percent, self.program.year.period)
 
         income = int(self.screen.calc_gross_income("yearly", ["all"]))
         income_eligible = income <= income_limit

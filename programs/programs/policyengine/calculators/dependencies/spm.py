@@ -36,7 +36,7 @@ class HousingCostDependency(SpmUnit):
     field = "housing_cost"
 
     def value(self):
-        return int(self.screen.calc_expenses("yearly", ["rent", "mortgage"]))
+        return int(self.screen.calc_expenses("yearly", ["rent", "mortgage", "subsidizedRent"]))
 
 
 class SnapAssetsDependency(SpmUnit):
