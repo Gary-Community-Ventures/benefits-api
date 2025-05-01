@@ -674,21 +674,13 @@ class UrgentNeedFunction(models.Model):
 
 
 class UrgentNeedCategory(models.Model):
-    white_label = models.ForeignKey(
-        WhiteLabel,
-        related_name="urgent_need_categories",
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-    )
     name = models.CharField(max_length=120)
 
     class Meta:
         verbose_name_plural = "Urgent Need Categories"
 
     def __str__(self):
-        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
-        return f"{white_label_name}{self.name}"
+        return f"{self.name}"
 
 
 class UrgentNeedManager(models.Manager):

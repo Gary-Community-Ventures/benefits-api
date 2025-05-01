@@ -254,10 +254,7 @@ class WarningMessageAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
 class UrgentNeedAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "active", "action_buttons"]
-    white_label_filter_horizontal = (
-        "type_short",
-        "counties",
-    )
+    white_label_filter_horizontal = ("counties",)
     filter_horizontal = (
         "type_short",
         "functions",
@@ -315,9 +312,9 @@ class UrgentNeedAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class UrgentNeedCategoryAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+class UrgentNeedCategoryAdmin(ModelAdmin):
     search_fields = ("name",)
-    fields = ("white_label", "name")
+    fields = ("name",)
 
 
 class UrgentNeedFunctionAdmin(ModelAdmin):
