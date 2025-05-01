@@ -801,10 +801,8 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
         for category in data["categories"]:
             try:
                 cat_instance = UrgentNeedCategory.objects.get(name=category["name"])
-                cat_instance.white_label = white_label
-                cat_instance.save()
             except UrgentNeedCategory.DoesNotExist:
-                cat_instance = UrgentNeedCategory.objects.create(name=category["name"], white_label=white_label)
+                cat_instance = UrgentNeedCategory.objects.create(name=category["name"])
 
             categories.append(cat_instance)
         need.type_short.set(categories)
