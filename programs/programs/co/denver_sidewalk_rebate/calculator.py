@@ -29,12 +29,12 @@ class DenverSidewalkRebate(ProgramCalculator):
                 categorical_eligible = True
                 break
 
+        for member in self.screen.household_members.all():
+            if member.has_benefit("co_medicaid"):
+                categorical_eligible = True
+                break
+
         e.condition(categorical_eligible or income_eligible, messages.income(income, income_limit))
 
         # mortgage expense
         e.condition(self.screen.has_expense(["mortgage"]))
-
-    def member_eligible(self, e: MemberEligibility):
-        member = e.member
-
-        e.condition(member.has_benefit("co_medicaid"))

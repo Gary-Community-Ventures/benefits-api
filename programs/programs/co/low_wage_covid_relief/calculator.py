@@ -37,20 +37,14 @@ class LowWageCovidRelief(ProgramCalculator):
                 has_benefit = self.screen.has_benefit(benefit)
                 break
 
+        for benefit in LowWageCovidRelief.member_auto_eligible_benefits:
+            has_benefit = any(member.has_benefit(benefit) for member in self.screen.household_member.all())
+            if has_benefit:
+                break
+
         # meets income limit
         income_limit = LowWageCovidRelief.income_limits[self.screen.household_size]
         income = self.screen.calc_gross_income("monthly", ["all"])
         meets_income_limit = income <= income_limit
 
         e.condition(meets_income_limit or has_benefit)
-
-    def member_eligible(self, e: MemberEligibility):
-        member = e.member
-
-        has_benefit = False
-        for benefit in LowWageCovidRelief.member_auto_eligible_benefits:
-            if member.has_benefit(benefit):
-                has_benefit = member.has_benefit(benefit)
-                break
-
-        e.condition(has_benefit)

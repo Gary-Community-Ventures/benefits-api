@@ -29,13 +29,13 @@ class DenverTrashRebate(ProgramCalculator):
                 categorical_eligible = True
                 break
 
+        for member in self.screen.household_members.all():
+            if member.has_benefit("co_medicaid"):
+                categorical_eligible = True
+                break
+
         e.condition(categorical_eligible or income_eligible, messages.income(income, income_limit))
 
         # has rent or mortgage expense
         has_rent_or_mortgage = self.screen.has_expense(DenverTrashRebate.expenses)
         e.condition(has_rent_or_mortgage)
-
-    def member_eligible(self, e: MemberEligibility):
-        member = e.member
-
-        e.condition(member.has_benefit("co_medicaid"))

@@ -12,23 +12,20 @@ class UtilityBillPay(ProgramCalculator):
         for benefit in self.presumptive_eligibility:
             if self.screen.has_benefit(benefit):
                 presumptive_eligible = True
+                break
             elif benefit in self.data and self.data[benefit].eligible:
                 presumptive_eligible = True
+                break
+
+        for benefit in self.member_presumptive_eligibility:
+            presumptive_eligible = any(member.has_benefit(benefit) for member in self.screen.household_members.all())
+            if presumptive_eligible:
+                break
 
         e.condition(presumptive_eligible)
 
         # has rent or mortgage expense
         e.condition(self._has_expense())
-
-    def member_eligible(self, e: MemberEligibility):
-        member = e.member
-
-        presumptive_eligible = False
-        for benefit in self.member_presumptive_eligibility:
-            if member.has_benefit(benefit):
-                presumptive_eligible = True
-
-        e.condition(presumptive_eligible)
 
     def _has_expense(self):
         return self.screen.has_expense(["rent", "mortgage"])
