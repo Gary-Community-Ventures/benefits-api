@@ -376,14 +376,12 @@ class Screen(models.Model):
             "co_andso": self.has_co_andso,
         }
 
-        has_insurance = self.has_insurance_types((name_abbreviated,), strict=False)
-
         if name_abbreviated in name_map:
             has_benefit = name_map[name_abbreviated]
         else:
             has_benefit = False
 
-        return has_insurance or has_benefit
+        return has_benefit
 
     def set_screen_is_test(self):
         referral_source_tests = ["testorprospect", "test"]
@@ -551,14 +549,26 @@ class HouseholdMember(models.Model):
             "nc_medicaid": self.insurance.medicaid,
             "co_medicaid": self.insurance.medicaid,
             "medicaid": self.insurance.medicaid,
+            "emergency_medicaid": self.insurance.emergency_medicaid,
         }
+
+        has_insurance = self.has_insurance_types((name_abbreviated,), strict=False)
 
         if name_abbreviated in name_map:
             has_benefit = name_map[name_abbreviated]
         else:
             has_benefit = False
 
-        return has_benefit
+        return has_insurance or has_benefit
+
+    def has_insurance_types(self, types, strict=True):
+        if not hasattr(self, "insurance"):
+            return False
+
+        if self.insurance.has_insurance_types(types, strict):
+            return True
+
+        return False
 
     @property
     def birth_year(self) -> Optional[int]:

@@ -1,4 +1,4 @@
-from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.calc import ProgramCalculator, Eligibility, MemberEligibility
 from programs.programs.helpers import STATE_MEDICAID_OPTIONS
 import programs.programs.messages as messages
 from programs.co_county_zips import counties_from_screen
@@ -7,7 +7,8 @@ import math
 
 class LowWageCovidRelief(ProgramCalculator):
     amount = 1_500
-    auto_eligible_benefits = (*STATE_MEDICAID_OPTIONS, "tanf", "snap", "wic", "leap")
+    auto_eligible_benefits = ("tanf", "snap", "wic", "leap")
+    member_auto_eligible_benefits = (*STATE_MEDICAID_OPTIONS,)
     income_limits = {
         1: -math.inf,
         2: 3_266.25,
@@ -42,3 +43,14 @@ class LowWageCovidRelief(ProgramCalculator):
         meets_income_limit = income <= income_limit
 
         e.condition(meets_income_limit or has_benefit)
+
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
+
+        has_benefit = False
+        for benefit in LowWageCovidRelief.member_auto_eligible_benefits:
+            if member.has_benefit(benefit):
+                has_benefit = member.has_benefit(benefit)
+                break
+
+        e.condition(has_benefit)

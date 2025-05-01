@@ -1,6 +1,6 @@
 from integrations.services.sheets.sheets import GoogleSheetsCache
 from programs.co_county_zips import counties_from_screen
-from programs.programs.calc import Eligibility, ProgramCalculator
+from programs.programs.calc import Eligibility, ProgramCalculator, MemberEligibility
 import programs.programs.messages as messages
 
 
@@ -22,7 +22,7 @@ class IncomeLimitsCache(GoogleSheetsCache):
 class DenverSidewalkRebate(ProgramCalculator):
     county = "Denver County"
     income_limits = IncomeLimitsCache()
-    presumptive_eligibility = ["co_medicaid", "snap", "tanf", "cccap"]
+    presumptive_eligibility = ["snap", "tanf", "cccap"]
     amount = 150
     dependencies = ["household_size", "income_amount", "income_frequency", "zipcode"]
 
@@ -48,3 +48,8 @@ class DenverSidewalkRebate(ProgramCalculator):
 
         # mortgage expense
         e.condition(self.screen.has_expense(["mortgage"]))
+
+    def member_eligible(self, e: MemberEligibility):
+        member = e.member
+
+        e.condition(member.has_benefit("co_medicaid"))
