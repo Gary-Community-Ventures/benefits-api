@@ -2829,9 +2829,7 @@ class CoConfigurationData(ConfigurationData):
             },
         },
         "logoFooterSource": {"default": "MFB_Logo"},
-        "logoFooterAlt": {
-            "default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}
-        },
+        "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
         "logoClass": {
             "default": "logo",
             "eaglecounty": "eaglecounty-logo-size",
