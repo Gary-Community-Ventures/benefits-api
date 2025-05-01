@@ -58,5 +58,5 @@ class AffordableResidentialEnergy(ProgramCalculator):
 
         # income
         income = self.screen.calc_gross_income("yearly", ["all"])
-        income_limit = ami.get_screen_ami(self.screen, self.ami_percent, self.program.category.year)
+        income_limit = ami.get_screen_ami(self.screen, self.ami_percent, self.program.year.period)
         e.condition(income < income_limit)
