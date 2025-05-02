@@ -13,6 +13,6 @@ class Heartwap(UrgentNeedFunction):
         income_eligible = income <= income_limit
 
         # expenses
-        has_expense = self.screen.has_expense(["rent"])
+        has_expense = self.screen.has_expense(["mortgage"])
 
         return income_eligible and has_expense
