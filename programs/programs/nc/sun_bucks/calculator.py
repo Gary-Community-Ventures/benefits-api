@@ -18,7 +18,6 @@ class SunBucks(ProgramCalculator):
         # Must not have the following benefits
         e.condition(not self.screen.has_benefit("snap"), messages.must_not_have_benefit("snap"))
         e.condition(not self.screen.has_benefit("tanf"), messages.must_not_have_benefit("tanf"))
-        e.condition(not self.screen.has_benefit("medicaid"), messages.must_not_have_benefit("medicaid"))
 
         e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
@@ -27,3 +26,5 @@ class SunBucks(ProgramCalculator):
 
         # age eligibility
         e.condition(SunBucks.min_age <= member.age <= SunBucks.max_age)
+
+        e.condition(not member.has_benefit("medicaid"))

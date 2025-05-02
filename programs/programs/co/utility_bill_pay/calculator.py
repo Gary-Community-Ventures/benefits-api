@@ -1,8 +1,9 @@
-from programs.programs.calc import Eligibility, ProgramCalculator
+from programs.programs.calc import Eligibility, ProgramCalculator, MemberEligibility
 
 
 class UtilityBillPay(ProgramCalculator):
-    presumptive_eligibility = ("snap", "ssi", "andcs", "tanf", "wic", "co_medicaid", "emergency_medicaid", "chp")
+    presumptive_eligibility = ("snap", "ssi", "andcs", "tanf", "wic", "chp")
+    member_presumptive_eligibility = ("co_medicaid", "emergency_medicaid")
     amount = 400
 
     def household_eligible(self, e: Eligibility):
@@ -11,8 +12,15 @@ class UtilityBillPay(ProgramCalculator):
         for benefit in self.presumptive_eligibility:
             if self.screen.has_benefit(benefit):
                 presumptive_eligible = True
+                break
             elif benefit in self.data and self.data[benefit].eligible:
                 presumptive_eligible = True
+                break
+
+        for benefit in self.member_presumptive_eligibility:
+            presumptive_eligible = any(member.has_benefit(benefit) for member in self.screen.household_members.all())
+            if presumptive_eligible:
+                break
 
         e.condition(presumptive_eligible)
 

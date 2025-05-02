@@ -338,6 +338,7 @@ class MemberEligibilitySerializer(serializers.Serializer):
     frontend_id = serializers.UUIDField()
     eligible = serializers.BooleanField()
     value = serializers.IntegerField()
+    already_has = serializers.BooleanField()
 
 
 class EligibilitySerializer(serializers.Serializer):

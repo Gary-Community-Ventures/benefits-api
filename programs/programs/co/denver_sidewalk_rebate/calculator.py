@@ -1,13 +1,13 @@
 from integrations.services.income_limits import ami
 from programs.co_county_zips import counties_from_screen
-from programs.programs.calc import Eligibility, ProgramCalculator
+from programs.programs.calc import Eligibility, ProgramCalculator, MemberEligibility
 import programs.programs.messages as messages
 
 
 class DenverSidewalkRebate(ProgramCalculator):
     county = "Denver County"
     ami_percent = "60%"
-    presumptive_eligibility = ["co_medicaid", "snap", "tanf", "cccap"]
+    presumptive_eligibility = ["snap", "tanf", "cccap"]
     amount = 150
     dependencies = ["household_size", "income_amount", "income_frequency", "zipcode"]
 
@@ -26,6 +26,11 @@ class DenverSidewalkRebate(ProgramCalculator):
         categorical_eligible = False
         for program in DenverSidewalkRebate.presumptive_eligibility:
             if self.screen.has_benefit(program):
+                categorical_eligible = True
+                break
+
+        for member in self.screen.household_members.all():
+            if member.has_benefit("co_medicaid"):
                 categorical_eligible = True
                 break
 
