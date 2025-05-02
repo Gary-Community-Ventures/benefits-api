@@ -10,7 +10,7 @@ class Raft(UrgentNeedFunction):
         # income
         income_limit = ami.get_screen_ami(self.screen, self.ami_percent, self.urgent_need.year.period)
         income = self.screen.calc_gross_income("yearly", ["all"])
-        income_eligible = income < income_limit
+        income_eligible = income <= income_limit
 
         # expenses
         has_expense = self.screen.has_expense(["rent", "mortgage", "subsidizedRent"])

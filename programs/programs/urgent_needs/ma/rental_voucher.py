@@ -10,4 +10,4 @@ class RentalVoucher(UrgentNeedFunction):
         # income
         income_limit = ami.get_screen_ami(self.screen, self.ami_percent, self.urgent_need.year.period)
         income = self.screen.calc_gross_income("yearly", ["all"])
-        return income < income_limit
+        return income <= income_limit
