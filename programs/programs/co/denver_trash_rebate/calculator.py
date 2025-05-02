@@ -1,6 +1,6 @@
 from integrations.services.income_limits import ami
 from programs.co_county_zips import counties_from_screen
-from programs.programs.calc import ProgramCalculator, Eligibility
+from programs.programs.calc import ProgramCalculator, Eligibility, MemberEligibility
 import programs.programs.messages as messages
 
 
@@ -10,7 +10,7 @@ class DenverTrashRebate(ProgramCalculator):
     county = "Denver County"
     expenses = ["rent", "mortgage"]
     dependencies = ["zipcode", "income_amount", "income_frequency", "household_size"]
-    presumptive_eligibility = ["co_medicaid", "snap", "tanf", "cccap"]
+    presumptive_eligibility = ["snap", "tanf", "cccap"]
 
     def household_eligible(self, e: Eligibility):
         # county
@@ -26,6 +26,11 @@ class DenverTrashRebate(ProgramCalculator):
         categorical_eligible = False
         for program in DenverTrashRebate.presumptive_eligibility:
             if self.screen.has_benefit(program):
+                categorical_eligible = True
+                break
+
+        for member in self.screen.household_members.all():
+            if member.has_benefit("co_medicaid"):
                 categorical_eligible = True
                 break
 

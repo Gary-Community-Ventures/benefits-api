@@ -1,18 +1,7 @@
+from integrations.services.income_limits import ami
 from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import MemberEligibility, ProgramCalculator, Eligibility
-from integrations.services.sheets import GoogleSheetsCache
 import programs.programs.messages as messages
-
-
-class DenverAmiCache(GoogleSheetsCache):
-    sheet_id = "1ggXBCWybiThlaL2s2FErpTdS5vZ_gZBXYX6d98nTqho"
-    range_name = "current AMI!B2:I2"
-    default = [0, 0, 0, 0, 0, 0, 0, 0]
-
-    def update(self):
-        data = super().update()
-
-        return [int(a.replace(",", "")) for a in data[0]]
 
 
 class DenverPropertyTaxRelief(ProgramCalculator):
@@ -23,7 +12,6 @@ class DenverPropertyTaxRelief(ProgramCalculator):
     child_max_age = 17
     age_eligible = 65
     county = "Denver County"
-    ami = DenverAmiCache()
     income_types = [
         "wages",
         "selfEmployment",
@@ -41,7 +29,7 @@ class DenverPropertyTaxRelief(ProgramCalculator):
     mortgage_amount = 1_800
     rent_amount = 1_000
     dependencies = [
-        "zipcode",
+        "county",
         "income_amount",
         "income_frequency",
         "income_type",
@@ -71,8 +59,7 @@ class DenverPropertyTaxRelief(ProgramCalculator):
         elif has_mortgage:
             ami_percent = DenverPropertyTaxRelief.ami_percent_mortgage
 
-        ami = DenverPropertyTaxRelief.ami.fetch()
-        limit = ami[self.screen.household_size - 1] * ami_percent
+        limit = ami.get_screen_ami(self.screen, "100%", self.program.year.period) * ami_percent
         total_income = 0
         for member in self.screen.household_members.all():
             if member.is_head() or member.is_spouse():

@@ -27,11 +27,11 @@ class NcMedicaid(Medicaid):
 class NcWic(Wic):
     wic_categories = {
         "NONE": 0,
-        "INFANT": 130,
-        "CHILD": 26,
-        "PREGNANT": 47,
-        "POSTPARTUM": 47,
-        "BREASTFEEDING": 52,
+        "INFANT": 60,
+        "CHILD": 60,
+        "PREGNANT": 60,
+        "POSTPARTUM": 60,
+        "BREASTFEEDING": 60,
     }
     pe_inputs = [
         *Wic.pe_inputs,

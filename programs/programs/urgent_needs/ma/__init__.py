@@ -7,6 +7,9 @@ from .family_shelter import FamilyShelter
 from .family_support_centers import FamilySupportCenters
 from .good_neighbor_energy import GoodNeighborEnergy
 from .heartwap import Heartwap
+from .alternative_housing_voucher import AlternativeHousingVoucher
+from .raft import Raft
+from .rental_voucher import RentalVoucher
 
 
 ma_urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
@@ -18,4 +21,7 @@ ma_urgent_need_functions: dict[str, type[UrgentNeedFunction]] = {
     "ma_healthy_baby_healthy_child": HealthyBabyHealthyChild,
     "ma_good_neighbor_energy": GoodNeighborEnergy,
     "ma_heartwap": Heartwap,
+    "ma_alternative_housing_voucher": AlternativeHousingVoucher,
+    "ma_raft": Raft,
+    "ma_rental_voucher": RentalVoucher,
 }
