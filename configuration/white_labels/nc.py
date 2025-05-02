@@ -195,6 +195,10 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.felp",
             "_default_message": "Future Endeavors Life Program (FELP)",
         },
+        "hf": {
+            "_label": "referralOptions.hf",
+            "_default_message": "Hispanic Federation",
+        },
         "mda": {
             "_label": "referralOptions.mda",
             "_default_message": "Montagnard Dega Association",
@@ -213,11 +217,7 @@ class NcConfigurationData(ConfigurationData):
         },
         "ncchwa": {
             "_label": "referralOptions.NCCHWA",
-            "_default_message": "NC Community Health Worker Association (NCCHWA)",
-        },
-        "ncnc": {
-            "_label": "referralOptions.ncnc",
-            "_default_message": "NC Navigators Consurtium",
+            "_default_message": "North Carolina Community Health Worker Association (NCCHWA)",
         },
         "onTrackFin": {
             "_label": "referralOptions.onTrackFin",
@@ -243,7 +243,6 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.weAreDownHome",
             "_default_message": "We Are Down Home",
         },
-        "wrcgso": {"_label": "referralOptions.wrcgso", "_default_message": "Women's Resource Center of Greensboro"},
         "searchEngine": {
             "_label": "referralOptions.searchEngine",
             "_default_message": "Google or other search engine",
@@ -258,6 +257,7 @@ class NcConfigurationData(ConfigurationData):
             "_default_message": "Test / Prospective Partner",
         },
     }
+
     language_options = {
         "en-us": "English",
         "es": "Español",
@@ -268,7 +268,7 @@ class NcConfigurationData(ConfigurationData):
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "中文",
+        "zh": "中文 (简体)",
         "ar": "عربي",
         "sw": "Kiswahili",
     }
