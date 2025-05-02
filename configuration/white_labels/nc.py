@@ -213,7 +213,11 @@ class NcConfigurationData(ConfigurationData):
         },
         "ncchwa": {
             "_label": "referralOptions.NCCHWA",
-            "_default_message": "North Carolina Community Health Worker Association (NCCHWA)",
+            "_default_message": "NC Community Health Worker Association (NCCHWA)",
+        },
+        "ncnc": {
+            "_label": "referralOptions.ncnc",
+            "_default_message": "NC Navigators Consurtium",
         },
         "onTrackFin": {
             "_label": "referralOptions.onTrackFin",
@@ -238,6 +242,10 @@ class NcConfigurationData(ConfigurationData):
         "downHome": {
             "_label": "referralOptions.weAreDownHome",
             "_default_message": "We Are Down Home",
+        },
+        "wrcgso": {
+            "_label": "referralOptions.wrcgso",
+            "_default_message": "Women's Resource Center of Greensboro",
         },
         "searchEngine": {
             "_label": "referralOptions.searchEngine",
@@ -1423,10 +1431,7 @@ class NcConfigurationData(ConfigurationData):
         "27947": {"Currituck County": "Currituck County"},
         "27948": {"Dare County": "Dare County"},
         "27949": {"Dare County": "Dare County"},
-        "27950": {
-            "Currituck County": "Currituck County",
-            "Virginia Beach County": "Virginia Beach County",
-        },
+        "27950": {"Currituck County": "Currituck County"},
         "27953": {"Dare County": "Dare County"},
         "27954": {"Dare County": "Dare County"},
         "27956": {"Currituck County": "Currituck County"},
@@ -2377,7 +2382,7 @@ class NcConfigurationData(ConfigurationData):
         "28674": {"Wilkes County": "Wilkes County"},
         "28675": {
             "Alleghany County": "Alleghany County",
-            "Grayson County": "Grayson County",
+            "Ashe County": "Ashe County",
             "Wilkes County": "Wilkes County",
         },
         "28676": {
@@ -2577,7 +2582,7 @@ class NcConfigurationData(ConfigurationData):
         },
         "28774": {
             "Jackson County": "Jackson County",
-            "Transylvania County": "Transylvania Count",
+            "Transylvania County": "Transylvania County",
         },
         "28775": {"Macon County": "Macon County"},
         "28776": {"Buncombe County": "Buncombe County"},
@@ -2773,7 +2778,7 @@ class NcConfigurationData(ConfigurationData):
         },
         "healthCare": {
             "benefits": {
-                "nc_aca": {
+                "aca": {
                     "name": {
                         "_label": "taxBenefits.nc_aca",
                         "_default_message": "ACA (Affordable Care Act) Subsidies: ",
@@ -2909,7 +2914,7 @@ class NcConfigurationData(ConfigurationData):
         },
         "featureFlags": {
             "default": ["nc_show_211_link"],
-            "211nc": ["no_results_more_help", "nc_show_211_link"],
+            "211nc": ["no_results_more_help", "nc_show_211_link", "211nc"],
         },
         "noResultMessage": {
             "default": {

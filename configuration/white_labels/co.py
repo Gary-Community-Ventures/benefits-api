@@ -2308,7 +2308,7 @@ class CoConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": [], "211co": ["no_results_more_help"]},
+        "featureFlags": {"default": [], "211co": ["no_results_more_help", "211co"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
