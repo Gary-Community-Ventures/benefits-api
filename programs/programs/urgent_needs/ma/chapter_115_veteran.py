@@ -15,6 +15,6 @@ class Chapter115Veteran(UrgentNeedFunction):
 
         # assets
         asset_limit = self.asset_limit_joint if self.screen.is_joint() else self.asset_limit_indv
-        asset_eligible = int(self.screen.household_assets) < asset_limit
+        asset_eligible = int(self.screen.household_assets) <= asset_limit
 
         return income_eligible and asset_eligible
