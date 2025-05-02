@@ -58,6 +58,7 @@ class Ami(GoogleSheetsCache):
         self,
         screen: Screen,
         percent: Union[
+            Literal["100%"],
             Literal["80%"],
             Literal["70%"],
             Literal["60%"],
@@ -66,9 +67,12 @@ class Ami(GoogleSheetsCache):
             Literal["30%"],
             Literal["20%"],
         ],
-        year: int,
+        year: str,
     ):
         data = self.fetch()
+
+        if percent == "100%":
+            return self.get_screen_ami(screen, "80%", year) / 0.8
 
         return data[year][screen.white_label.state_code][screen.county][percent][screen.household_size]
 
