@@ -7,12 +7,9 @@ from googleapiclient.errors import HttpError
 from integrations.services.sheets.formatting import color_cell, title_cell, wrap_row
 from screener.views import eligibility_results
 from validations.models import Validation
-from googleapiclient.discovery import build
-from google.oauth2 import service_account
 from decouple import config
+from integrations.services.sheets import GoogleSheets
 import argparse
-import json
-import httplib2
 
 
 class Result(Enum):
@@ -237,12 +234,7 @@ class Command(BaseCommand):
         for result in results.results:
             row_data.append(result.sheets_row())
 
-        info = json.loads(config("GOOGLE_APPLICATION_CREDENTIALS"))
-        creds = service_account.Credentials.from_service_account_info(info)
-        http_client = httplib2.Http(timeout=60 * 5)
-        http_client = creds.authorize(http_client)
-        service = build("sheets", "v4", credentials=creds, http=http_client)
-        sheet = service.spreadsheets()
+        sheet = GoogleSheets.sheet
 
         # there is around a 1 in 2 billion chance of a conflct, so if that happens,
         # buy a lottery ticket and run the script again.
@@ -308,8 +300,6 @@ class Command(BaseCommand):
         body = {"requests": requests}
         try:
             sheet.batchUpdate(spreadsheetId=google_sheet_id, body=body).execute()
-        except TimeoutError:
-            self.stdout.write(self.style.ERROR("\nRequest timed out"))
         except HttpError:
             self.stdout.write(
                 self.style.ERROR("\nGoogle Sheet not found. Make sure that you share the sheet with the service acount")
