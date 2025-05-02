@@ -12,4 +12,4 @@ class CoEmergencyMortgageAssistance(UrgentNeedFunction):
         income_limit = ami.get_screen_ami(self.screen, "100%", self.urgent_need.year.period) * self.ami_percent
         has_mortgage = self.screen.has_expense(["mortgage"])
 
-        return income < income_limit and has_mortgage
+        return income <= income_limit and has_mortgage
