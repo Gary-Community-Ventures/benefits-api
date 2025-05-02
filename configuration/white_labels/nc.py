@@ -217,8 +217,9 @@ class NcConfigurationData(ConfigurationData):
         },
         "ncchwa": {
             "_label": "referralOptions.NCCHWA",
-            "_default_message": "North Carolina Community Health Worker Association (NCCHWA)",
+            "_default_message": "NC Community Health Worker Association (NCCHWA)",
         },
+        "ncnc": {"_label": "referralOptions.ncnc", "_default_message": "NC Navigators Consortium"},
         "onTrackFin": {
             "_label": "referralOptions.onTrackFin",
             "_default_message": "On Track Financial",
