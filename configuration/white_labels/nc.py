@@ -243,7 +243,10 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.weAreDownHome",
             "_default_message": "We Are Down Home",
         },
-        "wrcgso": {"_label": "referralOptions.wrcgso", "_default_message": "Women's Resource Center of Greensboro"},
+        "wrcgso": {
+            "_label": "referralOptions.wrcgso",
+            "_default_message": "Women's Resource Center of Greensboro",
+        },
         "searchEngine": {
             "_label": "referralOptions.searchEngine",
             "_default_message": "Google or other search engine",
@@ -2911,7 +2914,7 @@ class NcConfigurationData(ConfigurationData):
         },
         "featureFlags": {
             "default": ["nc_show_211_link"],
-            "211nc": ["no_results_more_help", "nc_show_211_link"],
+            "211nc": ["no_results_more_help", "nc_show_211_link", "211nc"],
         },
         "noResultMessage": {
             "default": {
