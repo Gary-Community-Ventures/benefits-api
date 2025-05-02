@@ -240,6 +240,7 @@ class Command(BaseCommand):
         info = json.loads(config("GOOGLE_APPLICATION_CREDENTIALS"))
         creds = service_account.Credentials.from_service_account_info(info)
         http_client = httplib2.Http(timeout=60 * 5)
+        http_client = creds.authorize(http_client)
         service = build("sheets", "v4", credentials=creds, http=http_client)
         sheet = service.spreadsheets()
 
