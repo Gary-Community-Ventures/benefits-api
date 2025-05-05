@@ -439,11 +439,6 @@ class ConfigurationData:
     }
 
     footer_data = {
-        "address_one": "",
-        "address_two": "",
-        "city": "",
-        "state": "",
-        "zip_code": "",
         "email": "",
     }
 

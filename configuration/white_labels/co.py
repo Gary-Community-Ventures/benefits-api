@@ -2318,11 +2318,6 @@ class CoConfigurationData(ConfigurationData):
     }
 
     footer_data = {
-        "address_one": "1705 17th St.",
-        "address_two": "Suite 200",
-        "city": "Denver",
-        "state": "CO",
-        "zip_code": "80202",
         "email": "hello@myfriendben.org",
     }
 
