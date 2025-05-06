@@ -13,7 +13,7 @@ class Trua(ProgramCalculator):
     def household_eligible(self, e: Eligibility):
         # income
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"]))
-        income_limit = ami.get_screen_ami(self.screen, self.ami_percent, self.program.year.period)
+        income_limit = ami.get_screen_ami(self.screen, self.ami_percent, self.program.year.period, limit_type="il")
         e.condition(gross_income <= income_limit, messages.income(gross_income, income_limit))
 
         # location
