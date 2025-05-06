@@ -8,8 +8,12 @@ from integrations.services.sheets.formatting import color_cell, title_cell, wrap
 from screener.views import eligibility_results
 from validations.models import Validation
 from decouple import config
-from integrations.services.sheets import GoogleSheets
+from google_auth_httplib2 import AuthorizedHttp
+from googleapiclient.discovery import build
+from google.oauth2 import service_account
 import argparse
+import json
+from httplib2 import Http
 
 
 class Result(Enum):
@@ -234,7 +238,13 @@ class Command(BaseCommand):
         for result in results.results:
             row_data.append(result.sheets_row())
 
-        sheet = GoogleSheets.sheet
+        info = json.loads(config("GOOGLE_APPLICATION_CREDENTIALS"))
+        creds = service_account.Credentials.from_service_account_info(
+            info, scopes=["https://www.googleapis.com/auth/spreadsheets"]
+        )
+        http_client = AuthorizedHttp(creds, http=Http(timeout=60 * 5))
+        service = build("sheets", "v4", http=http_client)
+        sheet = service.spreadsheets()
 
         # there is around a 1 in 2 billion chance of a conflct, so if that happens,
         # buy a lottery ticket and run the script again.
