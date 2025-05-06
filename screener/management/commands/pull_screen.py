@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from decouple import config
 from getpass import getpass
 
 from django.db import transaction
@@ -26,7 +27,10 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         domain = options["domain"]
         uuid = options["uuid"]
-        api_key = getpass("API key: ")
+
+        api_key = config("DEV_API_KEY", "")
+        if not api_key:
+            api_key = getpass("API key: ")
 
         remote_screen = self._get_screen_from_remote(uuid, domain, api_key)
 
