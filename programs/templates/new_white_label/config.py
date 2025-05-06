@@ -144,7 +144,7 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "中文",
+        "zh": "中文 (简体)",
         "ar": "عربي",
         "sw": "Kiswahili",
     }
