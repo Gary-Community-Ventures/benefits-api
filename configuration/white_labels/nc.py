@@ -2925,11 +2925,6 @@ class NcConfigurationData(ConfigurationData):
     }
 
     footer_data = {
-        "address_one": "201 W Main St.",
-        "address_two": "Suite 100",
-        "city": "Durham",
-        "state": "NC",
-        "zip_code": 27701,
         "email": "myfriendben@codethedream.org",
     }
 
