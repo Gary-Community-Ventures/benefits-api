@@ -63,7 +63,7 @@ class Command(BaseCommand):
         screen.save()
 
         white_label = remote_screen.get("white_label", screen.white_label)
-        results_url = f"http://localhost:3000/{white_label}/{uuid}/step-3"
+        results_url = f"http://localhost:3000/{white_label}/{uuid}/results/benefits"
 
         self.stdout.write(f"Screen pulled successfully. Results: {results_url}")
 
