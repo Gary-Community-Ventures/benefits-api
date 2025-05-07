@@ -117,7 +117,7 @@ class MaMbta(PolicyEngineMembersCalculator):
         dependency.member.MaTapCharlieCardEligible,
     ]
 
-    amount = 30 * 12
+    amount = 60 * 12
 
     def member_value(self, member: HouseholdMember):
         mbta_programs_eligible = self.get_member_dependency_value(dependency.member.MaMbtaProgramsEligible, member.id)
