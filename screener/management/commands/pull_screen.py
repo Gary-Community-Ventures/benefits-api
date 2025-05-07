@@ -22,15 +22,23 @@ class Command(BaseCommand):
             nargs=None,
             help="UUID of the screen to pull",
         )
+        parser.add_argument(
+            "--no-bypass",
+            action="store_true",
+            help="Do not use the environment variable for the API key; prompt for it instead.",
+        )
 
     @transaction.atomic
     def handle(self, *args, **options):
         domain = options["domain"]
         uuid = options["uuid"]
 
-        api_key = config("DEV_API_KEY", "")
-        if not api_key:
+        if options["no_bypass"]:
             api_key = getpass("API key: ")
+        else:
+            api_key = config("DEV_API_KEY", "")
+            if not api_key:
+                api_key = getpass("API key: ")
 
         remote_screen = self._get_screen_from_remote(uuid, domain, api_key)
 
@@ -54,7 +62,10 @@ class Command(BaseCommand):
         screen.uuid = uuid
         screen.save()
 
-        self.stdout.write(f"Successfully pulled screen with UUID {uuid} into the local database.")
+        white_label = remote_screen.get("white_label", screen.white_label)
+        results_url = f"http://localhost:3000/{white_label}/{uuid}/step-3"
+
+        self.stdout.write(f"Screen pulled successfully. Results: {results_url}")
 
     def _get_screen_from_remote(self, uuid: str, domain: str, api_key: str):
         header = {
