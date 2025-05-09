@@ -195,6 +195,10 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.felp",
             "_default_message": "Future Endeavors Life Program (FELP)",
         },
+        "hf": {
+            "_label": "referralOptions.hf",
+            "_default_message": "Hispanic Federation",
+        },
         "mda": {
             "_label": "referralOptions.mda",
             "_default_message": "Montagnard Dega Association",
@@ -215,10 +219,7 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.NCCHWA",
             "_default_message": "NC Community Health Worker Association (NCCHWA)",
         },
-        "ncnc": {
-            "_label": "referralOptions.ncnc",
-            "_default_message": "NC Navigators Consurtium",
-        },
+        "ncnc": {"_label": "referralOptions.ncnc", "_default_message": "NC Navigators Consortium"},
         "onTrackFin": {
             "_label": "referralOptions.onTrackFin",
             "_default_message": "On Track Financial",
@@ -261,6 +262,7 @@ class NcConfigurationData(ConfigurationData):
             "_default_message": "Test / Prospective Partner",
         },
     }
+
     language_options = {
         "en-us": "English",
         "es": "Español",
@@ -271,7 +273,7 @@ class NcConfigurationData(ConfigurationData):
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "中文",
+        "zh": "中文 (简体)",
         "ar": "عربي",
         "sw": "Kiswahili",
     }
@@ -2925,11 +2927,6 @@ class NcConfigurationData(ConfigurationData):
     }
 
     footer_data = {
-        "address_one": "201 W Main St.",
-        "address_two": "Suite 100",
-        "city": "Durham",
-        "state": "NC",
-        "zip_code": 27701,
         "email": "myfriendben@codethedream.org",
     }
 
