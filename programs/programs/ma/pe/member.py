@@ -57,16 +57,16 @@ class MaMassHealthLimited(Medicaid):
 
     medicaid_categories = {
         "NONE": 0,
-        "ADULT": 0,
+        "ADULT": 255,
         "INFANT": 255,
         "YOUNG_CHILD": 255,
         "OLDER_CHILD": 255,
         "PREGNANT": 255,
-        "YOUNG_ADULT": 0,
+        "YOUNG_ADULT": 255,
         "PARENT": 255,
-        "SSI_RECIPIENT": 0,
-        "AGED": 0,
-        "DISABLED": 0,
+        "SSI_RECIPIENT": 255,
+        "AGED": 255,
+        "DISABLED": 255,
     }
 
 
