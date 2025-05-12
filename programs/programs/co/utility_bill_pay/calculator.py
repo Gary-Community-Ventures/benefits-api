@@ -1,4 +1,4 @@
-from programs.programs.calc import Eligibility, ProgramCalculator, MemberEligibility
+from programs.programs.calc import Eligibility, ProgramCalculator
 
 
 class UtilityBillPay(ProgramCalculator):
@@ -18,9 +18,10 @@ class UtilityBillPay(ProgramCalculator):
                 break
 
         for benefit in self.member_presumptive_eligibility:
-            presumptive_eligible = any(member.has_benefit(benefit) for member in self.screen.household_members.all())
             if presumptive_eligible:
                 break
+            if any(member.has_benefit(benefit) for member in self.screen.household_members.all()):
+                presumptive_eligible = True
 
         e.condition(presumptive_eligible)
 

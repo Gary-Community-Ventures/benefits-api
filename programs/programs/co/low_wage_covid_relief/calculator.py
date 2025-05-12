@@ -1,4 +1,4 @@
-from programs.programs.calc import ProgramCalculator, Eligibility, MemberEligibility
+from programs.programs.calc import ProgramCalculator, Eligibility
 from programs.programs.helpers import STATE_MEDICAID_OPTIONS
 import programs.programs.messages as messages
 from programs.co_county_zips import counties_from_screen
@@ -38,9 +38,10 @@ class LowWageCovidRelief(ProgramCalculator):
                 break
 
         for benefit in LowWageCovidRelief.member_auto_eligible_benefits:
-            has_benefit = any(member.has_benefit(benefit) for member in self.screen.household_member.all())
             if has_benefit:
                 break
+            if any(member.has_benefit(benefit) for member in self.screen.household_member.all()):
+                has_benefit = True
 
         # meets income limit
         income_limit = LowWageCovidRelief.income_limits[self.screen.household_size]
