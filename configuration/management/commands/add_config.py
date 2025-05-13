@@ -23,6 +23,15 @@ class Command(BaseCommand):
     @transaction.atomic
     def handle(self, *args, **options):
         white_labels_to_update = white_label_config.keys() if options["all"] else options["white_labels"]
+
+        if len(white_labels_to_update) == 0:
+            self.stdout.write(
+                self.style.ERROR(
+                    "No white labels selected. Use --all to select all white labels, or list them individually"
+                )
+            )
+            return
+
         for white_label_code in white_labels_to_update:
             if white_label_code not in white_label_config:
                 self.stdout.write(self.style.WARNING(f'White label for "{white_label_code}" does not exist'))
