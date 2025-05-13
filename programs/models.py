@@ -245,6 +245,8 @@ class ProgramCategory(models.Model):
         null=False,
         on_delete=models.PROTECT,
     )
+    priority = models.IntegerField(blank=True, null=True)
+
     description = models.ForeignKey(
         Translation,
         related_name="program_category_description",

@@ -451,6 +451,7 @@ def eligibility_results(screen: Screen, batch=False):
             "description": default_message(category.description),
             "caps": caps,
             "tax_category": category.tax_category,
+            "priority": category.priority,
             "programs": [program.id],
         }
     categories = list(category_map.values())
