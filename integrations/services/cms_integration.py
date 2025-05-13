@@ -263,7 +263,7 @@ class NcHubSpotIntegration(CentralHubSpotIntegration):
 
 
 class MaHubSpotIntegration(CentralHubSpotIntegration):
-    OWNER_ID = "43883083"
+    OWNER_ID = "79223440"
 
 
 CMS_INTEGRATIONS = {
