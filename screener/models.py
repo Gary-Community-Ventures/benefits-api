@@ -799,6 +799,7 @@ class EnergyCalculatorScreen(models.Model):
     gas_provider = models.CharField(max_length=200, null=True, blank=True)
     electricity_is_disconnected = models.BooleanField(default=False, null=True, blank=True)
     has_past_due_energy_bills = models.BooleanField(default=False, null=True, blank=True)
+    has_old_car = models.BooleanField(default=False, null=True, blank=True)
     needs_water_heater = models.BooleanField(default=False, null=True, blank=True)
     needs_hvac = models.BooleanField(default=False, null=True, blank=True)
     needs_stove = models.BooleanField(default=False, null=True, blank=True)
