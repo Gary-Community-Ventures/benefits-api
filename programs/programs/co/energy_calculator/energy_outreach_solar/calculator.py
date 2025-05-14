@@ -1,6 +1,7 @@
 from integrations.services.sheets.sheets import GoogleSheetsCache
 from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import Eligibility, ProgramCalculator
+from programs.programs.co.energy_calculator.util import has_renter_expenses
 
 
 class EnergyOutreachSolarIncomeLimitCache(GoogleSheetsCache):
@@ -29,3 +30,6 @@ class EnergyOutreachSolar(ProgramCalculator):
 
         # utility providers
         e.condition(self.screen.energy_calculator.has_electricity_provider(self.electricity_providers))
+
+        # no renters without expenses
+        e.condition(has_renter_expenses(self.screen))

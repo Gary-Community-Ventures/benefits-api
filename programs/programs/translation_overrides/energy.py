@@ -6,5 +6,4 @@ class CoEnergyCalculatorRenter(TranslationOverrideCalculator):
         """
         Show for renters
         """
-        print(self.screen.path)
         return self.screen.path == "renter"

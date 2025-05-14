@@ -1,4 +1,5 @@
 from programs.programs.calc import Eligibility
+from programs.programs.co.energy_calculator.util import has_renter_expenses
 from programs.programs.co.utility_bill_pay.calculator import UtilityBillPay
 
 
@@ -20,4 +21,5 @@ class EnergyCalculatorUtilityBillPay(UtilityBillPay):
         return super().household_eligible(e)
 
     def _has_expense(self):
-        return True
+        # no renters without expenses
+        return has_renter_expenses(self.screen)

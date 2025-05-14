@@ -1,6 +1,7 @@
 from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import Eligibility, ProgramCalculator
 from integrations.services.sheets.sheets import GoogleSheetsCache
+from programs.programs.co.energy_calculator.util import has_renter_expenses
 
 
 class EnergyOutreachIncomeLimitCache(GoogleSheetsCache):
@@ -31,3 +32,6 @@ class EnergyCalculatorEnergyOutreach(ProgramCalculator):
             self.screen.energy_calculator.electricity_is_disconnected
             or self.screen.energy_calculator.has_past_due_energy_bills
         )
+
+        # no renters without expenses
+        e.condition(has_renter_expenses(self.screen))
