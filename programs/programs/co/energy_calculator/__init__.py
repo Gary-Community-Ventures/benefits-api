@@ -29,6 +29,7 @@ from programs.programs.co.energy_calculator.property_credit_rebate.calculator im
     EnergyCalculatorPropertyCreditRebate,
 )
 from programs.programs.co.energy_calculator.utility_bill_pay.calculator import EnergyCalculatorUtilityBillPay
+from programs.programs.co.energy_calculator.vehicle_exchange.calculator import EnergyCalculatorVehicleExchange
 from programs.programs.co.energy_calculator.weatherization_assistance.calculator import (
     EnergyCalculatorWeatherizationAssistance,
 )
@@ -52,4 +53,5 @@ co_energy_calculators: dict[str, type[ProgramCalculator]] = {
     "co_energy_calculator_cngba": EnergyCalculatorNaturalGasBillAssistance,
     "co_energy_calculator_poipp": EnergyCalculatorPercentageOfIncomePaymentPlan,
     "co_energy_calculator_energy_ebt": EnergyCalculatorEnergyEbt,
+    "co_energy_calculator_energy_": EnergyCalculatorVehicleExchange,
 }
