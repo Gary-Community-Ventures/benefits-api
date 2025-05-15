@@ -1,7 +1,6 @@
 from django.core.management.base import BaseCommand
 from decouple import config
 from getpass import getpass
-
 from django.db import transaction
 from screener.models import Screen
 from screener.serializers import ScreenSerializer

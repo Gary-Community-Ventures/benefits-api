@@ -13,7 +13,6 @@ class Snap(PolicyEngineSpmCalulator):
         dependency.spm.HasPhoneExpenseDependency,
         dependency.spm.HasHeatingCoolingExpenseDependency,
         dependency.spm.HeatingCoolingExpenseDependency,
-        dependency.spm.MeetsSnapAssetTestDependency,
         dependency.spm.SnapDependentCareDeductionDependency,
         dependency.spm.WaterExpenseDependency,
         dependency.spm.PhoneExpenseDependency,
