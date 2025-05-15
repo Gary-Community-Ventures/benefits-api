@@ -1768,6 +1768,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "no_confirmation_return_zipcode",
                 "white_header",
                 "white_multi_select_tile_icon",
+                "dont_show_category_values",
             ]
         },
         "noResultMessage": {
