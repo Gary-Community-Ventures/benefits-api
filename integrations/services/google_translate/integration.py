@@ -1,3 +1,4 @@
+from sentry_sdk import capture_exception
 from django.conf import settings
 from decouple import config
 import json
