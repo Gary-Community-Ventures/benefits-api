@@ -1773,6 +1773,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "white_header",
                 "white_multi_select_tile_icon",
                 "dont_show_category_values",
+                "logo_landing_page_link",
             ]
         },
         "noResultMessage": {
