@@ -1790,7 +1790,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     current_benefits = {
         "title": {
             "_label": "energyCalculator.currentBenefits.title",
-            "_default_message": "Colorado Energy Navigator",
+            "_default_message": "Colorado Energy Savings Navigator",
         },
         "program_heading": {
             "_label": "energyCalculator.currentBenefits.long-term-benefits",
