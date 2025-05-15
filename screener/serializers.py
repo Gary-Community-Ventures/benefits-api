@@ -394,6 +394,7 @@ class ProgramCategorySerializer(serializers.Serializer):
     description = TranslationSerializer()
     caps = ProgramCategoryCapSerializer(many=True)
     tax_category = serializers.BooleanField()
+    priority = serializers.IntegerField()
     programs = serializers.ListField(child=serializers.IntegerField())
 
 
