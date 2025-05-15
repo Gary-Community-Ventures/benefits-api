@@ -637,7 +637,7 @@ class NcConfigurationData(ConfigurationData):
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "conditionOptions.disabled",
-                    "_default_message": "Currently have any disabilities that make you unable to work now or in the future",
+                    "_default_message": "Currently have any disabilities that make them unable to work now or in the future",
                 },
             },
             "longTermDisability": {

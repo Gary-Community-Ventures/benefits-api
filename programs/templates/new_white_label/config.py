@@ -428,7 +428,7 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "conditionOptions.disabled.them",
-                    "_default_message": "Have any disabilities that make them unable to work now or in the future",
+                    "_default_message": "Currently have any disabilities that make them unable to work now or in the future",
                 },
             },
             "longTermDisability": {

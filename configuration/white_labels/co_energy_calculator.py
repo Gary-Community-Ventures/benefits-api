@@ -175,7 +175,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "eCConditionOptions.disabledThem",
-                    "_default_message": "Have any disabilities that make them unable to work now or in the future",
+                    "_default_message": "Currently have any disabilities that make them unable to work now or in the future",
                 },
             },
         },
