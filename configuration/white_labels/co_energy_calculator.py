@@ -10,7 +10,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     state = {"name": "Colorado"}
 
     public_charge_rule = {
-        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract."
+        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract.",
+        "text": {
+            "_label": "landingPage.publicChargeLinkCO",
+            "_default_message": "Colorado Department of Human Services Public Charge Rule",
+        },
     }
 
     more_help_options = {
@@ -1810,6 +1814,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "no_confirmation_return_zipcode",
                 "white_header",
                 "white_multi_select_tile_icon",
+                "dont_show_category_values",
             ]
         },
         "noResultMessage": {
@@ -1832,7 +1837,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     current_benefits = {
         "title": {
             "_label": "energyCalculator.currentBenefits.title",
-            "_default_message": "Colorado Energy Navigator",
+            "_default_message": "Colorado Energy Savings Navigator",
         },
         "program_heading": {
             "_label": "energyCalculator.currentBenefits.long-term-benefits",
