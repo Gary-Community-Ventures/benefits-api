@@ -53,5 +53,5 @@ co_energy_calculators: dict[str, type[ProgramCalculator]] = {
     "co_energy_calculator_cngba": EnergyCalculatorNaturalGasBillAssistance,
     "co_energy_calculator_poipp": EnergyCalculatorPercentageOfIncomePaymentPlan,
     "co_energy_calculator_energy_ebt": EnergyCalculatorEnergyEbt,
-    "co_energy_calculator_energy_": EnergyCalculatorVehicleExchange,
+    "co_energy_calculator_energy_vec": EnergyCalculatorVehicleExchange,
 }
