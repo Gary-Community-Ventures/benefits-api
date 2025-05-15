@@ -1808,8 +1808,16 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     }
 
     override_text = {
+        "questions.householdSize": {
+            "_label": "energyCalculator.questions.householdSize",
+            "_default_message": "How many people live in your household?",
+        },
         "questions.householdSize-helpText": {
             "_label": "energyCalculator.householdSize.helpText",
-            "_default_message": "This is usually family members whom you live with and share important resources with like food and bills.",
-        }
+            "_default_message": "This can include family or non-family members, adults, and children. Please do not count unborn children in this total.",
+        },
+        "questions.hasBenefits": {
+            "_label": "energyCalculator.hasBenefits.question",
+            "_default_message": "Does your household currently have any public assistance benefits?",
+        },
     }
