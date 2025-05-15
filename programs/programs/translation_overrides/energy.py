@@ -5,6 +5,6 @@ from programs.programs.translation_overrides.base import TranslationOverrideCalc
 class CoEnergyCalculatorRenter(TranslationOverrideCalculator):
     def eligible(self) -> bool:
         """
-        Show for renters
+        Show for renters with no expenses
         """
         return has_renter_expenses(self.screen)
