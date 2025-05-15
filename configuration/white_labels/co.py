@@ -190,7 +190,7 @@ class CoConfigurationData(ConfigurationData):
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "中文",
+        "zh": "中文 (简体)",
         "ar": "عربي",
         "sw": "Kiswahili",
     }
@@ -2308,7 +2308,7 @@ class CoConfigurationData(ConfigurationData):
                 "referralSource",
             ],
         },
-        "featureFlags": {"default": [], "211co": ["no_results_more_help"]},
+        "featureFlags": {"default": [], "211co": ["no_results_more_help", "211co"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
@@ -2318,11 +2318,6 @@ class CoConfigurationData(ConfigurationData):
     }
 
     footer_data = {
-        "address_one": "1705 17th St.",
-        "address_two": "Suite 200",
-        "city": "Denver",
-        "state": "CO",
-        "zip_code": "80202",
         "email": "hello@myfriendben.org",
     }
 

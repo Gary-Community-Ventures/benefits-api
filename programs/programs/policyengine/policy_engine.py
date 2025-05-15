@@ -32,7 +32,7 @@ def calc_pe_eligibility(
         except Exception as e:
             if settings.DEBUG:
                 print(repr(e))
-            capture_exception(e, level="warning", message="")
+            capture_exception(e, level="warning")
             capture_message(f"Failed to calculate eligibility with the {Method.method_name} method", level="warning")
 
     raise Exception("Failed to calculate Policy Engine eligibility")

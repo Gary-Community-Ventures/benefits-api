@@ -1,27 +1,16 @@
+from integrations.services.income_limits import ami
 from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import ProgramCalculator, Eligibility
-from integrations.services.sheets import GoogleSheetsCache
 import programs.programs.messages as messages
-
-
-class DenverAmiCache(GoogleSheetsCache):
-    sheet_id = "1dahRu8UVdWBBU1jMiGiWehY4kOUkzcOmKRPJ-GfcfGo"
-    range_name = "current Denver Trash - 60% AMI!B2:I2"
-    default = [0, 0, 0, 0, 0, 0, 0, 0]
-
-    def update(self):
-        data = super().update()
-
-        return [int(a.replace(",", "")) for a in data[0]]
 
 
 class DenverTrashRebate(ProgramCalculator):
     amount = 252
+    ami_percent = "60%"
     county = "Denver County"
-    ami = DenverAmiCache()
     expenses = ["rent", "mortgage"]
     dependencies = ["zipcode", "income_amount", "income_frequency", "household_size"]
-    presumptive_eligibility = ["co_medicaid", "snap", "tanf", "cccap"]
+    presumptive_eligibility = ["snap", "tanf", "cccap"]
 
     def household_eligible(self, e: Eligibility):
         # county
@@ -29,8 +18,7 @@ class DenverTrashRebate(ProgramCalculator):
         e.condition(DenverTrashRebate.county in counties, messages.location())
 
         # income
-        ami = DenverTrashRebate.ami.fetch()
-        income_limit = ami[self.screen.household_size - 1]
+        income_limit = ami.get_screen_ami(self.screen, self.ami_percent, self.program.year.period)
         income = self.screen.calc_gross_income("yearly", ["all"])
         income_eligible = income <= income_limit
 
@@ -38,6 +26,11 @@ class DenverTrashRebate(ProgramCalculator):
         categorical_eligible = False
         for program in DenverTrashRebate.presumptive_eligibility:
             if self.screen.has_benefit(program):
+                categorical_eligible = True
+                break
+
+        for member in self.screen.household_members.all():
+            if member.has_benefit("co_medicaid"):
                 categorical_eligible = True
                 break
 

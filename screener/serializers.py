@@ -338,6 +338,7 @@ class MemberEligibilitySerializer(serializers.Serializer):
     frontend_id = serializers.UUIDField()
     eligible = serializers.BooleanField()
     value = serializers.IntegerField()
+    already_has = serializers.BooleanField()
 
 
 class EligibilitySerializer(serializers.Serializer):
@@ -393,6 +394,7 @@ class ProgramCategorySerializer(serializers.Serializer):
     description = TranslationSerializer()
     caps = ProgramCategoryCapSerializer(many=True)
     tax_category = serializers.BooleanField()
+    priority = serializers.IntegerField()
     programs = serializers.ListField(child=serializers.IntegerField())
 
 

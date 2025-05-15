@@ -1,3 +1,4 @@
+from types import NoneType
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from screener.models import WhiteLabel
@@ -7,7 +8,7 @@ from programs.programs import calculators
 from programs.util import Dependencies
 import requests
 from integrations.util.cache import Cache
-from typing import Optional, TypedDict
+from typing import Optional, TypedDict, Union
 from programs.programs.translation_overrides import warning_calculators
 
 
@@ -192,6 +193,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
             "calculator": str,
             "icon": str,
             "tax_category": bool,
+            "priority": Union[int, NoneType],
             "white_label": str,
         },
     )
@@ -203,6 +205,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
             "icon": program_category.icon,
             "tax_category": program_category.tax_category,
             "white_label": program_category.white_label.code,
+            "priority": program_category.priority,
         }
 
     def from_model_data(self, data: DataType):
@@ -210,8 +213,9 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
 
         program_category.calculator = data["calculator"]
         program_category.icon = data["icon"]
-        if "tax_category" in data:
-            program_category.tax_category = data["tax_category"]
+        if "priority" in data:
+            program_category.priority = data["priority"]
+        program_category.tax_category = data["tax_category"]
 
         try:
             white_label = WhiteLabel.objects.get(code=data["white_label"])
@@ -245,6 +249,8 @@ class ProgramCategory(models.Model):
         null=False,
         on_delete=models.PROTECT,
     )
+    priority = models.IntegerField(blank=True, null=True)
+
     description = models.ForeignKey(
         Translation,
         related_name="program_category_description",
@@ -674,21 +680,13 @@ class UrgentNeedFunction(models.Model):
 
 
 class UrgentNeedCategory(models.Model):
-    white_label = models.ForeignKey(
-        WhiteLabel,
-        related_name="urgent_need_categories",
-        null=False,
-        blank=False,
-        on_delete=models.CASCADE,
-    )
     name = models.CharField(max_length=120)
 
     class Meta:
         verbose_name_plural = "Urgent Need Categories"
 
     def __str__(self):
-        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
-        return f"{white_label_name}{self.name}"
+        return f"{self.name}"
 
 
 class UrgentNeedManager(models.Manager):
@@ -809,10 +807,8 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
         for category in data["categories"]:
             try:
                 cat_instance = UrgentNeedCategory.objects.get(name=category["name"])
-                cat_instance.white_label = white_label
-                cat_instance.save()
             except UrgentNeedCategory.DoesNotExist:
-                cat_instance = UrgentNeedCategory.objects.create(name=category["name"], white_label=white_label)
+                cat_instance = UrgentNeedCategory.objects.create(name=category["name"])
 
             categories.append(cat_instance)
         need.type_short.set(categories)

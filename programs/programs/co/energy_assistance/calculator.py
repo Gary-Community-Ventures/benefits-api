@@ -1,3 +1,4 @@
+from integrations.services.income_limits import smi
 from integrations.services.sheets.sheets import GoogleSheetsCache
 from programs.programs.calc import ProgramCalculator, Eligibility
 import programs.programs.messages as messages
@@ -23,28 +24,17 @@ class LeapValueCache(GoogleSheetsCache):
         return int(float(raw_value.replace("$", "")))
 
 
-class LeapIncomeLimitCache(GoogleSheetsCache):
-    sheet_id = "15dxjTY0k1l4nqm8TAwtJPaMpYWPDbwTYKGbDu7Dc3bI"
-    range_name = "current!B2:I2"
-    default = [0, 0, 0, 0, 0, 0, 0, 0]
-
-    def update(self):
-        data = super().update()
-
-        return [int(a.replace(",", "")) for a in data[0]]
-
-
 class EnergyAssistance(ProgramCalculator):
     county_values = LeapValueCache()
-    income_bands = LeapIncomeLimitCache()  # monthly
+    smi_percent = 0.6
     expenses = ["rent", "mortgage"]
-    dependencies = ["income_frequency", "income_amount", "zipcode", "household_size"]
+    dependencies = ["income_frequency", "income_amount", "county", "household_size"]
 
     def household_eligible(self, e: Eligibility):
         # income
         frequency = "monthly"
         income_types = ["all"]
-        income_limit = EnergyAssistance.income_bands.fetch()[self.screen.household_size - 1]
+        income_limit = smi.get_screen_smi(self.screen, self.program.year.period) * self.smi_percent
         leap_income = self.screen.calc_gross_income(frequency, income_types)
 
         e.condition(leap_income <= income_limit, messages.income(leap_income, income_limit))

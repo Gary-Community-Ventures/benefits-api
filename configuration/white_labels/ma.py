@@ -158,7 +158,7 @@ class MaConfigurationData(ConfigurationData):
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "中文",
+        "zh": "中文 (简体)",
         "ar": "عربي",
         "sw": "Kiswahili",
     }
@@ -1405,7 +1405,7 @@ class MaConfigurationData(ConfigurationData):
                 "signUpInfo",
             ],
         },
-        "featureFlags": {"default": []},
+        "featureFlags": {"default": ["no_results_more_help"]},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
@@ -1415,11 +1415,6 @@ class MaConfigurationData(ConfigurationData):
     }
 
     footer_data = {
-        "address_one": "1705 17th St.",
-        "address_two": "Suite 200",
-        "city": "Denver",
-        "state": "CO",
-        "zip_code": "80202",
         "email": "hello@myfriendben.org",
     }
 
