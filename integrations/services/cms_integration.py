@@ -226,10 +226,10 @@ class CoHubSpotIntegration(HubSpotIntegration):
         return contact
 
 
-class NcHubSpotIntegration(HubSpotIntegration):
+class CentralHubSpotIntegration(HubSpotIntegration):
     access_token = config("HUBSPOT_CENTRAL", "")
 
-    OWNER_ID = "47185138"
+    OWNER_ID = ""
 
     def _hubspot_contact_data(self):
         contact = {
@@ -257,7 +257,20 @@ class NcHubSpotIntegration(HubSpotIntegration):
         }
 
 
-CMS_INTEGRATIONS = {"brevo": BrevoIntegration, "co_hubspot": CoHubSpotIntegration, "nc_hubspot": NcHubSpotIntegration}
+class NcHubSpotIntegration(CentralHubSpotIntegration):
+    OWNER_ID = "47185138"
+
+
+class MaHubSpotIntegration(CentralHubSpotIntegration):
+    OWNER_ID = "79223440"
+
+
+CMS_INTEGRATIONS = {
+    "brevo": BrevoIntegration,
+    "co_hubspot": CoHubSpotIntegration,
+    "nc_hubspot": NcHubSpotIntegration,
+    "ma_hubspot": MaHubSpotIntegration,
+}
 
 
 class NoCmsSelected(Exception):
