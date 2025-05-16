@@ -65,13 +65,6 @@ class TakesUpSnapIfEligibleDependency(SpmUnit):
         return True
 
 
-class MeetsSnapAssetTestDependency(SpmUnit):
-    field = "meets_snap_asset_test"
-
-    def value(self):
-        return True
-
-
 class HasHeatingCoolingExpenseDependency(SpmUnit):
     field = "has_heating_cooling_expense"
 

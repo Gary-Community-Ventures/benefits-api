@@ -280,6 +280,7 @@ def eligibility_results(screen: Screen, batch=False):
             "co_energy_calculator_eoc",
             "co_energy_calculator_cowap",
             "co_energy_calculator_ubp",
+            "co_energy_calculator_care",
         )
 
         if program.name_abbreviated not in calc_order:
@@ -451,6 +452,7 @@ def eligibility_results(screen: Screen, batch=False):
             "description": default_message(category.description),
             "caps": caps,
             "tax_category": category.tax_category,
+            "priority": category.priority,
             "programs": [program.id],
         }
     categories = list(category_map.values())

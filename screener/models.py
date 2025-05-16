@@ -104,6 +104,7 @@ class Screen(models.Model):
     has_ma_maeitc = models.BooleanField(default=False, blank=True, null=True)
     has_ma_macfc = models.BooleanField(default=False, blank=True, null=True)
     has_co_andso = models.BooleanField(default=False, blank=True, null=True)
+    has_co_care = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -373,6 +374,7 @@ class Screen(models.Model):
             "ma_tafdc": self.has_tanf,
             "ma_mass_health": self.has_medicaid or self.has_medicaid_hi,
             "co_andso": self.has_co_andso,
+            "co_care": self.has_co_care,
         }
 
         if name_abbreviated in name_map:
@@ -799,6 +801,7 @@ class EnergyCalculatorScreen(models.Model):
     gas_provider = models.CharField(max_length=200, null=True, blank=True)
     electricity_is_disconnected = models.BooleanField(default=False, null=True, blank=True)
     has_past_due_energy_bills = models.BooleanField(default=False, null=True, blank=True)
+    has_old_car = models.BooleanField(default=False, null=True, blank=True)
     needs_water_heater = models.BooleanField(default=False, null=True, blank=True)
     needs_hvac = models.BooleanField(default=False, null=True, blank=True)
     needs_stove = models.BooleanField(default=False, null=True, blank=True)

@@ -330,7 +330,7 @@ class ConfigurationData:
             "disabled": {
                 "icon": {"_name": "Disabled", "_classname": "option-card-icon"},
                 "_label": "conditionOptions.disabled",
-                "_default_message": "Have any disabilities that make you unable to work now or in the future",
+                "_default_message": "Currently have any disabilities that make you unable to work now or in the future",
             },
             "longTermDisability": {
                 "icon": {"_name": "LongTermDisability", "_classname": "option-card-icon"},
@@ -357,7 +357,7 @@ class ConfigurationData:
             "disabled": {
                 "icon": {"_name": "Disabled", "_classname": "option-card-icon"},
                 "_label": "conditionOptions.disabled",
-                "_default_message": "Have any disabilities that make you unable to work now or in the future",
+                "_default_message": "Currently have any disabilities that make them unable to work now or in the future",
             },
             "longTermDisability": {
                 "icon": {"_name": "LongTermDisability", "_classname": "option-card-icon"},

@@ -10,7 +10,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     state = {"name": "Colorado"}
 
     public_charge_rule = {
-        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract."
+        "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract.",
+        "text": {
+            "_label": "landingPage.publicChargeLinkCO",
+            "_default_message": "Colorado Department of Human Services Public Charge Rule",
+        },
     }
 
     more_help_options = {
@@ -155,7 +159,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "eCConditionOptions.disabledYou",
-                    "_default_message": "Have any disabilities that make you unable to work now or in the future",
+                    "_default_message": "Currently have any disabilities that make you unable to work now or in the future",
                 },
             },
         },
@@ -171,7 +175,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "eCConditionOptions.disabledThem",
-                    "_default_message": "Have any disabilities that make them unable to work now or in the future",
+                    "_default_message": "Currently have any disabilities that make them unable to work now or in the future",
                 },
             },
         },
@@ -1633,6 +1637,16 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                         "_default_message": "State cash assistance for individuals 60 years of age or older",
                     },
                 },
+                "ssdi": {
+                    "name": {
+                        "_label": "cashAssistanceBenefits.ssdi",
+                        "_default_message": "Social Security Disability Insurance (SSDI): ",
+                    },
+                    "description": {
+                        "_label": "cashAssistanceBenefits.ssdi_desc",
+                        "_default_message": "Social security benefit for people with disabilities",
+                    },
+                },
             },
             "category_name": {"_label": "cashAssistance", "_default_message": "Cash Assistance"},
         },
@@ -1683,6 +1697,26 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                         "_default_message": "Rent Subsidy (formerly Section 8)",
                     },
                 },
+                "cowap": {
+                    "name": {
+                        "_label": "housingAndUtilities.cowap",
+                        "_default_message": "Weatherization Assistance Program: ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.cowap_desc",
+                        "_default_message": "Free home energy upgrades",
+                    },
+                },
+                "co_care": {
+                    "name": {
+                        "_label": "housingAndUtilities.care",
+                        "_default_message": "Colorado's Affordable Residential Energy (CARE) via Energy Outreach Colorado: ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.care_desc",
+                        "_default_message": "Home energy upgrades",
+                    },
+                },
             },
             "category_name": {"_label": "housingAndUtilities", "_default_message": "Housing and Utilities"},
         },
@@ -1707,6 +1741,18 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 },
             },
             "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
+        },
+        "transportation": {
+            "benefits": {
+                "rtdlive": {
+                    "name": {"_label": "transportationBenefits.rtdlive", "_default_message": "RTD LiVE: "},
+                    "description": {
+                        "_label": "transportationBenefits.rtdlive_desc",
+                        "_default_message": "Discounted RTD fares",
+                    },
+                }
+            },
+            "category_name": {"_label": "transportation", "_default_message": "Transportation"},
         },
     }
 
@@ -1768,6 +1814,8 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "no_confirmation_return_zipcode",
                 "white_header",
                 "white_multi_select_tile_icon",
+                "dont_show_category_values",
+                "logo_landing_page_link",
             ]
         },
         "noResultMessage": {
@@ -1790,7 +1838,7 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     current_benefits = {
         "title": {
             "_label": "energyCalculator.currentBenefits.title",
-            "_default_message": "Colorado Energy Navigator",
+            "_default_message": "Colorado Energy Savings Navigator",
         },
         "program_heading": {
             "_label": "energyCalculator.currentBenefits.long-term-benefits",
@@ -1803,8 +1851,16 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     }
 
     override_text = {
+        "questions.householdSize": {
+            "_label": "energyCalculator.questions.householdSize",
+            "_default_message": "How many people live in your household?",
+        },
         "questions.householdSize-helpText": {
             "_label": "energyCalculator.householdSize.helpText",
-            "_default_message": "This is usually family members whom you live with and share important resources with like food and bills.",
-        }
+            "_default_message": "This can include family or non-family members, adults, and children. Please do not count unborn children in this total.",
+        },
+        "questions.hasBenefits": {
+            "_label": "energyCalculator.hasBenefits.question",
+            "_default_message": "Does your household currently have any public assistance benefits?",
+        },
     }
