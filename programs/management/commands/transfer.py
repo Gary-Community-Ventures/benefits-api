@@ -103,6 +103,7 @@ class Command(BaseCommand):
                 new_program.year = source_program.year
                 new_program.external_name = None
                 new_program.category = None
+                new_program.active = False
 
                 # Set the new translations
                 for field, translation in translation_mapping.items():
