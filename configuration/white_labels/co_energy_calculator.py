@@ -1637,6 +1637,16 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                         "_default_message": "State cash assistance for individuals 60 years of age or older",
                     },
                 },
+                "ssdi": {
+                    "name": {
+                        "_label": "cashAssistanceBenefits.ssdi",
+                        "_default_message": "Social Security Disability Insurance (SSDI): ",
+                    },
+                    "description": {
+                        "_label": "cashAssistanceBenefits.ssdi_desc",
+                        "_default_message": "Social security benefit for people with disabilities",
+                    },
+                },
             },
             "category_name": {"_label": "cashAssistance", "_default_message": "Cash Assistance"},
         },
@@ -1687,6 +1697,26 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                         "_default_message": "Rent Subsidy (formerly Section 8)",
                     },
                 },
+                "cowap": {
+                    "name": {
+                        "_label": "housingAndUtilities.cowap",
+                        "_default_message": "Weatherization Assistance Program: ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.cowap_desc",
+                        "_default_message": "Free home energy upgrades",
+                    },
+                },
+                "co_care": {
+                    "name": {
+                        "_label": "housingAndUtilities.care",
+                        "_default_message": "Colorado's Affordable Residential Energy (CARE) via Energy Outreach Colorado: ",
+                    },
+                    "description": {
+                        "_label": "housingAndUtilities.care_desc",
+                        "_default_message": "Home energy upgrades",
+                    },
+                },
             },
             "category_name": {"_label": "housingAndUtilities", "_default_message": "Housing and Utilities"},
         },
@@ -1711,6 +1741,18 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 },
             },
             "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
+        },
+        "transportation": {
+            "benefits": {
+                "rtdlive": {
+                    "name": {"_label": "transportationBenefits.rtdlive", "_default_message": "RTD LiVE: "},
+                    "description": {
+                        "_label": "transportationBenefits.rtdlive_desc",
+                        "_default_message": "Discounted RTD fares",
+                    },
+                }
+            },
+            "category_name": {"_label": "transportation", "_default_message": "Transportation"},
         },
     }
 
