@@ -79,7 +79,7 @@ class Command(BaseCommand):
                         new_translation = Translation.objects.add_translation(
                             label=f"program.{source_program.external_name}_{source_program.id}-{field}-{str(uuid.uuid4())}",
                             default_message=source_translation.default_message,
-                            active=source_translation.active,
+                            active=False,
                             no_auto=source_translation.no_auto,
                         )
 
@@ -103,6 +103,7 @@ class Command(BaseCommand):
                 new_program.year = source_program.year
                 new_program.external_name = None
                 new_program.category = None
+                new_program.active = False
 
                 # Set the new translations
                 for field, translation in translation_mapping.items():
@@ -116,10 +117,14 @@ class Command(BaseCommand):
                 new_program.required_programs.set([])
                 new_program.documents.set([])
                 new_program.legal_status_required.set(legal_statuses)
-                self.stdout.write("Reminder: Please add external names to the transferred programs.")
+                self.stdout.write(
+                    "Reminder: Please add external names to the transferred programs."
+                )
 
             except Program.DoesNotExist:
-                self.stdout.write(self.style.ERROR(f"Error: Program '{external_name}' not found"))
+                self.stdout.write(
+                    self.style.ERROR(f"Error: Program '{external_name}' not found")
+                )
                 continue
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Error during transfer: {str(e)}"))
