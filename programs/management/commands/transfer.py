@@ -117,14 +117,10 @@ class Command(BaseCommand):
                 new_program.required_programs.set([])
                 new_program.documents.set([])
                 new_program.legal_status_required.set(legal_statuses)
-                self.stdout.write(
-                    "Reminder: Please add external names to the transferred programs."
-                )
+                self.stdout.write("Reminder: Please add external names to the transferred programs.")
 
             except Program.DoesNotExist:
-                self.stdout.write(
-                    self.style.ERROR(f"Error: Program '{external_name}' not found")
-                )
+                self.stdout.write(self.style.ERROR(f"Error: Program '{external_name}' not found"))
                 continue
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Error during transfer: {str(e)}"))
