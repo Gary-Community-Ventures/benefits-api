@@ -1,5 +1,6 @@
 from programs.programs.calc import Eligibility, ProgramCalculator
 from programs.programs.co.energy_calculator.energy_assistance.calculator import EnergyCalculatorEnergyAssistance
+from programs.programs.co.energy_calculator.util import has_renter_expenses
 
 
 class EnergyCalculatorEnergyOutreachCrisisIntervention(ProgramCalculator):
@@ -14,3 +15,6 @@ class EnergyCalculatorEnergyOutreachCrisisIntervention(ProgramCalculator):
         # heating is not working
         needs_heating = self.screen.energy_calculator.needs_hvac
         e.condition(needs_heating)
+
+        # no renters without expenses
+        e.condition(has_renter_expenses(self.screen))

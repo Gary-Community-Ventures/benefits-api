@@ -1,5 +1,6 @@
 from integrations.services.income_limits import ami
 from programs.programs.calc import Eligibility, ProgramCalculator
+from programs.programs.co.energy_calculator.util import has_renter_expenses
 
 
 class EnergyCalculatorEnergyOutreach(ProgramCalculator):
@@ -18,3 +19,6 @@ class EnergyCalculatorEnergyOutreach(ProgramCalculator):
             self.screen.energy_calculator.electricity_is_disconnected
             or self.screen.energy_calculator.has_past_due_energy_bills
         )
+
+        # no renters without expenses
+        e.condition(has_renter_expenses(self.screen))
