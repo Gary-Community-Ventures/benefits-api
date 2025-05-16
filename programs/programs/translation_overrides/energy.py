@@ -1,4 +1,3 @@
-from programs.programs.co.energy_calculator.util import has_renter_expenses
 from programs.programs.translation_overrides.base import TranslationOverrideCalculator
 
 
@@ -7,4 +6,4 @@ class CoEnergyCalculatorRenter(TranslationOverrideCalculator):
         """
         Show for renters with no expenses
         """
-        return has_renter_expenses(self.screen)
+        return self.screen.path == "renter" and not self.screen.has_expense(["heating", "cooling", "electricity"])
