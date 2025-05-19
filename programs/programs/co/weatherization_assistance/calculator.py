@@ -1,23 +1,41 @@
-from integrations.services.income_limits import ami, smi
+from integrations.services.sheets import GoogleSheetsCache
+from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import Eligibility, ProgramCalculator
 import programs.programs.messages as messages
 
 
+class IncomeLimitsCache(GoogleSheetsCache):
+    sheet_id = "1ZzQYhULtiP61crj0pbPjhX62L1TnyAisLcr_dQXbbFg"
+    range_name = "A2:K"  # WARN: This selects the first tab because the tab name is "(Updated mm/dd/yyyy)"
+    default = {}
+
+    def update(self):
+        data = super().update()
+
+        return {self._format_county(r[0]): self._format_amounts(r[1:9]) for r in data}
+
+    @staticmethod
+    def _format_county(county: str):
+        return county.strip() + " County"
+
+    @staticmethod
+    def _format_amounts(amounts: list[str]):
+        return [float(a.strip().replace("$", "").replace(",", "")) for a in amounts]
+
+
 class WeatherizationAssistance(ProgramCalculator):
+    income_limits = IncomeLimitsCache()
     presumptive_eligibility = ("andcs", "ssi", "snap", "leap", "tanf")
-    fpl_percent = 2
-    ami_percent = "80%"
-    smi_percent = 0.6
     amount = 350
     dependencies = ["household_size", "income_amount", "income_frequency", "county"]
 
     def household_eligible(self, e: Eligibility):
         # income condition
-        fpl_limit = self.program.year.as_dict()[self.screen.household_size] * self.fpl_percent
-        ami_limit = ami.get_screen_ami(self.screen, self.ami_percent, self.program.year.period)
-        smi_limit = smi.get_screen_smi(self.screen, self.program.year.period) * self.smi_percent
-
-        income_limit = max(fpl_limit, ami_limit, smi_limit)
+        counties = counties_from_screen(self.screen)
+        income_limits = []
+        for county in counties:
+            income_limits.append(self.income_limits.fetch()[county][self.screen.household_size - 1])
+        income_limit = min(income_limits)
 
         income = int(self.screen.calc_gross_income("yearly", ["all"]))
         income_eligible = income <= income_limit
