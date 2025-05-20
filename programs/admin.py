@@ -49,9 +49,16 @@ class WhiteLabelModelAdminMixin(ModelAdmin):
 
         for field in self.white_label_filter_horizontal:
             form_field = context["adminform"].form.fields[field]
-            restricted_query_set = form_field.queryset.filter(
-                Q(white_label=obj.white_label) | Q(id__in=getattr(obj, field).all().values_list("id", flat=True))
-            )
+            if hasattr(obj, field) and hasattr(getattr(obj, field), "all"):
+                restricted_query_set = form_field.queryset.filter(
+                    Q(white_label=obj.white_label) | Q(id__in=getattr(obj, field).all().values_list("id", flat=True))
+                )
+            elif obj.white_label is not None:
+                restricted_query_set = form_field.queryset.filter(
+                    Q(white_label=obj.white_label) | Q(id=getattr(obj, field).id)
+                )
+            else:
+                restricted_query_set = form_field.queryset
             if not request.user.is_superuser:
                 restricted_query_set = restricted_query_set.filter(white_label__in=user_white_labels)
 
@@ -70,6 +77,7 @@ class ProgramAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     white_label_filter_horizontal = [
         "documents",
         "required_programs",
+        "category",
     ]
     filter_horizontal = (
         "legal_status_required",
