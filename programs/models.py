@@ -1,4 +1,3 @@
-from types import NoneType
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from screener.models import WhiteLabel
@@ -193,7 +192,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
             "calculator": str,
             "icon": str,
             "tax_category": bool,
-            "priority": Union[int, NoneType],
+            "priority": Union[int, type(None)],
             "white_label": str,
         },
     )
