@@ -390,7 +390,7 @@ class WebHookFunctionsAdmin(ModelAdmin):
 class TranslationOverrideAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "calculator", "action_buttons"]
-    white_label_filter_horizontal = ("counties",)
+    white_label_filter_horizontal = ("counties", "program")
     filter_horizontal = ("counties",)
     exclude = ["translation"]
 
