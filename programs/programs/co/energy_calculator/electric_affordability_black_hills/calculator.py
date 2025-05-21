@@ -22,6 +22,7 @@ class EnergyCalculatorElectricityAffordabilityBlackHills(ProgramCalculator):
         "co_energy_calculator_eoc",
         "co_energy_calculator_cowap",
         "co_energy_calculator_ubp",
+        "co_energy_calculator_care",
     ]
     electricity_providers = ["co-black-hills-energy"]
 
