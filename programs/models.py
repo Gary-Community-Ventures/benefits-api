@@ -1112,7 +1112,11 @@ class WarningMessageManager(models.Manager):
     def new_warning(self, white_label: str, calculator: str, external_name: Optional[str] = None):
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(f"warning.{calculator}_temporary_key-{field}", "", no_auto=(field in self.no_auto_fields),)
+            translations[field] = Translation.objects.add_translation(
+                f"warning.{calculator}_temporary_key-{field}",
+                "",
+                no_auto=(field in self.no_auto_fields),
+            )
 
         if external_name is None:
             external_name = calculator

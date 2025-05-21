@@ -19,6 +19,7 @@ def add_warning_message_links(apps, schema_editor):
             link_url=translation_link_url.id, link_text=translation_link_text.id
         )
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -29,4 +30,3 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunPython(add_warning_message_links, migrations.RunPython.noop),
     ]
-
