@@ -1774,8 +1774,8 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
         },
-        "logoFooterSource": {"default": "PoweredByLogo"},
-        "logoFooterAlt": {"default": {"id": "poweredByFooter.logo.alt", "defaultMessage": "Powered by MyFriendBen"}},
+        "logoFooterSource": {"default": ""},  # NOTE: Handled on FE b/c there are 2 logos
+        "logoFooterAlt": {"default": {"id": "", "": ""}},  # NOTE: Handled on FE b/c there are 2 logos
         "logoClass": {
             "default": "logo",
         },
@@ -1809,13 +1809,13 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "featureFlags": {
             "default": [
                 "energy_calculator",
-                "powered_by_mfb_footer",
                 "no_zipcode_change_state",
                 "no_confirmation_return_zipcode",
                 "white_header",
                 "white_multi_select_tile_icon",
                 "dont_show_category_values",
                 "logo_landing_page_link",
+                "no_lets_get_started",
             ]
         },
         "noResultMessage": {
