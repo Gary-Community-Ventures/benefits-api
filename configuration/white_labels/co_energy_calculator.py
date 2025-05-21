@@ -26,6 +26,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             },
             {
                 "name": {"_default_message": "MyFriendBen", "_label": "moreHelp.myfriendben"},
+                "description": {
+                    "_label": "moreHelp.myfriendben.energy.description",
+                    "_default_message": "MyFriendBen is dedicated to empowering individuals and organizations by making it easy to understand and access government benefits, tax credits, and nonprofit programs. Quickly get the information you need to make a plan before you apply.",
+                },
                 "link": "https://screener.myfriendben.org/co/step-1?referrer=energy_calculator",
             },
         ]
