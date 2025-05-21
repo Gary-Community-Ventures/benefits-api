@@ -325,8 +325,8 @@ class NavigatorSerializer(serializers.Serializer):
 
 class WarningMessageSerializer(serializers.ModelSerializer):
     message = ModelTranslationSerializer()
-    link_url = TranslationSerializer()
-    link_text = TranslationSerializer()
+    link_url = ModelTranslationSerializer()
+    link_text = ModelTranslationSerializer()
     legal_statuses = serializers.SerializerMethodField()
 
     class Meta:

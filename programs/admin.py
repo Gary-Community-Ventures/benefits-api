@@ -240,8 +240,8 @@ class WarningMessageAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
                 <span class="dropdown-btn material-symbols-outlined"> menu </span>
                 <div class="dropdown-content">
                     <a href="{}">Warning Message</a>
-                    <a href="{}">Warning Message Link</a>
-                    <a href="{}">Warning Message Link Text</a>
+                    <a href="{}">Link</a>
+                    <a href="{}">Link Text</a>
                 </div>
             </div>
             """,
