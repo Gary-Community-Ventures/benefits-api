@@ -53,10 +53,12 @@ class WhiteLabelModelAdminMixin(ModelAdmin):
                 restricted_query_set = form_field.queryset.filter(
                     Q(white_label=obj.white_label) | Q(id__in=getattr(obj, field).all().values_list("id", flat=True))
                 )
-            elif obj.white_label is not None:
+            elif obj.white_label is not None and getattr(obj, field) is not None:
                 restricted_query_set = form_field.queryset.filter(
                     Q(white_label=obj.white_label) | Q(id=getattr(obj, field).id)
                 )
+            elif obj.white_label is not None:
+                restricted_query_set = form_field.queryset.filter(Q(white_label=obj.white_label))
             else:
                 restricted_query_set = form_field.queryset
             if not request.user.is_superuser:
