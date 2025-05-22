@@ -13,7 +13,7 @@ nc_member_calculators = {
 nc_spm_calculators = {
     "nc_snap": spm.NcSnap,
     "nc_tanf": spm.NcTanf,
-    "nc_scca": spm.NcScca,    
+    "nc_scca": spm.NcScca,
 }
 
 nc_pe_calculators: dict[str, type[PolicyEngineCalulator]] = {
