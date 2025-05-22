@@ -25,7 +25,7 @@ class MaConfigurationData(ConfigurationData):
                 "link": "https://mass211.org/",
             },
             {
-                "name": {"_label": "moreHelp.ma.masscap.name", "_default_message": "MassCap Community Action Agencies"},
+                "name": {"_label": "moreHelp.ma.masscap.name", "_default_message": "MASSCAP Community Action Agencies"},
                 "description": {
                     "_label": "moreHelp.ma.masscap.phone",
                     "_default_message": "Your local community action agency may be able to connect you to other resources and support services. Find an agency near you.",
