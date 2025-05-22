@@ -241,18 +241,21 @@ class WarningMessageAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     get_str.short_description = "Name"
 
     def action_buttons(self, obj):
-        message = obj.message
 
         return format_html(
             """
             <div class="dropdown">
                 <span class="dropdown-btn material-symbols-outlined"> menu </span>
                 <div class="dropdown-content">
-                    <a href="{}">Warning message</a>
+                    <a href="{}">Warning Message</a>
+                    <a href="{}">Link</a>
+                    <a href="{}">Link Text</a>
                 </div>
             </div>
             """,
-            reverse("translation_admin_url", args=[message.id]),
+            reverse("translation_admin_url", args=[obj.message.id]),
+            reverse("translation_admin_url", args=[obj.link_url.id]),
+            reverse("translation_admin_url", args=[obj.link_text.id]),
         )
 
     action_buttons.short_description = "Translate:"
