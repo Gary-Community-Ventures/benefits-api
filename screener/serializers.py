@@ -370,6 +370,7 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_value_override = TranslationSerializer()
     warning_messages = WarningMessageSerializer(many=True)
     required_programs = serializers.ListField(child=serializers.IntegerField())
+    value_format = serializers.CharField()
 
     class Meta:
         fields = "__all__"
