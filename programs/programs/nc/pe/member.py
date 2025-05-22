@@ -40,7 +40,7 @@ class NcWic(Wic):
     ]
 
 class NcAca(Aca):
-    pe_name = "nc_aca"
+    pe_name = "aca_ptc"
     pe_inputs = [
         *Aca.pe_inputs,
         dependency.household.NcStateCodeDependency,
