@@ -8,7 +8,13 @@ class EmergencyMedicaid(ProgramCalculator):
     member_amount = 6268
     max_age = 64
     fpl_percent = 1.96
-    dependencies = ["age", "insurance", "income_amount", "income_frequency", "household_size"]
+    dependencies = [
+        "age",
+        "insurance",
+        "income_amount",
+        "income_frequency",
+        "household_size",
+    ]
 
     def household_eligible(self, e: Eligibility):
         # Does not have insurance
@@ -34,9 +40,6 @@ class EmergencyMedicaid(ProgramCalculator):
 
     def member_eligible(self, e: MemberEligibility):
         member = e.member
-
-        # pregnant
-        e.condition(member.pregnant)
 
         # age
         e.condition(not member.age >= EmergencyMedicaid.max_age)
