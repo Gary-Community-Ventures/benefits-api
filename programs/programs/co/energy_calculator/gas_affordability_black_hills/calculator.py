@@ -1,4 +1,5 @@
 from programs.programs.calc import Eligibility, ProgramCalculator
+from programs.programs.co.energy_calculator.util import has_renter_expenses
 from programs.programs.co.energy_calculator.energy_assistance.calculator import EnergyCalculatorEnergyAssistance
 from programs.programs.co.energy_calculator.energy_outreach.calculator import EnergyCalculatorEnergyOutreach
 from programs.programs.co.energy_calculator.utility_bill_pay.calculator import EnergyCalculatorUtilityBillPay
@@ -21,6 +22,7 @@ class EnergyCalculatorGasAffordabilityBlackHills(ProgramCalculator):
         "co_energy_calculator_eoc",
         "co_energy_calculator_cowap",
         "co_energy_calculator_ubp",
+        "co_energy_calculator_care",
     ]
     gas_providers = ["co-black-hills-energy"]
 
@@ -35,3 +37,6 @@ class EnergyCalculatorGasAffordabilityBlackHills(ProgramCalculator):
 
         # has gas provider
         e.condition(self.screen.energy_calculator.has_gas_provider(self.gas_providers))
+
+        # no renters without expenses
+        e.condition(has_renter_expenses(self.screen))

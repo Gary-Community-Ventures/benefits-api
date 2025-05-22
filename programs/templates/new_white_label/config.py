@@ -144,7 +144,7 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "中文",
+        "zh": "中文 (简体)",
         "ar": "عربي",
         "sw": "Kiswahili",
     }
@@ -391,7 +391,7 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "conditionOptions.disabled",
-                    "_default_message": "Have any disabilities that make you unable to work now or in the future",
+                    "_default_message": "Currently have any disabilities that make you unable to work now or in the future",
                 },
             },
             "longTermDisability": {
@@ -428,7 +428,7 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "conditionOptions.disabled.them",
-                    "_default_message": "Have any disabilities that make them unable to work now or in the future",
+                    "_default_message": "Currently have any disabilities that make them unable to work now or in the future",
                 },
             },
             "longTermDisability": {
@@ -519,11 +519,6 @@ class {{code_capitalize}}ConfigurationData(ConfigurationData):
     }
 
     footer_data = {  # TODO: add footer information
-        "address_one": "",
-        "address_two": "",
-        "city": "",
-        "state": "",
-        "zip_code": "",
         "email": "",
     }
 

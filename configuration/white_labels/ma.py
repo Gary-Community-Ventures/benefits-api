@@ -17,12 +17,20 @@ class MaConfigurationData(ConfigurationData):
         },
     }
 
-    more_help_options = {  # TODO: add more help options for the bottom of the results page
+    more_help_options = {
         "moreHelpOptions": [
             {
-                "name": {"_default_message": "", "_label": ""},
-                "link": "",
-                "phone": {"_default_message": "", "_label": ""},
+                "name": {"_label": "moreHelp.ma.211.name", "_default_message": "Mass 211"},
+                "phone": {"_label": "moreHelp.ma.211.phone", "_default_message": "Dial 2-1-1 or 877.211.6277"},
+                "link": "https://mass211.org/",
+            },
+            {
+                "name": {"_label": "moreHelp.ma.masscap.name", "_default_message": "MassCap Community Action Agencies"},
+                "description": {
+                    "_label": "moreHelp.ma.masscap.phone",
+                    "_default_message": "Your local community action agency may be able to connect you to other resources and support services. Find an agency near you.",
+                },
+                "link": "https://www.masscap.org/agencies/",
             },
         ]
     }
@@ -158,7 +166,7 @@ class MaConfigurationData(ConfigurationData):
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "中文",
+        "zh": "中文 (简体)",
         "ar": "عربي",
         "sw": "Kiswahili",
     }
@@ -370,7 +378,7 @@ class MaConfigurationData(ConfigurationData):
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "conditionOptions.disabled",
-                    "_default_message": "Have any disabilities that make you unable to work now or in the future",
+                    "_default_message": "Currently have any disabilities that make you unable to work now or in the future",
                 },
             },
             "longTermDisability": {
@@ -407,7 +415,7 @@ class MaConfigurationData(ConfigurationData):
                 "icon": {"_icon": "Disabled", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "conditionOptions.disabled.them",
-                    "_default_message": "Have any disabilities that make them unable to work now or in the future",
+                    "_default_message": "Currently have any disabilities that make them unable to work now or in the future",
                 },
             },
             "longTermDisability": {
@@ -1415,11 +1423,6 @@ class MaConfigurationData(ConfigurationData):
     }
 
     footer_data = {
-        "address_one": "1705 17th St.",
-        "address_two": "Suite 200",
-        "city": "Denver",
-        "state": "CO",
-        "zip_code": "80202",
         "email": "hello@myfriendben.org",
     }
 

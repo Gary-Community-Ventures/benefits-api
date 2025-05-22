@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
+from decouple import config
 from getpass import getpass
-
 from django.db import transaction
 from screener.models import Screen
 from screener.serializers import ScreenSerializer
@@ -18,11 +18,21 @@ class Command(BaseCommand):
             nargs=None,
             help="Domain of the environment to pull from",
         )
+        parser.add_argument(
+            "--no-bypass",
+            action="store_true",
+            help="Do not use the environment variable for the API key; prompt for it instead.",
+        )
 
     @transaction.atomic
     def handle(self, *args, **options):
         domain = options["domain"]
-        api_key = getpass("API key: ")
+        if options["no_bypass"]:
+            api_key = getpass("API key: ")
+        else:
+            api_key = config("DEV_API_KEY", "")
+            if not api_key:
+                api_key = getpass("API key: ")
 
         response = requests.get(f"{domain}/api/validations")
 

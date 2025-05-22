@@ -1,4 +1,4 @@
-from integrations.services.sheets.sheets import GoogleSheetsCache
+from integrations.services.sheets import GoogleSheetsCache
 from programs.co_county_zips import counties_from_screen
 from programs.programs.calc import Eligibility, ProgramCalculator
 import programs.programs.messages as messages
@@ -27,7 +27,7 @@ class WeatherizationAssistance(ProgramCalculator):
     income_limits = IncomeLimitsCache()
     presumptive_eligibility = ("andcs", "ssi", "snap", "leap", "tanf")
     amount = 350
-    dependencies = ["household_size", "income_amount", "income_frequency", "zipcode"]
+    dependencies = ["household_size", "income_amount", "income_frequency", "county"]
 
     def household_eligible(self, e: Eligibility):
         # income condition

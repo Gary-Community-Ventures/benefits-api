@@ -3,8 +3,6 @@ from typing import Optional
 from django.db import models
 from decimal import Decimal
 import uuid
-
-from google.auth import default
 from authentication.models import User
 from django.utils.translation import gettext_lazy as _
 from programs.util import Dependencies
@@ -14,6 +12,7 @@ from django.conf import settings
 class WhiteLabel(models.Model):
     name = models.CharField(max_length=120, blank=False, null=False)
     code = models.CharField(max_length=32, blank=False, null=False)
+    state_code = models.CharField(max_length=8, blank=True, null=True)
     cms_method = models.CharField(max_length=32, blank=True, null=True)
 
     def __str__(self):
@@ -105,6 +104,7 @@ class Screen(models.Model):
     has_ma_maeitc = models.BooleanField(default=False, blank=True, null=True)
     has_ma_macfc = models.BooleanField(default=False, blank=True, null=True)
     has_co_andso = models.BooleanField(default=False, blank=True, null=True)
+    has_co_care = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -359,9 +359,6 @@ class Screen(models.Model):
             "cowap": self.has_cowap,
             "ncwap": self.has_ncwap,
             "ubp": self.has_ubp,
-            "co_medicaid": self.has_medicaid or self.has_medicaid_hi,
-            "nc_medicaid": self.has_medicaid or self.has_medicaid_hi,
-            "medicaid": self.has_medicaid or self.has_medicaid_hi,
             "medicare": self.has_medicare_hi,
             "chp": self.has_chp or self.has_chp_hi,
             "va": self.has_va,
@@ -377,16 +374,15 @@ class Screen(models.Model):
             "ma_tafdc": self.has_tanf,
             "ma_mass_health": self.has_medicaid or self.has_medicaid_hi,
             "co_andso": self.has_co_andso,
+            "co_care": self.has_co_care,
         }
-
-        has_insurance = self.has_insurance_types((name_abbreviated,), strict=False)
 
         if name_abbreviated in name_map:
             has_benefit = name_map[name_abbreviated]
         else:
             has_benefit = False
 
-        return has_insurance or has_benefit
+        return has_benefit
 
     def set_screen_is_test(self):
         referral_source_tests = ["testorprospect", "test"]
@@ -548,6 +544,35 @@ class HouseholdMember(models.Model):
 
     def is_in_tax_unit(self):
         return self.is_head() or self.is_spouse() or self.is_dependent()
+
+    def has_benefit(self, name_abbreviated: str):
+        name_map = {}
+
+        if hasattr(self, "insurance"):
+            name_map = {
+                "nc_medicaid": self.insurance.medicaid,
+                "co_medicaid": self.insurance.medicaid,
+                "medicaid": self.insurance.medicaid,
+                "emergency_medicaid": self.insurance.emergency_medicaid,
+            }
+
+        has_insurance = self.has_insurance_types((name_abbreviated,), strict=False)
+
+        if name_abbreviated in name_map:
+            has_benefit = name_map[name_abbreviated]
+        else:
+            has_benefit = False
+
+        return has_insurance or has_benefit
+
+    def has_insurance_types(self, types, strict=True):
+        if not hasattr(self, "insurance"):
+            return False
+
+        if self.insurance.has_insurance_types(types, strict):
+            return True
+
+        return False
 
     @property
     def birth_year(self) -> Optional[int]:
@@ -776,6 +801,7 @@ class EnergyCalculatorScreen(models.Model):
     gas_provider = models.CharField(max_length=200, null=True, blank=True)
     electricity_is_disconnected = models.BooleanField(default=False, null=True, blank=True)
     has_past_due_energy_bills = models.BooleanField(default=False, null=True, blank=True)
+    has_old_car = models.BooleanField(default=False, null=True, blank=True)
     needs_water_heater = models.BooleanField(default=False, null=True, blank=True)
     needs_hvac = models.BooleanField(default=False, null=True, blank=True)
     needs_stove = models.BooleanField(default=False, null=True, blank=True)
@@ -805,6 +831,7 @@ class EnergyCalculatorMember(models.Model):
     )
     surviving_spouse = models.BooleanField(default=False, null=True, blank=True)
     receives_ssi = models.BooleanField(default=False, null=True, blank=True)
+    medical_equipment = models.BooleanField(default=False, null=True, blank=True)
 
 
 # A point in time log table to capture the exact eligibility and value results

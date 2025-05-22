@@ -280,6 +280,7 @@ def eligibility_results(screen: Screen, batch=False):
             "co_energy_calculator_eoc",
             "co_energy_calculator_cowap",
             "co_energy_calculator_ubp",
+            "co_energy_calculator_care",
         )
 
         if program.name_abbreviated not in calc_order:
@@ -386,6 +387,7 @@ def eligibility_results(screen: Screen, batch=False):
                         "frontend_id": str(member_eligibility.member.frontend_id),
                         "eligible": member_eligibility.eligible,
                         "value": member_eligibility.value,
+                        "already_has": member_eligibility.member.has_benefit(program.name_abbreviated),
                     }
                 )
 
@@ -451,6 +453,7 @@ def eligibility_results(screen: Screen, batch=False):
             "description": default_message(category.description),
             "caps": caps,
             "tax_category": category.tax_category,
+            "priority": category.priority,
             "programs": [program.id],
         }
     categories = list(category_map.values())

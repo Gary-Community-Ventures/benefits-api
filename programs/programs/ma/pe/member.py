@@ -57,16 +57,16 @@ class MaMassHealthLimited(Medicaid):
 
     medicaid_categories = {
         "NONE": 0,
-        "ADULT": 0,
+        "ADULT": 255,
         "INFANT": 255,
         "YOUNG_CHILD": 255,
         "OLDER_CHILD": 255,
         "PREGNANT": 255,
-        "YOUNG_ADULT": 0,
-        "PARENT": 0,
-        "SSI_RECIPIENT": 0,
-        "AGED": 0,
-        "DISABLED": 0,
+        "YOUNG_ADULT": 255,
+        "PARENT": 255,
+        "SSI_RECIPIENT": 255,
+        "AGED": 255,
+        "DISABLED": 255,
     }
 
 
@@ -85,10 +85,10 @@ class MaWic(Wic):
 class MaCcdf(Ccdf):
     cost_by_age = (
         # cost, age
-        (22_813, 2),
-        (20_535, 3),
-        (16_254, 4.5),
-        (11_942, 14),
+        (23_191, 2),
+        (21_125, 3),
+        (16_572, 4.5),
+        (12_632, 14),
     )
 
     def child_care_cost(self, member: HouseholdMember):
@@ -117,7 +117,7 @@ class MaMbta(PolicyEngineMembersCalculator):
         dependency.member.MaTapCharlieCardEligible,
     ]
 
-    amount = 30 * 12
+    amount = 60 * 12
 
     def member_value(self, member: HouseholdMember):
         mbta_programs_eligible = self.get_member_dependency_value(dependency.member.MaMbtaProgramsEligible, member.id)
