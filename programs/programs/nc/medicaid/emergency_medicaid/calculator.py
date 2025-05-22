@@ -17,11 +17,6 @@ class EmergencyMedicaid(ProgramCalculator):
     ]
 
     def household_eligible(self, e: Eligibility):
-        # Check if any member is a non-citizen by checking if they have selected
-        # "Individuals without lawful presence or U.S. citizenship" filter
-        has_non_citizen = not any(status.status == "citizen" for status in self.program.legal_status_required.all())
-        e.condition(has_non_citizen, messages.must_be("non-citizen"))
-
         # Does not have insurance
         has_no_insurance = False
         for member in self.screen.household_members.all():
