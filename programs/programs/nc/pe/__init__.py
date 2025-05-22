@@ -7,12 +7,14 @@ from programs.programs.policyengine.calculators.base import PolicyEngineCalulato
 nc_member_calculators = {
     "nc_medicaid": member.NcMedicaid,
     "nc_wic": member.NcWic,
+    "nc_aca": member.NcAca,
 }
 
 nc_spm_calculators = {
     "nc_snap": spm.NcSnap,
     "nc_tanf": spm.NcTanf,
     "nc_scca": spm.NcScca,
+    # "nc_aca": spm.NcAca,
 }
 
 nc_pe_calculators: dict[str, type[PolicyEngineCalulator]] = {
