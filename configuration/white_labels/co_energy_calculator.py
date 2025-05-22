@@ -162,6 +162,13 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     "_default_message": "Currently have any disabilities that make you unable to work now or in the future",
                 },
             },
+            "medicalEquipment": {
+                "icon": {"_icon": "Dialysis", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "eCConditionOptions.medicalEquipmentYou",
+                    "_default_message": "You have in-home life support / medical equipment that requires high power use",
+                },
+            },
         },
         "them": {
             "survivingSpouse": {
@@ -176,6 +183,13 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "text": {
                     "_label": "eCConditionOptions.disabledThem",
                     "_default_message": "Currently have any disabilities that make them unable to work now or in the future",
+                },
+            },
+            "medicalEquipment": {
+                "icon": {"_icon": "Dialysis", "_classname": "option-card-icon"},
+                "text": {
+                    "_label": "eCConditionOptions.medicalEquipmentThem",
+                    "_default_message": "They have in-home life support / medical equipment that requires high power use",
                 },
             },
         },
