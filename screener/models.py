@@ -831,6 +831,7 @@ class EnergyCalculatorMember(models.Model):
     )
     surviving_spouse = models.BooleanField(default=False, null=True, blank=True)
     receives_ssi = models.BooleanField(default=False, null=True, blank=True)
+    medical_equipment = models.BooleanField(default=False, null=True, blank=True)
 
 
 # A point in time log table to capture the exact eligibility and value results

@@ -17,12 +17,20 @@ class MaConfigurationData(ConfigurationData):
         },
     }
 
-    more_help_options = {  # TODO: add more help options for the bottom of the results page
+    more_help_options = {
         "moreHelpOptions": [
             {
-                "name": {"_default_message": "", "_label": ""},
-                "link": "",
-                "phone": {"_default_message": "", "_label": ""},
+                "name": {"_label": "moreHelp.ma.211.name", "_default_message": "Mass 211"},
+                "phone": {"_label": "moreHelp.ma.211.phone", "_default_message": "Dial 2-1-1 or 877.211.6277"},
+                "link": "https://mass211.org/",
+            },
+            {
+                "name": {"_label": "moreHelp.ma.masscap.name", "_default_message": "MASSCAP Community Action Agencies"},
+                "description": {
+                    "_label": "moreHelp.ma.masscap.phone",
+                    "_default_message": "Your local community action agency may be able to connect you to other resources and support services. Find an agency near you.",
+                },
+                "link": "https://www.masscap.org/agencies/",
             },
         ]
     }
@@ -1405,7 +1413,7 @@ class MaConfigurationData(ConfigurationData):
                 "signUpInfo",
             ],
         },
-        "featureFlags": {"default": ["no_results_more_help"]},
+        "featureFlags": {"default": []},
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",

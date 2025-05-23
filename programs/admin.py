@@ -49,9 +49,18 @@ class WhiteLabelModelAdminMixin(ModelAdmin):
 
         for field in self.white_label_filter_horizontal:
             form_field = context["adminform"].form.fields[field]
-            restricted_query_set = form_field.queryset.filter(
-                Q(white_label=obj.white_label) | Q(id__in=getattr(obj, field).all().values_list("id", flat=True))
-            )
+            if hasattr(obj, field) and hasattr(getattr(obj, field), "all"):
+                restricted_query_set = form_field.queryset.filter(
+                    Q(white_label=obj.white_label) | Q(id__in=getattr(obj, field).all().values_list("id", flat=True))
+                )
+            elif obj.white_label is not None and getattr(obj, field) is not None:
+                restricted_query_set = form_field.queryset.filter(
+                    Q(white_label=obj.white_label) | Q(id=getattr(obj, field).id)
+                )
+            elif obj.white_label is not None:
+                restricted_query_set = form_field.queryset.filter(Q(white_label=obj.white_label))
+            else:
+                restricted_query_set = form_field.queryset
             if not request.user.is_superuser:
                 restricted_query_set = restricted_query_set.filter(white_label__in=user_white_labels)
 
@@ -70,6 +79,7 @@ class ProgramAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     white_label_filter_horizontal = [
         "documents",
         "required_programs",
+        "category",
     ]
     filter_horizontal = (
         "legal_status_required",
@@ -233,18 +243,21 @@ class WarningMessageAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     get_str.short_description = "Name"
 
     def action_buttons(self, obj):
-        message = obj.message
 
         return format_html(
             """
             <div class="dropdown">
                 <span class="dropdown-btn material-symbols-outlined"> menu </span>
                 <div class="dropdown-content">
-                    <a href="{}">Warning message</a>
+                    <a href="{}">Warning Message</a>
+                    <a href="{}">Link</a>
+                    <a href="{}">Link Text</a>
                 </div>
             </div>
             """,
-            reverse("translation_admin_url", args=[message.id]),
+            reverse("translation_admin_url", args=[obj.message.id]),
+            reverse("translation_admin_url", args=[obj.link_url.id]),
+            reverse("translation_admin_url", args=[obj.link_text.id]),
         )
 
     action_buttons.short_description = "Translate:"
@@ -382,7 +395,7 @@ class WebHookFunctionsAdmin(ModelAdmin):
 class TranslationOverrideAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "calculator", "action_buttons"]
-    white_label_filter_horizontal = ("counties",)
+    white_label_filter_horizontal = ("counties", "program")
     filter_horizontal = ("counties",)
     exclude = ["translation"]
 

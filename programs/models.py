@@ -1,4 +1,3 @@
-from types import NoneType
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 from screener.models import WhiteLabel
@@ -193,7 +192,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
             "calculator": str,
             "icon": str,
             "tax_category": bool,
-            "priority": Union[int, NoneType],
+            "priority": Union[int, type(None)],
             "white_label": str,
         },
     )
@@ -1106,12 +1105,17 @@ class Navigator(models.Model):
 
 
 class WarningMessageManager(models.Manager):
-    translated_fields = ("message",)
+    translated_fields = ("message", "link_url", "link_text")
+    no_auto_fields = ("link_url",)
 
     def new_warning(self, white_label: str, calculator: str, external_name: Optional[str] = None):
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(f"warning.{calculator}_temporary_key-{field}")
+            translations[field] = Translation.objects.add_translation(
+                f"warning.{calculator}_temporary_key-{field}",
+                "",
+                no_auto=(field in self.no_auto_fields),
+            )
 
         if external_name is None:
             external_name = calculator
@@ -1230,6 +1234,20 @@ class WarningMessage(models.Model):
     message = models.ForeignKey(
         Translation,
         related_name="warning_messages",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
+    )
+    link_url = models.ForeignKey(
+        Translation,
+        related_name="warning_message_link_url",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
+    )
+    link_text = models.ForeignKey(
+        Translation,
+        related_name="warning_message_link_text",
         blank=False,
         null=False,
         on_delete=models.PROTECT,

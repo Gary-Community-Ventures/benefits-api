@@ -7,6 +7,7 @@ from programs.programs.policyengine.calculators.base import PolicyEngineCalulato
 nc_member_calculators = {
     "nc_medicaid": member.NcMedicaid,
     "nc_wic": member.NcWic,
+    "nc_aca": member.NcAca,
 }
 
 nc_spm_calculators = {

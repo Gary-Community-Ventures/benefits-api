@@ -324,12 +324,14 @@ class NavigatorSerializer(serializers.Serializer):
 
 
 class WarningMessageSerializer(serializers.ModelSerializer):
-    message = ModelTranslationSerializer()
+    message = TranslationSerializer()
+    link_url = TranslationSerializer()
+    link_text = TranslationSerializer()
     legal_statuses = serializers.SerializerMethodField()
 
     class Meta:
         model = WarningMessage
-        fields = ("message", "legal_statuses")
+        fields = ("message", "link_url", "link_text", "legal_statuses")
 
     def get_legal_statuses(self, obj: WarningMessage):
         return [m.status for m in obj.legal_statuses.all()]

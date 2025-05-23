@@ -28,5 +28,4 @@ class MaAca(Aca):
     pe_inputs = [
         *Aca.pe_inputs,
         dependency.household.MaStateCodeDependency,
-        dependency.household.ZipCodeDependency,
     ]
