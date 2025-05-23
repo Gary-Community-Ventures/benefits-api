@@ -32,7 +32,7 @@ class EnergyAssistance(ProgramCalculator):
 
     def household_eligible(self, e: Eligibility):
         # income
-        frequency = "monthly"
+        frequency = "yearly"
         income_types = ["all"]
         income_limit = smi.get_screen_smi(self.screen, self.program.year.period) * self.smi_percent
         leap_income = self.screen.calc_gross_income(frequency, income_types)
