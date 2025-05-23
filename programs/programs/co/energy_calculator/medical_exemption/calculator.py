@@ -14,7 +14,7 @@ class EnergyCalculatorMedicalExemption(ProgramCalculator):
         e.condition(income <= income_limit)
 
         # has exel
-        e.condition(self.screen.energy_calculator.has_electricity_provider())
+        e.condition(self.screen.energy_calculator.has_electricity_provider(self.providers))
 
     def member_eligible(self, e: MemberEligibility):
         # has medical equipment
