@@ -13,5 +13,5 @@ nc_calculators: dict[str, type[ProgramCalculator]] = {
     "nc_lieap": NCLieap,
     "nccip": NCCrisisIntervention,
     "ncwap": NCWeatherization,
-    "nc_aca_mfb_version": ACASubsidiesNC,
+    "nc_aca_mfb_version": ACASubsidiesNC,  # TODO: remove when it is fixed in PE
 }
