@@ -212,8 +212,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
 
         program_category.calculator = data["calculator"]
         program_category.icon = data["icon"]
-        if "priority" in data:
-            program_category.priority = data["priority"]
+        program_category.priority = data["priority"]
         program_category.tax_category = data["tax_category"]
 
         try:
@@ -429,6 +428,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "documents": list[str],
             "category": Optional[str],
             "required_programs": list[str],
+            "value_format": Optional[str],
             "white_label": str,
         },
     )
@@ -452,6 +452,7 @@ class ProgramDataController(ModelDataController["Program"]):
             "documents": [d.external_name for d in program.documents.all()],
             "category": (program.category.external_name if program.category is not None else None),
             "required_programs": [p.external_name for p in program.required_programs.all()],
+            "value_format": program.value_format,
             "white_label": program.white_label.code,
         }
 
@@ -462,6 +463,7 @@ class ProgramDataController(ModelDataController["Program"]):
         program.name_abbreviated = data["name_abbreviated"]
         program.active = data["active"]
         program.low_confidence = data["low_confidence"]
+        program.value_format = data["value_format"]
 
         # get or create fpl
         fpl = data["fpl"]
