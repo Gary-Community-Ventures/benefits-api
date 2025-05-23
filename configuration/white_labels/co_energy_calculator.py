@@ -169,8 +169,8 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "medicalEquipment": {
                 "icon": {"_icon": "Dialysis", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "eCConditionOptions.medicalEquipmentYou",
-                    "_default_message": "You have in-home life support / medical equipment that requires high power use",
+                    "_label": "eCConditionOptions.medicalEquipment",
+                    "_default_message": "Have in-home life support / medical equipment that requires high power use",
                 },
             },
         },
@@ -192,8 +192,8 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "medicalEquipment": {
                 "icon": {"_icon": "Dialysis", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "eCConditionOptions.medicalEquipmentThem",
-                    "_default_message": "They have in-home life support / medical equipment that requires high power use",
+                    "_label": "eCConditionOptions.medicalEquipment",
+                    "_default_message": "Have in-home life support / medical equipment that requires high power use",
                 },
             },
         },

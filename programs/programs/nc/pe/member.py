@@ -1,6 +1,7 @@
 import programs.programs.policyengine.calculators.dependencies as dependency
 from programs.programs.federal.pe.member import Medicaid
 from programs.programs.federal.pe.member import Wic
+from programs.programs.federal.pe.tax import Aca
 
 
 class NcMedicaid(Medicaid):
@@ -35,5 +36,13 @@ class NcWic(Wic):
     }
     pe_inputs = [
         *Wic.pe_inputs,
+        dependency.household.NcStateCodeDependency,
+    ]
+
+
+class NcAca(Aca):
+    pe_name = "aca_ptc"
+    pe_inputs = [
+        *Aca.pe_inputs,
         dependency.household.NcStateCodeDependency,
     ]
