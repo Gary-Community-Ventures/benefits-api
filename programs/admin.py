@@ -1,8 +1,7 @@
 from django.contrib import admin
-from django.db.models import Q
 from django.urls import reverse
 from django.utils.html import format_html
-from unfold.admin import ModelAdmin
+from authentication.admin import SecureAdmin
 from .models import (
     LegalStatus,
     Program,
@@ -22,58 +21,7 @@ from .models import (
 )
 
 
-# WARNING: This is only for the user experience. This does not prevent admin from
-# using the API to edit programs they don't have access to
-class WhiteLabelModelAdminMixin(ModelAdmin):
-    white_label_filter_horizontal = []
-
-    # dont list white labels the admin does not have access to
-    def get_queryset(self, request):
-        if request.user.is_superuser:
-            return super().get_queryset(request)
-
-        # limit the white labels shown based on the admin permisions
-        return super().get_queryset(request).filter(white_label__in=request.user.white_labels.all())
-
-    # limit the objects the user can select to
-    # the objects with the same white label as the object the admin is editing
-    def render_change_form(self, request, context, add=False, change=False, form_url="", obj=None):
-        user_white_labels = request.user.white_labels.all()
-
-        white_label_input = context["adminform"].form.fields["white_label"]
-        original_white_label_queryset = white_label_input.queryset
-        white_label_input.queryset = white_label_input.queryset.filter(id__in=user_white_labels)
-
-        if obj is None:
-            return super().render_change_form(request, context, add=add, change=change, form_url=form_url, obj=obj)
-
-        for field in self.white_label_filter_horizontal:
-            form_field = context["adminform"].form.fields[field]
-            if hasattr(obj, field) and hasattr(getattr(obj, field), "all"):
-                restricted_query_set = form_field.queryset.filter(
-                    Q(white_label=obj.white_label) | Q(id__in=getattr(obj, field).all().values_list("id", flat=True))
-                )
-            elif obj.white_label is not None and getattr(obj, field) is not None:
-                restricted_query_set = form_field.queryset.filter(
-                    Q(white_label=obj.white_label) | Q(id=getattr(obj, field).id)
-                )
-            elif obj.white_label is not None:
-                restricted_query_set = form_field.queryset.filter(Q(white_label=obj.white_label))
-            else:
-                restricted_query_set = form_field.queryset
-            if not request.user.is_superuser:
-                restricted_query_set = restricted_query_set.filter(white_label__in=user_white_labels)
-
-            form_field.queryset = restricted_query_set
-
-        if request.user.is_superuser:
-            white_label_input.queryset = original_white_label_queryset
-            return super().render_change_form(request, context, add=add, change=change, form_url=form_url, obj=obj)
-
-        return super().render_change_form(request, context, add=add, change=change, form_url=form_url, obj=obj)
-
-
-class ProgramAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+class ProgramAdmin(SecureAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "name_abbreviated", "active", "action_buttons"]
     white_label_filter_horizontal = [
@@ -158,19 +106,19 @@ class ProgramAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class LegalStatusAdmin(ModelAdmin):
+class LegalStatusAdmin(SecureAdmin):
     search_fields = ("status",)
 
 
-class CountiesAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+class CountiesAdmin(SecureAdmin):
     search_fields = ("name",)
 
 
-class NavigatorLanguageAdmin(ModelAdmin):
+class NavigatorLanguageAdmin(SecureAdmin):
     search_fields = ("code",)
 
 
-class NavigatorAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+class NavigatorAdmin(SecureAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "action_buttons"]
     white_label_filter_horizontal = ("programs", "counties")
@@ -219,7 +167,7 @@ class NavigatorAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class WarningMessageAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+class WarningMessageAdmin(SecureAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "calculator", "action_buttons"]
     white_label_filter_horizontal = (
@@ -264,7 +212,7 @@ class WarningMessageAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class UrgentNeedAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+class UrgentNeedAdmin(SecureAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "active", "action_buttons"]
     white_label_filter_horizontal = ("counties",)
@@ -325,21 +273,21 @@ class UrgentNeedAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class UrgentNeedCategoryAdmin(ModelAdmin):
+class UrgentNeedCategoryAdmin(SecureAdmin):
     search_fields = ("name",)
     fields = ("name",)
 
 
-class UrgentNeedFunctionAdmin(ModelAdmin):
+class UrgentNeedFunctionAdmin(SecureAdmin):
     search_fields = ("name",)
     fields = ("name",)
 
 
-class FederalPovertyLimitAdmin(ModelAdmin):
+class FederalPovertyLimitAdmin(SecureAdmin):
     search_fields = ("year",)
 
 
-class DocumentAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+class DocumentAdmin(SecureAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "action_buttons"]
     exclude = ["text", "link_url", "link_text"]
@@ -375,7 +323,7 @@ class DocumentAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class ReferrerAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+class ReferrerAdmin(SecureAdmin):
     search_fields = ("referrer_code",)
     white_label_filter_horizontal = (
         "primary_navigators",
@@ -388,11 +336,11 @@ class ReferrerAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     )
 
 
-class WebHookFunctionsAdmin(ModelAdmin):
+class WebHookFunctionsAdmin(SecureAdmin):
     search_fields = ("name",)
 
 
-class TranslationOverrideAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+class TranslationOverrideAdmin(SecureAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "calculator", "action_buttons"]
     white_label_filter_horizontal = ("counties", "program")
@@ -427,7 +375,7 @@ class TranslationOverrideAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class ProgramCategoryAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
+class ProgramCategoryAdmin(SecureAdmin):
     search_fields = ("external_name",)
     list_display = ["get_str", "external_name", "action_buttons"]
     exclude = ["name", "description"]
