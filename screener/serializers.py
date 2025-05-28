@@ -201,6 +201,8 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_rag",
             "has_nfp",
             "has_fatc",
+            "has_cfhc",
+            "has_shitc",
             "has_section_8",
             "has_csfp",
             "has_ccdf",

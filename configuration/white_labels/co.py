@@ -2126,6 +2126,16 @@ class CoConfigurationData(ConfigurationData):
                         "_default_message": "Personalized support for first-time parents",
                     },
                 },
+                "cfhc": {
+                    "name": {
+                        "_label": "healthCareBenefits.connectForHealth",
+                        "_default_message": "Connect for Health/Premium Tax Credit: ",
+                    },
+                    "description": {
+                        "_label": "healthCareBenefits.connectForHealth_desc",
+                        "_default_message": "Health insurance marketplace premium tax credit",
+                    },
+                },
             },
             "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
         },
@@ -2165,6 +2175,16 @@ class CoConfigurationData(ConfigurationData):
                         "_default_message": "Family Affordability Tax Credit: ",
                     },
                     "description": {"_label": "taxCreditBenefits.fatc_desc", "_default_message": "State tax credit"},
+                },
+                "shitc": {
+                    "name": {
+                        "_label": "taxCreditBenefits.seniorHousingIncomeTaxCredit",
+                        "_default_message": "Senior Housing Income Tax Credit: ",
+                    },
+                    "description": {
+                        "_label": "taxCreditBenefits.seniorHousingIncomeTaxCredit_desc",
+                        "_default_message": "State tax credit for people 65 years of age or older",
+                    },
                 },
             },
             "category_name": {"_label": "taxCredits", "_default_message": "Tax Credits"},
@@ -2312,7 +2332,7 @@ class CoConfigurationData(ConfigurationData):
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
-                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the \"Near-Term Benefits\" tab. For additional resources, please click the 'More Help' button below to get the resources you're looking for.",
             },
         },
     }
