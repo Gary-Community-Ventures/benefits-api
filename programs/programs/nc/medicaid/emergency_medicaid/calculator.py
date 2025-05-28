@@ -26,8 +26,6 @@ class EmergencyMedicaid(ProgramCalculator):
             if member.age <= 18 and member.pregnant:
                 self.fpl_percent = 2.11
 
-        e.condition(has_no_insurance, messages.has_no_insurance())
-
         # Medicaid eligibility
         e.condition(medicaid_eligible(self.data), messages.must_have_benefit("Medicaid"))
 
