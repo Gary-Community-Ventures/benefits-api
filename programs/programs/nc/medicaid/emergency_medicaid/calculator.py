@@ -17,14 +17,12 @@ class EmergencyMedicaid(ProgramCalculator):
     ]
 
     def household_eligible(self, e: Eligibility):
-        # Does not have insurance
-        has_no_insurance = False
-        for member in self.screen.household_members.all():
-            has_no_insurance = member.insurance.has_insurance_types(("none",)) or has_no_insurance
+        fpl_percent = EmergencyMedicaid.fpl_percent
 
+        for member in self.screen.household_members.all():
             # Pregnant and under 18 years old have a different FPL percentage
             if member.age <= 18 and member.pregnant:
-                self.fpl_percent = 2.11
+                fpl_percent = 2.11
 
         # Medicaid eligibility
         e.condition(medicaid_eligible(self.data), messages.must_have_benefit("Medicaid"))
