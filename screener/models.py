@@ -105,6 +105,8 @@ class Screen(models.Model):
     has_ma_macfc = models.BooleanField(default=False, blank=True, null=True)
     has_co_andso = models.BooleanField(default=False, blank=True, null=True)
     has_co_care = models.BooleanField(default=False, blank=True, null=True)
+    has_cfhc = models.BooleanField(default=False, blank=True, null=True)
+    has_shitc = models.BooleanField(default=False, blank=True, null=True)
     has_employer_hi = models.BooleanField(default=None, blank=True, null=True)
     has_private_hi = models.BooleanField(default=None, blank=True, null=True)
     has_medicaid_hi = models.BooleanField(default=None, blank=True, null=True)
@@ -375,6 +377,8 @@ class Screen(models.Model):
             "ma_mass_health": self.has_medicaid or self.has_medicaid_hi,
             "co_andso": self.has_co_andso,
             "co_care": self.has_co_care,
+            "cfhc": self.has_cfhc,
+            "shitc": self.has_shitc,
         }
 
         if name_abbreviated in name_map:
