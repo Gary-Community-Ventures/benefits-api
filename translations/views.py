@@ -7,7 +7,12 @@ from .models import Translation
 from rest_framework.response import Response
 from rest_framework import views
 from django import forms
-from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseNotFound
+from django.http import (
+    HttpResponseBadRequest,
+    HttpResponse,
+    HttpResponseForbidden,
+    HttpResponseNotFound,
+)
 from django.db.models import ProtectedError
 from django.db import models
 from programs.models import (
@@ -49,6 +54,8 @@ class NewTranslationForm(forms.Form):
 @login_required(login_url="/admin/login")
 @staff_member_required
 def admin_view(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("/api/translations/admin/programs")
     if request.method == "GET":
         translations = Translation.objects.all().order_by("id")
         # Display 50 translations per page
@@ -81,6 +88,7 @@ def admin_view(request):
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/{translation.id}"
             return response
+        return HttpResponseBadRequest()
 
 
 @login_required(login_url="/admin/login")
@@ -335,25 +343,25 @@ class TranslationAdminViews:
         elif request.method == "POST":
             return self._add_view(request, *args, **kwargs)
 
-        raise HttpResponseNotFound()
+        return HttpResponseNotFound()
 
     def _filter_router(self, request, *args, **kwargs):
         if request.method == "GET":
             return self._filter_view(request, *args, **kwargs)
 
-        raise HttpResponseNotFound()
+        return HttpResponseNotFound()
 
     def _page_router(self, request, *args, **kwargs):
         if request.method == "GET":
             return self._object_page_view(request, *args, **kwargs)
 
-        raise HttpResponseNotFound()
+        return HttpResponseNotFound()
 
     def _form_router(self, request, *args, **kwargs):
         if request.method == "GET":
             return self._add_form_view(request, *args, **kwargs)
 
-        raise HttpResponseNotFound()
+        return HttpResponseNotFound()
 
 
 class ProgramTranslationAdmin(TranslationAdminViews):
