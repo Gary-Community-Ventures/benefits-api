@@ -512,10 +512,6 @@ class NcConfigurationData(ConfigurationData):
             "_label": "expenseOptions.internet",
             "_default_message": "Internet",
         },
-        "autoInsurance": {
-            "_label": "expenseOptions.autoInsurance",
-            "_default_message": "Auto Insurance Premium &/or Payment",
-        },
         "otherUtilities": {
             "_label": "expenseOptions.otherUtilities",
             "_default_message": "Other Utilities",
@@ -540,14 +536,6 @@ class NcConfigurationData(ConfigurationData):
         "medical": {
             "_label": "expenseOptions.medical",
             "_default_message": "Medical Insurance Premium &/or Bills",
-        },
-        "personalLoan": {
-            "_label": "expenseOptions.personalLoan",
-            "_default_message": "Personal Loan",
-        },
-        "studentLoans": {
-            "_label": "expenseOptions.studentLoans",
-            "_default_message": "Student Loans",
         },
         "cooling": {"_label": "expenseOptions.cooling", "_default_message": "Cooling"},
         "childCare": {
