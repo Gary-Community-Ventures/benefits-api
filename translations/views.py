@@ -1,15 +1,15 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.conf import settings
-
 from authentication.models import User
 from screener.models import WhiteLabel
 from .models import Translation
 from rest_framework.response import Response
 from rest_framework import views
 from django import forms
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.db.models import ProtectedError
+from django.db import models
 from programs.models import (
     Program,
     Navigator,
@@ -23,6 +23,7 @@ from phonenumber_field.formfields import PhoneNumberField
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from integrations.services.google_translate.integration import Translate
+from django.urls import path
 
 
 class TranslationView(views.APIView):
@@ -225,15 +226,6 @@ def auto_translate(request, id=0, lang="en-us"):
         return render(request, "edit/lang_form.html", context)
 
 
-def model_white_label_query_set(Model, user: User):
-    query_set = Model.objects.all()
-
-    if user.is_superuser:
-        return query_set
-
-    return query_set.filter(white_label__in=user.white_labels.all())
-
-
 def get_white_label_choices():
     return [(w.code, w.name) for w in WhiteLabel.objects.exclude(code="_default").order_by("name")]
 
@@ -254,6 +246,113 @@ class WhiteLabelForm(forms.Form):
 
         white_label_field = self.fields["white_label"]
         white_label_field.choices = [c for c in white_label_field.choices if c[0] in allowed_white_label_codes]
+
+
+class TranslationAdminViews:
+    name = ""
+
+    class Form(WhiteLabelForm):
+        pass
+
+    # assume the model has a white_label foreign key, and an external_name
+    Model = models.Model
+
+    def _list_view(self, request):
+        objects = self._model_white_label_query_set(request.user).order_by("external_name")
+
+        paginator = Paginator(objects, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+
+        return render(request, f"{self.name}/main.html", context)
+
+    def _add_view(self, request):
+        form = self.Form(request.POST, user=request.user)
+        if form.is_valid():
+            new_object = self._new_object(form)
+            response = HttpResponse()
+            response.headers["HX-Redirect"] = f"/api/translations/admin/{self.name}/{new_object.id}"
+            return response
+
+    def _new_object(self, form: Form) -> models.Model:
+        raise NotImplemented(f"Please add the `new_object` method for the '{self.name}' translations admin")
+
+    def _add_form_view(self, request):
+        context = {"form": self.Form(user=request.user), "route": f"/api/translations/admin/{self.name}"}
+
+        return render(request, "util/create_form.html", context)
+
+    def _object_page_view(self, request, id=0):
+        page_object = self._model_white_label_query_set(request.user).get(pk=id)
+        context = {"object": page_object}
+
+        return render(request, f"{self.name}/page.html", context)
+
+    def _filter_view(self, request):
+        objects = self._filter_query_set(request).distinct().order_by("external_name")
+
+        paginator = Paginator(objects, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+
+        return render(request, f"{self.name}/list.html", context)
+
+    def _filter_query_set(self, request):
+        raise NotImplemented(f"Please add the `filter_query_set` method for the '{self.name}' translations admin")
+
+    def _model_white_label_query_set(self, user: User):
+        query_set = self.Model.objects.all()
+
+        if user.is_superuser:
+            return query_set
+
+        return query_set.filter(white_label__in=user.white_labels.all())
+
+    def _wapper(self, func):
+        @login_required(login_url="/admin/login")
+        @staff_member_required
+        def check_white_label_access(*args, **kwargs):
+            func(*args, **kwargs)
+
+        return check_white_label_access
+
+    def urls(self):
+        return [
+            path(f"admin/{self.name}", self._wapper(self._list_router)),
+            path(f"admin/{self.name}/filter", self._wapper(self._filter_router)),
+            path(f"admin/{self.name}/create", self._wapper(self._form_router)),
+            path(f"admin/{self.name}/<int:id>", self._wapper(self._page_router)),
+        ]
+
+    def _list_router(self, request, *args, **kwargs):
+        if request.method == "GET":
+            self._list_router(request, *args, **kwargs)
+        elif request.method == "POST":
+            self._add_view(request, *args, **kwargs)
+
+        raise Http404()
+
+    def _filter_router(self, request, *args, **kwargs):
+        if request.method == "GET":
+            self._filter_view(request, *args, **kwargs)
+
+        raise Http404()
+
+    def _page_router(self, request, *args, **kwargs):
+        if request.method == "GET":
+            self._object_page_view(request, *args, **kwargs)
+
+        raise Http404()
+
+    def _form_router(self, request, *args, **kwargs):
+        if request.method == "GET":
+            self._add_form_view(request, *args, **kwargs)
+
+        raise Http404()
 
 
 class NewProgramForm(WhiteLabelForm):
