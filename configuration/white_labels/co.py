@@ -170,6 +170,7 @@ class CoConfigurationData(ConfigurationData):
             "_default_message": "FIRC Summit Resource Center",
         },
         "ccig": "Colorado Design Insight Group",
+        "coAccess": "Colorado Access",
         "searchEngine": {"_label": "referralOptions.searchEngine", "_default_message": "Google or other search engine"},
         "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
         "friend": {"_label": "referralOptions.friend", "_default_message": "Friend / Family / Word of Mouth"},
@@ -393,10 +394,8 @@ class CoConfigurationData(ConfigurationData):
         "rent": {"_label": "expenseOptions.rent", "_default_message": "Rent"},
         "telephone": {"_label": "expenseOptions.telephone", "_default_message": "Telephone"},
         "internet": {"_label": "expenseOptions.internet", "_default_message": "Internet"},
-        "auto": {"_label": "expenseOptions.auto", "_default_message": "Auto Insurance Premium &/or Payment"},
         "otherUtilities": {"_label": "expenseOptions.otherUtilities", "_default_message": "Other Utilities"},
         "heating": {"_label": "expenseOptions.heating", "_default_message": "Heating"},
-        "creditCard": {"_label": "expenseOptions.creditCard", "_default_message": "Credit Card Debt"},
         "mortgage": {"_label": "expenseOptions.mortgage", "_default_message": "Mortgage"},
         "propertyTax": {"_label": "expenseOptions.propertyTax", "_default_message": "Property Taxes"},
         "hoa": {"_label": "expenseOptions.hoa", "_default_message": "Homeowners or Condo Association Fees and Dues"},
@@ -405,8 +404,6 @@ class CoConfigurationData(ConfigurationData):
             "_default_message": "Homeowners Insurance",
         },
         "medical": {"_label": "expenseOptions.medical", "_default_message": "Medical Insurance Premium &/or Bills"},
-        "personalLoan": {"_label": "expenseOptions.personalLoan", "_default_message": "Personal Loan"},
-        "studentLoans": {"_label": "expenseOptions.studentLoans", "_default_message": "Student Loans"},
         "cooling": {"_label": "expenseOptions.cooling", "_default_message": "Cooling"},
         "childCare": {"_label": "expenseOptions.childCare", "_default_message": "Child Care"},
         "childSupport": {"_label": "expenseOptions.childSupport", "_default_message": "Child Support (Paid)"},
@@ -2126,6 +2123,16 @@ class CoConfigurationData(ConfigurationData):
                         "_default_message": "Personalized support for first-time parents",
                     },
                 },
+                "cfhc": {
+                    "name": {
+                        "_label": "healthCareBenefits.connectForHealth",
+                        "_default_message": "Connect for Health/Premium Tax Credit: ",
+                    },
+                    "description": {
+                        "_label": "healthCareBenefits.connectForHealth_desc",
+                        "_default_message": "Health insurance marketplace premium tax credit",
+                    },
+                },
             },
             "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
         },
@@ -2165,6 +2172,16 @@ class CoConfigurationData(ConfigurationData):
                         "_default_message": "Family Affordability Tax Credit: ",
                     },
                     "description": {"_label": "taxCreditBenefits.fatc_desc", "_default_message": "State tax credit"},
+                },
+                "shitc": {
+                    "name": {
+                        "_label": "taxCreditBenefits.seniorHousingIncomeTaxCredit",
+                        "_default_message": "Senior Housing Income Tax Credit: ",
+                    },
+                    "description": {
+                        "_label": "taxCreditBenefits.seniorHousingIncomeTaxCredit_desc",
+                        "_default_message": "State tax credit for people 65 years of age or older",
+                    },
                 },
             },
             "category_name": {"_label": "taxCredits", "_default_message": "Tax Credits"},
@@ -2312,7 +2329,7 @@ class CoConfigurationData(ConfigurationData):
         "noResultMessage": {
             "default": {
                 "_label": "noResultMessage",
-                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the \"Near-Term Benefits\" tab. For additional resources, please click the 'More Help' button below to get the resources you're looking for.",
             },
         },
     }
