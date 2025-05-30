@@ -7,7 +7,7 @@ from .models import Translation
 from rest_framework.response import Response
 from rest_framework import views
 from django import forms
-from django.http import Http404, HttpResponse
+from django.http import HttpResponseBadRequest, HttpResponse, HttpResponseNotFound
 from django.db.models import ProtectedError
 from django.db import models
 from programs.models import (
@@ -275,6 +275,7 @@ class TranslationAdminViews:
             response = HttpResponse()
             response.headers["HX-Redirect"] = f"/api/translations/admin/{self.name}/{new_object.id}"
             return response
+        return HttpResponseBadRequest()
 
     def _new_object(self, form: Form) -> models.Model:
         raise NotImplemented(f"Please add the `new_object` method for the '{self.name}' translations admin")
@@ -334,25 +335,25 @@ class TranslationAdminViews:
         elif request.method == "POST":
             return self._add_view(request, *args, **kwargs)
 
-        raise Http404()
+        raise HttpResponseNotFound()
 
     def _filter_router(self, request, *args, **kwargs):
         if request.method == "GET":
             return self._filter_view(request, *args, **kwargs)
 
-        raise Http404()
+        raise HttpResponseNotFound()
 
     def _page_router(self, request, *args, **kwargs):
         if request.method == "GET":
             return self._object_page_view(request, *args, **kwargs)
 
-        raise Http404()
+        raise HttpResponseNotFound()
 
     def _form_router(self, request, *args, **kwargs):
         if request.method == "GET":
             return self._add_form_view(request, *args, **kwargs)
 
-        raise Http404()
+        raise HttpResponseNotFound()
 
 
 class ProgramTranslationAdmin(TranslationAdminViews):
