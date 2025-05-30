@@ -316,7 +316,7 @@ class TranslationAdminViews:
         @login_required(login_url="/admin/login")
         @staff_member_required
         def check_white_label_access(*args, **kwargs):
-            func(*args, **kwargs)
+            return func(*args, **kwargs)
 
         return check_white_label_access
 
@@ -330,508 +330,168 @@ class TranslationAdminViews:
 
     def _list_router(self, request, *args, **kwargs):
         if request.method == "GET":
-            self._list_router(request, *args, **kwargs)
+            return self._list_view(request, *args, **kwargs)
         elif request.method == "POST":
-            self._add_view(request, *args, **kwargs)
+            return self._add_view(request, *args, **kwargs)
 
         raise Http404()
 
     def _filter_router(self, request, *args, **kwargs):
         if request.method == "GET":
-            self._filter_view(request, *args, **kwargs)
+            return self._filter_view(request, *args, **kwargs)
 
         raise Http404()
 
     def _page_router(self, request, *args, **kwargs):
         if request.method == "GET":
-            self._object_page_view(request, *args, **kwargs)
+            return self._object_page_view(request, *args, **kwargs)
 
         raise Http404()
 
     def _form_router(self, request, *args, **kwargs):
         if request.method == "GET":
-            self._add_form_view(request, *args, **kwargs)
+            return self._add_form_view(request, *args, **kwargs)
 
         raise Http404()
 
 
-class NewProgramForm(WhiteLabelForm):
-    name_abbreviated = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+class ProgramTranslationAdmin(TranslationAdminViews):
+    name = "programs"
 
+    class Form(WhiteLabelForm):
+        name_abbreviated = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
 
-@login_required(login_url="/admin/login")
-@staff_member_required
-def programs_view(request):
-    if request.method == "GET":
-        programs = model_white_label_query_set(Program, request.user).order_by("external_name")
+    Model = Program
 
-        paginator = Paginator(programs, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+    def _new_object(self, form: Form) -> models.Model:
+        return self.Model.objects.new_program(form["white_label"].value(), form["name_abbreviated"].value())
 
-        context = {"page_obj": page_obj}
-
-        return render(request, "programs/main.html", context)
-    elif request.method == "POST":
-        form = NewProgramForm(request.POST, user=request.user)
-        if form.is_valid():
-            program = Program.objects.new_program(form["white_label"].value(), form["name_abbreviated"].value())
-            response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/programs/{program.id}"
-            return response
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def create_program_view(request):
-    if request.method == "GET":
-        context = {"form": NewProgramForm(user=request.user), "route": "/api/translations/admin/programs"}
-
-        return render(request, "util/create_form.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def program_view(request, id=0):
-    if request.method == "GET":
-        program = Program.objects.get(pk=id)
-        context = {"program": program}
-
-        return render(request, "programs/program.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def programs_filter_view(request):
-    if request.method == "GET":
-        programs = (
-            model_white_label_query_set(Program, request.user)
-            .filter(name__translations__text__icontains=request.GET.get("name", ""))
-            .distinct()
-            .order_by("external_name")
+    def _filter_query_set(self, request):
+        return self._model_white_label_query_set(request.user).filter(
+            name__translations__text__icontains=request.GET.get("name", "")
         )
 
-        paginator = Paginator(programs, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
 
-        context = {"page_obj": page_obj}
+class NavigatorTranslationAdmin(TranslationAdminViews):
+    name = "navigators"
 
-        return render(request, "programs/list.html", context)
+    class Form(WhiteLabelForm):
+        label = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "input"}))
+        phone_number = PhoneNumberField(required=False, widget=forms.TextInput(attrs={"class": "input"}))
 
+    Model = Navigator
 
-class NewNavigatorForm(WhiteLabelForm):
-    label = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "input"}))
-    phone_number = PhoneNumberField(required=False, widget=forms.TextInput(attrs={"class": "input"}))
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def navigators_view(request):
-    if request.method == "GET":
-        navigators = model_white_label_query_set(Navigator, request.user).order_by("external_name")
-
-        paginator = Paginator(navigators, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-
-        return render(request, "navigators/main.html", context)
-    if request.method == "POST":
-        form = NewNavigatorForm(request.POST, user=request.user)
-        if form.is_valid():
-            navigator = Navigator.objects.new_navigator(
-                form["white_label"].value(),
-                form["label"].value(),
-                form["phone_number"].value(),
-            )
-            response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/navigators/{navigator.id}"
-            return response
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def create_navigator_view(request):
-    if request.method == "GET":
-        context = {"form": NewNavigatorForm(user=request.user), "route": "/api/translations/admin/navigators"}
-
-        return render(request, "util/create_form.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def navigator_view(request, id=0):
-    if request.method == "GET":
-        navigator = Navigator.objects.get(pk=id)
-        context = {"navigator": navigator}
-
-        return render(request, "navigators/navigator.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def navigator_filter_view(request):
-    if request.method == "GET":
-        navigators = (
-            model_white_label_query_set(Navigator, request.user)
-            .filter(name__translations__text__icontains=request.GET.get("name", ""))
-            .distinct()
-            .order_by("external_name")
+    def _new_object(self, form: Form) -> models.Model:
+        return self.Model.objects.new_navigator(
+            form["white_label"].value(),
+            form["label"].value(),
+            form["phone_number"].value(),
         )
 
-        paginator = Paginator(navigators, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-
-        return render(request, "navigators/list.html", context)
-
-
-class NewUrgentNeedForm(WhiteLabelForm):
-    label = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "input"}))
-    phone_number = PhoneNumberField(required=False, widget=forms.TextInput(attrs={"class": "input"}))
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def urgent_needs_view(request):
-    if request.method == "GET":
-        urgent_needs = model_white_label_query_set(UrgentNeed, request.user).order_by("external_name")
-
-        paginator = Paginator(urgent_needs, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-        return render(request, "urgent_needs/main.html", context)
-    if request.method == "POST":
-        form = NewUrgentNeedForm(request.POST, user=request.user)
-        if form.is_valid():
-            urgent_need = UrgentNeed.objects.new_urgent_need(
-                form["white_label"].value(),
-                form["label"].value(),
-                form["phone_number"].value(),
-            )
-            response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/urgent_needs/{urgent_need.id}"
-            return response
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def create_urgent_need_view(request):
-    if request.method == "GET":
-        context = {"form": NewUrgentNeedForm(user=request.user), "route": "/api/translations/admin/urgent_needs"}
-
-        return render(request, "util/create_form.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def urgent_need_view(request, id=0):
-    if request.method == "GET":
-        urgent_need = UrgentNeed.objects.get(pk=id)
-        context = {"urgent_need": urgent_need}
-
-        return render(request, "urgent_needs/urgent_need.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def urgent_need_filter_view(request):
-    if request.method == "GET":
-        urgent_needs = (
-            model_white_label_query_set(UrgentNeed, request.user)
-            .filter(name__translations__text__icontains=request.GET.get("name", ""))
-            .distinct()
-            .order_by("external_name")
+    def _filter_query_set(self, request):
+        return self._model_white_label_query_set(request.user).filter(
+            name__translations__text__icontains=request.GET.get("name", "")
         )
 
-        paginator = Paginator(urgent_needs, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
 
-        context = {"page_obj": page_obj}
+class UrgentNeedTranslationAdmin(TranslationAdminViews):
+    name = "urgent_needs"
 
-        return render(request, "urgent_needs/list.html", context)
+    class Form(WhiteLabelForm):
+        label = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "input"}))
+        phone_number = PhoneNumberField(required=False, widget=forms.TextInput(attrs={"class": "input"}))
 
+    Model = UrgentNeed
 
-class NewDocumentForm(WhiteLabelForm):
-    external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def documents_view(request):
-    if request.method == "GET":
-        documents = model_white_label_query_set(Document, request.user).order_by("external_name")
-
-        paginator = Paginator(documents, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-        return render(request, "documents/main.html", context)
-    if request.method == "POST":
-        form = NewDocumentForm(request.POST, user=request.user)
-        if form.is_valid():
-            document = Document.objects.new_document(form["white_label"].value(), form["external_name"].value())
-            response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/documents/{document.id}"
-            return response
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def create_document_view(request):
-    if request.method == "GET":
-        context = {"form": NewDocumentForm(user=request.user), "route": "/api/translations/admin/documents"}
-
-        return render(request, "util/create_form.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def document_view(request, id=0):
-    if request.method == "GET":
-        document = Document.objects.get(pk=id)
-        context = {"document": document}
-
-        return render(request, "documents/document.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def document_filter_view(request):
-    if request.method == "GET":
-        query = request.GET.get("name", "")
-        documents = (
-            model_white_label_query_set(Document, request.user)
-            .filter(external_name__contains=query)
-            .order_by("external_name")
+    def _new_object(self, form: Form) -> models.Model:
+        return self.Model.objects.new_urgent_need(
+            form["white_label"].value(),
+            form["label"].value(),
+            form["phone_number"].value(),
         )
 
-        paginator = Paginator(documents, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-
-        return render(request, "documents/list.html", context)
-
-
-class NewWarningMessageForm(WhiteLabelForm):
-    external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
-    calculator_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def warning_messages_view(request):
-    if request.method == "GET":
-        warnings = model_white_label_query_set(WarningMessage, request.user).order_by("external_name")
-
-        paginator = Paginator(warnings, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-        return render(request, "warning_messages/main.html", context)
-    if request.method == "POST":
-        form = NewWarningMessageForm(request.POST, user=request.user)
-        if form.is_valid():
-            warning = WarningMessage.objects.new_warning(
-                form["white_label"].value(), form["calculator_name"].value(), form["external_name"].value()
-            )
-            response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/warning_messages/{warning.id}"
-            return response
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def create_warning_message_view(request):
-    if request.method == "GET":
-        context = {
-            "form": NewWarningMessageForm(user=request.user),
-            "route": "/api/translations/admin/warning_messages",
-        }
-
-        return render(request, "util/create_form.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def warning_message_view(request, id=0):
-    if request.method == "GET":
-        warning = WarningMessage.objects.get(pk=id)
-        context = {"warning": warning}
-
-        return render(request, "warning_messages/warning_message.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def warning_messages_filter_view(request):
-    if request.method == "GET":
-        query = request.GET.get("name", "")
-        warnings = (
-            model_white_label_query_set(WarningMessage, request.user)
-            .filter(external_name__contains=query)
-            .order_by("external_name")
+    def _filter_query_set(self, request):
+        return self._model_white_label_query_set(request.user).filter(
+            name__translations__text__icontains=request.GET.get("name", "")
         )
 
-        paginator = Paginator(warnings, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
 
-        context = {"page_obj": page_obj}
+class DocumentTranslationAdmin(TranslationAdminViews):
+    name = "documents"
 
-        return render(request, "warning_messages/list.html", context)
+    class Form(WhiteLabelForm):
+        external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
 
+    Model = Document
 
-class NewTranslationOverrideForm(WhiteLabelForm):
-    external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
-    calculator_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
-    field_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+    def _new_object(self, form: Form) -> models.Model:
+        return self.Model.objects.new_document(form["white_label"].value(), form["external_name"].value())
 
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def translation_overrides_view(request):
-    if request.method == "GET":
-        translation_overrides = model_white_label_query_set(TranslationOverride, request.user).order_by("external_name")
-
-        paginator = Paginator(translation_overrides, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-        return render(request, "translation_overrides/main.html", context)
-    if request.method == "POST":
-        form = NewTranslationOverrideForm(request.POST, user=request.user)
-        if form.is_valid():
-            translation_override = TranslationOverride.objects.new_translation_override(
-                form["white_label"].value(),
-                form["calculator_name"].value(),
-                form["field_name"].value(),
-                form["external_name"].value(),
-            )
-            response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/translation_overrides/{translation_override.id}"
-            return response
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def create_translation_override_view(request):
-    if request.method == "GET":
-        context = {
-            "form": NewTranslationOverrideForm(user=request.user),
-            "route": "/api/translations/admin/translation_overrides",
-        }
-
-        return render(request, "util/create_form.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def translation_override_view(request, id=0):
-    if request.method == "GET":
-        translation_override = TranslationOverride.objects.get(pk=id)
-        context = {"translation_override": translation_override}
-
-        return render(request, "translation_overrides/translation_override.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def translation_override_filter_view(request):
-    if request.method == "GET":
-        query = request.GET.get("name", "")
-        translation_overrides = (
-            model_white_label_query_set(TranslationOverride, request.user)
-            .filter(external_name__contains=query)
-            .order_by("external_name")
+    def _filter_query_set(self, request):
+        return self._model_white_label_query_set(request.user).filter(
+            external_name__contains=request.GET.get("name", "")
         )
 
-        paginator = Paginator(translation_overrides, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
 
-        context = {"page_obj": page_obj}
+class WarningMessageTranslationAdmin(TranslationAdminViews):
+    name = "warning_messages"
 
-        return render(request, "translation_overrides/list.html", context)
+    class Form(WhiteLabelForm):
+        external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+        calculator_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
 
+    Model = WarningMessage
 
-class NewProgramCategoryForm(WhiteLabelForm):
-    external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
-    icon = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def program_categories_view(request):
-    if request.method == "GET":
-        program_categories = model_white_label_query_set(ProgramCategory, request.user).order_by("external_name")
-
-        paginator = Paginator(program_categories, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-        return render(request, "program_categories/main.html", context)
-    if request.method == "POST":
-        form = NewProgramCategoryForm(request.POST, user=request.user)
-        if form.is_valid():
-            program_category = ProgramCategory.objects.new_program_category(
-                form["white_label"].value(), form["external_name"].value(), form["icon"].value()
-            )
-            response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/program_categories/{program_category.id}"
-            return response
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def create_program_category_view(request):
-    if request.method == "GET":
-        context = {
-            "form": NewProgramCategoryForm(user=request.user),
-            "route": "/api/translations/admin/program_categories",
-        }
-
-        return render(request, "util/create_form.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def program_category_view(request, id=0):
-    if request.method == "GET":
-        program_category = ProgramCategory.objects.get(pk=id)
-        context = {"program_category": program_category}
-
-        return render(request, "program_categories/program_category.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def program_category_filter_view(request):
-    if request.method == "GET":
-        query = request.GET.get("name", "")
-        program_categories = (
-            model_white_label_query_set(ProgramCategory, request.user)
-            .filter(external_name__contains=query)
-            .order_by("external_name")
+    def _new_object(self, form: Form) -> models.Model:
+        return self.Model.objects.new_warning(
+            form["white_label"].value(), form["calculator_name"].value(), form["external_name"].value()
         )
 
-        paginator = Paginator(program_categories, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+    def _filter_query_set(self, request):
+        return self._model_white_label_query_set(request.user).filter(
+            external_name__contains=request.GET.get("name", "")
+        )
 
-        context = {"page_obj": page_obj}
 
-        return render(request, "program_categories/list.html", context)
+class TranslationOverrideTranslationAdmin(TranslationAdminViews):
+    name = "translation_overrides"
+
+    class Form(WhiteLabelForm):
+        external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+        calculator_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+        field_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+
+    Model = TranslationOverride
+
+    def _new_object(self, form: Form) -> models.Model:
+        return self.Model.objects.new_translation_override(
+            form["white_label"].value(),
+            form["calculator_name"].value(),
+            form["field_name"].value(),
+            form["external_name"].value(),
+        )
+
+    def _filter_query_set(self, request):
+        return self._model_white_label_query_set(request.user).filter(
+            external_name__contains=request.GET.get("name", "")
+        )
+
+
+class ProgramCategoryTranslationAdmin(TranslationAdminViews):
+    name = "program_categories"
+
+    class Form(WhiteLabelForm):
+        external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+        icon = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+
+    Model = ProgramCategory
+
+    def _new_object(self, form: Form) -> models.Model:
+        return self.Model.objects.new_program_category(
+            form["white_label"].value(), form["external_name"].value(), form["icon"].value()
+        )
+
+    def _filter_query_set(self, request):
+        return self._model_white_label_query_set(request.user).filter(
+            external_name__contains=request.GET.get("name", "")
+        )
