@@ -54,8 +54,10 @@ class NewTranslationForm(forms.Form):
 @login_required(login_url="/admin/login")
 @staff_member_required
 def admin_view(request):
+    # don't let non super users view/create the main translations
     if not request.user.is_superuser:
         return HttpResponseForbidden("/api/translations/admin/programs")
+
     if request.method == "GET":
         translations = Translation.objects.all().order_by("id")
         # Display 50 translations per page
@@ -94,6 +96,10 @@ def admin_view(request):
 @login_required(login_url="/admin/login")
 @staff_member_required
 def create_translation_view(request):
+    # don't let non super users create the main translations
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("/api/translations/admin/programs")
+
     context = {"form": NewTranslationForm(), "route": "/api/translations/admin"}
 
     return render(request, "util/create_form.html", context)
@@ -102,6 +108,10 @@ def create_translation_view(request):
 @login_required(login_url="/admin/login")
 @staff_member_required
 def filter_view(request):
+    # don't let non super users view the main translations
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("/api/translations/admin/programs")
+
     translations = Translation.objects.filter(label__icontains=request.GET.get("label", "")).translated(
         text__icontains=request.GET.get("text", "")
     )
@@ -134,11 +144,34 @@ class LabelForm(forms.Form):
     no_auto = forms.BooleanField(required=False)
 
 
+def has_translation_access(translation: Translation, user: User) -> bool:
+    if user.is_superuser:
+        return True
+    reverse_instances = translation.get_reverse_instances()
+
+    if len(reverse_instances) == 0:
+        return False
+
+    allowed_white_labels = user.white_labels.all().values_list("id", flat=True)
+
+    # only allow acces if the user can access all the models it is attached to
+    access_to_all = True
+    for reverse in reverse_instances:
+        if reverse.instance.white_label.id not in allowed_white_labels:
+            access_to_all = False
+
+    return access_to_all
+
+
 @login_required(login_url="/admin/login")
 @staff_member_required
 def translation_view(request, id=0):
+    translation = Translation.objects.prefetch_related("translations").get(pk=id)
+
+    if not has_translation_access(translation, request.user):
+        return HttpResponseForbidden()
+
     if request.method == "GET":
-        translation = Translation.objects.prefetch_related("translations").get(pk=id)
         langs = [lang["code"] for lang in settings.PARLER_LANGUAGES[None]]
 
         translations = {t.language_code: TranslationForm({"text": t.text}) for t in translation.translations.all()}
@@ -159,7 +192,6 @@ def translation_view(request, id=0):
     elif request.method == "POST":
         form = LabelForm(request.POST)
         if form.is_valid():
-            translation = Translation.objects.get(pk=id)
             translation.label = form["label"].value()
             translation.active = form["active"].value()
             translation.no_auto = form["no_auto"].value()
@@ -173,7 +205,7 @@ def translation_view(request, id=0):
             return render(request, "edit/label_form.html", context)
     elif request.method == "DELETE":
         try:
-            Translation.objects.get(pk=id).delete()
+            translation.delete()
         except ProtectedError:
             return render(
                 request,
@@ -190,6 +222,11 @@ def translation_view(request, id=0):
 @login_required(login_url="/admin/login")
 @staff_member_required
 def edit_translation(request, id=0, lang="en-us"):
+    translation = Translation.objects.get(pk=id)
+
+    if not has_translation_access(translation, request.user):
+        return HttpResponseForbidden()
+
     if request.method == "POST":
         form = TranslationForm(request.POST)
         if form.is_valid():
@@ -216,8 +253,12 @@ def edit_translation(request, id=0, lang="en-us"):
 @login_required(login_url="/admin/login")
 @staff_member_required
 def auto_translate(request, id=0, lang="en-us"):
+    translation = Translation.objects.language(settings.LANGUAGE_CODE).get(pk=id)
+
+    if not has_translation_access(translation, request.user):
+        return HttpResponseForbidden()
+
     if request.method == "POST":
-        translation = Translation.objects.language(settings.LANGUAGE_CODE).get(pk=id)
 
         auto = Translate().translate(lang, translation.text)
 
