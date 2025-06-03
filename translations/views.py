@@ -10,8 +10,8 @@ from django import forms
 from django.http import (
     HttpResponseBadRequest,
     HttpResponse,
-    HttpResponseForbidden,
     HttpResponseNotFound,
+    HttpResponseRedirect,
 )
 from django.db.models import ProtectedError
 from django.db import models
@@ -56,7 +56,7 @@ class NewTranslationForm(forms.Form):
 def admin_view(request):
     # don't let non super users view/create the main translations
     if not request.user.is_superuser:
-        return HttpResponseForbidden("/api/translations/admin/programs")
+        return HttpResponseRedirect("/api/translations/admin/programs")
 
     if request.method == "GET":
         translations = Translation.objects.all().order_by("id")
@@ -98,7 +98,7 @@ def admin_view(request):
 def create_translation_view(request):
     # don't let non super users create the main translations
     if not request.user.is_superuser:
-        return HttpResponseForbidden("/api/translations/admin/programs")
+        return HttpResponseRedirect("/api/translations/admin/programs")
 
     context = {"form": NewTranslationForm(), "route": "/api/translations/admin"}
 
@@ -110,7 +110,7 @@ def create_translation_view(request):
 def filter_view(request):
     # don't let non super users view the main translations
     if not request.user.is_superuser:
-        return HttpResponseForbidden("/api/translations/admin/programs")
+        return HttpResponseRedirect("/api/translations/admin/programs")
 
     translations = Translation.objects.filter(label__icontains=request.GET.get("label", "")).translated(
         text__icontains=request.GET.get("text", "")
@@ -169,7 +169,7 @@ def translation_view(request, id=0):
     translation = Translation.objects.prefetch_related("translations").get(pk=id)
 
     if not has_translation_access(translation, request.user):
-        return HttpResponseForbidden()
+        return HttpResponseRedirect("/api/translations/admin/programs")
 
     if request.method == "GET":
         langs = [lang["code"] for lang in settings.PARLER_LANGUAGES[None]]
@@ -225,7 +225,7 @@ def edit_translation(request, id=0, lang="en-us"):
     translation = Translation.objects.get(pk=id)
 
     if not has_translation_access(translation, request.user):
-        return HttpResponseForbidden()
+        return HttpResponseRedirect("/api/translations/admin/programs")
 
     if request.method == "POST":
         form = TranslationForm(request.POST)
@@ -256,7 +256,7 @@ def auto_translate(request, id=0, lang="en-us"):
     translation = Translation.objects.language(settings.LANGUAGE_CODE).get(pk=id)
 
     if not has_translation_access(translation, request.user):
-        return HttpResponseForbidden()
+        return HttpResponseRedirect("/api/translations/admin/programs")
 
     if request.method == "POST":
 

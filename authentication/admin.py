@@ -9,6 +9,8 @@ from .models import User
 
 
 class SecureAdmin(ModelAdmin):
+    always_can_view = False
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
@@ -16,7 +18,7 @@ class SecureAdmin(ModelAdmin):
             return qs
 
         if not self._model_has_white_label():
-            return qs.none()
+            return qs if self.always_can_view else qs.none()
 
         return qs.filter(white_label__in=request.user.white_labels.all())
 
@@ -33,7 +35,7 @@ class SecureAdmin(ModelAdmin):
         return obj.white_label in request.user.white_labels.all()
 
     def has_view_permission(self, request, obj=None):
-        return self.has_obj_permission(request, obj)
+        return self.has_obj_permission(request, obj) or self.always_can_view
 
     def has_change_permission(self, request, obj=None):
         return self.has_obj_permission(request, obj)
@@ -51,7 +53,7 @@ class SecureAdmin(ModelAdmin):
         if self._is_superuser(request):
             return True
 
-        return self._model_has_white_label()
+        return self._model_has_white_label() or self.always_can_view
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)

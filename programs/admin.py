@@ -107,6 +107,7 @@ class ProgramAdmin(SecureAdmin):
 
 
 class LegalStatusAdmin(SecureAdmin):
+    always_can_view = True
     search_fields = ("status",)
 
 
@@ -115,6 +116,7 @@ class CountiesAdmin(SecureAdmin):
 
 
 class NavigatorLanguageAdmin(SecureAdmin):
+    always_can_view = True
     search_fields = ("code",)
 
 
@@ -179,7 +181,7 @@ class WarningMessageAdmin(SecureAdmin):
         "counties",
         "legal_statuses",
     )
-    exclude = ["message"]
+    exclude = ["message", "link_url", "link_text"]
 
     def has_add_permission(self, request):
         return False
@@ -274,16 +276,19 @@ class UrgentNeedAdmin(SecureAdmin):
 
 
 class UrgentNeedCategoryAdmin(SecureAdmin):
+    always_can_view = True
     search_fields = ("name",)
     fields = ("name",)
 
 
 class UrgentNeedFunctionAdmin(SecureAdmin):
+    always_can_view = True
     search_fields = ("name",)
     fields = ("name",)
 
 
 class FederalPovertyLimitAdmin(SecureAdmin):
+    always_can_view = True
     search_fields = ("year",)
 
 
@@ -337,6 +342,7 @@ class ReferrerAdmin(SecureAdmin):
 
 
 class WebHookFunctionsAdmin(SecureAdmin):
+    always_can_view = True
     search_fields = ("name",)
 
 
