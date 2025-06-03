@@ -155,12 +155,11 @@ def has_translation_access(translation: Translation, user: User) -> bool:
     allowed_white_labels = user.white_labels.all().values_list("id", flat=True)
 
     # only allow acces if the user can access all the models it is attached to
-    access_to_all = True
     for reverse in reverse_instances:
         if reverse.instance.white_label.id not in allowed_white_labels:
-            access_to_all = False
+            return False
 
-    return access_to_all
+    return True
 
 
 @login_required(login_url="/admin/login")
