@@ -1,3 +1,4 @@
+import json
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.conf import settings
@@ -15,6 +16,8 @@ from programs.models import (
     Navigator,
     ProgramCategory,
     UrgentNeed,
+    UrgentNeedType,
+    CategoryIconName,
     Document,
     WarningMessage,
     TranslationOverride,
@@ -390,6 +393,85 @@ def navigator_filter_view(request):
 
         return render(request, "navigators/list.html", context)
 
+
+def get_urgent_need_icon_choices():
+    icons = CategoryIconName.objects.all().order_by("name")
+    return [(icon.name, icon.name) for icon in icons]
+
+
+class NewUrgentNeedTypeForm(WhiteLabelForm):
+    icon = forms.ChoiceField(
+        choices=get_urgent_need_icon_choices,
+        widget=forms.Select(attrs={"class": "input"})
+    )
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def urgent_need_types_view(request):
+    if request.method == "GET":
+        urgent_need_types = model_white_label_query_set(UrgentNeedType, request.user).order_by("icon")
+        
+        paginator = Paginator(urgent_need_types, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+        return render(request, "urgent_need_types/main.html", context)
+    
+    if request.method == "POST":
+        form = NewUrgentNeedTypeForm(request.POST, user=request.user)
+        if form.is_valid():
+            icon_instance = CategoryIconName.objects.get(name=form["icon"].value())
+            urgent_need_type = UrgentNeedType.objects.new_urgent_need_type(
+                form["white_label"].value(),
+                icon_instance,
+            )
+            response = HttpResponse()
+            response.headers["HX-Redirect"] = f"/api/translations/admin/urgent_need_types/{urgent_need_type.id}"
+            return response
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def create_urgent_need_type_view(request):
+    if request.method == "GET":
+        context = {
+            "form": NewUrgentNeedTypeForm(user=request.user),
+            "route": "/api/translations/admin/urgent_need_types",
+        }
+
+        return render(request, "util/create_form.html", context)
+    
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def urgent_need_type_view(request, id):
+    if request.method == "GET":
+        urgent_need_type = UrgentNeedType.objects.get(pk=id)
+        context = {"urgent_need_type": urgent_need_type}
+
+        return render(request, "urgent_need_types/urgent_need_type.html", context)
+
+
+@login_required(login_url="/admin/login")
+@staff_member_required
+def urgent_need_type_filter_view(request):
+    if request.method == "GET":
+        query = request.GET.get("name", "")
+        urgent_need_types = (
+            model_white_label_query_set(UrgentNeedType, request.user)
+            .filter(icon__contains=query)
+            .order_by("icon")
+        )
+
+        paginator = Paginator(urgent_need_types, 50)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {"page_obj": page_obj}
+
+        return render(request, "urgent_need_types/list.html", context)
 
 class NewUrgentNeedForm(WhiteLabelForm):
     label = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "input"}))
