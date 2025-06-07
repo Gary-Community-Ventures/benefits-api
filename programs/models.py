@@ -156,6 +156,13 @@ class LegalStatus(models.Model):
     def __str__(self):
         return self.status
 
+    
+class CategoryIconName(models.Model):
+    name = models.CharField(max_length=120)
+
+    def __str__(self):
+        return self.name
+
 
 class ProgramCategoryManager(models.Manager):
     translated_fields = ("name", "description")
@@ -169,9 +176,14 @@ class ProgramCategoryManager(models.Manager):
 
         # set white label
         white_label = WhiteLabel.objects.get(code=white_label)
+
+        # set icon
+        icon_instance = None
+        if icon:
+            icon_instance = CategoryIconName.objects.filter(name=icon).first()
         program_category = self.create(
             external_name=external_name,
-            icon=icon,
+            icon=icon_instance,
             white_label=white_label,
             **translations,
         )
@@ -238,7 +250,13 @@ class ProgramCategory(models.Model):
     )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     calculator = models.CharField(max_length=120, blank=True, null=True)
-    icon = models.CharField(max_length=120, blank=False, null=False)
+    icon = models.ForeignKey(
+        CategoryIconName,
+        related_name="program_categories_icon",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
     tax_category = models.BooleanField(default=False)
     name = models.ForeignKey(
         Translation,
@@ -260,6 +278,12 @@ class ProgramCategory(models.Model):
     objects = ProgramCategoryManager()
 
     TranslationExportBuilder = ProgramCategoryDataController
+
+    @property
+    def icon_name(self):
+        if self.icon is not None:
+            return self.icon.name
+        return "default"
 
     def __str__(self):
         white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
@@ -691,12 +715,77 @@ class UrgentNeedCategory(models.Model):
         return f"{self.name}"
 
 
+class UrgentNeedTypeManager(models.Manager):
+    translated_fields = ("name",)
+
+    def new_urgent_need_type(self, white_label: str, icon: str):
+        translations = {}
+        for field in self.translated_fields:
+            translations[field] = Translation.objects.add_translation(
+                f"urgent_need_type.{icon}_temporary_key-{field}"
+            )
+
+        # set white label
+        white_label = WhiteLabel.objects.get(code=white_label)
+
+        # set icon
+        icon_instance = None
+        if icon:
+            icon_instance = CategoryIconName.objects.filter(name=icon).first()
+        urgent_need_type = self.create(
+            icon=icon_instance,
+            white_label=white_label,
+            **translations,
+        )
+
+        for [field, translation] in translations.items():
+            translation.label = f"urgent_need_type.{icon}_{urgent_need_type.id}-{field}"
+            translation.save()
+
+        return urgent_need_type
+    
+
+class UrgentNeedType(models.Model):
+    white_label = models.ForeignKey(
+        WhiteLabel,
+        related_name="urgent_need_types",
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+    )
+    icon = models.ForeignKey(
+        CategoryIconName,
+        related_name="urgent_need_type_icon",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+    name = models.ForeignKey(
+        Translation,
+        related_name="urgent_need_type_name",
+        blank=False,
+        null=False,
+        on_delete=models.PROTECT,
+    )
+
+    objects = UrgentNeedTypeManager()
+
+    @property
+    def icon_name(self):
+        if self.icon is not None:
+            return self.icon.name
+        return "default"
+
+    def __str__(self):
+        white_label_name = f"[{self.white_label.name}] " if self.white_label and self.white_label.name else ""
+        return f"{white_label_name}{self.name.text}"
+
+
 class UrgentNeedManager(models.Manager):
     translated_fields = (
         "name",
         "description",
         "link",
-        "type",
         "warning",
         "website_description",
     )
@@ -867,7 +956,17 @@ class UrgentNeed(models.Model):
     )
     external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     phone_number = PhoneNumberField(blank=True, null=True)
-    type_short = models.ManyToManyField(UrgentNeedCategory, related_name="urgent_needs")
+    type_short = models.ManyToManyField(
+        UrgentNeedCategory,
+        related_name="urgent_needs",
+    )
+    category_type = models.ForeignKey(
+        UrgentNeedType,
+        related_name="urgent_needs",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
     active = models.BooleanField(blank=True, null=False, default=True)
     low_confidence = models.BooleanField(blank=True, null=False, default=False)
     functions = models.ManyToManyField(UrgentNeedFunction, related_name="function", blank=True)
@@ -893,13 +992,6 @@ class UrgentNeed(models.Model):
     link = models.ForeignKey(
         Translation,
         related_name="urgent_need_link",
-        blank=False,
-        null=False,
-        on_delete=models.PROTECT,
-    )
-    type = models.ForeignKey(
-        Translation,
-        related_name="urgent_need_type",
         blank=False,
         null=False,
         on_delete=models.PROTECT,
