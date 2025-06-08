@@ -541,7 +541,9 @@ def urgent_need_results(screen: Screen, data):
         UrgentNeed.objects.prefetch_related(
             "functions", "counties", *translations_prefetch_name("", UrgentNeed.objects.translated_fields)
         )
-        .filter(type_short__name__in=list_of_needs, category_type__isnull=False, active=True, white_label=screen.white_label)
+        .filter(
+            type_short__name__in=list_of_needs, category_type__isnull=False, active=True, white_label=screen.white_label
+        )
         .distinct()
     )
 

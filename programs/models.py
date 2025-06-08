@@ -156,7 +156,7 @@ class LegalStatus(models.Model):
     def __str__(self):
         return self.status
 
-    
+
 class CategoryIconName(models.Model):
     name = models.CharField(max_length=120)
 
@@ -721,9 +721,7 @@ class UrgentNeedTypeManager(models.Manager):
     def new_urgent_need_type(self, white_label: str, icon: str):
         translations = {}
         for field in self.translated_fields:
-            translations[field] = Translation.objects.add_translation(
-                f"urgent_need_type.{icon}_temporary_key-{field}"
-            )
+            translations[field] = Translation.objects.add_translation(f"urgent_need_type.{icon}_temporary_key-{field}")
 
         # set white label
         white_label = WhiteLabel.objects.get(code=white_label)
@@ -743,7 +741,7 @@ class UrgentNeedTypeManager(models.Manager):
             translation.save()
 
         return urgent_need_type
-    
+
 
 class UrgentNeedType(models.Model):
     white_label = models.ForeignKey(

@@ -15,7 +15,6 @@ class Migration(migrations.Migration):
             model_name="programcategory",
             name="icon",
         ),
-
         migrations.AddField(
             model_name="programcategory",
             name="icon",

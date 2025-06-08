@@ -42,7 +42,7 @@ class UrgentNeedViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewse
 
     def get_queryset(self):
         return UrgentNeed.objects.filter(active=True, white_label__code=self.kwargs["white_label"])
-    
+
 
 class UrgentNeedTypeViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = UrgentNeedTypeSerializer

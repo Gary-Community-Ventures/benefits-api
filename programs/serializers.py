@@ -33,7 +33,7 @@ class UrgentNeedSerializer(serializers.ModelSerializer):
 
     class Meta(UrgentNeedSerializerMeta):
         pass
-    
+
 
 class ProgramSerializerWithCategory(ProgramSerializer):
     category = ModelTranslationSerializer(source="category.name")

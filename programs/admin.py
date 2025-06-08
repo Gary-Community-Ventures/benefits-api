@@ -527,7 +527,7 @@ class UrgentNeedTypeAdmin(ModelAdmin):
 
 class CategoryIconNameAdmin(ModelAdmin):
     search_fields = ("name",)
-    
+
 
 admin.site.register(LegalStatus, LegalStatusAdmin)
 admin.site.register(Program, ProgramAdmin)

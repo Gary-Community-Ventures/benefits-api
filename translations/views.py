@@ -400,10 +400,7 @@ def get_urgent_need_icon_choices():
 
 
 class NewUrgentNeedTypeForm(WhiteLabelForm):
-    icon = forms.ChoiceField(
-        choices=get_urgent_need_icon_choices,
-        widget=forms.Select(attrs={"class": "input"})
-    )
+    icon = forms.ChoiceField(choices=get_urgent_need_icon_choices, widget=forms.Select(attrs={"class": "input"}))
 
 
 @login_required(login_url="/admin/login")
@@ -411,14 +408,14 @@ class NewUrgentNeedTypeForm(WhiteLabelForm):
 def urgent_need_types_view(request):
     if request.method == "GET":
         urgent_need_types = model_white_label_query_set(UrgentNeedType, request.user).order_by("icon")
-        
+
         paginator = Paginator(urgent_need_types, 50)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
         context = {"page_obj": page_obj}
         return render(request, "urgent_need_types/main.html", context)
-    
+
     if request.method == "POST":
         form = NewUrgentNeedTypeForm(request.POST, user=request.user)
         if form.is_valid():
@@ -442,7 +439,7 @@ def create_urgent_need_type_view(request):
         }
 
         return render(request, "util/create_form.html", context)
-    
+
 
 @login_required(login_url="/admin/login")
 @staff_member_required
@@ -460,9 +457,7 @@ def urgent_need_type_filter_view(request):
     if request.method == "GET":
         query = request.GET.get("name", "")
         urgent_need_types = (
-            model_white_label_query_set(UrgentNeedType, request.user)
-            .filter(icon__contains=query)
-            .order_by("icon")
+            model_white_label_query_set(UrgentNeedType, request.user).filter(icon__contains=query).order_by("icon")
         )
 
         paginator = Paginator(urgent_need_types, 50)
@@ -472,6 +467,7 @@ def urgent_need_type_filter_view(request):
         context = {"page_obj": page_obj}
 
         return render(request, "urgent_need_types/list.html", context)
+
 
 class NewUrgentNeedForm(WhiteLabelForm):
     label = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "input"}))
