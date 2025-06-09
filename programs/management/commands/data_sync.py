@@ -195,7 +195,10 @@ class Command(BaseCommand):
 
             # Assign the urgent need types to the urgent needs.
             for need in UrgentNeed.objects.filter(white_label=white_label):
-                category_type = UrgentNeedType.objects.get(id=need_type_lookup.get(need.id))
+                category_type_id = need_type_lookup.get(need.id)
+                if not category_type_id:
+                    continue
+                category_type = UrgentNeedType.objects.get(id=category_type_id)
                 need.category_type = category_type
                 need.save()
 
