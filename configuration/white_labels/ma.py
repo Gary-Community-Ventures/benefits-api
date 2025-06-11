@@ -20,12 +20,21 @@ class MaConfigurationData(ConfigurationData):
     more_help_options = {
         "moreHelpOptions": [
             {
-                "name": {"_label": "moreHelp.ma.211.name", "_default_message": "Mass 211"},
-                "phone": {"_label": "moreHelp.ma.211.phone", "_default_message": "Dial 2-1-1 or 877.211.6277"},
+                "name": {
+                    "_label": "moreHelp.ma.211.name",
+                    "_default_message": "Mass 211",
+                },
+                "phone": {
+                    "_label": "moreHelp.ma.211.phone",
+                    "_default_message": "Dial 2-1-1 or 877.211.6277",
+                },
                 "link": "https://mass211.org/",
             },
             {
-                "name": {"_label": "moreHelp.ma.masscap.name", "_default_message": "MASSCAP Community Action Agencies"},
+                "name": {
+                    "_label": "moreHelp.ma.masscap.name",
+                    "_default_message": "MASSCAP Community Action Agencies",
+                },
                 "description": {
                     "_label": "moreHelp.ma.masscap.phone",
                     "_default_message": "Your local community action agency may be able to connect you to other resources and support services. Find an agency near you.",
@@ -125,14 +134,38 @@ class MaConfigurationData(ConfigurationData):
             "_label": "relationshipOptions.fosterChildOrKinshipChild.ma",
             "_default_message": "Foster Child / Kinship-Guardianship Care",
         },
-        "stepChild": {"_label": "relationshipOptions.stepChild", "_default_message": "Step-child"},
-        "grandChild": {"_label": "relationshipOptions.grandChild", "_default_message": "Grandchild"},
-        "spouse": {"_label": "relationshipOptions.spouse", "_default_message": "Spouse"},
-        "parent": {"_label": "relationshipOptions.parent", "_default_message": "Parent"},
-        "fosterParent": {"_label": "relationshipOptions.fosterParent", "_default_message": "Foster Parent"},
-        "stepParent": {"_label": "relationshipOptions.stepParent", "_default_message": "Step-parent"},
-        "grandParent": {"_label": "relationshipOptions.grandParent", "_default_message": "Grandparent"},
-        "sisterOrBrother": {"_label": "relationshipOptions.sisterOrBrother", "_default_message": "Sister/Brother"},
+        "stepChild": {
+            "_label": "relationshipOptions.stepChild",
+            "_default_message": "Step-child",
+        },
+        "grandChild": {
+            "_label": "relationshipOptions.grandChild",
+            "_default_message": "Grandchild",
+        },
+        "spouse": {
+            "_label": "relationshipOptions.spouse",
+            "_default_message": "Spouse",
+        },
+        "parent": {
+            "_label": "relationshipOptions.parent",
+            "_default_message": "Parent",
+        },
+        "fosterParent": {
+            "_label": "relationshipOptions.fosterParent",
+            "_default_message": "Foster Parent",
+        },
+        "stepParent": {
+            "_label": "relationshipOptions.stepParent",
+            "_default_message": "Step-parent",
+        },
+        "grandParent": {
+            "_label": "relationshipOptions.grandParent",
+            "_default_message": "Grandparent",
+        },
+        "sisterOrBrother": {
+            "_label": "relationshipOptions.sisterOrBrother",
+            "_default_message": "Sister/Brother",
+        },
         "stepSisterOrBrother": {
             "_label": "relationshipOptions.stepSisterOrBrother",
             "_default_message": "Step-sister/Step-brother",
@@ -141,14 +174,26 @@ class MaConfigurationData(ConfigurationData):
             "_label": "relationshipOptions.boyfriendOrGirlfriend",
             "_default_message": "Boyfriend/Girlfriend",
         },
-        "domesticPartner": {"_label": "relationshipOptions.domesticPartner", "_default_message": "Domestic Partner"},
-        "relatedOther": {"_label": "relationshipOptions.relatedOther", "_default_message": "Related in some other way"},
+        "domesticPartner": {
+            "_label": "relationshipOptions.domesticPartner",
+            "_default_message": "Domestic Partner",
+        },
+        "relatedOther": {
+            "_label": "relationshipOptions.relatedOther",
+            "_default_message": "Related in some other way",
+        },
     }
 
     referral_options = {
         "bch": "Boston Children's Hospital",
-        "socialMedia": {"_label": "referralOptions.socialMedia", "_default_message": "Social Media"},
-        "friend": {"_label": "referralOptions.friend", "_default_message": "Friend / Family / Word of Mouth"},
+        "socialMedia": {
+            "_label": "referralOptions.socialMedia",
+            "_default_message": "Social Media",
+        },
+        "friend": {
+            "_label": "referralOptions.friend",
+            "_default_message": "Friend / Family / Word of Mouth",
+        },
         "other": {"_label": "referralOptions.other", "_default_message": "Other"},
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
@@ -172,7 +217,10 @@ class MaConfigurationData(ConfigurationData):
     }
 
     income_options = {
-        "wages": {"_label": "incomeOptions.wages", "_default_message": "Wages, salaries, tips"},
+        "wages": {
+            "_label": "incomeOptions.wages",
+            "_default_message": "Wages, salaries, tips",
+        },
         "selfEmployment": {
             "_label": "incomeOptions.selfEmployment",
             "_default_message": "Income from freelance, independent contractor, or self-employment work",
@@ -185,18 +233,30 @@ class MaConfigurationData(ConfigurationData):
             "_label": "incomeOptions.sSRetirement",
             "_default_message": "Social Security Retirement Benefits",
         },
-        "sSI": {"_label": "incomeOptions.sSI", "_default_message": "Supplemental Security Income (SSI)"},
-        "childSupport": {"_label": "incomeOptions.childSupport", "_default_message": "Child Support (Received)"},
+        "sSI": {
+            "_label": "incomeOptions.sSI",
+            "_default_message": "Supplemental Security Income (SSI)",
+        },
+        "childSupport": {
+            "_label": "incomeOptions.childSupport",
+            "_default_message": "Child Support (Received)",
+        },
         "pension": {
             "_label": "incomeOptions.pension.ma",
             "_default_message": "Military, Government, or Private Pension",
         },
-        "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
+        "veteran": {
+            "_label": "incomeOptions.veteran",
+            "_default_message": "Veteran's Pension or Benefits",
+        },
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
             "_default_message": "Social Security Survivor's Benefits (Widowed)",
         },
-        "unemployment": {"_label": "incomeOptions.unemployment", "_default_message": "Unemployment Benefits"},
+        "unemployment": {
+            "_label": "incomeOptions.unemployment",
+            "_default_message": "Unemployment Benefits",
+        },
         "sSDependent": {
             "_label": "incomeOptions.sSDependent",
             "_default_message": "Social Security Dependent Benefits (retirement, disability, or survivors)",
@@ -205,7 +265,10 @@ class MaConfigurationData(ConfigurationData):
             "_label": "incomeOptions.cashAssistance.ma",
             "_default_message": "Government Cash Assistance (including TAFDC and EAEDC)",
         },
-        "gifts": {"_label": "incomeOptions.gifts", "_default_message": "Gifts/Contributions (Received)"},
+        "gifts": {
+            "_label": "incomeOptions.gifts",
+            "_default_message": "Gifts/Contributions (Received)",
+        },
         "investment": {
             "_label": "incomeOptions.investment",
             "_default_message": "Investment Income (interest, dividends, and profit from selling stocks)",
@@ -214,14 +277,26 @@ class MaConfigurationData(ConfigurationData):
             "_label": "incomeOptions.stateDisability.ma",
             "_default_message": "State Disability Benefits",
         },
-        "rental": {"_label": "incomeOptions.rental", "_default_message": "Rental Income"},
-        "alimony": {"_label": "incomeOptions.alimony", "_default_message": "Alimony (Received)"},
+        "rental": {
+            "_label": "incomeOptions.rental",
+            "_default_message": "Rental Income",
+        },
+        "alimony": {
+            "_label": "incomeOptions.alimony",
+            "_default_message": "Alimony (Received)",
+        },
         "deferredComp": {
             "_label": "incomeOptions.deferredComp",
             "_default_message": "Withdrawals from Deferred Compensation (IRA, Keogh, etc.)",
         },
-        "workersComp": {"_label": "incomeOptions.workersComp", "_default_message": "Worker's Compensation"},
-        "boarder": {"_label": "incomeOptions.boarder", "_default_message": "Boarder or Lodger"},
+        "workersComp": {
+            "_label": "incomeOptions.workersComp",
+            "_default_message": "Worker's Compensation",
+        },
+        "boarder": {
+            "_label": "incomeOptions.boarder",
+            "_default_message": "Boarder or Lodger",
+        },
     }
 
     health_insurance_options = {
@@ -244,7 +319,7 @@ class MaConfigurationData(ConfigurationData):
                 "icon": {"_icon": "PrivateInsurance", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "healthInsuranceOptions.private",
-                    "_default_message": "Private (non-employer) health insurance",
+                    "_default_message": "Private (student or non-employer) health insurance",
                 },
             },
             "mass_health": {
@@ -288,7 +363,7 @@ class MaConfigurationData(ConfigurationData):
                 "icon": {"_icon": "PrivateInsurance", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "healthInsuranceOptions.private",
-                    "_default_message": "Private (non-employer) health insurance",
+                    "_default_message": "Private (student or non-employer) health insurance",
                 },
             },
             "mass_health": {
@@ -316,35 +391,80 @@ class MaConfigurationData(ConfigurationData):
     }
 
     frequency_options = {
-        "weekly": {"_label": "frequencyOptions.weekly", "_default_message": "every week"},
-        "biweekly": {"_label": "frequencyOptions.biweekly", "_default_message": "every 2 weeks"},
-        "semimonthly": {"_label": "frequencyOptions.semimonthly", "_default_message": "twice a month"},
-        "monthly": {"_label": "frequencyOptions.monthly", "_default_message": "every month"},
+        "weekly": {
+            "_label": "frequencyOptions.weekly",
+            "_default_message": "every week",
+        },
+        "biweekly": {
+            "_label": "frequencyOptions.biweekly",
+            "_default_message": "every 2 weeks",
+        },
+        "semimonthly": {
+            "_label": "frequencyOptions.semimonthly",
+            "_default_message": "twice a month",
+        },
+        "monthly": {
+            "_label": "frequencyOptions.monthly",
+            "_default_message": "every month",
+        },
         "hourly": {"_label": "frequencyOptions.hourly", "_default_message": "hourly"},
     }
 
     expense_options = {
-        "rent": {"_label": "expenseOptions.nonSubidizedRent", "_default_message": "Rent (Non-Subsidized)"},
+        "rent": {
+            "_label": "expenseOptions.nonSubidizedRent",
+            "_default_message": "Rent (Non-Subsidized)",
+        },
         "subsidizedRent": {
             "_label": "expenseOptions.subidizedRent",
             "_default_message": "Rent (Public / Subidized Housing)",
         },
-        "telephone": {"_label": "expenseOptions.telephone", "_default_message": "Telephone"},
-        "internet": {"_label": "expenseOptions.internet", "_default_message": "Internet"},
-        "otherUtilities": {"_label": "expenseOptions.otherUtilities", "_default_message": "Other Utilities"},
+        "telephone": {
+            "_label": "expenseOptions.telephone",
+            "_default_message": "Telephone",
+        },
+        "internet": {
+            "_label": "expenseOptions.internet",
+            "_default_message": "Internet",
+        },
+        "otherUtilities": {
+            "_label": "expenseOptions.otherUtilities",
+            "_default_message": "Other Utilities",
+        },
         "heating": {"_label": "expenseOptions.heating", "_default_message": "Heating"},
-        "mortgage": {"_label": "expenseOptions.mortgage", "_default_message": "Mortgage"},
-        "propertyTax": {"_label": "expenseOptions.propertyTax", "_default_message": "Property Taxes"},
-        "hoa": {"_label": "expenseOptions.hoa", "_default_message": "Homeowners or Condo Association Fees and Dues"},
+        "mortgage": {
+            "_label": "expenseOptions.mortgage",
+            "_default_message": "Mortgage",
+        },
+        "propertyTax": {
+            "_label": "expenseOptions.propertyTax",
+            "_default_message": "Property Taxes",
+        },
+        "hoa": {
+            "_label": "expenseOptions.hoa",
+            "_default_message": "Homeowners or Condo Association Fees and Dues",
+        },
         "homeownersInsurance": {
             "_label": "expenseOptions.homeownersInsurance",
             "_default_message": "Homeowners Insurance",
         },
-        "medical": {"_label": "expenseOptions.medical", "_default_message": "Medical Insurance Premium &/or Bills"},
+        "medical": {
+            "_label": "expenseOptions.medical",
+            "_default_message": "Medical Insurance Premium &/or Bills",
+        },
         "cooling": {"_label": "expenseOptions.cooling", "_default_message": "Cooling"},
-        "childCare": {"_label": "expenseOptions.childCare", "_default_message": "Child Care"},
-        "childSupport": {"_label": "expenseOptions.childSupport", "_default_message": "Child Support (Paid)"},
-        "dependentCare": {"_label": "expenseOptions.dependentCare", "_default_message": "Dependent Care"},
+        "childCare": {
+            "_label": "expenseOptions.childCare",
+            "_default_message": "Child Care",
+        },
+        "childSupport": {
+            "_label": "expenseOptions.childSupport",
+            "_default_message": "Child Support (Paid)",
+        },
+        "dependentCare": {
+            "_label": "expenseOptions.dependentCare",
+            "_default_message": "Dependent Care",
+        },
     }
 
     condition_options = {
@@ -364,7 +484,10 @@ class MaConfigurationData(ConfigurationData):
                 },
             },
             "blindOrVisuallyImpaired": {
-                "icon": {"_icon": "BlindOrVisuallyImpaired", "_classname": "option-card-icon"},
+                "icon": {
+                    "_icon": "BlindOrVisuallyImpaired",
+                    "_classname": "option-card-icon",
+                },
                 "text": {
                     "_label": "conditionOptions.blindOrVisuallyImpaired",
                     "_default_message": "Blind or visually impaired",
@@ -378,7 +501,10 @@ class MaConfigurationData(ConfigurationData):
                 },
             },
             "longTermDisability": {
-                "icon": {"_icon": "LongTermDisability", "_classname": "option-card-icon"},
+                "icon": {
+                    "_icon": "LongTermDisability",
+                    "_classname": "option-card-icon",
+                },
                 "text": {
                     "_label": "conditionOptions.longTermDisability",
                     "_default_message": "Any medical or developmental condition that has lasted, or is expected to last, more than 12 months",
@@ -401,7 +527,10 @@ class MaConfigurationData(ConfigurationData):
                 },
             },
             "blindOrVisuallyImpaired": {
-                "icon": {"_icon": "BlindOrVisuallyImpaired", "_classname": "option-card-icon"},
+                "icon": {
+                    "_icon": "BlindOrVisuallyImpaired",
+                    "_classname": "option-card-icon",
+                },
                 "text": {
                     "_label": "conditionOptions.blindOrVisuallyImpaired",
                     "_default_message": "Blind or visually impaired",
@@ -415,7 +544,10 @@ class MaConfigurationData(ConfigurationData):
                 },
             },
             "longTermDisability": {
-                "icon": {"_icon": "LongTermDisability", "_classname": "option-card-icon"},
+                "icon": {
+                    "_icon": "LongTermDisability",
+                    "_classname": "option-card-icon",
+                },
                 "text": {
                     "_label": "conditionOptions.longTermDisability",
                     "_default_message": "Any medical or developmental condition that has lasted, or is expected to last, more than 12 months",
@@ -1221,7 +1353,10 @@ class MaConfigurationData(ConfigurationData):
                     },
                 },
             },
-            "category_name": {"_label": "cashAssistance", "_default_message": "Cash Assistance"},
+            "category_name": {
+                "_label": "cashAssistance",
+                "_default_message": "Cash Assistance",
+            },
         },
         "foodAndNutrition": {
             "benefits": {
@@ -1266,7 +1401,10 @@ class MaConfigurationData(ConfigurationData):
                     },
                 },
             },
-            "category_name": {"_label": "foodAndNutrition", "_default_message": "Food and Nutrition"},
+            "category_name": {
+                "_label": "foodAndNutrition",
+                "_default_message": "Food and Nutrition",
+            },
         },
         "childCare": {
             "benefits": {
@@ -1289,14 +1427,20 @@ class MaConfigurationData(ConfigurationData):
         "housingAndUtilities": {
             "benefits": {
                 "lifeline": {
-                    "name": {"_label": "housingAndUtilities.lifeline", "_default_message": "Lifeline: "},
+                    "name": {
+                        "_label": "housingAndUtilities.lifeline",
+                        "_default_message": "Lifeline: ",
+                    },
                     "description": {
                         "_label": "housingAndUtilities.lifeline_desc",
                         "_default_message": "Phone or internet discount",
                     },
                 },
             },
-            "category_name": {"_label": "housingAndUtilities", "_default_message": "Housing and Utilities"},
+            "category_name": {
+                "_label": "housingAndUtilities",
+                "_default_message": "Housing and Utilities",
+            },
         },
         "transportation": {
             "benefits": {
@@ -1311,7 +1455,10 @@ class MaConfigurationData(ConfigurationData):
                     },
                 }
             },
-            "category_name": {"_label": "transportation", "_default_message": "Transportation"},
+            "category_name": {
+                "_label": "transportation",
+                "_default_message": "Transportation",
+            },
         },
         "healthCare": {
             "benefits": {
@@ -1326,7 +1473,10 @@ class MaConfigurationData(ConfigurationData):
                     },
                 },
             },
-            "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
+            "category_name": {
+                "_label": "healthCare",
+                "_default_message": "Health Care",
+            },
         },
         "taxCredits": {
             "benefits": {
@@ -1341,8 +1491,14 @@ class MaConfigurationData(ConfigurationData):
                     },
                 },
                 "ctc": {
-                    "name": {"_label": "taxCreditBenefits.ctc", "_default_message": "Child Tax Credit (CTC): "},
-                    "description": {"_label": "taxCreditBenefits.ctc_desc", "_default_message": "Federal tax credit"},
+                    "name": {
+                        "_label": "taxCreditBenefits.ctc",
+                        "_default_message": "Child Tax Credit (CTC): ",
+                    },
+                    "description": {
+                        "_label": "taxCreditBenefits.ctc_desc",
+                        "_default_message": "Federal tax credit",
+                    },
                 },
                 "ma_maeitc": {
                     "name": {
@@ -1365,7 +1521,10 @@ class MaConfigurationData(ConfigurationData):
                     },
                 },
             },
-            "category_name": {"_label": "taxCredits", "_default_message": "Tax Credits"},
+            "category_name": {
+                "_label": "taxCredits",
+                "_default_message": "Tax Credits",
+            },
         },
     }
 
@@ -1385,7 +1544,10 @@ class MaConfigurationData(ConfigurationData):
             "default": "MFB_MALogo",
         },
         "logoAlt": {
-            "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
+            "default": {
+                "id": "referrerHook.logoAlts.default",
+                "defaultMessage": "MyFriendBen home page button",
+            },
         },
         "logoFooterSource": {"default": "MFB_Logo"},
         "logoFooterAlt": {
