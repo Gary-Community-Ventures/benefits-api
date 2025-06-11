@@ -201,6 +201,8 @@ class ScreenSerializer(serializers.ModelSerializer):
             "has_rag",
             "has_nfp",
             "has_fatc",
+            "has_cfhc",
+            "has_shitc",
             "has_section_8",
             "has_csfp",
             "has_ccdf",
@@ -372,6 +374,7 @@ class EligibilitySerializer(serializers.Serializer):
     estimated_value_override = TranslationSerializer()
     warning_messages = WarningMessageSerializer(many=True)
     required_programs = serializers.ListField(child=serializers.IntegerField())
+    value_format = serializers.CharField()
 
     class Meta:
         fields = "__all__"
