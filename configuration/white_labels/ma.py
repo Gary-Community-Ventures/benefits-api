@@ -244,7 +244,7 @@ class MaConfigurationData(ConfigurationData):
                 "icon": {"_icon": "PrivateInsurance", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "healthInsuranceOptions.private",
-                    "_default_message": "Private (non-employer) health insurance",
+                    "_default_message": "Private (student or non-employer) health insurance",
                 },
             },
             "mass_health": {
@@ -288,7 +288,7 @@ class MaConfigurationData(ConfigurationData):
                 "icon": {"_icon": "PrivateInsurance", "_classname": "option-card-icon"},
                 "text": {
                     "_label": "healthInsuranceOptions.private",
-                    "_default_message": "Private (non-employer) health insurance",
+                    "_default_message": "Private (student or non-employer) health insurance",
                 },
             },
             "mass_health": {
