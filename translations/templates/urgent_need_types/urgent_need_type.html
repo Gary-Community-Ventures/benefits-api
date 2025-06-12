@@ -1,0 +1,33 @@
+{% extends "base.html" %}{% block content %}
+<section class="section">
+  <h2>Urgent Need Category Type Actions</h2>
+</section>
+<hr />
+<div id="urgent-need-type-actions">
+  <table class="table is-striped is-fullwidth is-bordered">
+    <thead>
+      <tr>
+        <th>Icon</th>
+        <th>Actions (add)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{ urgent_need_type.icon }}</td>
+        <td>
+          <div class="new-actions">
+            <a href="/api/translations/admin/{{ urgent_need_type.name.id }}">Name</a>
+            <a
+              href="/admin/programs/urgentneedtype/{{ urgent_need_type.id }}/change/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Edit in Main Admin
+            </a>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
