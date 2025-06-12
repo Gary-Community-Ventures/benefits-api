@@ -1,0 +1,4 @@
+.selector select {
+    resize: vertical;
+    overflow: auto;
+}

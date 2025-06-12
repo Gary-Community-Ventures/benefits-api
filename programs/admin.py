@@ -27,6 +27,9 @@ from .models import (
 class WhiteLabelModelAdminMixin(ModelAdmin):
     white_label_filter_horizontal = []
 
+    class Media:
+        css = {"all": ("css/style.css",)}
+
     # dont list white labels the admin does not have access to
     def get_queryset(self, request):
         if request.user.is_superuser:
