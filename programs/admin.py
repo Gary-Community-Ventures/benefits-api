@@ -100,6 +100,11 @@ class ProgramAdmin(WhiteLabelModelAdminMixin, ModelAdmin):
         "estimated_value",
     ]
 
+    class Media:
+        css = {
+            'all': ('/static/css/style.css',)
+        }
+
     def has_add_permission(self, request):
         return False
 
