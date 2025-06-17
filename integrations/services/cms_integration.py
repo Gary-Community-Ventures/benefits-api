@@ -31,7 +31,35 @@ class CmsIntegration:
 
 
 class HubSpotIntegration(CmsIntegration):
-    access_token = ""
+    access_token = config("HUBSPOT_CENTRAL", "")
+
+    STATE = ""
+    OWNER_ID = ""
+
+    def _hubspot_contact_data(self):
+        contact = {
+            "firstname": self.user.first_name,
+            "lastname": self.user.last_name,
+            "email": self.user.email,
+            "phone": str(self.user.cell),
+            "states": self.STATE,
+            "send_offers": self.user.send_offers,
+            "explicit_tcpa_consent": self.user.explicit_tcpa_consent,
+            "send_updates": self.user.send_updates,
+            "hs_language": self.user.language_code,
+            "hubspot_owner_id": self.OWNER_ID,
+        }
+
+        if self.screen:
+            contact["uuid"] = str(self.screen.uuid)
+
+        return contact
+
+    def _hubspot_send_offers_data(self):
+        return {
+            "send_offers": self.user.send_offers,
+            "send_updates": self.user.send_updates,
+        }
 
     def __init__(self, user: User, screen: Screen):
         self.api_client = HubSpot(access_token=self.access_token)
@@ -68,12 +96,6 @@ class HubSpotIntegration(CmsIntegration):
         if not should_upsert_user or self.screen.is_test_data:
             return False
         return True
-
-    def _hubspot_contact_data(self) -> dict:
-        raise NotImplemented("Please implement '_hubspot_contact_data'")
-
-    def _hubspot_send_offers_data(self) -> dict:
-        raise NotImplemented("Please implement '_hubspot_send_offers_data'")
 
     def _get_conflict_contact_id(self, e):
         http_body = json.loads(e.body)
@@ -169,49 +191,17 @@ class BrevoIntegration(CmsIntegration):
         return True
 
 
-class CentralHubSpotIntegration(HubSpotIntegration):
-    access_token = config("HUBSPOT_CENTRAL", "")
-
-    STATE = ""
-    OWNER_ID = ""
-
-    def _hubspot_contact_data(self):
-        contact = {
-            "firstname": self.user.first_name,
-            "lastname": self.user.last_name,
-            "email": self.user.email,
-            "phone": str(self.user.cell),
-            "states": self.STATE,
-            "send_offers": self.user.send_offers,
-            "explicit_tcpa_consent": self.user.explicit_tcpa_consent,
-            "send_updates": self.user.send_updates,
-            "hs_language": self.user.language_code,
-            "hubspot_owner_id": self.OWNER_ID,
-        }
-
-        if self.screen:
-            contact["uuid"] = str(self.screen.uuid)
-
-        return contact
-
-    def _hubspot_send_offers_data(self):
-        return {
-            "send_offers": self.user.send_offers,
-            "send_updates": self.user.send_updates,
-        }
-
-
-class CoHubSpotIntegration(CentralHubSpotIntegration):
+class CoHubSpotIntegration(HubSpotIntegration):
     STATE = "CO"
     OWNER_ID = "80630223"
 
 
-class NcHubSpotIntegration(CentralHubSpotIntegration):
+class NcHubSpotIntegration(HubSpotIntegration):
     STATE = "NC"
     OWNER_ID = "47185138"
 
 
-class MaHubSpotIntegration(CentralHubSpotIntegration):
+class MaHubSpotIntegration(HubSpotIntegration):
     STATE = "MA"
     OWNER_ID = "79223440"
 
