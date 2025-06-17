@@ -169,66 +169,10 @@ class BrevoIntegration(CmsIntegration):
         return True
 
 
-class CoHubSpotIntegration(HubSpotIntegration):
-    access_token = config("HUBSPOT", "")
-    MAX_HOUSEHOLD_SIZE = 8
-
-    def _hubspot_contact_data(self):
-        contact = {
-            "email": self.user.email,
-            "firstname": self.user.first_name,
-            "lastname": self.user.last_name,
-            "phone": str(self.user.cell),
-            "benefits_screener_id": self.user.id,
-            "ab01___send_offers": self.user.send_offers,
-            "ab01___send_updates": self.user.send_updates,
-            "ab01___explicit_tcpa_consent": self.user.explicit_tcpa_consent,
-            "hs_language": self.user.language_code,
-            "ab01___1st_mfb_completion_date": self.user.date_joined.date().isoformat(),
-            "full_name": f"{self.user.first_name} {self.user.last_name}",
-        }
-
-        if self.screen:
-            contact["ab01___screener_id"] = self.screen.id
-            contact["ab01___uuid"] = str(self.screen.uuid)
-            contact["ab01___county"] = self.screen.county
-            contact["ab01___number_of_household_members"] = self.screen.household_size
-            contact["ab01___mfb_annual_income"] = int(self.screen.calc_gross_income("yearly", ["all"]))
-
-            members = self.screen.household_members.all()
-            if len(members) > self.MAX_HOUSEHOLD_SIZE:
-                capture_message(f"screen has more than {self.MAX_HOUSEHOLD_SIZE} household members", level="error")
-
-            for i, member in enumerate(members):
-                if i >= self.MAX_HOUSEHOLD_SIZE:
-                    break
-
-                contact[f"ab01___hhm{i + 1}_age"] = member.age
-
-        return contact
-
-    def _hubspot_send_offers_data(self):
-        return {
-            "ab01___send_offers": self.user.send_offers,
-            "ab01___send_updates": self.user.send_updates,
-        }
-
-    @classmethod
-    def format_email_new_benefit(cls, external_id: str, num_benefits: int, value_benefits: int):
-        contact = {
-            "id": external_id,
-            "properties": {
-                "ab01___number_of_new_benefits": num_benefits,
-                "ab01___new_benefit_total_value": value_benefits,
-            },
-        }
-
-        return contact
-
-
 class CentralHubSpotIntegration(HubSpotIntegration):
     access_token = config("HUBSPOT_CENTRAL", "")
 
+    STATE = ""
     OWNER_ID = ""
 
     def _hubspot_contact_data(self):
@@ -237,7 +181,7 @@ class CentralHubSpotIntegration(HubSpotIntegration):
             "lastname": self.user.last_name,
             "email": self.user.email,
             "phone": str(self.user.cell),
-            "states": "NC",
+            "states": self.STATE,
             "send_offers": self.user.send_offers,
             "explicit_tcpa_consent": self.user.explicit_tcpa_consent,
             "send_updates": self.user.send_updates,
@@ -257,11 +201,18 @@ class CentralHubSpotIntegration(HubSpotIntegration):
         }
 
 
+class CoHubSpotIntegration(CentralHubSpotIntegration):
+    STATE = "CO"
+    OWNER_ID = "80630223"
+
+
 class NcHubSpotIntegration(CentralHubSpotIntegration):
+    STATE = "NC"
     OWNER_ID = "47185138"
 
 
 class MaHubSpotIntegration(CentralHubSpotIntegration):
+    STATE = "MA"
     OWNER_ID = "79223440"
 
 
