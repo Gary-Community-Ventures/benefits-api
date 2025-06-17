@@ -3,12 +3,9 @@ from django.conf import settings
 from hubspot import HubSpot
 from decouple import config
 from hubspot.crm.contacts import BatchInputSimplePublicObjectBatchInput, SimplePublicObjectInput
-import sib_api_v3_sdk
 from hubspot.crm.contacts.exceptions import ApiException as HubSpotApiException
 from django.conf import settings
 import json
-from sentry_sdk import capture_message
-
 from authentication.models import User
 from screener.models import Screen, WhiteLabel
 
@@ -88,6 +85,7 @@ class HubSpotIntegration(CmsIntegration):
         self._update_contact(self.user.external_id, data)
 
     def should_add(self):
+        return True  # FIXME: remove
         if settings.DEBUG:
             return False
         if self.user is None or self.screen.is_test_data is None:
@@ -126,71 +124,6 @@ class HubSpotIntegration(CmsIntegration):
         )
 
 
-class BrevoIntegration(CmsIntegration):
-    MAX_HOUSEHOLD_SIZE = 8
-
-    def __init__(self, user, screen):
-        super().__init__(user, screen)
-        configuration = sib_api_v3_sdk.Configuration()
-        configuration.api_key["api-key"] = settings.BREVO_API_KEY
-        self.api_instance = sib_api_v3_sdk.ContactsApi(sib_api_v3_sdk.ApiClient(configuration))
-        self.sms_instance = sib_api_v3_sdk.TransactionalSMSApi(sib_api_v3_sdk.ApiClient(configuration))
-        self.email_instance = sib_api_v3_sdk.TransactionalEmailsApi(sib_api_v3_sdk.ApiClient(configuration))
-        self.front_end_domain = settings.FRONTEND_DOMAIN
-
-    def add(self) -> str:
-        contact = {
-            "first_name": self.user.first_name,
-            "last_name": self.user.last_name,
-            "sms": str(self.user.cell),
-            "benefits_screener_id": self.user.id,
-            "send_updates": self.user.send_updates,
-            "send_offers": self.user.send_offers,
-            "tcpa_consent": self.user.tcpa_consent,
-            "language_code": self.user.language_code,
-            "mfb_completion_date": self.user.date_joined.date().isoformat(),
-            "full_name": f"{self.user.first_name} {self.user.last_name}",
-        }
-
-        if self.screen:
-            contact["screener_id"] = self.screen.id
-            contact["uuid"] = str(self.screen.uuid)
-            contact["county"] = self.screen.county
-            contact["number_of_household_members"] = self.screen.household_size
-            contact["mfb_annual_income"] = int(self.screen.calc_gross_income("yearly", ["all"]))
-
-            members = self.screen.household_members.all()
-            if len(members) > self.MAX_HOUSEHOLD_SIZE:
-                capture_message(f"screen has more than {self.MAX_HOUSEHOLD_SIZE} household members", level="error")
-
-            for i, member in enumerate(members):
-                if i >= self.MAX_HOUSEHOLD_SIZE:
-                    break
-
-                contact[f"hhm{i + 1}_age"] = member.age
-
-        create_contact = sib_api_v3_sdk.CreateContact(email=self.user.email, attributes=contact, list_ids=[6])
-        return self.api_instance.create_contact(create_contact)
-
-    def update(self):
-        ext_id_dict = json.loads(self.user.external_id.replace("'", '"'))
-        data = {"send_offers": self.user.send_offers, "send_updates": self.user.send_updates}
-        id_value = ext_id_dict["id"]
-        update_attributes = sib_api_v3_sdk.UpdateContact(attributes=data)
-        self.api_instance.update_contact(id_value, update_attributes)
-
-    def should_add(self):
-        if settings.DEBUG:
-            return False
-        if self.user is None or self.screen.is_test_data is None:
-            return False
-        should_upsert_user = (self.user.send_offers or self.user.send_updates) and self.user.external_id is None
-        if not should_upsert_user or self.screen.is_test_data:
-            return False
-
-        return True
-
-
 class CoHubSpotIntegration(HubSpotIntegration):
     STATE = "CO"
     OWNER_ID = "80630223"
@@ -207,7 +140,6 @@ class MaHubSpotIntegration(HubSpotIntegration):
 
 
 CMS_INTEGRATIONS = {
-    "brevo": BrevoIntegration,
     "co_hubspot": CoHubSpotIntegration,
     "nc_hubspot": NcHubSpotIntegration,
     "ma_hubspot": MaHubSpotIntegration,
