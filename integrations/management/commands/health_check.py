@@ -48,7 +48,7 @@ class Command(BaseCommand):
         self._output_condition(self._no_pii_in_db(), self.PII_IN_DB_TEXT)
 
     def _cant_read_hubspot(self) -> bool:
-        client = HubSpot(access_token=config("HUBSPOT"))
+        client = HubSpot(access_token=config("HUBSPOT_CENTRAL"))
 
         try:
             client.crm.contacts.basic_api.get_page(limit=1, archived=False)
