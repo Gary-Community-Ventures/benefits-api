@@ -1,9 +1,9 @@
 {% extends "base.html" %}{% block content %}
 <section class="section">
-  <h2>Translation Override Actions</h2>
+  <h2>Document Actions</h2>
 </section>
 <hr />
-<div id="translation-override-actions">
+<div id="document-actions">
   <table class="table is-striped is-fullwidth is-bordered">
     <thead>
       <tr>
@@ -13,12 +13,14 @@
     </thead>
     <tbody>
       <tr>
-        <td>{{ translation_override.external_name }}</td>
+        <td>{{ object.external_name }}</td>
         <td>
           <div class="new-actions">
-            <a href="/api/translations/admin/{{ translation_override.translation.id }}">Translation</a>
+            <a href="/api/translations/admin/{{ object.text.id }}">Text</a>
+            <a href="/api/translations/admin/{{ object.link_url.id }}">Link Url</a>
+            <a href="/api/translations/admin/{{ object.link_text.id }}">Link Text</a>
             <a
-              href="/admin/programs/translationoverride/{{ translation_override.id }}/change/"
+              href="/admin/programs/document/{{ object.id }}/change/"
               target="_blank"
               rel="noopener noreferrer"
             >
