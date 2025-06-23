@@ -9,6 +9,10 @@ from .models import User
 
 
 class SecureAdmin(ModelAdmin):
+    class Media:
+        css = {
+            "all": ("css/style.css",)
+        }
     always_can_view = False
 
     def get_queryset(self, request):
@@ -106,7 +110,7 @@ class SecureAdmin(ModelAdmin):
 class CustomUserAdmin(SecureAdmin):
     search_fields = ("email",)
     ordering = ("email_or_cell", "email")
-    filter_horizontal = ["white_labels"]
+    filter_horizontal = ["white_labels", "user_permissions"]
 
     list_display = ("email_or_cell", "is_staff")
 
