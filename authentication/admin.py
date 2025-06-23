@@ -10,9 +10,8 @@ from .models import User
 
 class SecureAdmin(ModelAdmin):
     class Media:
-        css = {
-            "all": ("css/style.css",)
-        }
+        css = {"all": ("css/style.css",)}
+
     always_can_view = False
 
     def get_queryset(self, request):
