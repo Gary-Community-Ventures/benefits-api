@@ -154,6 +154,7 @@ class CoConfigurationData(ConfigurationData):
         "cch": "Colorado Coalition for the Homeless",
         "frca": "Family Resource Center Association",
         "achs": "Adams County Human Services",
+        "achd": "Adams County Health Department",
         "arapahoectypublichealth": "Arapahoe County Public Health",
         "dhs": "Denver Human Services",
         "eaglecounty": "Eagle County",
