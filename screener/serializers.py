@@ -13,7 +13,7 @@ from screener.models import (
 )
 from authentication.serializers import UserOffersSerializer
 from rest_framework import serializers
-from translations.serializers import ModelTranslationSerializer, TranslationSerializer
+from translations.serializers import TranslationSerializer
 from validations.serializers import ValidationSerializer
 
 
