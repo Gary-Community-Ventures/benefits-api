@@ -1445,4 +1445,9 @@ class MaConfigurationData(ConfigurationData):
             "_label": "questions.zipcode.city.error.ma",
             "_default_message": "Please Select a city",
         },
+        # NOTE: Change the household size help text
+        "questions.householdSize-helpText": {
+            "_label": "questions.householdSize-helpText.ma",
+            "_default_message": "This is usually family members whom you live with and share important resources with like food and bills. Your roommates / housemates typically do not count as part of your household. If other adults 18 or older in your household file their own tax return, ask them to complete this tool to determine if they qualify for benefits. But even if you and your spouse file taxes separately, include your spouse in the household.",
+        },
     }
