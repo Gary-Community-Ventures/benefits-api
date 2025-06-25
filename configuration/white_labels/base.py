@@ -196,7 +196,7 @@ class ConfigurationData:
             "private": {
                 "icon": {"_name": "PrivateInsurance", "_classname": "option-card-icon"},
                 "_label": "healthInsuranceOptions.private",
-                "_default_message": "Private (non-employer) health insurance",
+                "_default_message": "Private (student or non-employer) health insurance",
             },
             "medicaid": {
                 "icon": {"_name": "Medicaid", "_classname": "option-card-icon"},
@@ -243,7 +243,7 @@ class ConfigurationData:
             "private": {
                 "icon": {"_name": "PrivateInsurance", "_classname": "option-card-icon"},
                 "_label": "healthInsuranceOptions.private",
-                "_default_message": "Private (non-employer) health insurance",
+                "_default_message": "Private (student or non-employer) health insurance",
             },
             "medicaid": {
                 "icon": {"_name": "Medicaid", "_classname": "option-card-icon"},

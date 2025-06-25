@@ -105,14 +105,16 @@
                 </div>
               </a>
             </li>
-            <li>
-              <a href="/api/translations/admin" class="sidebar-item">
-                <div class="text-icon">
-                  <span class="material-symbols-outlined"> translate </span>
-                  <span>Translations</span>
-                </div>
-              </a>
-            </li>
+            {% if request.user.is_superuser %}
+              <li>
+                <a href="/api/translations/admin" class="sidebar-item">
+                  <div class="text-icon">
+                    <span class="material-symbols-outlined"> translate </span>
+                    <span>Translations</span>
+                  </div>
+                </a>
+              </li>
+            {% endif %}
           </ul>
           <hr class="dropdown-divider" />
           <ul class="menu-list">

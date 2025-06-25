@@ -1,12 +1,12 @@
 from django.contrib import admin
-from unfold.admin import ModelAdmin
 from django_json_widget.widgets import JSONEditorWidget
 from django.db.models import JSONField
+from authentication.admin import SecureAdmin
 from .models import Configuration
 import json
 
 
-class ConfigurationAdmin(ModelAdmin):
+class ConfigurationAdmin(SecureAdmin):
     formfield_overrides = {
         JSONField: {
             "widget": JSONEditorWidget(options={"modes": ["tree", "code"], "mode": "tree", "enableDrag": False})
