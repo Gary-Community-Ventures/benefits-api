@@ -71,7 +71,7 @@ class UrgentNeedAPISerializer(serializers.ModelSerializer):
 class UrgentNeedTypeSerializer(serializers.ModelSerializer):
     name = ModelTranslationSerializer()
     urgent_needs = serializers.SerializerMethodField()
-    icon = serializers.SerializerMethodField()
+    icon = serializers.CharField(source="icon_name")
 
     class Meta:
         ref_name = "Urgent Need Type List"
