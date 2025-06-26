@@ -176,7 +176,7 @@ class Command(BaseCommand):
                 if not need_type:
                     need_type = UrgentNeedType.objects.new_urgent_need_type(white_label=white_label.code, icon=icon)
                     # translate the 'name' field
-                    base_lang = "en-us"
+                    base_lang = settings.LANGUAGE_CODE
                     name_translation = need_type.name
 
                     Translation.objects.edit_translation_by_id(name_translation.id, base_lang, type_name)
