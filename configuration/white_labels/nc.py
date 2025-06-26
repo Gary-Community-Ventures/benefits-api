@@ -199,6 +199,10 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.hf",
             "_default_message": "Hispanic Federation",
         },
+        "lanc": {
+            "_label": "referralOptions.lanc",
+            "_default_message": "Legal Aid of North Carolina",
+        },
         "mda": {
             "_label": "referralOptions.mda",
             "_default_message": "Montagnard Dega Association",
@@ -2812,7 +2816,7 @@ class NcConfigurationData(ConfigurationData):
     }
 
     referrer_data = {
-        "theme": {"default": "default", "211nc": "twoOneOneNC"},
+        "theme": {"default": "default", "211nc": "twoOneOneNC", "lanc": "nc_lanc"},
         "logoSource": {
             "default": "MFB_NCLogo",
             "bia": "BIA_MFBLogo",
@@ -2905,6 +2909,7 @@ class NcConfigurationData(ConfigurationData):
         "featureFlags": {
             "default": ["nc_show_211_link"],
             "211nc": ["no_results_more_help", "nc_show_211_link", "211nc"],
+            "lanc": ["no_results_more_help", "lanc"],
         },
         "noResultMessage": {
             "default": {
