@@ -96,7 +96,7 @@ class MaConfigurationData(ConfigurationData):
             "icon": {"_icon": "Legal_services", "_classname": "option-card-icon"},
             "text": {
                 "_label": "acuteConditionOptions.legalServices",
-                "_default_message": "Free or low-cost help with civil legal needs or IDs",
+                "_default_message": "Free or low-cost help with civil legal needs or identity documents",
             },
         },
         "veteranServices": {
@@ -1444,5 +1444,10 @@ class MaConfigurationData(ConfigurationData):
         "errorMessage-county": {
             "_label": "questions.zipcode.city.error.ma",
             "_default_message": "Please Select a city",
+        },
+        # NOTE: Change the household size help text
+        "questions.householdSize-helpText": {
+            "_label": "questions.householdSize-helpText.ma",
+            "_default_message": "This is usually family members whom you live with and share important resources with like food and bills. Your roommates / housemates typically do not count as part of your household. If other adults 18 or older in your household file their own tax return, ask them to complete this tool to determine if they qualify for benefits. But even if you and your spouse file taxes separately, include your spouse in the household.",
         },
     }
