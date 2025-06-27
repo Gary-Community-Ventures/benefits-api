@@ -30,28 +30,28 @@ class MedicareSavings(ProgramCalculator):
         e.condition(self.screen.household_assets < self.asset_limit[status])
 
         # income
-        earned_income = member.calc_gross_income("monthly", ("earned",))
-        unearned_income = member.calc_gross_income("monthly", ("unearned",))
+        earned_income = member.calc_gross_income("yearly", ("earned",))
+        unearned_income = member.calc_gross_income("yearly", ("unearned",))
         if status == "married":
             spouse = is_married["married_to"]
-            earned_income += spouse.calc_gross_income("monthly", ("earned",))
-            unearned_income += spouse.calc_gross_income("monthly", ("unearned",))
+            earned_income += spouse.calc_gross_income("yearly", ("earned",))
+            unearned_income += spouse.calc_gross_income("yearly", ("unearned",))
 
         # apply $20 general income disregard
-        if total_unearned_income >= self.general_income_disregard:
-            total_unearned_income -= self.general_income_disregard
+        if unearned_income >= self.general_income_disregard:
+            unearned_income -= self.general_income_disregard
         else:
-            remaining_disregard = self.general_income_disregard - total_unearned_income
-            total_unearned_income = 0
-            total_earned_income -= remaining_disregard
+            remaining_disregard = self.general_income_disregard - unearned_income
+            unearned_income = 0
+            earned_income -= remaining_disregard
 
         # apply $65 earned income disregard
-        total_earned_income -= self.earned_income_disregard
+        earned_income -= self.earned_income_disregard
 
         # halve remaining earned income
-        total_earned_income /= 2
+        earned_income /= 2
 
-        countable_income = total_unearned_income + total_earned_income
+        countable_income = unearned_income + earned_income
 
         household_size = self.screen.household_size
         fpl = self.program.year.as_dict()[household_size]
