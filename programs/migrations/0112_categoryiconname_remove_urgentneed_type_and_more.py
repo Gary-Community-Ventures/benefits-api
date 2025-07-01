@@ -4,7 +4,7 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-def populate_icon_names(apps, schema_editor):
+def populate_icon_names(apps, _):
     CategoryIconName = apps.get_model("programs", "CategoryIconName")
 
     icon_names = [
