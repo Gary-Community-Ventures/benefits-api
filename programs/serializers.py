@@ -80,6 +80,3 @@ class UrgentNeedTypeSerializer(serializers.ModelSerializer):
 
     def get_urgent_needs(self, obj: UrgentNeedType):
         return UrgentNeedSerializer(obj.urgent_needs.filter(active=True), many=True).data
-
-    def get_icon(self, obj: UrgentNeedType):
-        return obj.icon.name if obj.icon else "default"

@@ -158,7 +158,7 @@ class LegalStatus(models.Model):
 
 
 class CategoryIconName(models.Model):
-    name = models.CharField(max_length=120)
+    name = models.CharField(max_length=120, unique=True)
 
     def __str__(self):
         return self.name
@@ -213,7 +213,7 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
         program_category = self.instance
         return {
             "calculator": program_category.calculator,
-            "icon": program_category.icon,
+            "icon": program_category.icon.name if program_category.icon else None,
             "tax_category": program_category.tax_category,
             "white_label": program_category.white_label.code,
             "priority": program_category.priority,
@@ -232,6 +232,14 @@ class ProgramCategoryDataController(ModelDataController["ProgramCategory"]):
         except WhiteLabel.DoesNotExist:
             white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
         program_category.white_label = white_label
+
+        if data["icon"]:
+            icon = CategoryIconName.objects.filter(name=data["icon"]).first()
+            if not icon:
+                icon = CategoryIconName.objects.create(name=data["icon"])
+            program_category.icon = icon
+        else:
+            program_category.icon = None
 
         program_category.save()
 
@@ -713,6 +721,53 @@ class UrgentNeedCategory(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+    
+
+from typing import TypedDict
+from translations.model_data import ModelDataController
+
+
+class UrgentNeedTypeDataController(ModelDataController["UrgentNeedType"]):
+    _model_name = "UrgentNeedType"
+
+    DataType = TypedDict(
+        "DataType",
+        {
+            "white_label": str,
+            "icon": str | None,
+        },
+    )
+
+    def to_model_data(self) -> DataType:
+        return {
+            "white_label": self.instance.white_label.code,
+            "icon": self.instance.icon.name if self.instance.icon else None,
+        }
+
+    def from_model_data(self, data: DataType):
+        from screener.models import WhiteLabel
+        from programs.models import CategoryIconName
+
+        try:
+            white_label = WhiteLabel.objects.get(code=data["white_label"])
+        except WhiteLabel.DoesNotExist:
+            white_label = WhiteLabel.objects.create(code=data["white_label"], name=data["white_label"])
+        self.instance.white_label = white_label
+
+        if data["icon"]:
+            icon = CategoryIconName.objects.filter(name=data["icon"]).first()
+            if not icon:
+                icon = CategoryIconName.objects.create(name=data["icon"])
+            self.instance.icon = icon
+        else:
+            self.instance.icon = None
+
+        self.instance.save()
+
+    @classmethod
+    def create_instance(cls, external_name: str, Model: type["UrgentNeedType"]):
+        return Model.objects.new_urgent_need_type("_default", external_name)
+
 
 
 class UrgentNeedTypeManager(models.Manager):
@@ -767,6 +822,8 @@ class UrgentNeedType(models.Model):
     )
 
     objects = UrgentNeedTypeManager()
+
+    TranslationExportBuilder = UrgentNeedTypeDataController
 
     @property
     def icon_name(self):

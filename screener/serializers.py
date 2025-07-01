@@ -408,6 +408,7 @@ class UrgentNeedSerializer(serializers.Serializer):
     name = TranslationSerializer()
     description = TranslationSerializer()
     link = TranslationSerializer()
+    category_type = TranslationSerializer()
     phone_number = serializers.CharField()
 
 
