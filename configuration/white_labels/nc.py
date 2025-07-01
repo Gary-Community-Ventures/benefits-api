@@ -94,7 +94,7 @@ class NcConfigurationData(ConfigurationData):
             "icon": {"_icon": "Legal_services", "_classname": "option-card-icon"},
             "text": {
                 "_label": "acuteConditionOptions.legalServices",
-                "_default_message": "Free or low-cost help with civil legal needs",
+                "_default_message": "Free or low-cost help with civil legal needs or identity documents",
             },
         },
     }
