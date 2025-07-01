@@ -721,7 +721,7 @@ class UrgentNeedCategory(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-    
+
 
 from typing import TypedDict
 from translations.model_data import ModelDataController
@@ -767,7 +767,6 @@ class UrgentNeedTypeDataController(ModelDataController["UrgentNeedType"]):
     @classmethod
     def create_instance(cls, external_name: str, Model: type["UrgentNeedType"]):
         return Model.objects.new_urgent_need_type("_default", external_name)
-
 
 
 class UrgentNeedTypeManager(models.Manager):

@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 
 def sync_data(apps, _):
-    
+
     URGENT_NEED_TYPE_MAP = {
         "co": {
             "bia_food": "Food or groceries",
@@ -191,7 +191,7 @@ def sync_data(apps, _):
                 icon_instance = None
                 if icon:
                     icon_instance = icon
-                    
+
                 need_type = UrgentNeedType.objects.create(
                     icon=icon_instance,
                     white_label=white_label,

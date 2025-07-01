@@ -553,7 +553,7 @@ class ProgramCategoryTranslationAdmin(TranslationAdminViews):
         return self._model_white_label_query_set(request.user).filter(
             external_name__contains=request.GET.get("name", "")
         )
-    
+
 
 class UrgentNeedTypeTranslationAdmin(TranslationAdminViews):
     name = "urgent_need_types"
@@ -566,10 +566,7 @@ class UrgentNeedTypeTranslationAdmin(TranslationAdminViews):
 
     def _new_object(self, form: Form) -> models.Model:
         icon_instance = CategoryIconName.objects.get(name=form["icon"].value())
-        return self.Model.objects.new_urgent_need_type(
-            form["white_label"].value(),
-            icon_instance
-        )
+        return self.Model.objects.new_urgent_need_type(form["white_label"].value(), icon_instance)
 
     def _filter_query_set(self, request):
         query = request.GET.get("name", "")
