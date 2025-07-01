@@ -449,7 +449,7 @@ class ProgramCategoryAdmin(SecureAdmin):
     action_buttons.allow_tags = True
 
 
-class UrgentNeedTypeAdmin(ModelAdmin):
+class UrgentNeedTypeAdmin(SecureAdmin):
     search_fields = ("name",)
     list_display = ["get_str", "icon", "action_buttons"]
 
@@ -479,7 +479,7 @@ class UrgentNeedTypeAdmin(ModelAdmin):
     action_buttons.allow_tags = True
 
 
-class CategoryIconNameAdmin(ModelAdmin):
+class CategoryIconNameAdmin(SecureAdmin):
     search_fields = ("name",)
 
 

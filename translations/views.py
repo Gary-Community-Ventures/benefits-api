@@ -1,4 +1,3 @@
-import json
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.conf import settings
@@ -281,6 +280,12 @@ def get_white_label_choices():
     return [(w.code, w.name) for w in WhiteLabel.objects.exclude(code="_default").order_by("name")]
 
 
+def get_urgent_need_icon_choices():
+    icons = CategoryIconName.objects.all().order_by("name")
+    # what if empty
+    return [(icon.name, icon.name) for icon in icons]
+
+
 class WhiteLabelForm(forms.Form):
     white_label = forms.ChoiceField(choices=get_white_label_choices, widget=forms.Select(attrs={"class": "input"}))
 
@@ -301,6 +306,7 @@ class WhiteLabelForm(forms.Form):
 
 class TranslationAdminViews:
     name = ""
+    ordering_field = "external_name"
 
     class Form(WhiteLabelForm):
         pass
@@ -309,7 +315,7 @@ class TranslationAdminViews:
     Model = models.Model
 
     def _list_view(self, request):
-        objects = self._model_white_label_query_set(request.user).order_by("external_name")
+        objects = self._model_white_label_query_set(request.user).order_by(self.ordering_field)
 
         paginator = Paginator(objects, 50)
         page_number = request.GET.get("page")
@@ -343,7 +349,7 @@ class TranslationAdminViews:
         return render(request, f"{self.name}/page.html", context)
 
     def _filter_view(self, request):
-        objects = self._filter_query_set(request).distinct().order_by("external_name")
+        objects = self._filter_query_set(request).distinct().order_by(self.ordering_field)
 
         paginator = Paginator(objects, 50)
         page_number = request.GET.get("page")
@@ -440,148 +446,6 @@ class NavigatorTranslationAdmin(TranslationAdminViews):
             form["phone_number"].value(),
         )
 
-        paginator = Paginator(navigators, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-
-        return render(request, "navigators/list.html", context)
-
-
-def get_urgent_need_icon_choices():
-    icons = CategoryIconName.objects.all().order_by("name")
-    return [(icon.name, icon.name) for icon in icons]
-
-
-class NewUrgentNeedTypeForm(WhiteLabelForm):
-    icon = forms.ChoiceField(choices=get_urgent_need_icon_choices, widget=forms.Select(attrs={"class": "input"}))
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def urgent_need_types_view(request):
-    if request.method == "GET":
-        urgent_need_types = model_white_label_query_set(UrgentNeedType, request.user).order_by("icon")
-
-        paginator = Paginator(urgent_need_types, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-        return render(request, "urgent_need_types/main.html", context)
-
-    if request.method == "POST":
-        form = NewUrgentNeedTypeForm(request.POST, user=request.user)
-        if form.is_valid():
-            icon_instance = CategoryIconName.objects.get(name=form["icon"].value())
-            urgent_need_type = UrgentNeedType.objects.new_urgent_need_type(
-                form["white_label"].value(),
-                icon_instance,
-            )
-            response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/urgent_need_types/{urgent_need_type.id}"
-            return response
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def create_urgent_need_type_view(request):
-    if request.method == "GET":
-        context = {
-            "form": NewUrgentNeedTypeForm(user=request.user),
-            "route": "/api/translations/admin/urgent_need_types",
-        }
-
-        return render(request, "util/create_form.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def urgent_need_type_view(request, id):
-    if request.method == "GET":
-        urgent_need_type = UrgentNeedType.objects.get(pk=id)
-        context = {"urgent_need_type": urgent_need_type}
-
-        return render(request, "urgent_need_types/urgent_need_type.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def urgent_need_type_filter_view(request):
-    if request.method == "GET":
-        query = request.GET.get("name", "")
-        urgent_need_types = (
-            model_white_label_query_set(UrgentNeedType, request.user).filter(icon__contains=query).order_by("icon")
-        )
-
-        paginator = Paginator(urgent_need_types, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-
-        return render(request, "urgent_need_types/list.html", context)
-
-
-class NewUrgentNeedForm(WhiteLabelForm):
-    label = forms.CharField(max_length=50, widget=forms.TextInput(attrs={"class": "input"}))
-    phone_number = PhoneNumberField(required=False, widget=forms.TextInput(attrs={"class": "input"}))
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def urgent_needs_view(request):
-    if request.method == "GET":
-        urgent_needs = model_white_label_query_set(UrgentNeed, request.user).order_by("external_name")
-
-        paginator = Paginator(urgent_needs, 50)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        context = {"page_obj": page_obj}
-        return render(request, "urgent_needs/main.html", context)
-    if request.method == "POST":
-        form = NewUrgentNeedForm(request.POST, user=request.user)
-        if form.is_valid():
-            urgent_need = UrgentNeed.objects.new_urgent_need(
-                form["white_label"].value(),
-                form["label"].value(),
-                form["phone_number"].value(),
-            )
-            response = HttpResponse()
-            response.headers["HX-Redirect"] = f"/api/translations/admin/urgent_needs/{urgent_need.id}"
-            return response
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def create_urgent_need_view(request):
-    if request.method == "GET":
-        context = {"form": NewUrgentNeedForm(user=request.user), "route": "/api/translations/admin/urgent_needs"}
-
-        return render(request, "util/create_form.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def urgent_need_view(request, id=0):
-    if request.method == "GET":
-        urgent_need = UrgentNeed.objects.get(pk=id)
-        context = {"urgent_need": urgent_need}
-
-        return render(request, "urgent_needs/urgent_need.html", context)
-
-
-@login_required(login_url="/admin/login")
-@staff_member_required
-def urgent_need_filter_view(request):
-    if request.method == "GET":
-        urgent_needs = (
-            model_white_label_query_set(UrgentNeed, request.user)
-            .filter(name__translations__text__icontains=request.GET.get("name", ""))
-            .distinct()
-            .order_by("external_name")
     def _filter_query_set(self, request):
         return self._model_white_label_query_set(request.user).filter(
             name__translations__text__icontains=request.GET.get("name", "")
@@ -676,7 +540,7 @@ class ProgramCategoryTranslationAdmin(TranslationAdminViews):
 
     class Form(WhiteLabelForm):
         external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
-        icon = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+        icon = forms.ChoiceField(choices=get_urgent_need_icon_choices, widget=forms.Select(attrs={"class": "input"}))
 
     Model = ProgramCategory
 
@@ -689,4 +553,24 @@ class ProgramCategoryTranslationAdmin(TranslationAdminViews):
         return self._model_white_label_query_set(request.user).filter(
             external_name__contains=request.GET.get("name", "")
         )
-        
+    
+
+class UrgentNeedTypeTranslationAdmin(TranslationAdminViews):
+    name = "urgent_need_types"
+    ordering_field = "icon__name"
+
+    class Form(WhiteLabelForm):
+        icon = forms.ChoiceField(choices=get_urgent_need_icon_choices, widget=forms.Select(attrs={"class": "input"}))
+
+    Model = UrgentNeedType
+
+    def _new_object(self, form: Form) -> models.Model:
+        icon_instance = CategoryIconName.objects.get(name=form["icon"].value())
+        return self.Model.objects.new_urgent_need_type(
+            form["white_label"].value(),
+            icon_instance
+        )
+
+    def _filter_query_set(self, request):
+        query = request.GET.get("name", "")
+        return self._model_white_label_query_set(request.user).filter(icon__contains=query).order_by("icon")

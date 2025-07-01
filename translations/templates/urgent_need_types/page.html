@@ -13,12 +13,12 @@
     </thead>
     <tbody>
       <tr>
-        <td>{{ urgent_need_type.icon }}</td>
+        <td>{{ object.icon }}</td>
         <td>
           <div class="new-actions">
-            <a href="/api/translations/admin/{{ urgent_need_type.name.id }}">Name</a>
+            <a href="/api/translations/admin/{{ object.name.id }}">Name</a>
             <a
-              href="/admin/programs/urgentneedtype/{{ urgent_need_type.id }}/change/"
+              href="/admin/programs/urgentneedtype/{{ object.id }}/change/"
               target="_blank"
               rel="noopener noreferrer"
             >
