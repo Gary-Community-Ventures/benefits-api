@@ -13,14 +13,15 @@ class NCFamilyPlanningServices(ProgramCalculator):
 
     def household_eligible(self, e: Eligibility):
         # Does not have insurance
-        has_no_insurance = False
+        has_eligible_insurance_type = False
 
         for member in self.screen.household_members.all():
-            has_no_insurance = (
-                member.insurance.has_insurance_types(NCFamilyPlanningServices.insurance_types) or has_no_insurance
+            has_eligible_insurance_type = (
+                member.insurance.has_insurance_types(NCFamilyPlanningServices.insurance_types)
+                or has_eligible_insurance_type
             )
 
-        e.condition(has_no_insurance, messages.has_no_insurance())
+        e.condition(has_eligible_insurance_type)
 
         # Income
         fpl = self.program.year
