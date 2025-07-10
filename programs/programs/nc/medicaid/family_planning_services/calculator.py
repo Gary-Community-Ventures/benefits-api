@@ -26,7 +26,8 @@ class NCFamilyPlanningServices(ProgramCalculator):
         # Income
         fpl = self.program.year
 
-        income_limit = int(NCFamilyPlanningServices.fpl_percent * fpl.get_limit(len(e.eligible_members)))
+        income_limit = int(NCFamilyPlanningServices.fpl_percent * fpl.get_limit(self.screen.household_size))
+
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"], exclude=["cashAssistance"]))
 
         e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
