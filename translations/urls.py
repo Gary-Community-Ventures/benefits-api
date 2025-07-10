@@ -17,4 +17,5 @@ urlpatterns = [
     *views.WarningMessageTranslationAdmin().urls(),
     *views.TranslationOverrideTranslationAdmin().urls(),
     *views.ProgramCategoryTranslationAdmin().urls(),
+    *views.UrgentNeedTypeTranslationAdmin().urls(),
 ]

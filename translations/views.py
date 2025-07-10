@@ -20,6 +20,8 @@ from programs.models import (
     Navigator,
     ProgramCategory,
     UrgentNeed,
+    UrgentNeedType,
+    CategoryIconName,
     Document,
     WarningMessage,
     TranslationOverride,
@@ -278,6 +280,12 @@ def get_white_label_choices():
     return [(w.code, w.name) for w in WhiteLabel.objects.exclude(code="_default").order_by("name")]
 
 
+def get_urgent_need_icon_choices():
+    icons = CategoryIconName.objects.all().order_by("name")
+    # what if empty
+    return [(icon.name, icon.name) for icon in icons]
+
+
 class WhiteLabelForm(forms.Form):
     white_label = forms.ChoiceField(choices=get_white_label_choices, widget=forms.Select(attrs={"class": "input"}))
 
@@ -298,6 +306,7 @@ class WhiteLabelForm(forms.Form):
 
 class TranslationAdminViews:
     name = ""
+    ordering_field = "external_name"
 
     class Form(WhiteLabelForm):
         pass
@@ -306,7 +315,7 @@ class TranslationAdminViews:
     Model = models.Model
 
     def _list_view(self, request):
-        objects = self._model_white_label_query_set(request.user).order_by("external_name")
+        objects = self._model_white_label_query_set(request.user).order_by(self.ordering_field)
 
         paginator = Paginator(objects, 50)
         page_number = request.GET.get("page")
@@ -340,7 +349,7 @@ class TranslationAdminViews:
         return render(request, f"{self.name}/page.html", context)
 
     def _filter_view(self, request):
-        objects = self._filter_query_set(request).distinct().order_by("external_name")
+        objects = self._filter_query_set(request).distinct().order_by(self.ordering_field)
 
         paginator = Paginator(objects, 50)
         page_number = request.GET.get("page")
@@ -531,7 +540,7 @@ class ProgramCategoryTranslationAdmin(TranslationAdminViews):
 
     class Form(WhiteLabelForm):
         external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
-        icon = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
+        icon = forms.ChoiceField(choices=get_urgent_need_icon_choices, widget=forms.Select(attrs={"class": "input"}))
 
     Model = ProgramCategory
 
@@ -544,3 +553,21 @@ class ProgramCategoryTranslationAdmin(TranslationAdminViews):
         return self._model_white_label_query_set(request.user).filter(
             external_name__contains=request.GET.get("name", "")
         )
+
+
+class UrgentNeedTypeTranslationAdmin(TranslationAdminViews):
+    name = "urgent_need_types"
+    ordering_field = "icon__name"
+
+    class Form(WhiteLabelForm):
+        icon = forms.ChoiceField(choices=get_urgent_need_icon_choices, widget=forms.Select(attrs={"class": "input"}))
+
+    Model = UrgentNeedType
+
+    def _new_object(self, form: Form) -> models.Model:
+        icon_instance = CategoryIconName.objects.get(name=form["icon"].value())
+        return self.Model.objects.new_urgent_need_type(form["white_label"].value(), icon_instance)
+
+    def _filter_query_set(self, request):
+        query = request.GET.get("name", "")
+        return self._model_white_label_query_set(request.user).filter(icon__contains=query).order_by("icon")
