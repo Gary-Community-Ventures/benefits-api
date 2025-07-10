@@ -12,18 +12,7 @@ class NCFamilyPlanningServices(ProgramCalculator):
     insurance_types = ("none", "employer", "private", "va", "medicare")
 
     def household_eligible(self, e: Eligibility):
-        # Does not have insurance
-        has_eligible_insurance_type = False
 
-        for member in self.screen.household_members.all():
-            has_eligible_insurance_type = (
-                member.insurance.has_insurance_types(NCFamilyPlanningServices.insurance_types)
-                or has_eligible_insurance_type
-            )
-
-        e.condition(has_eligible_insurance_type)
-
-        # Income
         fpl = self.program.year
 
         income_limit = int(NCFamilyPlanningServices.fpl_percent * fpl.get_limit(self.screen.household_size))
@@ -44,8 +33,8 @@ class NCFamilyPlanningServices(ProgramCalculator):
         # not pregnant
         e.condition(not member.pregnant)
 
+        e.condition(member.insurance.has_insurance_types(NCFamilyPlanningServices.insurance_types))
+
+        e.condition(member.is_head() or member.is_spouse())
         # age
         e.condition(member.age >= NCFamilyPlanningServices.min_age)
-
-        # head or spouse
-        e.condition(member.is_head() or member.is_spouse())
