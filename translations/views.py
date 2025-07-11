@@ -560,14 +560,16 @@ class UrgentNeedTypeTranslationAdmin(TranslationAdminViews):
     ordering_field = "icon__name"
 
     class Form(WhiteLabelForm):
+        external_name = forms.CharField(max_length=120, widget=forms.TextInput(attrs={"class": "input"}))
         icon = forms.ChoiceField(choices=get_urgent_need_icon_choices, widget=forms.Select(attrs={"class": "input"}))
 
     Model = UrgentNeedType
 
     def _new_object(self, form: Form) -> models.Model:
-        icon_instance = CategoryIconName.objects.get(name=form["icon"].value())
-        return self.Model.objects.new_urgent_need_type(form["white_label"].value(), icon_instance)
+        return self.Model.objects.new_urgent_need_type(
+            form["white_label"].value(), form["external_name"].value(), form["icon"].value()
+        )
 
     def _filter_query_set(self, request):
         query = request.GET.get("name", "")
-        return self._model_white_label_query_set(request.user).filter(icon__contains=query).order_by("icon")
+        return self._model_white_label_query_set(request.user).filter(icon__name__contains=query).order_by("icon")
