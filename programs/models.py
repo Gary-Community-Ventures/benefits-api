@@ -771,7 +771,7 @@ class UrgentNeedTypeDataController(ModelDataController["UrgentNeedType"]):
 
     @classmethod
     def create_instance(cls, external_name: str, Model: type["UrgentNeedType"]):
-        return Model.objects.new_urgent_need_type("_default", external_name)
+        return Model.objects.new_urgent_need_type("_default", external_name, "housing")
 
 
 class UrgentNeedTypeManager(models.Manager):
