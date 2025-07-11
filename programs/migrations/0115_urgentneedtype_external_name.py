@@ -10,7 +10,7 @@ def updated_urgent_need_type_external_name(apps, schema_editor):
     # populates the external_name field
     for urgent_need_type in UrgentNeedType.objects.all():
         wl = urgent_need_type.white_label.code
-        text = urgent_need_type.name.text.replace(" ", "_").replace("'", "").lower()
+        text = urgent_need_type.name.text.replace(" ", "_").replace("'", "").replace(",", "").lower()
         if wl == "co":
             urgent_need_type.external_name = text
         else:
@@ -39,7 +39,5 @@ class Migration(migrations.Migration):
             name="external_name",
             field=models.CharField(blank=True, max_length=120, null=True, unique=True),
         ),
-        migrations.RunPython(
-            updated_urgent_need_type_external_name, migrations.RunPython.noop
-        ),
+        migrations.RunPython(updated_urgent_need_type_external_name, migrations.RunPython.noop),
     ]
