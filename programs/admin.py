@@ -7,6 +7,8 @@ from .models import (
     Program,
     ProgramCategory,
     UrgentNeed,
+    UrgentNeedType,
+    CategoryIconName,
     Navigator,
     UrgentNeedFunction,
     FederalPoveryLimit,
@@ -217,7 +219,10 @@ class WarningMessageAdmin(SecureAdmin):
 class UrgentNeedAdmin(SecureAdmin):
     search_fields = ("name__translations__text",)
     list_display = ["get_str", "external_name", "active", "action_buttons"]
-    white_label_filter_horizontal = ("counties",)
+    white_label_filter_horizontal = [
+        "counties",
+        "category_type",
+    ]
     filter_horizontal = (
         "type_short",
         "functions",
@@ -227,10 +232,43 @@ class UrgentNeedAdmin(SecureAdmin):
         "name",
         "description",
         "link",
-        "type",
         "warning",
         "website_description",
     ]
+    list_editable = ["active"]
+
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "white_label",
+                    "external_name",
+                    "phone_number",
+                    "type_short",
+                    "category_type",
+                    "active",
+                    "low_confidence",
+                    "year",
+                    "functions",
+                    "counties",
+                ),
+            },
+        ),
+        (
+            "Fields Overview",
+            {
+                "fields": (),
+                "description": (
+                    "<b>Type short:</b> A <i>type_short</i> associates a tile option from the immediate need (step-9) page to an urgent "
+                    "need. If more than one <i>type_short</i> is selected, the urgent need will be shown in the near-term benefits if either of "
+                    "<i>type_short</i> associated tiles is selected.<br>"
+                    "<br>"
+                    "<b>Category type:</b> A <i>category_type</i> determines the urgent need's category, name and icon."
+                ),
+            },
+        ),
+    )
 
     def has_add_permission(self, request):
         return False
@@ -245,7 +283,6 @@ class UrgentNeedAdmin(SecureAdmin):
         name = obj.name
         description = obj.description
         link = obj.link
-        type = obj.type
         warning = obj.warning
         website_description = obj.website_description
 
@@ -257,7 +294,6 @@ class UrgentNeedAdmin(SecureAdmin):
                     <a href="{}">Name</a>
                     <a href="{}">Description</a>
                     <a href="{}">Link</a>
-                    <a href="{}">Type</a>
                     <a href="{}">Warning</a>
                     <a href="{}">Website Description</a>
                 </div>
@@ -266,7 +302,6 @@ class UrgentNeedAdmin(SecureAdmin):
             reverse("translation_admin_url", args=[name.id]),
             reverse("translation_admin_url", args=[description.id]),
             reverse("translation_admin_url", args=[link.id]),
-            reverse("translation_admin_url", args=[type.id]),
             reverse("translation_admin_url", args=[warning.id]),
             reverse("translation_admin_url", args=[website_description.id]),
         )
@@ -414,6 +449,40 @@ class ProgramCategoryAdmin(SecureAdmin):
     action_buttons.allow_tags = True
 
 
+class UrgentNeedTypeAdmin(SecureAdmin):
+    search_fields = ("name",)
+    list_display = ["get_str", "icon", "action_buttons"]
+
+    def has_add_permission(self, request):
+        return False
+
+    def get_str(self, obj):
+        return str(obj)
+
+    get_str.admin_order_field = "name"
+    get_str.short_description = "Name"
+
+    def action_buttons(self, obj):
+        return format_html(
+            """
+            <div class="dropdown">
+                <span class="dropdown-btn material-symbols-outlined"> menu </span>
+                <div class="dropdown-content">
+                    <a href="{}">Name</a>
+                </div>
+            </div>
+            """,
+            reverse("translation_admin_url", args=[obj.name.id]),
+        )
+
+    action_buttons.short_description = "Translate:"
+    action_buttons.allow_tags = True
+
+
+class CategoryIconNameAdmin(SecureAdmin):
+    search_fields = ("name",)
+
+
 admin.site.register(LegalStatus, LegalStatusAdmin)
 admin.site.register(Program, ProgramAdmin)
 admin.site.register(County, CountiesAdmin)
@@ -429,3 +498,5 @@ admin.site.register(Referrer, ReferrerAdmin)
 admin.site.register(WebHookFunction, WebHookFunctionsAdmin)
 admin.site.register(TranslationOverride, TranslationOverrideAdmin)
 admin.site.register(ProgramCategory, ProgramCategoryAdmin)
+admin.site.register(UrgentNeedType, UrgentNeedTypeAdmin)
+admin.site.register(CategoryIconName, CategoryIconNameAdmin)
