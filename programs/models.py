@@ -836,11 +836,11 @@ class UrgentNeedTypeDataController(ModelDataController["UrgentNeedType"]):
 class UrgentNeedTypeManager(models.Manager):
     translated_fields = ("name",)
 
-    def new_urgent_need_type(self, white_label: str, icon: str):
+    def new_urgent_need_type(self, white_label: str, external_name: str, icon: str):
         translations = {}
         for field in self.translated_fields:
             translations[field] = Translation.objects.add_translation(
-                f"urgent_need_type.{icon}_temporary_key-{field}"
+                f"urgent_need_type.{external_name}_temporary_key-{field}"
             )
 
         # set white label
@@ -851,13 +851,14 @@ class UrgentNeedTypeManager(models.Manager):
         if icon:
             icon_instance = CategoryIconName.objects.filter(name=icon).first()
         urgent_need_type = self.create(
+            external_name=external_name,
             icon=icon_instance,
             white_label=white_label,
             **translations,
         )
 
         for [field, translation] in translations.items():
-            translation.label = f"urgent_need_type.{icon}_{urgent_need_type.id}-{field}"
+            translation.label = f"urgent_need_type.{external_name}_{urgent_need_type.id}-{field}"
             translation.save()
 
         return urgent_need_type
@@ -871,6 +872,7 @@ class UrgentNeedType(models.Model):
         blank=False,
         on_delete=models.CASCADE,
     )
+    external_name = models.CharField(max_length=120, blank=True, null=True, unique=True)
     icon = models.ForeignKey(
         CategoryIconName,
         related_name="urgent_need_type_icon",
