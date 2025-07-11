@@ -858,7 +858,9 @@ class UrgentNeedTypeManager(models.Manager):
         )
 
         for [field, translation] in translations.items():
-            translation.label = f"urgent_need_type.{external_name}_{urgent_need_type.id}-{field}"
+            translation.label = (
+                f"urgent_need_type.{external_name}_{urgent_need_type.id}-{field}"
+            )
             translation.save()
 
         return urgent_need_type

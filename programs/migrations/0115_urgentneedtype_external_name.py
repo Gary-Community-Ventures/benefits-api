@@ -25,7 +25,7 @@ def updated_urgent_need_type_external_name(apps, schema_editor):
             translation = Translation.objects.get(label=current_label)
             translation.label = new_label
             translation.save()
-            
+
 
 class Migration(migrations.Migration):
 
@@ -39,5 +39,7 @@ class Migration(migrations.Migration):
             name="external_name",
             field=models.CharField(blank=True, max_length=120, null=True, unique=True),
         ),
-        migrations.RunPython(updated_urgent_need_type_external_name, migrations.RunPython.noop),
+        migrations.RunPython(
+            updated_urgent_need_type_external_name, migrations.RunPython.noop
+        ),
     ]
