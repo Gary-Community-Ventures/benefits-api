@@ -15,26 +15,33 @@ class NCFamilyPlanningServices(ProgramCalculator):
 
         fpl = self.program.year
 
+        # Calculate the income limit for Family Planning Medicaid based on household size
         income_limit = int(NCFamilyPlanningServices.fpl_percent * fpl.get_limit(self.screen.household_size))
 
+        # Calculate the household's gross yearly income, excluding cash assistance
         gross_income = int(self.screen.calc_gross_income("yearly", ["all"], exclude=["cashAssistance"]))
 
+        # Check if gross income is below the Family Planning Medicaid income limit
         e.condition(gross_income < income_limit, messages.income(gross_income, income_limit))
 
-        income_limit_for_medicaid = int(
-            NCFamilyPlanningServices.medicaid_fpl_limit * fpl.get_limit(len(e.eligible_members))
+        # Exclude if eligible for full Medicaid at this income level
+        income_limit_for_full_medicaid = int(
+            NCFamilyPlanningServices.medicaid_fpl_limit * fpl.get_limit(self.screen.household_size)
         )
-        if gross_income < income_limit_for_medicaid:
+        if gross_income < income_limit_for_full_medicaid:
             e.condition(not medicaid_eligible(self.data), messages.must_not_have_benefit("Medicaid"))
 
     def member_eligible(self, e: MemberEligibility):
         member = e.member
 
-        # not pregnant
+        # Member must not be pregnant
         e.condition(not member.pregnant)
 
+        # Member must have an allowed insurance type
         e.condition(member.insurance.has_insurance_types(NCFamilyPlanningServices.insurance_types))
 
+        # Member must be head of household or spouse
         e.condition(member.is_head() or member.is_spouse())
-        # age
+
+        # Member must meet minimum age requirement
         e.condition(member.age >= NCFamilyPlanningServices.min_age)
