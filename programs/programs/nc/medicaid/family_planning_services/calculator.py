@@ -9,7 +9,7 @@ class NCFamilyPlanningServices(ProgramCalculator):
     fpl_percent = 1.95
     medicaid_fpl_limit = 1.38
     dependencies = ["age", "insurance", "income_frequency", "income_amount", "household_size"]
-    insurance_types = ("none", "employer", "private", "va", "medicare")
+    ineligible_insurance_types = ["medicaid", "emergency_medicaid", "family_planning"]
 
     def household_eligible(self, e: Eligibility):
 
@@ -37,8 +37,8 @@ class NCFamilyPlanningServices(ProgramCalculator):
         # Member must not be pregnant
         e.condition(not member.pregnant)
 
-        # Member must have an allowed insurance type
-        e.condition(member.insurance.has_insurance_types(NCFamilyPlanningServices.insurance_types))
+        # Member must not have these types of insurance.
+        e.condition(not member.insurance.has_insurance_types(NCFamilyPlanningServices.ineligible_insurance_types))
 
         # Member must be head of household or spouse
         e.condition(member.is_head() or member.is_spouse())
