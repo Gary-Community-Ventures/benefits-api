@@ -8,10 +8,9 @@ class MedicareSavings(ProgramCalculator):
         "married": 17_470,
     }
     min_age = 65
-    member_amount = 175 * 12
-    general_income_disregard = 20
-    earned_income_disregard = 65
-    min_income_percent = 1.2
+    member_amount = 185 * 12
+    general_income_disregard = 20 * 12
+    earned_income_disregard = 65 * 12
     max_income_percent = 1.35
     dependencies = ["household_assets", "relationship", "income_frequency", "income_amount", "age"]
 
@@ -55,7 +54,6 @@ class MedicareSavings(ProgramCalculator):
 
         household_size = self.screen.household_size
         fpl = self.program.year.as_dict()[household_size]
-        min_income = fpl * self.min_income_percent
         max_income = fpl * self.max_income_percent
 
-        e.condition(min_income <= countable_income <= max_income)
+        e.condition(countable_income <= max_income)
