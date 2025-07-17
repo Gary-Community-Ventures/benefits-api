@@ -29,12 +29,14 @@ class MedicareSavings(ProgramCalculator):
         e.condition(self.screen.household_assets < self.asset_limit[status])
 
         # income
-        earned_income = member.calc_gross_income("yearly", ("earned",))
-        unearned_income = member.calc_gross_income("yearly", ("unearned",))
+        earned_income = member.calc_gross_income("yearly", ["earned"])
+        unearned_income = member.calc_gross_income("yearly", ["unearned"], ["sSI"])
+        ssi_income = member.calc_gross_income("yearly", ["sSI"])
         if status == "married":
             spouse = is_married["married_to"]
-            earned_income += spouse.calc_gross_income("yearly", ("earned",))
-            unearned_income += spouse.calc_gross_income("yearly", ("unearned",))
+            earned_income += spouse.calc_gross_income("yearly", ["earned"])
+            unearned_income += spouse.calc_gross_income("yearly", ["unearned"], ["sSI"])
+            ssi_income += spouse.calc_gross_income("yearly", ["sSI"])
 
         # apply $20 general income disregard
         if unearned_income >= self.general_income_disregard:
@@ -50,7 +52,7 @@ class MedicareSavings(ProgramCalculator):
         # halve remaining earned income
         earned_income /= 2
 
-        countable_income = unearned_income + earned_income
+        countable_income = unearned_income + earned_income + ssi_income
 
         household_size = self.screen.household_size
         fpl = self.program.year.as_dict()[household_size]
