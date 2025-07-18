@@ -26,7 +26,7 @@ class MedicareSavings(ProgramCalculator):
         # assets
         is_married = member.is_married()
         status = "married" if is_married["is_married"] else "single"
-        e.condition(self.screen.household_assets < self.asset_limit[status])
+        e.condition(self.screen.household_assets <= self.asset_limit[status])
 
         # income
         earned_income = member.calc_gross_income("yearly", ["earned"])
@@ -47,7 +47,7 @@ class MedicareSavings(ProgramCalculator):
             earned_income -= remaining_disregard
 
         # apply $65 earned income disregard
-        earned_income -= self.earned_income_disregard
+        earned_income = max(0, earned_income - self.earned_income_disregard)
 
         # halve remaining earned income
         earned_income /= 2
