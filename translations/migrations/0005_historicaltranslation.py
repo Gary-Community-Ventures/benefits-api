@@ -5,6 +5,7 @@ from django.db import migrations, models
 import django.db.models.deletion
 import simple_history.models
 
+
 def move_zh_to_zh_hans(apps, _):
     Translation = apps.get_model("translations", "Translation")
     translations = Translation.objects.prefetch_related("translations").all()
@@ -19,6 +20,7 @@ def move_zh_to_zh_hans(apps, _):
 
                 language.delete()
 
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -32,9 +34,7 @@ class Migration(migrations.Migration):
             fields=[
                 (
                     "id",
-                    models.BigIntegerField(
-                        auto_created=True, blank=True, db_index=True, verbose_name="ID"
-                    ),
+                    models.BigIntegerField(auto_created=True, blank=True, db_index=True, verbose_name="ID"),
                 ),
                 ("active", models.BooleanField(default=True)),
                 ("no_auto", models.BooleanField(default=False)),

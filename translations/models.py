@@ -139,26 +139,25 @@ class TranslationManager(TranslatableManager):
 
 
 class CustomHistoricalRecords(HistoricalRecords):
-    
+
     def get_history_model_name(self, model):
-        return f'Historical{model._meta.object_name}'
-    
+        return f"Historical{model._meta.object_name}"
+
     def create_history_model(self, model, inherited):
         history_model = super().create_history_model(model, inherited)
-        
-        history_model.add_to_class('affected_language', models.CharField(max_length=16, null=True, blank=True))
-        history_model.add_to_class('original_text', models.TextField(null=True, blank=True))
-        history_model.add_to_class('changed_text', models.TextField(null=True, blank=True))
-        history_model.add_to_class('edit_type', models.BooleanField(null=True, blank=True))
-        
+
+        history_model.add_to_class("affected_language", models.CharField(max_length=16, null=True, blank=True))
+        history_model.add_to_class("original_text", models.TextField(null=True, blank=True))
+        history_model.add_to_class("changed_text", models.TextField(null=True, blank=True))
+        history_model.add_to_class("edit_type", models.BooleanField(null=True, blank=True))
+
         return history_model
 
 
 class Translation(TranslatableModel):
     history = CustomHistoricalRecords()
     translations = TranslatedFields(
-        text=models.TextField(null=True, blank=True), 
-        edited=models.BooleanField(default=False, null=False)
+        text=models.TextField(null=True, blank=True), edited=models.BooleanField(default=False, null=False)
     )
     active = models.BooleanField(default=True, null=False)
     no_auto = models.BooleanField(default=False, null=False)
@@ -181,8 +180,8 @@ class Translation(TranslatableModel):
                     try:
                         old_instance.set_current_language(lang_code)
                         old_translations[lang_code] = {
-                            'text': old_instance.text,
-                            'edited': old_instance.edited,
+                            "text": old_instance.text,
+                            "edited": old_instance.edited,
                         }
                     except Exception:
                         old_translations[lang_code] = None

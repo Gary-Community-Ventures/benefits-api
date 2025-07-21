@@ -380,9 +380,11 @@ class TranslationAdminViews:
 
     def _filter_query_set(self, request):
         raise NotImplemented(f"Please add the `filter_query_set` method for the '{self.name}' translations admin")
-    
+
     def _filter_query_set_by_id(self, request, obj_id):
-        raise NotImplemented(f"Please add the `_filter_query_set_by_id` method for the '{self.name}' translations admin")
+        raise NotImplemented(
+            f"Please add the `_filter_query_set_by_id` method for the '{self.name}' translations admin"
+        )
 
     def _model_white_label_query_set(self, user: User):
         query_set = self.Model.objects.all()
@@ -610,9 +612,13 @@ class TranslationHistoryTranslationAdmin(TranslationAdminViews):
         return [
             path(f"admin/{self.name}/<int:id>", self._wapper(self._list_router)),
             path(f"admin/{self.name}/<int:id>/filter", self._wapper(self._filter_router)),
-            path(f"admin/{self.name}/revert/<int:history_id>", self._wapper(self.revert_translation), name="revert_translation"),
+            path(
+                f"admin/{self.name}/revert/<int:history_id>",
+                self._wapper(self.revert_translation),
+                name="revert_translation",
+            ),
         ]
-    
+
     def revert_translation(self, request, history_id):
         historical_record = HistoricalTranslation.objects.get(history_id=history_id)
         instance = historical_record.instance
@@ -628,8 +634,10 @@ class TranslationHistoryTranslationAdmin(TranslationAdminViews):
         update_change_reason(instance, f"Reverted to history ID {history_id} for '{lang}'")
 
         instance.save()
-        return HttpResponseRedirect(f"/api/translations/admin/translation_history/{instance.id}?lang={historical_record.affected_language}")
-    
+        return HttpResponseRedirect(
+            f"/api/translations/admin/translation_history/{instance.id}?lang={historical_record.affected_language}"
+        )
+
     def _list_view(self, request, id):
         try:
             translation = Translation.objects.get(pk=id)
@@ -649,7 +657,7 @@ class TranslationHistoryTranslationAdmin(TranslationAdminViews):
         paginator = Paginator(all_history, 25)
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
-        
+
         context = {
             "translation": translation,
             "page_obj": page_obj,
@@ -657,6 +665,8 @@ class TranslationHistoryTranslationAdmin(TranslationAdminViews):
         return render(request, f"{self.name}/main.html", context)
 
     def _filter_query_set_by_id(self, request, obj_id):
-        return self._model_white_label_query_set(request.user).filter(
-            original_text__icontains=request.GET.get("name", "")
-        ).order_by(self.ordering_field)
+        return (
+            self._model_white_label_query_set(request.user)
+            .filter(original_text__icontains=request.GET.get("name", ""))
+            .order_by(self.ordering_field)
+        )
