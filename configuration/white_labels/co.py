@@ -192,7 +192,7 @@ class CoConfigurationData(ConfigurationData):
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "中文 (简体)",
+        "zh-hans": "中文 (简体)",
         "ar": "عربي",
         "sw": "Kiswahili",
     }
