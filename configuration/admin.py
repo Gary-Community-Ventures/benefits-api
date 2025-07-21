@@ -15,7 +15,7 @@ class ConfigurationAdmin(SecureAdmin):
     search_fields = ("name", "white_label__name")
     list_display = ("name", "white_label_name", "active")
     list_editable = ["active"]
-    
+
     def white_label_name(self, obj):
         return obj.white_label.name
 
