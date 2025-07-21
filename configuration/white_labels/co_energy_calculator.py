@@ -1834,6 +1834,8 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                 "dont_show_category_values",
                 "logo_landing_page_link",
                 "no_lets_get_started",
+                "help_bubble_always_open",
+                "small_header_language_dropdown",
             ]
         },
         "noResultMessage": {
