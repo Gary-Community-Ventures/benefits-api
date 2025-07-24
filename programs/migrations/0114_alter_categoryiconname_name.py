@@ -248,5 +248,7 @@ class Migration(migrations.Migration):
             name="name",
             field=models.CharField(max_length=120, unique=True),
         ),
-        migrations.RunPython(sync_data, migrations.RunPython.noop),
+        # The sync_data method only needed a to be run once
+        # after the urgent need's type field was refactored.
+        # migrations.RunPython(sync_data, migrations.RunPython.noop),
     ]
