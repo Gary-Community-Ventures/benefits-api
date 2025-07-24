@@ -49,6 +49,7 @@ class ProgramAdmin(SecureAdmin):
         "website_description",
         "estimated_value",
     ]
+    list_editable = ["active"]
 
     def has_add_permission(self, request):
         return False
@@ -383,10 +384,11 @@ class WebHookFunctionsAdmin(SecureAdmin):
 
 class TranslationOverrideAdmin(SecureAdmin):
     search_fields = ("external_name",)
-    list_display = ["get_str", "calculator", "action_buttons"]
+    list_display = ["get_str", "calculator", "active", "action_buttons"]
     white_label_filter_horizontal = ("counties", "program")
     filter_horizontal = ("counties",)
     exclude = ["translation"]
+    list_editable = ["active"]
 
     def has_add_permission(self, request):
         return False
