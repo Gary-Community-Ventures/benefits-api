@@ -962,7 +962,14 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
         # get urgent need type
         category_type = None
         if data["category_type"] is not None:
-            need.category_type = UrgentNeedType.objects.get(external_name=data["category_type"])
+            try:
+                category_type = UrgentNeedType.objects.get(external_name=data["category_type"])
+            except UrgentNeedType.DoesNotExist:
+                category_type = UrgentNeedType.objects.create(
+                    external_name=data["category_type"],
+                    white_label=white_label,
+                )
+            category_type = UrgentNeedType.objects.get(external_name=data["category_type"])
         need.category_type = category_type
 
         # get or create type short
