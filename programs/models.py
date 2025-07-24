@@ -964,7 +964,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
         if data["category_type"] is not None:
             need.category_type = UrgentNeedType.objects.get(external_name=data["category_type"])
         need.category_type = category_type
-        
+
         # get or create type short
         categories = []
         for category in data["categories"]:
