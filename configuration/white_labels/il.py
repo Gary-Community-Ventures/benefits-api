@@ -2288,6 +2288,16 @@ class IlConfigurationData(ConfigurationData):
                         "_default_message": "Food assistance",
                     },
                 },
+                "il_wic": {
+                    "name": {
+                        "_label": "foodAndNutritionBenefits.il_wic",
+                        "_default_message": "Special Supplemental Nutrition Program for Women, Infants, and Children (WIC): ",
+                    },
+                    "description": {
+                        "_label": "foodAndNutritionBenefits.il_wic_desc",
+                        "_default_message": "Monthly benefits for nutritious foods, nutrition education, and healthcare referrals for pregnant women, new mothers, and young children",
+                    },
+                },
             },
             "category_name": {
                 "_label": "foodAndNutrition",
