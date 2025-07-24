@@ -164,6 +164,7 @@ class CoConfigurationData(ConfigurationData):
         "pueblo": "Pueblo County",
         "pitkin": "Pitkin County",
         "broomfield": "City and County of Broomfield",
+        "theactioncenter": "The Action Center",
         "gac": "Get Ahead Colorado",
         "bia": "Benefits in Action",
         "fircsummitresourcecenter": {
@@ -2205,6 +2206,7 @@ class CoConfigurationData(ConfigurationData):
             "default": "MFB_COLogo",
             "bia": "BIA_MFBLogo",
             "broomfield": "Broomfield_MFBLogo",
+            "theactioncenter": "TheActionCenter_MFBLogo",
             "jeffcoHS": "JHSA_MFBLogo",
             "jeffcoHSCM": "JHSA_MFBLogo",
             "jeffcoPS": "JPS_MFBLogo",
@@ -2232,6 +2234,10 @@ class CoConfigurationData(ConfigurationData):
             "broomfield": {
                 "id": "referrerHook.logoAlts.broomfield",
                 "defaultMessage": "City and County of Broomfield and MyFriendBen home page button",
+            },
+            "theactioncenter": {
+                "id": "referrerHook.logoAlts.theactioncenter",
+                "defaultMessage": "The Action Center and MyFriendBen home page button",
             },
             "jeffcoHS": {
                 "id": "referrerHook.logoAlts.jeffcoHS",
@@ -2294,6 +2300,7 @@ class CoConfigurationData(ConfigurationData):
         "logoClass": {
             "default": "logo",
             "broomfield": "broomfield-logo-size",
+            "theactioncenter": "theactioncenter-logo-size",
             "eaglecounty": "eaglecounty-logo-size",
             "larimercounty": "larimercounty-logo-size",
             "tellercounty": "tellercounty-logo-size",
