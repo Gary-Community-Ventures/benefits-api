@@ -885,6 +885,7 @@ class UrgentNeedManager(models.Manager):
 
 class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
     _model_name = "UrgentNeed"
+    dependencies = ["UrgentNeedType"]
 
     YearDataType = TypedDict("FplDataType", {"year": str, "period": str})
     CategoriesType = list[TypedDict("CategoryType", {"name": str})]
@@ -896,6 +897,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "phone_number": Optional[str],
             "active": bool,
             "low_confidence": str,
+            "category_type": Optional[str],
             "categories": CategoriesType,
             "functions": NeedFunctionsType,
             "fpl": Optional[YearDataType],
@@ -924,6 +926,7 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             "phone_number": (str(need.phone_number) if need.phone_number is not None else None),
             "active": need.active,
             "low_confidence": need.low_confidence,
+            "category_type": (need.category_type.external_name if need.category_type is not None else None),
             "categories": self._category(),
             "functions": self._functions(),
             "fpl": self._year(),
@@ -956,6 +959,12 @@ class UrgentNeedDataController(ModelDataController["UrgentNeed"]):
             white_label = WhiteLabel.objects.create(name=data["white_label"], code=data["white_label"])
         need.white_label = white_label
 
+        # get urgent need type
+        category_type = None
+        if data["category_type"] is not None:
+            need.category_type = UrgentNeedType.objects.get(external_name=data["category_type"])
+        need.category_type = category_type
+        
         # get or create type short
         categories = []
         for category in data["categories"]:
