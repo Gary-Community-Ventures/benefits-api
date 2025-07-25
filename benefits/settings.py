@@ -19,7 +19,24 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from django.conf.locale import LANG_INFO as DJANGO_LANG_INFO
 
+EXTRA_LANG_INFO = {
+    "am": {
+        "bidi": False,
+        "code": "am",
+        "name": "Amharic",
+        "name_local": "አማርኛ",
+    },
+    "so": {
+        "bidi": False,
+        "code": "so",
+        "name": "Somali",
+        "name_local": "Soomaali",
+    },
+}
+
+DJANGO_LANG_INFO.update(EXTRA_LANG_INFO)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -78,6 +95,7 @@ INSTALLED_APPS = [
     "unfold.contrib.guardian",  # optional, if django-guardian package is used
     # optional, if django-simple-history package is used
     "unfold.contrib.simple_history",
+    "simple_history",
     "authentication.apps.AuthConfig",
     "corsheaders",
     "screener.apps.ScreenerConfig",
@@ -113,6 +131,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 ROOT_URLCONF = "benefits.urls"
@@ -197,7 +216,7 @@ LANGUAGES = (
     ("ru", _("Russian")),
     ("ne", _("Nepali")),
     ("my", _("Burmese")),
-    ("zh", _("Chinese")),
+    ("zh-hans", _("Simplified Chinese")),
     ("ar", _("Arabic")),
     ("sw", _("Kiswahili")),
 )
@@ -221,7 +240,7 @@ PARLER_LANGUAGES = {
         {"code": "ru"},
         {"code": "ne"},
         {"code": "my"},
-        {"code": "zh"},
+        {"code": "zh-hans"},
         {"code": "ar"},
         {"code": "sw"},
     ),

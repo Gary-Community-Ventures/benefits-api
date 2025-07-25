@@ -3,7 +3,8 @@ from django.shortcuts import render
 from django.conf import settings
 from authentication.models import User
 from screener.models import WhiteLabel
-from .models import Translation
+from .models import Translation, HistoricalTranslation
+from simple_history.utils import update_change_reason
 from rest_framework.response import Response
 from rest_framework import views
 from django import forms
@@ -177,6 +178,13 @@ def translation_view(request, id=0):
 
         translations = {t.language_code: TranslationForm({"text": t.text}) for t in translation.translations.all()}
 
+        all_history = translation.history.all().order_by("history_date")
+
+        updated_dates = {}
+        for record in all_history:
+            if record.changed_text:
+                updated_dates[record.affected_language] = record.history_date
+
         for lang in langs:
             if lang not in translations:
                 translations[lang] = TranslationForm()
@@ -187,6 +195,7 @@ def translation_view(request, id=0):
             "label_form": LabelForm(
                 {"label": translation.label, "active": translation.active, "no_auto": translation.no_auto}
             ),
+            "updated_dates": updated_dates,
         }
 
         return render(request, "edit/main.html", context)
@@ -243,10 +252,17 @@ def edit_translation(request, id=0, lang="en-us"):
                     Translation.objects.edit_translation_by_id(id, language, translated_text, False)
 
             parent = Translation.objects.get(pk=id)
+            all_history = parent.history.all().order_by("history_date")
+            updated_dates = {}
+            for record in all_history:
+                if record.changed_text:
+                    updated_dates[record.affected_language] = record.history_date
+
             forms = {t.language_code: TranslationForm({"text": t.text}) for t in parent.translations.all()}
             context = {
                 "translation": parent,
                 "langs": forms,
+                "updated_dates": updated_dates,
             }
             return render(request, "edit/langs.html", context)
 
@@ -282,7 +298,6 @@ def get_white_label_choices():
 
 def get_urgent_need_icon_choices():
     icons = CategoryIconName.objects.all().order_by("name")
-    # what if empty
     return [(icon.name, icon.name) for icon in icons]
 
 
@@ -348,8 +363,12 @@ class TranslationAdminViews:
 
         return render(request, f"{self.name}/page.html", context)
 
-    def _filter_view(self, request):
-        objects = self._filter_query_set(request).distinct().order_by(self.ordering_field)
+    def _filter_view(self, request, **kwargs):
+        obj_id = kwargs.get("id")
+        if obj_id:
+            objects = self._filter_query_set_by_id(request, obj_id).distinct().order_by(self.ordering_field)
+        else:
+            objects = self._filter_query_set(request).distinct().order_by(self.ordering_field)
 
         paginator = Paginator(objects, 50)
         page_number = request.GET.get("page")
@@ -361,6 +380,11 @@ class TranslationAdminViews:
 
     def _filter_query_set(self, request):
         raise NotImplemented(f"Please add the `filter_query_set` method for the '{self.name}' translations admin")
+
+    def _filter_query_set_by_id(self, request, obj_id):
+        raise NotImplemented(
+            f"Please add the `_filter_query_set_by_id` method for the '{self.name}' translations admin"
+        )
 
     def _model_white_label_query_set(self, user: User):
         query_set = self.Model.objects.all()
@@ -573,3 +597,76 @@ class UrgentNeedTypeTranslationAdmin(TranslationAdminViews):
     def _filter_query_set(self, request):
         query = request.GET.get("name", "")
         return self._model_white_label_query_set(request.user).filter(icon__name__contains=query).order_by("icon")
+
+
+class TranslationHistoryTranslationAdmin(TranslationAdminViews):
+    name = "translation_history"
+    ordering_field = "-history_date"
+
+    class Form(WhiteLabelForm):
+        pass
+
+    Model = HistoricalTranslation
+
+    def urls(self):
+        return [
+            path(f"admin/{self.name}/<int:id>", self._wapper(self._list_router)),
+            path(f"admin/{self.name}/<int:id>/filter", self._wapper(self._filter_router)),
+            path(
+                f"admin/{self.name}/revert/<int:history_id>",
+                self._wapper(self.revert_translation),
+                name="revert_translation",
+            ),
+        ]
+
+    def revert_translation(self, request, history_id):
+        historical_record = HistoricalTranslation.objects.get(history_id=history_id)
+        instance = historical_record.instance
+        lang = historical_record.affected_language
+
+        Translation.objects.edit_translation_by_id(
+            instance.id,
+            lang,
+            historical_record.original_text,
+            historical_record.edit_type,
+        )
+
+        update_change_reason(instance, f"Reverted to history ID {history_id} for '{lang}'")
+
+        instance.save()
+        return HttpResponseRedirect(
+            f"/api/translations/admin/translation_history/{instance.id}?lang={historical_record.affected_language}"
+        )
+
+    def _list_view(self, request, id):
+        try:
+            translation = Translation.objects.get(pk=id)
+        except Translation.DoesNotExist:
+            return HttpResponseNotFound()
+
+        if not has_translation_access(translation, request.user):
+            return HttpResponseRedirect("/api/translations/admin/programs")
+
+        lang = request.GET.get("lang")
+
+        all_history = translation.history.filter(changed_text__isnull=False).order_by(self.ordering_field)
+
+        if lang:
+            all_history = all_history.filter(affected_language=lang)
+
+        paginator = Paginator(all_history, 25)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        context = {
+            "translation": translation,
+            "page_obj": page_obj,
+        }
+        return render(request, f"{self.name}/main.html", context)
+
+    def _filter_query_set_by_id(self, request, obj_id):
+        return (
+            self._model_white_label_query_set(request.user)
+            .filter(original_text__icontains=request.GET.get("name", ""))
+            .order_by(self.ordering_field)
+        )

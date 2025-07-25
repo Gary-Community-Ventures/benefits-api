@@ -1,7 +1,27 @@
+{% load filters %}
 <div id="languages">
   {% for lang, form in langs.items %}
   <div class="block">
-    <label class="label">Language Code: {{ lang }}</label>
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <label class="label">Language: {{ lang|get_language_name }}</label>
+        </div>
+      </div>
+      <div class="level-right">
+        <div class="level-item">
+          <label class="label">Last Updated: {{ updated_dates|get_updated_label:lang }}</label>
+        </div>
+        <div class="level-item">
+          <label class="label">Update Type: {% if translation|get_update_type:lang %}
+            Manual
+          {% else %}
+            Auto
+          {% endif %}
+          </label>
+        </div>
+      </div>
+    </div>
     <form
       id="{{ lang }}"
       hx-post="{{ translation.id }}/{{ lang }}"
