@@ -7,7 +7,7 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Name</th>
+        <th>External Name</th>
         <th>Icon</th>
         <th>Actions</th>
       </tr>
@@ -16,7 +16,7 @@
       {% for urgent_need_type in page_obj %}
       <tr>
         <td>{{ urgent_need_type.id }}</td>
-        <td>{{ urgent_need_type.name.text }}</td>
+        <td>{{ urgent_need_type.external_name }}</td>
         <td>{{ urgent_need_type.icon }}</td>
         <td>
           <div class="dropdown">
