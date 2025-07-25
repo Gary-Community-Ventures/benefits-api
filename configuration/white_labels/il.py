@@ -251,8 +251,8 @@ class IlConfigurationData(ConfigurationData):
             "_default_message": "Social Security Dependent Benefits (retirement, disability, or survivors)",
         },
         "cashAssistance": {
-            "_label": "incomeOptions.cashAssistance",
-            "_default_message": "Cash Assistance Grant",
+            "_label": "incomeOptions.cashAssistance.il",
+            "_default_message": "Government Cash Assistance (including TANF)",
         },
         "gifts": {
             "_label": "incomeOptions.gifts",
@@ -393,8 +393,8 @@ class IlConfigurationData(ConfigurationData):
             "family_planning": {
                 "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.family_planning",
-                    "_default_message": "Family Planning Limited Medicaid",
+                    "_label": "healthInsuranceOptions.family_planning.il",
+                    "_default_message": "Family Planning Presumptive Eligibility",
                 },
             },
             "va": {
@@ -2295,7 +2295,7 @@ class IlConfigurationData(ConfigurationData):
                     },
                     "description": {
                         "_label": "foodAndNutritionBenefits.il_wic_desc",
-                        "_default_message": "Monthly benefits for nutritious foods, nutrition education, and healthcare referrals for pregnant women, new mothers, and young children",
+                        "_default_message": "Food and breastfeeding assistance",
                     },
                 },
             },
@@ -2319,7 +2319,7 @@ class IlConfigurationData(ConfigurationData):
     referrer_data = {
         "theme": {"default": "default"},
         "logoSource": {
-            "default": "MFB_Logo",
+            "default": "MFB_ILLogo",
         },
         "logoAlt": {
             "default": {
