@@ -20,12 +20,21 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     more_help_options = {
         "moreHelpOptions": [
             {
-                "name": {"_default_message": "2-1-1 Colorado", "_label": "moreHelp.resource_name1"},
+                "name": {
+                    "_default_message": "2-1-1 Colorado",
+                    "_label": "moreHelp.resource_name1",
+                },
                 "link": "https://www.211colorado.org?utm_source=cesn&utm_medium=web&utm_campaign=cesn&utm_id=cesn",
-                "phone": {"_default_message": "Dial 2-1-1 or 866.760.6489", "_label": "moreHelp.resource_phone1"},
+                "phone": {
+                    "_default_message": "Dial 2-1-1 or 866.760.6489",
+                    "_label": "moreHelp.resource_phone1",
+                },
             },
             {
-                "name": {"_default_message": "MyFriendBen", "_label": "moreHelp.myfriendben"},
+                "name": {
+                    "_default_message": "MyFriendBen",
+                    "_label": "moreHelp.myfriendben",
+                },
                 "description": {
                     "_label": "moreHelp.myfriendben.energy.description",
                     "_default_message": "MyFriendBen is dedicated to empowering individuals and organizations by making it easy to understand and access government benefits, tax credits, and nonprofit programs. Quickly get the information you need to make a plan before you apply.",
@@ -45,14 +54,38 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "_label": "relationshipOptions.fosterChildOrKinshipChild",
             "_default_message": "Foster Child / Kinship Care",
         },
-        "stepChild": {"_label": "relationshipOptions.stepChild", "_default_message": "Step-child"},
-        "grandChild": {"_label": "relationshipOptions.grandChild", "_default_message": "Grandchild"},
-        "spouse": {"_label": "relationshipOptions.spouse", "_default_message": "Spouse"},
-        "parent": {"_label": "relationshipOptions.parent", "_default_message": "Parent"},
-        "fosterParent": {"_label": "relationshipOptions.fosterParent", "_default_message": "Foster Parent"},
-        "stepParent": {"_label": "relationshipOptions.stepParent", "_default_message": "Step-parent"},
-        "grandParent": {"_label": "relationshipOptions.grandParent", "_default_message": "Grandparent"},
-        "sisterOrBrother": {"_label": "relationshipOptions.sisterOrBrother", "_default_message": "Sister/Brother"},
+        "stepChild": {
+            "_label": "relationshipOptions.stepChild",
+            "_default_message": "Step-child",
+        },
+        "grandChild": {
+            "_label": "relationshipOptions.grandChild",
+            "_default_message": "Grandchild",
+        },
+        "spouse": {
+            "_label": "relationshipOptions.spouse",
+            "_default_message": "Spouse",
+        },
+        "parent": {
+            "_label": "relationshipOptions.parent",
+            "_default_message": "Parent",
+        },
+        "fosterParent": {
+            "_label": "relationshipOptions.fosterParent",
+            "_default_message": "Foster Parent",
+        },
+        "stepParent": {
+            "_label": "relationshipOptions.stepParent",
+            "_default_message": "Step-parent",
+        },
+        "grandParent": {
+            "_label": "relationshipOptions.grandParent",
+            "_default_message": "Grandparent",
+        },
+        "sisterOrBrother": {
+            "_label": "relationshipOptions.sisterOrBrother",
+            "_default_message": "Sister/Brother",
+        },
         "stepSisterOrBrother": {
             "_label": "relationshipOptions.stepSisterOrBrother",
             "_default_message": "Step-sister/Step-brother",
@@ -61,8 +94,14 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "_label": "relationshipOptions.boyfriendOrGirlfriend",
             "_default_message": "Boyfriend/Girlfriend",
         },
-        "domesticPartner": {"_label": "relationshipOptions.domesticPartner", "_default_message": "Domestic Partner"},
-        "relatedOther": {"_label": "relationshipOptions.relatedOther", "_default_message": "Related in some other way"},
+        "domesticPartner": {
+            "_label": "relationshipOptions.domesticPartner",
+            "_default_message": "Domestic Partner",
+        },
+        "relatedOther": {
+            "_label": "relationshipOptions.relatedOther",
+            "_default_message": "Related in some other way",
+        },
     }
 
     referral_options = {}
@@ -83,7 +122,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     }
 
     income_options = {
-        "wages": {"_label": "incomeOptions.wages", "_default_message": "Wages, salaries, tips"},
+        "wages": {
+            "_label": "incomeOptions.wages",
+            "_default_message": "Wages, salaries, tips",
+        },
         "selfEmployment": {
             "_label": "incomeOptions.selfEmployment",
             "_default_message": "Income from freelance, independent contractor, or self-employment work",
@@ -96,18 +138,30 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "_label": "incomeOptions.sSRetirement",
             "_default_message": "Social Security Retirement Benefits",
         },
-        "sSI": {"_label": "incomeOptions.sSI", "_default_message": "Supplemental Security Income (SSI)"},
-        "childSupport": {"_label": "incomeOptions.childSupport", "_default_message": "Child Support (Received)"},
+        "sSI": {
+            "_label": "incomeOptions.sSI",
+            "_default_message": "Supplemental Security Income (SSI)",
+        },
+        "childSupport": {
+            "_label": "incomeOptions.childSupport",
+            "_default_message": "Child Support (Received)",
+        },
         "pension": {
             "_label": "incomeOptions.pension",
             "_default_message": "Military, Government, or Private Pension (including PERA)",
         },
-        "veteran": {"_label": "incomeOptions.veteran", "_default_message": "Veteran's Pension or Benefits"},
+        "veteran": {
+            "_label": "incomeOptions.veteran",
+            "_default_message": "Veteran's Pension or Benefits",
+        },
         "sSSurvivor": {
             "_label": "incomeOptions.sSSurvivor",
             "_default_message": "Social Security Survivor's Benefits (Widowed)",
         },
-        "unemployment": {"_label": "incomeOptions.unemployment", "_default_message": "Unemployment Benefits"},
+        "unemployment": {
+            "_label": "incomeOptions.unemployment",
+            "_default_message": "Unemployment Benefits",
+        },
         "sSDependent": {
             "_label": "incomeOptions.sSDependent",
             "_default_message": "Social Security Dependent Benefits (retirement, disability, or survivors)",
@@ -116,7 +170,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "_label": "incomeOptions.cashAssistance",
             "_default_message": "Government Cash Assistance (including Colorado Works/TANF)",
         },
-        "gifts": {"_label": "incomeOptions.gifts", "_default_message": "Gifts/Contributions (Received)"},
+        "gifts": {
+            "_label": "incomeOptions.gifts",
+            "_default_message": "Gifts/Contributions (Received)",
+        },
         "investment": {
             "_label": "incomeOptions.investment",
             "_default_message": "Investment Income (interest, dividends, and profit from selling stocks)",
@@ -125,14 +182,26 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "_label": "incomeOptions.cOSDisability",
             "_default_message": "Colorado State Disability Benefits",
         },
-        "rental": {"_label": "incomeOptions.rental", "_default_message": "Rental Income"},
-        "alimony": {"_label": "incomeOptions.alimony", "_default_message": "Alimony (Received)"},
+        "rental": {
+            "_label": "incomeOptions.rental",
+            "_default_message": "Rental Income",
+        },
+        "alimony": {
+            "_label": "incomeOptions.alimony",
+            "_default_message": "Alimony (Received)",
+        },
         "deferredComp": {
             "_label": "incomeOptions.deferredComp",
             "_default_message": "Withdrawals from Deferred Compensation (IRA, Keogh, etc.)",
         },
-        "workersComp": {"_label": "incomeOptions.workersComp", "_default_message": "Worker's Compensation"},
-        "boarder": {"_label": "incomeOptions.boarder", "_default_message": "Boarder or Lodger"},
+        "workersComp": {
+            "_label": "incomeOptions.workersComp",
+            "_default_message": "Worker's Compensation",
+        },
+        "boarder": {
+            "_label": "incomeOptions.boarder",
+            "_default_message": "Boarder or Lodger",
+        },
     }
 
     health_insurance_options = {
@@ -141,10 +210,22 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     }
 
     frequency_options = {
-        "weekly": {"_label": "frequencyOptions.weekly", "_default_message": "every week"},
-        "biweekly": {"_label": "frequencyOptions.biweekly", "_default_message": "every 2 weeks"},
-        "semimonthly": {"_label": "frequencyOptions.semimonthly", "_default_message": "twice a month"},
-        "monthly": {"_label": "frequencyOptions.monthly", "_default_message": "every month"},
+        "weekly": {
+            "_label": "frequencyOptions.weekly",
+            "_default_message": "every week",
+        },
+        "biweekly": {
+            "_label": "frequencyOptions.biweekly",
+            "_default_message": "every 2 weeks",
+        },
+        "semimonthly": {
+            "_label": "frequencyOptions.semimonthly",
+            "_default_message": "twice a month",
+        },
+        "monthly": {
+            "_label": "frequencyOptions.monthly",
+            "_default_message": "every month",
+        },
         "hourly": {"_label": "frequencyOptions.hourly", "_default_message": "hourly"},
     }
 
@@ -205,9 +286,15 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Denver County": "Denver County",
             "Jefferson County": "Jefferson County",
         },
-        "80003": {"Adams County": "Adams County", "Jefferson County": "Jefferson County"},
+        "80003": {
+            "Adams County": "Adams County",
+            "Jefferson County": "Jefferson County",
+        },
         "80004": {"Jefferson County": "Jefferson County"},
-        "80005": {"Jefferson County": "Jefferson County", "Broomfield County": "Broomfield County"},
+        "80005": {
+            "Jefferson County": "Jefferson County",
+            "Broomfield County": "Broomfield County",
+        },
         "80007": {
             "Boulder County": "Boulder County",
             "Jefferson County": "Jefferson County",
@@ -223,10 +310,19 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Denver County": "Denver County",
             "Arapahoe County": "Arapahoe County",
         },
-        "80012": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
+        "80012": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80013": {"Arapahoe County": "Arapahoe County"},
-        "80014": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
-        "80015": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
+        "80014": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80015": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80016": {
             "Denver County": "Denver County",
             "Elbert County": "Elbert County",
@@ -259,7 +355,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Broomfield County": "Broomfield County",
         },
         "80024": {"Adams County": "Adams County"},
-        "80025": {"Boulder County": "Boulder County", "Jefferson County": "Jefferson County"},
+        "80025": {
+            "Boulder County": "Boulder County",
+            "Jefferson County": "Jefferson County",
+        },
         "80026": {
             "Weld County": "Weld County",
             "Boulder County": "Boulder County",
@@ -270,19 +369,28 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Jefferson County": "Jefferson County",
             "Broomfield County": "Broomfield County",
         },
-        "80030": {"Adams County": "Adams County", "Jefferson County": "Jefferson County"},
+        "80030": {
+            "Adams County": "Adams County",
+            "Jefferson County": "Jefferson County",
+        },
         "80031": {
             "Adams County": "Adams County",
             "Jefferson County": "Jefferson County",
             "Broomfield County": "Broomfield County",
         },
-        "80033": {"Denver County": "Denver County", "Jefferson County": "Jefferson County"},
+        "80033": {
+            "Denver County": "Denver County",
+            "Jefferson County": "Jefferson County",
+        },
         "80045": {
             "Adams County": "Adams County",
             "Denver County": "Denver County",
             "Arapahoe County": "Arapahoe County",
         },
-        "80101": {"Elbert County": "Elbert County", "Arapahoe County": "Arapahoe County"},
+        "80101": {
+            "Elbert County": "Elbert County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80102": {
             "Weld County": "Weld County",
             "Adams County": "Adams County",
@@ -315,10 +423,22 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         },
         "80108": {"Douglas County": "Douglas County"},
         "80109": {"Douglas County": "Douglas County"},
-        "80110": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
-        "80111": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
-        "80112": {"Douglas County": "Douglas County", "Arapahoe County": "Arapahoe County"},
-        "80113": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
+        "80110": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80111": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80112": {
+            "Douglas County": "Douglas County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80113": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80116": {"Elbert County": "Elbert County", "Douglas County": "Douglas County"},
         "80117": {"Elbert County": "Elbert County"},
         "80118": {
@@ -326,21 +446,33 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Douglas County": "Douglas County",
             "El Paso County": "El Paso County",
         },
-        "80120": {"Douglas County": "Douglas County", "Arapahoe County": "Arapahoe County"},
+        "80120": {
+            "Douglas County": "Douglas County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80121": {"Arapahoe County": "Arapahoe County"},
-        "80122": {"Douglas County": "Douglas County", "Arapahoe County": "Arapahoe County"},
+        "80122": {
+            "Douglas County": "Douglas County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80123": {
             "Denver County": "Denver County",
             "Arapahoe County": "Arapahoe County",
             "Jefferson County": "Jefferson County",
         },
-        "80124": {"Douglas County": "Douglas County", "Arapahoe County": "Arapahoe County"},
+        "80124": {
+            "Douglas County": "Douglas County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80125": {
             "Douglas County": "Douglas County",
             "Arapahoe County": "Arapahoe County",
             "Jefferson County": "Jefferson County",
         },
-        "80126": {"Douglas County": "Douglas County", "Arapahoe County": "Arapahoe County"},
+        "80126": {
+            "Douglas County": "Douglas County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80127": {
             "Denver County": "Denver County",
             "Douglas County": "Douglas County",
@@ -351,10 +483,16 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Arapahoe County": "Arapahoe County",
             "Jefferson County": "Jefferson County",
         },
-        "80129": {"Douglas County": "Douglas County", "Arapahoe County": "Arapahoe County"},
+        "80129": {
+            "Douglas County": "Douglas County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80130": {"Douglas County": "Douglas County"},
         "80131": {"Douglas County": "Douglas County"},
-        "80132": {"Douglas County": "Douglas County", "El Paso County": "El Paso County"},
+        "80132": {
+            "Douglas County": "Douglas County",
+            "El Paso County": "El Paso County",
+        },
         "80133": {
             "Teller County": "Teller County",
             "Douglas County": "Douglas County",
@@ -390,19 +528,31 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         },
         "80202": {"Denver County": "Denver County"},
         "80203": {"Denver County": "Denver County"},
-        "80204": {"Denver County": "Denver County", "Jefferson County": "Jefferson County"},
+        "80204": {
+            "Denver County": "Denver County",
+            "Jefferson County": "Jefferson County",
+        },
         "80205": {"Denver County": "Denver County"},
         "80206": {"Denver County": "Denver County"},
         "80207": {"Denver County": "Denver County"},
-        "80209": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
-        "80210": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
+        "80209": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80210": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80211": {"Denver County": "Denver County"},
         "80212": {
             "Adams County": "Adams County",
             "Denver County": "Denver County",
             "Jefferson County": "Jefferson County",
         },
-        "80214": {"Denver County": "Denver County", "Jefferson County": "Jefferson County"},
+        "80214": {
+            "Denver County": "Denver County",
+            "Jefferson County": "Jefferson County",
+        },
         "80215": {"Jefferson County": "Jefferson County"},
         "80216": {"Adams County": "Adams County", "Denver County": "Denver County"},
         "80218": {"Denver County": "Denver County"},
@@ -417,30 +567,69 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Arapahoe County": "Arapahoe County",
         },
         "80221": {"Adams County": "Adams County", "Denver County": "Denver County"},
-        "80222": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
-        "80223": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
-        "80224": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
-        "80226": {"Denver County": "Denver County", "Jefferson County": "Jefferson County"},
-        "80227": {"Denver County": "Denver County", "Jefferson County": "Jefferson County"},
+        "80222": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80223": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80224": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80226": {
+            "Denver County": "Denver County",
+            "Jefferson County": "Jefferson County",
+        },
+        "80227": {
+            "Denver County": "Denver County",
+            "Jefferson County": "Jefferson County",
+        },
         "80228": {"Jefferson County": "Jefferson County"},
         "80229": {"Adams County": "Adams County"},
-        "80230": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
-        "80231": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
-        "80232": {"Denver County": "Denver County", "Jefferson County": "Jefferson County"},
+        "80230": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80231": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80232": {
+            "Denver County": "Denver County",
+            "Jefferson County": "Jefferson County",
+        },
         "80233": {"Adams County": "Adams County"},
-        "80234": {"Adams County": "Adams County", "Broomfield County": "Broomfield County"},
-        "80235": {"Denver County": "Denver County", "Jefferson County": "Jefferson County"},
+        "80234": {
+            "Adams County": "Adams County",
+            "Broomfield County": "Broomfield County",
+        },
+        "80235": {
+            "Denver County": "Denver County",
+            "Jefferson County": "Jefferson County",
+        },
         "80236": {
             "Denver County": "Denver County",
             "Arapahoe County": "Arapahoe County",
             "Jefferson County": "Jefferson County",
         },
-        "80237": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
+        "80237": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80238": {"Adams County": "Adams County", "Denver County": "Denver County"},
         "80239": {"Adams County": "Adams County", "Denver County": "Denver County"},
         "80241": {"Adams County": "Adams County"},
-        "80246": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
-        "80247": {"Denver County": "Denver County", "Arapahoe County": "Arapahoe County"},
+        "80246": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
+        "80247": {
+            "Denver County": "Denver County",
+            "Arapahoe County": "Arapahoe County",
+        },
         "80249": {"Adams County": "Adams County", "Denver County": "Denver County"},
         "80260": {"Adams County": "Adams County"},
         "80264": {"Denver County": "Denver County"},
@@ -449,7 +638,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "80294": {"Denver County": "Denver County"},
         "80301": {"Boulder County": "Boulder County"},
         "80302": {"Boulder County": "Boulder County"},
-        "80303": {"Boulder County": "Boulder County", "Jefferson County": "Jefferson County"},
+        "80303": {
+            "Boulder County": "Boulder County",
+            "Jefferson County": "Jefferson County",
+        },
         "80304": {"Boulder County": "Boulder County"},
         "80305": {"Boulder County": "Boulder County"},
         "80310": {"Boulder County": "Boulder County"},
@@ -461,7 +653,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Clear Creek County": "Clear Creek County",
         },
         "80419": {"Jefferson County": "Jefferson County"},
-        "80420": {"Lake County": "Lake County", "Park County": "Park County", "Summit County": "Summit County"},
+        "80420": {
+            "Lake County": "Lake County",
+            "Park County": "Park County",
+            "Summit County": "Summit County",
+        },
         "80421": {
             "Park County": "Park County",
             "Jefferson County": "Jefferson County",
@@ -480,9 +676,20 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Routt County": "Routt County",
             "Summit County": "Summit County",
         },
-        "80424": {"Lake County": "Lake County", "Park County": "Park County", "Summit County": "Summit County"},
-        "80425": {"Douglas County": "Douglas County", "Jefferson County": "Jefferson County"},
-        "80426": {"Eagle County": "Eagle County", "Routt County": "Routt County", "Garfield County": "Garfield County"},
+        "80424": {
+            "Lake County": "Lake County",
+            "Park County": "Park County",
+            "Summit County": "Summit County",
+        },
+        "80425": {
+            "Douglas County": "Douglas County",
+            "Jefferson County": "Jefferson County",
+        },
+        "80426": {
+            "Eagle County": "Eagle County",
+            "Routt County": "Routt County",
+            "Garfield County": "Garfield County",
+        },
         "80427": {
             "Gilpin County": "Gilpin County",
             "Jefferson County": "Jefferson County",
@@ -501,15 +708,25 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Summit County": "Summit County",
             "Clear Creek County": "Clear Creek County",
         },
-        "80436": {"Grand County": "Grand County", "Clear Creek County": "Clear Creek County"},
-        "80438": {"Grand County": "Grand County", "Clear Creek County": "Clear Creek County"},
+        "80436": {
+            "Grand County": "Grand County",
+            "Clear Creek County": "Clear Creek County",
+        },
+        "80438": {
+            "Grand County": "Grand County",
+            "Clear Creek County": "Clear Creek County",
+        },
         "80439": {
             "Park County": "Park County",
             "Gilpin County": "Gilpin County",
             "Jefferson County": "Jefferson County",
             "Clear Creek County": "Clear Creek County",
         },
-        "80440": {"Lake County": "Lake County", "Park County": "Park County", "Summit County": "Summit County"},
+        "80440": {
+            "Lake County": "Lake County",
+            "Park County": "Park County",
+            "Summit County": "Summit County",
+        },
         "80442": {"Grand County": "Grand County"},
         "80443": {
             "Lake County": "Lake County",
@@ -576,9 +793,17 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Summit County": "Summit County",
             "Chaffee County": "Chaffee County",
         },
-        "80463": {"Eagle County": "Eagle County", "Grand County": "Grand County", "Routt County": "Routt County"},
+        "80463": {
+            "Eagle County": "Eagle County",
+            "Grand County": "Grand County",
+            "Routt County": "Routt County",
+        },
         "80465": {"Jefferson County": "Jefferson County"},
-        "80466": {"Grand County": "Grand County", "Gilpin County": "Gilpin County", "Boulder County": "Boulder County"},
+        "80466": {
+            "Grand County": "Grand County",
+            "Gilpin County": "Gilpin County",
+            "Boulder County": "Boulder County",
+        },
         "80467": {
             "Grand County": "Grand County",
             "Routt County": "Routt County",
@@ -589,7 +814,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Summit County": "Summit County",
             "Clear Creek County": "Clear Creek County",
         },
-        "80469": {"Routt County": "Routt County", "Rio Blanco County": "Rio Blanco County"},
+        "80469": {
+            "Routt County": "Routt County",
+            "Rio Blanco County": "Rio Blanco County",
+        },
         "80470": {
             "Park County": "Park County",
             "Jefferson County": "Jefferson County",
@@ -624,17 +852,32 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Garfield County": "Garfield County",
             "Rio Blanco County": "Rio Blanco County",
         },
-        "80487": {"Grand County": "Grand County", "Routt County": "Routt County", "Jackson County": "Jackson County"},
+        "80487": {
+            "Grand County": "Grand County",
+            "Routt County": "Routt County",
+            "Jackson County": "Jackson County",
+        },
         "80488": {"Routt County": "Routt County"},
         "80497": {
             "Grand County": "Grand County",
             "Summit County": "Summit County",
             "Clear Creek County": "Clear Creek County",
         },
-        "80498": {"Eagle County": "Eagle County", "Grand County": "Grand County", "Summit County": "Summit County"},
+        "80498": {
+            "Eagle County": "Eagle County",
+            "Grand County": "Grand County",
+            "Summit County": "Summit County",
+        },
         "80501": {"Weld County": "Weld County", "Boulder County": "Boulder County"},
-        "80503": {"Boulder County": "Boulder County", "Larimer County": "Larimer County"},
-        "80504": {"Weld County": "Weld County", "Boulder County": "Boulder County", "Larimer County": "Larimer County"},
+        "80503": {
+            "Boulder County": "Boulder County",
+            "Larimer County": "Larimer County",
+        },
+        "80504": {
+            "Weld County": "Weld County",
+            "Boulder County": "Boulder County",
+            "Larimer County": "Larimer County",
+        },
         "80510": {
             "Grand County": "Grand County",
             "Boulder County": "Boulder County",
@@ -646,8 +889,15 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Jackson County": "Jackson County",
             "Larimer County": "Larimer County",
         },
-        "80513": {"Weld County": "Weld County", "Boulder County": "Boulder County", "Larimer County": "Larimer County"},
-        "80514": {"Weld County": "Weld County", "Broomfield County": "Broomfield County"},
+        "80513": {
+            "Weld County": "Weld County",
+            "Boulder County": "Boulder County",
+            "Larimer County": "Larimer County",
+        },
+        "80514": {
+            "Weld County": "Weld County",
+            "Broomfield County": "Broomfield County",
+        },
         "80515": {"Larimer County": "Larimer County"},
         "80516": {
             "Weld County": "Weld County",
@@ -673,7 +923,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "80536": {"Larimer County": "Larimer County"},
         "80537": {"Weld County": "Weld County", "Larimer County": "Larimer County"},
         "80538": {"Weld County": "Weld County", "Larimer County": "Larimer County"},
-        "80540": {"Boulder County": "Boulder County", "Larimer County": "Larimer County"},
+        "80540": {
+            "Boulder County": "Boulder County",
+            "Larimer County": "Larimer County",
+        },
         "80542": {"Weld County": "Weld County"},
         "80543": {"Weld County": "Weld County"},
         "80544": {"Boulder County": "Boulder County"},
@@ -706,7 +959,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "80631": {"Weld County": "Weld County"},
         "80634": {"Weld County": "Weld County"},
         "80640": {"Adams County": "Adams County"},
-        "80642": {"Weld County": "Weld County", "Adams County": "Adams County", "Denver County": "Denver County"},
+        "80642": {
+            "Weld County": "Weld County",
+            "Adams County": "Adams County",
+            "Denver County": "Denver County",
+        },
         "80643": {"Weld County": "Weld County", "Adams County": "Adams County"},
         "80644": {"Weld County": "Weld County"},
         "80645": {"Weld County": "Weld County"},
@@ -714,9 +971,17 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "80649": {"Weld County": "Weld County", "Morgan County": "Morgan County"},
         "80650": {"Weld County": "Weld County"},
         "80651": {"Weld County": "Weld County"},
-        "80652": {"Weld County": "Weld County", "Adams County": "Adams County", "Morgan County": "Morgan County"},
+        "80652": {
+            "Weld County": "Weld County",
+            "Adams County": "Adams County",
+            "Morgan County": "Morgan County",
+        },
         "80653": {"Morgan County": "Morgan County"},
-        "80654": {"Weld County": "Weld County", "Adams County": "Adams County", "Morgan County": "Morgan County"},
+        "80654": {
+            "Weld County": "Weld County",
+            "Adams County": "Adams County",
+            "Morgan County": "Morgan County",
+        },
         "80701": {
             "Weld County": "Weld County",
             "Adams County": "Adams County",
@@ -730,9 +995,18 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Morgan County": "Morgan County",
             "Washington County": "Washington County",
         },
-        "80721": {"Phillips County": "Phillips County", "Sedgwick County": "Sedgwick County"},
-        "80722": {"Logan County": "Logan County", "Washington County": "Washington County"},
-        "80723": {"Morgan County": "Morgan County", "Washington County": "Washington County"},
+        "80721": {
+            "Phillips County": "Phillips County",
+            "Sedgwick County": "Sedgwick County",
+        },
+        "80722": {
+            "Logan County": "Logan County",
+            "Washington County": "Washington County",
+        },
+        "80723": {
+            "Morgan County": "Morgan County",
+            "Washington County": "Washington County",
+        },
         "80726": {"Logan County": "Logan County", "Sedgwick County": "Sedgwick County"},
         "80727": {"Yuma County": "Yuma County"},
         "80728": {
@@ -758,23 +1032,39 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Phillips County": "Phillips County",
             "Sedgwick County": "Sedgwick County",
         },
-        "80735": {"Yuma County": "Yuma County", "Kit Carson County": "Kit Carson County"},
+        "80735": {
+            "Yuma County": "Yuma County",
+            "Kit Carson County": "Kit Carson County",
+        },
         "80736": {"Logan County": "Logan County"},
-        "80737": {"Phillips County": "Phillips County", "Sedgwick County": "Sedgwick County"},
-        "80740": {"Lincoln County": "Lincoln County", "Washington County": "Washington County"},
+        "80737": {
+            "Phillips County": "Phillips County",
+            "Sedgwick County": "Sedgwick County",
+        },
+        "80740": {
+            "Lincoln County": "Lincoln County",
+            "Washington County": "Washington County",
+        },
         "80741": {
             "Weld County": "Weld County",
             "Logan County": "Logan County",
             "Morgan County": "Morgan County",
             "Washington County": "Washington County",
         },
-        "80742": {"Weld County": "Weld County", "Logan County": "Logan County", "Morgan County": "Morgan County"},
+        "80742": {
+            "Weld County": "Weld County",
+            "Logan County": "Logan County",
+            "Morgan County": "Morgan County",
+        },
         "80743": {
             "Yuma County": "Yuma County",
             "Logan County": "Logan County",
             "Washington County": "Washington County",
         },
-        "80744": {"Phillips County": "Phillips County", "Sedgwick County": "Sedgwick County"},
+        "80744": {
+            "Phillips County": "Phillips County",
+            "Sedgwick County": "Sedgwick County",
+        },
         "80745": {"Weld County": "Weld County", "Logan County": "Logan County"},
         "80746": {"Phillips County": "Phillips County"},
         "80747": {"Logan County": "Logan County"},
@@ -789,8 +1079,15 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Morgan County": "Morgan County",
             "Washington County": "Washington County",
         },
-        "80751": {"Logan County": "Logan County", "Washington County": "Washington County"},
-        "80754": {"Weld County": "Weld County", "Logan County": "Logan County", "Morgan County": "Morgan County"},
+        "80751": {
+            "Logan County": "Logan County",
+            "Washington County": "Washington County",
+        },
+        "80754": {
+            "Weld County": "Weld County",
+            "Logan County": "Logan County",
+            "Morgan County": "Morgan County",
+        },
         "80755": {"Yuma County": "Yuma County"},
         "80757": {
             "Adams County": "Adams County",
@@ -851,11 +1148,22 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Kit Carson County": "Kit Carson County",
             "Washington County": "Washington County",
         },
-        "80816": {"Park County": "Park County", "Teller County": "Teller County", "Fremont County": "Fremont County"},
+        "80816": {
+            "Park County": "Park County",
+            "Teller County": "Teller County",
+            "Fremont County": "Fremont County",
+        },
         "80817": {"Pueblo County": "Pueblo County", "El Paso County": "El Paso County"},
-        "80818": {"Lincoln County": "Lincoln County", "Washington County": "Washington County"},
+        "80818": {
+            "Lincoln County": "Lincoln County",
+            "Washington County": "Washington County",
+        },
         "80819": {"Teller County": "Teller County", "El Paso County": "El Paso County"},
-        "80820": {"Park County": "Park County", "Teller County": "Teller County", "Fremont County": "Fremont County"},
+        "80820": {
+            "Park County": "Park County",
+            "Teller County": "Teller County",
+            "Fremont County": "Fremont County",
+        },
         "80821": {
             "Elbert County": "Elbert County",
             "Lincoln County": "Lincoln County",
@@ -873,7 +1181,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Lincoln County": "Lincoln County",
             "Cheyenne County": "Cheyenne County",
         },
-        "80824": {"Yuma County": "Yuma County", "Kit Carson County": "Kit Carson County"},
+        "80824": {
+            "Yuma County": "Yuma County",
+            "Kit Carson County": "Kit Carson County",
+        },
         "80825": {
             "Kiowa County": "Kiowa County",
             "Lincoln County": "Lincoln County",
@@ -1013,7 +1324,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Crowley County": "Crowley County",
             "Lincoln County": "Lincoln County",
         },
-        "81022": {"Pueblo County": "Pueblo County", "Huerfano County": "Huerfano County"},
+        "81022": {
+            "Pueblo County": "Pueblo County",
+            "Huerfano County": "Huerfano County",
+        },
         "81023": {"Custer County": "Custer County", "Pueblo County": "Pueblo County"},
         "81024": {"Las Animas County": "Las Animas County"},
         "81025": {
@@ -1056,7 +1370,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Lincoln County": "Lincoln County",
             "Cheyenne County": "Cheyenne County",
         },
-        "81047": {"Baca County": "Baca County", "Kiowa County": "Kiowa County", "Prowers County": "Prowers County"},
+        "81047": {
+            "Baca County": "Baca County",
+            "Kiowa County": "Kiowa County",
+            "Prowers County": "Prowers County",
+        },
         "81049": {
             "Baca County": "Baca County",
             "Bent County": "Bent County",
@@ -1107,7 +1425,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Crowley County": "Crowley County",
             "Lincoln County": "Lincoln County",
         },
-        "81064": {"Baca County": "Baca County", "Las Animas County": "Las Animas County"},
+        "81064": {
+            "Baca County": "Baca County",
+            "Las Animas County": "Las Animas County",
+        },
         "81067": {
             "Otero County": "Otero County",
             "Pueblo County": "Pueblo County",
@@ -1152,7 +1473,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Huerfano County": "Huerfano County",
             "Las Animas County": "Las Animas County",
         },
-        "81092": {"Bent County": "Bent County", "Kiowa County": "Kiowa County", "Prowers County": "Prowers County"},
+        "81092": {
+            "Bent County": "Bent County",
+            "Kiowa County": "Kiowa County",
+            "Prowers County": "Prowers County",
+        },
         "81101": {
             "Alamosa County": "Alamosa County",
             "Conejos County": "Conejos County",
@@ -1165,7 +1490,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Archuleta County": "Archuleta County",
             "Rio Grande County": "Rio Grande County",
         },
-        "81121": {"La Plata County": "La Plata County", "Archuleta County": "Archuleta County"},
+        "81121": {
+            "La Plata County": "La Plata County",
+            "Archuleta County": "Archuleta County",
+        },
         "81122": {
             "Hinsdale County": "Hinsdale County",
             "La Plata County": "La Plata County",
@@ -1185,7 +1513,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Rio Grande County": "Rio Grande County",
         },
         "81126": {"Costilla County": "Costilla County"},
-        "81128": {"Conejos County": "Conejos County", "Archuleta County": "Archuleta County"},
+        "81128": {
+            "Conejos County": "Conejos County",
+            "Archuleta County": "Archuleta County",
+        },
         "81129": {"Conejos County": "Conejos County"},
         "81130": {
             "Mineral County": "Mineral County",
@@ -1207,17 +1538,32 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Saguache County": "Saguache County",
             "Rio Grande County": "Rio Grande County",
         },
-        "81133": {"Costilla County": "Costilla County", "Huerfano County": "Huerfano County"},
-        "81136": {"Alamosa County": "Alamosa County", "Saguache County": "Saguache County"},
-        "81137": {"La Plata County": "La Plata County", "Archuleta County": "Archuleta County"},
+        "81133": {
+            "Costilla County": "Costilla County",
+            "Huerfano County": "Huerfano County",
+        },
+        "81136": {
+            "Alamosa County": "Alamosa County",
+            "Saguache County": "Saguache County",
+        },
+        "81137": {
+            "La Plata County": "La Plata County",
+            "Archuleta County": "Archuleta County",
+        },
         "81138": {"Costilla County": "Costilla County"},
         "81140": {
             "Alamosa County": "Alamosa County",
             "Conejos County": "Conejos County",
             "Rio Grande County": "Rio Grande County",
         },
-        "81141": {"Conejos County": "Conejos County", "Costilla County": "Costilla County"},
-        "81143": {"Custer County": "Custer County", "Saguache County": "Saguache County"},
+        "81141": {
+            "Conejos County": "Conejos County",
+            "Costilla County": "Costilla County",
+        },
+        "81143": {
+            "Custer County": "Custer County",
+            "Saguache County": "Saguache County",
+        },
         "81144": {
             "Alamosa County": "Alamosa County",
             "Conejos County": "Conejos County",
@@ -1239,7 +1585,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Rio Grande County": "Rio Grande County",
         },
         "81148": {"Conejos County": "Conejos County"},
-        "81149": {"Mineral County": "Mineral County", "Saguache County": "Saguache County"},
+        "81149": {
+            "Mineral County": "Mineral County",
+            "Saguache County": "Saguache County",
+        },
         "81151": {
             "Alamosa County": "Alamosa County",
             "Conejos County": "Conejos County",
@@ -1295,14 +1644,23 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Montrose County": "Montrose County",
         },
         "81221": {"Fremont County": "Fremont County"},
-        "81222": {"Fremont County": "Fremont County", "Saguache County": "Saguache County"},
+        "81222": {
+            "Fremont County": "Fremont County",
+            "Saguache County": "Saguache County",
+        },
         "81223": {
             "Custer County": "Custer County",
             "Fremont County": "Fremont County",
             "Saguache County": "Saguache County",
         },
-        "81224": {"Pitkin County": "Pitkin County", "Gunnison County": "Gunnison County"},
-        "81225": {"Pitkin County": "Pitkin County", "Gunnison County": "Gunnison County"},
+        "81224": {
+            "Pitkin County": "Pitkin County",
+            "Gunnison County": "Gunnison County",
+        },
+        "81225": {
+            "Pitkin County": "Pitkin County",
+            "Gunnison County": "Gunnison County",
+        },
         "81226": {"Custer County": "Custer County", "Fremont County": "Fremont County"},
         "81227": {"Chaffee County": "Chaffee County"},
         "81230": {
@@ -1315,7 +1673,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         },
         "81231": {"Gunnison County": "Gunnison County"},
         "81232": {"Custer County": "Custer County", "Fremont County": "Fremont County"},
-        "81233": {"Fremont County": "Fremont County", "Saguache County": "Saguache County"},
+        "81233": {
+            "Fremont County": "Fremont County",
+            "Saguache County": "Saguache County",
+        },
         "81235": {
             "Ouray County": "Ouray County",
             "Mineral County": "Mineral County",
@@ -1324,9 +1685,15 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Saguache County": "Saguache County",
             "San Juan County": "San Juan County",
         },
-        "81236": {"Chaffee County": "Chaffee County", "Gunnison County": "Gunnison County"},
+        "81236": {
+            "Chaffee County": "Chaffee County",
+            "Gunnison County": "Gunnison County",
+        },
         "81237": {"Gunnison County": "Gunnison County"},
-        "81239": {"Gunnison County": "Gunnison County", "Saguache County": "Saguache County"},
+        "81239": {
+            "Gunnison County": "Gunnison County",
+            "Saguache County": "Saguache County",
+        },
         "81240": {
             "Pueblo County": "Pueblo County",
             "Teller County": "Teller County",
@@ -1346,7 +1713,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Gunnison County": "Gunnison County",
             "Saguache County": "Saguache County",
         },
-        "81251": {"Lake County": "Lake County", "Pitkin County": "Pitkin County", "Chaffee County": "Chaffee County"},
+        "81251": {
+            "Lake County": "Lake County",
+            "Pitkin County": "Pitkin County",
+            "Chaffee County": "Chaffee County",
+        },
         "81252": {
             "Custer County": "Custer County",
             "Fremont County": "Fremont County",
@@ -1390,11 +1761,20 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Montezuma County": "Montezuma County",
             "San Miguel County": "San Miguel County",
         },
-        "81326": {"La Plata County": "La Plata County", "Montezuma County": "Montezuma County"},
+        "81326": {
+            "La Plata County": "La Plata County",
+            "Montezuma County": "Montezuma County",
+        },
         "81327": {"Montezuma County": "Montezuma County"},
-        "81328": {"La Plata County": "La Plata County", "Montezuma County": "Montezuma County"},
+        "81328": {
+            "La Plata County": "La Plata County",
+            "Montezuma County": "Montezuma County",
+        },
         "81330": {"Montezuma County": "Montezuma County"},
-        "81331": {"Dolores County": "Dolores County", "Montezuma County": "Montezuma County"},
+        "81331": {
+            "Dolores County": "Dolores County",
+            "Montezuma County": "Montezuma County",
+        },
         "81332": {
             "Dolores County": "Dolores County",
             "La Plata County": "La Plata County",
@@ -1402,7 +1782,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Montezuma County": "Montezuma County",
             "San Miguel County": "San Miguel County",
         },
-        "81334": {"La Plata County": "La Plata County", "Montezuma County": "Montezuma County"},
+        "81334": {
+            "La Plata County": "La Plata County",
+            "Montezuma County": "Montezuma County",
+        },
         "81335": {"Montezuma County": "Montezuma County"},
         "81401": {
             "Delta County": "Delta County",
@@ -1417,14 +1800,21 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "San Miguel County": "San Miguel County",
         },
         "81410": {"Delta County": "Delta County"},
-        "81411": {"Montrose County": "Montrose County", "San Miguel County": "San Miguel County"},
+        "81411": {
+            "Montrose County": "Montrose County",
+            "San Miguel County": "San Miguel County",
+        },
         "81413": {"Mesa County": "Mesa County", "Delta County": "Delta County"},
         "81415": {
             "Delta County": "Delta County",
             "Gunnison County": "Gunnison County",
             "Montrose County": "Montrose County",
         },
-        "81416": {"Mesa County": "Mesa County", "Delta County": "Delta County", "Montrose County": "Montrose County"},
+        "81416": {
+            "Mesa County": "Mesa County",
+            "Delta County": "Delta County",
+            "Montrose County": "Montrose County",
+        },
         "81418": {"Delta County": "Delta County"},
         "81419": {"Mesa County": "Mesa County", "Delta County": "Delta County"},
         "81422": {
@@ -1438,7 +1828,11 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "San Miguel County": "San Miguel County",
         },
         "81424": {"Montrose County": "Montrose County"},
-        "81425": {"Mesa County": "Mesa County", "Delta County": "Delta County", "Montrose County": "Montrose County"},
+        "81425": {
+            "Mesa County": "Mesa County",
+            "Delta County": "Delta County",
+            "Montrose County": "Montrose County",
+        },
         "81426": {
             "Dolores County": "Dolores County",
             "San Juan County": "San Juan County",
@@ -1450,15 +1844,25 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "San Juan County": "San Juan County",
             "San Miguel County": "San Miguel County",
         },
-        "81428": {"Mesa County": "Mesa County", "Delta County": "Delta County", "Gunnison County": "Gunnison County"},
-        "81429": {"Montrose County": "Montrose County", "San Miguel County": "San Miguel County"},
+        "81428": {
+            "Mesa County": "Mesa County",
+            "Delta County": "Delta County",
+            "Gunnison County": "Gunnison County",
+        },
+        "81429": {
+            "Montrose County": "Montrose County",
+            "San Miguel County": "San Miguel County",
+        },
         "81430": {
             "Ouray County": "Ouray County",
             "Dolores County": "Dolores County",
             "Montrose County": "Montrose County",
             "San Miguel County": "San Miguel County",
         },
-        "81431": {"Montrose County": "Montrose County", "San Miguel County": "San Miguel County"},
+        "81431": {
+            "Montrose County": "Montrose County",
+            "San Miguel County": "San Miguel County",
+        },
         "81432": {
             "Ouray County": "Ouray County",
             "Gunnison County": "Gunnison County",
@@ -1498,13 +1902,20 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "81524": {"Mesa County": "Mesa County", "Garfield County": "Garfield County"},
         "81525": {"Mesa County": "Mesa County", "Garfield County": "Garfield County"},
         "81526": {"Mesa County": "Mesa County"},
-        "81527": {"Mesa County": "Mesa County", "Delta County": "Delta County", "Montrose County": "Montrose County"},
+        "81527": {
+            "Mesa County": "Mesa County",
+            "Delta County": "Delta County",
+            "Montrose County": "Montrose County",
+        },
         "81601": {
             "Eagle County": "Eagle County",
             "Pitkin County": "Pitkin County",
             "Garfield County": "Garfield County",
         },
-        "81610": {"Moffat County": "Moffat County", "Rio Blanco County": "Rio Blanco County"},
+        "81610": {
+            "Moffat County": "Moffat County",
+            "Rio Blanco County": "Rio Blanco County",
+        },
         "81611": {
             "Lake County": "Lake County",
             "Pitkin County": "Pitkin County",
@@ -1541,7 +1952,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         },
         "81631": {"Eagle County": "Eagle County"},
         "81632": {"Eagle County": "Eagle County"},
-        "81633": {"Moffat County": "Moffat County", "Rio Blanco County": "Rio Blanco County"},
+        "81633": {
+            "Moffat County": "Moffat County",
+            "Rio Blanco County": "Rio Blanco County",
+        },
         "81635": {
             "Mesa County": "Mesa County",
             "Garfield County": "Garfield County",
@@ -1563,14 +1977,21 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
             "Moffat County": "Moffat County",
             "Rio Blanco County": "Rio Blanco County",
         },
-        "81640": {"Moffat County": "Moffat County", "Rio Blanco County": "Rio Blanco County"},
+        "81640": {
+            "Moffat County": "Moffat County",
+            "Rio Blanco County": "Rio Blanco County",
+        },
         "81641": {
             "Routt County": "Routt County",
             "Moffat County": "Moffat County",
             "Garfield County": "Garfield County",
             "Rio Blanco County": "Rio Blanco County",
         },
-        "81642": {"Lake County": "Lake County", "Eagle County": "Eagle County", "Pitkin County": "Pitkin County"},
+        "81642": {
+            "Lake County": "Lake County",
+            "Eagle County": "Eagle County",
+            "Pitkin County": "Pitkin County",
+        },
         "81643": {"Mesa County": "Mesa County", "Delta County": "Delta County"},
         "81645": {
             "Lake County": "Lake County",
@@ -1598,11 +2019,17 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         },
         "81652": {"Mesa County": "Mesa County", "Garfield County": "Garfield County"},
         "81653": {"Routt County": "Routt County", "Moffat County": "Moffat County"},
-        "81654": {"Pitkin County": "Pitkin County", "Gunnison County": "Gunnison County"},
+        "81654": {
+            "Pitkin County": "Pitkin County",
+            "Gunnison County": "Gunnison County",
+        },
         "81655": {"Eagle County": "Eagle County", "Summit County": "Summit County"},
         "81656": {"Pitkin County": "Pitkin County"},
         "81657": {"Eagle County": "Eagle County", "Summit County": "Summit County"},
-        "82063": {"Jackson County": "Jackson County", "Larimer County": "Larimer County"},
+        "82063": {
+            "Jackson County": "Jackson County",
+            "Larimer County": "Larimer County",
+        },
     }
 
     category_benefits = {
@@ -1649,7 +2076,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     },
                 },
                 "oap": {
-                    "name": {"_label": "cashAssistanceBenefits.oap", "_default_message": "Old Age Pension (OAP): "},
+                    "name": {
+                        "_label": "cashAssistanceBenefits.oap",
+                        "_default_message": "Old Age Pension (OAP): ",
+                    },
                     "description": {
                         "_label": "cashAssistanceBenefits.oap_desc",
                         "_default_message": "State cash assistance for individuals 60 years of age or older",
@@ -1666,7 +2096,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     },
                 },
             },
-            "category_name": {"_label": "cashAssistance", "_default_message": "Cash Assistance"},
+            "category_name": {
+                "_label": "cashAssistance",
+                "_default_message": "Cash Assistance",
+            },
         },
         "foodAndNutrition": {
             "benefits": {
@@ -1691,7 +2124,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     },
                 },
             },
-            "category_name": {"_label": "foodAndNutrition", "_default_message": "Food and Nutrition"},
+            "category_name": {
+                "_label": "foodAndNutrition",
+                "_default_message": "Food and Nutrition",
+            },
         },
         "housingAndUtilities": {
             "benefits": {
@@ -1736,7 +2172,10 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     },
                 },
             },
-            "category_name": {"_label": "housingAndUtilities", "_default_message": "Housing and Utilities"},
+            "category_name": {
+                "_label": "housingAndUtilities",
+                "_default_message": "Housing and Utilities",
+            },
         },
         "healthCare": {
             "benefits": {
@@ -1751,26 +2190,38 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
                     },
                 },
                 "chp": {
-                    "name": {"_label": "healthCareBenefits.chp", "_default_message": "Child Health Plan Plus (CHP+): "},
+                    "name": {
+                        "_label": "healthCareBenefits.chp",
+                        "_default_message": "Child Health Plan Plus (CHP+): ",
+                    },
                     "description": {
                         "_label": "healthCareBenefits.chp_desc",
                         "_default_message": "Low-cost health insurance for children and pregnant women",
                     },
                 },
             },
-            "category_name": {"_label": "healthCare", "_default_message": "Health Care"},
+            "category_name": {
+                "_label": "healthCare",
+                "_default_message": "Health Care",
+            },
         },
         "transportation": {
             "benefits": {
                 "rtdlive": {
-                    "name": {"_label": "transportationBenefits.rtdlive", "_default_message": "RTD LiVE: "},
+                    "name": {
+                        "_label": "transportationBenefits.rtdlive",
+                        "_default_message": "RTD LiVE: ",
+                    },
                     "description": {
                         "_label": "transportationBenefits.rtdlive_desc",
                         "_default_message": "Discounted RTD fares",
                     },
                 }
             },
-            "category_name": {"_label": "transportation", "_default_message": "Transportation"},
+            "category_name": {
+                "_label": "transportation",
+                "_default_message": "Transportation",
+            },
         },
     }
 
@@ -1787,10 +2238,13 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
     referrer_data = {
         "theme": {"default": "co_energy"},
         "logoSource": {
-            "default": "MFB_COEnergyLogo",
+            "default": "CESN_Logo",
         },
         "logoAlt": {
-            "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
+            "default": {
+                "id": "referrerHook.logoAlts.cesn",
+                "defaultMessage": "Colorado Energy Savings Navigator home page button",
+            },
         },
         "logoFooterSource": {"default": ""},  # NOTE: Handled on FE b/c there are 2 logos
         "logoFooterAlt": {"default": {"id": "", "": ""}},  # NOTE: Handled on FE b/c there are 2 logos
