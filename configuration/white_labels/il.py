@@ -9,26 +9,24 @@ class IlConfigurationData(ConfigurationData):
 
     state = {"name": "Illinois"}
 
-    public_charge_rule = {"link": "https://www.illinois.gov/content/dam/soi/en/web/dhs/forms/documents/en_2356.pdf"}
+    public_charge_rule = {
+        "link": "https://www.dhs.state.il.us/page.aspx?item=118709",
+        "text": {
+            "_label": "landingPage.publicChargeLinkIL",
+            "_default_message": "Illinois Department of Human Services website",
+        },
+    }
 
     more_help_options = {
         "moreHelpOptions": [
             {
                 "name": {
-                    "_default_message": "Illinois Department of Human Services",
-                    "_label": "moreHelp.dhs.name.il",
+                    "_default_message": "211 Illinois",
+                    "_label": "moreHelp.211.name.il",
                 },
-                "link": "https://www.dhs.state.il.us/page.aspx?item=30357",
+                "link": "https://211illinois.org/",
                 "phone": {
-                    "_default_message": "1-800-843-6154",
-                    "_label": "moreHelp.dhs.phone.il",
-                },
-            },
-            {
-                "name": {"_default_message": "Illinois 211", "_label": "moreHelp.211.name.il"},
-                "link": "https://www.illinois211.org/",
-                "phone": {
-                    "_default_message": "2-1-1",
+                    "_default_message": "Dial 2-1-1 or text your zip code to 898-211",
                     "_label": "moreHelp.211.phone.il",
                 },
             },
@@ -169,22 +167,26 @@ class IlConfigurationData(ConfigurationData):
     }
 
     referral_options = {
+        "socialServices": {
+            "_label": "referralOptions.gcfd.il",
+            "_default_message": "Greater Chicago Food Depository",
+        },
+        "searchEngine": {
+            "_label": "referralOptions.searchEngine",
+            "_default_message": "Google or other search engine",
+        },
+        "socialMedia": {
+            "_label": "referralOptions.socialMedia",
+            "_default_message": "Social Media",
+        },
+        "friend": {
+            "_label": "referralOptions.friend",
+            "_default_message": "Friend / Family / Word of Mouth",
+        },
         "other": {"_label": "referralOptions.other", "_default_message": "Other"},
         "testOrProspect": {
             "_label": "referralOptions.testOrProspect",
             "_default_message": "Test / Prospective Partner",
-        },
-        "socialServices": {
-            "_label": "referralOptions.socialServices",
-            "_default_message": "Illinois Department of Human Services",
-        },
-        "healthcare": {
-            "_label": "referralOptions.healthcare",
-            "_default_message": "Healthcare provider or clinic",
-        },
-        "community": {
-            "_label": "referralOptions.community",
-            "_default_message": "Community organization",
         },
     }
 
@@ -229,8 +231,8 @@ class IlConfigurationData(ConfigurationData):
             "_default_message": "Child Support (Received)",
         },
         "pension": {
-            "_label": "incomeOptions.pension",
-            "_default_message": "Military, Government, or Private Pension (including PERA)",
+            "_label": "incomeOptions.pension.il",
+            "_default_message": "Military, Government, or Private Pension",
         },
         "veteran": {
             "_label": "incomeOptions.veteran",
@@ -249,8 +251,8 @@ class IlConfigurationData(ConfigurationData):
             "_default_message": "Social Security Dependent Benefits (retirement, disability, or survivors)",
         },
         "cashAssistance": {
-            "_label": "incomeOptions.cashAssistance",
-            "_default_message": "Cash Assistance Grant",
+            "_label": "incomeOptions.cashAssistance.il",
+            "_default_message": "Government Cash Assistance (including TANF)",
         },
         "gifts": {
             "_label": "incomeOptions.gifts",
@@ -261,8 +263,8 @@ class IlConfigurationData(ConfigurationData):
             "_default_message": "Investment Income (interest, dividends, and profit from selling stocks)",
         },
         "iLStateDisability": {
-            "_label": "incomeOptions.iLStateDisability",
-            "_default_message": "Illinois State Disability Benefits",
+            "_label": "incomeOptions.stateDisability",
+            "_default_message": "State Disability Benefits",
         },
         "rental": {
             "_label": "incomeOptions.rental",
@@ -312,8 +314,8 @@ class IlConfigurationData(ConfigurationData):
             "medicaid": {
                 "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.medicaid",
-                    "_default_message": "Illinois Medicaid",
+                    "_label": "healthInsuranceOptions.medicaid.il",
+                    "_default_message": "Medicaid",
                 },
             },
             "medicare": {
@@ -326,25 +328,15 @@ class IlConfigurationData(ConfigurationData):
             "chp": {
                 "icon": {"_icon": "Chp", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.chp",
-                    "_default_message": "All Kids (Illinois Children's Health Insurance)",
-                },
-            },
-            "emergency_medicaid": {
-                "icon": {
-                    "_icon": "Emergency_medicaid",
-                    "_classname": "option-card-icon",
-                },
-                "text": {
-                    "_label": "healthInsuranceOptions.emergency_medicaid",
-                    "_default_message": "Emergency Medicaid / Reproductive Health",
+                    "_label": "healthInsuranceOptions.chp.il",
+                    "_default_message": "All Kids",
                 },
             },
             "family_planning": {
                 "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.family_planning",
-                    "_default_message": "Family Planning Limited Medicaid",
+                    "_label": "healthInsuranceOptions.family_planning.il",
+                    "_default_message": "Family Planning Presumptive Eligibility",
                 },
             },
             "va": {
@@ -380,8 +372,8 @@ class IlConfigurationData(ConfigurationData):
             "medicaid": {
                 "icon": {"_icon": "Medicaid", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.medicaid",
-                    "_default_message": "Illinois Medicaid",
+                    "_label": "healthInsuranceOptions.medicaid.il",
+                    "_default_message": "Medicaid",
                 },
             },
             "medicare": {
@@ -394,25 +386,15 @@ class IlConfigurationData(ConfigurationData):
             "chp": {
                 "icon": {"_icon": "Chp", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.chp",
-                    "_default_message": "All Kids (Illinois Children's Health Insurance)",
-                },
-            },
-            "emergency_medicaid": {
-                "icon": {
-                    "_icon": "Emergency_medicaid",
-                    "_classname": "option-card-icon",
-                },
-                "text": {
-                    "_label": "healthInsuranceOptions.emergency_medicaid",
-                    "_default_message": "Emergency Medicaid / Reproductive Health",
+                    "_label": "healthInsuranceOptions.chp.il",
+                    "_default_message": "All Kids",
                 },
             },
             "family_planning": {
                 "icon": {"_icon": "Family_planning", "_classname": "option-card-icon"},
                 "text": {
-                    "_label": "healthInsuranceOptions.family_planning",
-                    "_default_message": "Family Planning Limited Medicaid",
+                    "_label": "healthInsuranceOptions.family_planning.il",
+                    "_default_message": "Family Planning Presumptive Eligibility",
                 },
             },
             "va": {
@@ -2298,12 +2280,22 @@ class IlConfigurationData(ConfigurationData):
             "benefits": {
                 "il_snap": {
                     "name": {
-                        "_label": "foodAndNutritionBenefits.il_snap",
-                        "_default_message": "Illinois SNAP (Supplemental Nutrition Assistance Program): ",
+                        "_label": "foodAndNutritionBenefits.snap",
+                        "_default_message": "Supplemental Nutrition Assistance Program (SNAP): ",
                     },
                     "description": {
-                        "_label": "foodAndNutritionBenefits.il_snap_desc",
-                        "_default_message": "Monthly benefits to help buy nutritious food",
+                        "_label": "foodAndNutritionBenefits.snap_desc",
+                        "_default_message": "Food assistance",
+                    },
+                },
+                "il_wic": {
+                    "name": {
+                        "_label": "foodAndNutritionBenefits.il_wic",
+                        "_default_message": "Special Supplemental Nutrition Program for Women, Infants, and Children (WIC): ",
+                    },
+                    "description": {
+                        "_label": "foodAndNutritionBenefits.il_wic_desc",
+                        "_default_message": "Food and breastfeeding assistance",
                     },
                 },
             },
@@ -2315,17 +2307,19 @@ class IlConfigurationData(ConfigurationData):
     }
 
     consent_to_contact = {
-        "en-us": "https://www.dhs.state.il.us/page.aspx?item=30357",
+        "en-us": "https://www.myfriendben.org/terms-and-conditions/",
+        "es": "https://www.myfriendben.org/terminos-condiciones/",
     }
 
     privacy_policy = {
-        "en-us": "https://www.dhs.state.il.us/page.aspx?item=30357",
+        "en-us": "https://www.myfriendben.org/privacy-policy/",
+        "es": "https://www.myfriendben.org/privacidad/",
     }
 
     referrer_data = {
         "theme": {"default": "default"},
         "logoSource": {
-            "default": "MFB_Logo",
+            "default": "MFB_ILLogo",
         },
         "logoAlt": {
             "default": {
@@ -2365,12 +2359,17 @@ class IlConfigurationData(ConfigurationData):
     }
 
     footer_data = {
-        "email": "help@myfriendben.org",
+        "email": "hello@myfriendben.org",
     }
 
     feedback_links = {
-        "email": "help@myfriendben.org",
+        "email": "hello@myfriendben.org",
         "survey": "https://www.myfriendben.org/feedback",
     }
 
-    override_text = {}
+    override_text = {
+        "landingPage.publicCharge": {
+            "_label": "landingPage.publicCharge.il",
+            "_default_message": "Some benefits are available to Non-U.S. citizens. Non-U.S. citizens planning to apply for legal permanent residency or a visa should consider how applying for any benefits may affect their immigration status. To learn more, please visit the ",
+        },
+    }
