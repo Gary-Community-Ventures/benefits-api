@@ -195,8 +195,8 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.felp",
             "_default_message": "Future Endeavors Life Program (FELP)",
         },
-        "hf": {
-            "_label": "referralOptions.hf",
+        "hfed": {
+            "_label": "referralOptions.hfed",
             "_default_message": "Hispanic Federation",
         },
         "mda": {
@@ -2825,57 +2825,16 @@ class NcConfigurationData(ConfigurationData):
         "theme": {"default": "default", "211nc": "twoOneOneNC"},
         "logoSource": {
             "default": "MFB_NCLogo",
-            "bia": "BIA_MFBLogo",
-            "jeffcoHS": "JHSA_MFBLogo",
-            "jeffcoHSCM": "JHSA_MFBLogo",
-            "villageExchange": "VE_Logo",
-            "cch": "CCH_MFBLogo",
-            "lgs": "LGS_Logo",
-            "gac": "GAC_Logo",
-            "fircsummitresourcecenter": "FIRC_Logo",
-            "coBenefits": "CO_MFBLogo",
-            "dhs": "DHS_MFBLogo",
+            "hfed": "HispanicFederation_MFBLogo",
         },
         "logoAlt": {
             "default": {
                 "id": "referrerHook.logoAlts.default",
                 "defaultMessage": "MyFriendBen home page button",
             },
-            "bia": {
-                "id": "referrerHook.logoAlts.bia",
-                "defaultMessage": "Benefits in Action and MyFriendBen home page button",
-            },
-            "jeffcoHS": {
-                "id": "referrerHook.logoAlts.jeffcoHS",
-                "defaultMessage": "Jeffco Human Services and MyFriendBen home page button",
-            },
-            "jeffcoHSCM": {
-                "id": "referrerHook.logoAlts.jeffcoHSCM",
-                "defaultMessage": "Jeffco Human Services and MyFriendBen home page button",
-            },
-            "cch": {
-                "id": "referrerHook.logoAlts.cch",
-                "defaultMessage": "Colorado Coalition for the Homeless and MyFriendBen home page button",
-            },
-            "lgs": {
-                "id": "referrerHook.logoAlts.lgs",
-                "defaultMessage": "Let's Get Set home page button",
-            },
-            "gac": {
-                "id": "referrerHook.logoAlts.gac",
-                "defaultMessage": "Get Ahead Colorado home page button",
-            },
-            "fircsummitresourcecenter": {
-                "id": "referrerHook.logoAlts.fircsummitresourcecenter",
-                "defaultMessage": "Firc Summit Resource Center",
-            },
-            "coBenefits": {
-                "id": "referrerHook.logoAlts.coBenefits",
-                "defaultMessage": "MyFriendBen home page button",
-            },
-            "dhs": {
-                "id": "referrerHook.logoAlts.dhs",
-                "defaultMessage": "Denver Human Services and MyFriendBen home page button",
+            "hfed": {
+                "id": "referrerHook.logoAlts.hfed",
+                "defaultMessage": "Hispanic Federation and MyFriendBen home page button",
             },
         },
         "logoFooterSource": {"default": "MFB_NCFooterLogo"},
@@ -2915,6 +2874,7 @@ class NcConfigurationData(ConfigurationData):
         "featureFlags": {
             "default": ["nc_show_211_link"],
             "211nc": ["no_results_more_help", "nc_show_211_link", "211nc"],
+            "hfed": ["nc_show_211_link", "hfed"],
         },
         "noResultMessage": {
             "default": {
