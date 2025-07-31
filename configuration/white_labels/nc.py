@@ -2840,7 +2840,7 @@ class NcConfigurationData(ConfigurationData):
         "logoFooterSource": {"default": "MFB_NCFooterLogo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
         "logoClass": {
-            "default": "logo", 
+            "default": "logo",
             "hfed": "hfed-logo-size",
         },
         "footerLogoClass": {"default": "footer-logo-nc"},
@@ -2881,8 +2881,8 @@ class NcConfigurationData(ConfigurationData):
         },
         "noResultMessage": {
             "default": {
-                "_label": "noResultMessage",
-                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+                "_label": "noResultMessage.nc",
+                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab.",
             }
         },
     }
