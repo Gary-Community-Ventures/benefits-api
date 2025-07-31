@@ -2839,7 +2839,10 @@ class NcConfigurationData(ConfigurationData):
         },
         "logoFooterSource": {"default": "MFB_NCFooterLogo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
-        "logoClass": {"default": "logo"},
+        "logoClass": {
+            "default": "logo", 
+            "hfed": "hfed-logo-size",
+        },
         "footerLogoClass": {"default": "footer-logo-nc"},
         "twoOneOneLink": {
             "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"
@@ -2874,7 +2877,7 @@ class NcConfigurationData(ConfigurationData):
         "featureFlags": {
             "default": ["nc_show_211_link"],
             "211nc": ["no_results_more_help", "nc_show_211_link", "211nc"],
-            "hfed": ["nc_show_211_link", "hfed"],
+            "hfed": ["no_results_more_help", "hfed"],
         },
         "noResultMessage": {
             "default": {
