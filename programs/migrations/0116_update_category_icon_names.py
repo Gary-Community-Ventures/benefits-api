@@ -10,13 +10,13 @@ def update_category_icon_names(apps, _):
         "food or groceries": "food_groceries",
         "baby supplies": "baby_supplies",
         "managing housing costs": "managing_housing",
-        "behavioral health": "Support",
-        "child's development": "Child_development",
+        "behavioral health": "behavioral_health",
+        "child's development": "child_development",
         "family planning": "family_planning",
         "job resources": "job_resources",
-        "low-cost dental care": "Dental_care",
-        "civil legal needs": "Legal_services",
-        "veterans resources": "Military",
+        "low-cost dental care": "dental_care",
+        "civil legal needs": "legal_services",
+        "veterans resources": "veteran_services",
     }
 
     for old_name, new_name in name_mapping.items():
