@@ -2240,6 +2240,9 @@ class CoEnergyCalculatorConfigurationData(ConfigurationData):
         "logoSource": {
             "default": "CESN_Logo",
         },
+        "faviconSource": {
+            "default": "favicons/cesn_favicon.png",
+        },
         "logoAlt": {
             "default": {
                 "id": "referrerHook.logoAlts.cesn",
