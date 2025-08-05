@@ -6,21 +6,6 @@ import django.db.models.deletion
 import simple_history.models
 
 
-def move_zh_to_zh_hans(apps, _):
-    Translation = apps.get_model("translations", "Translation")
-    translations = Translation.objects.prefetch_related("translations").all()
-
-    for translation in translations:
-
-        for language in translation.translations.all():
-            if language.language_code == "zh":
-                translation.set_current_language("zh-hans")
-                translation.text = language.text
-                translation.save()
-
-                language.delete()
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -74,5 +59,4 @@ class Migration(migrations.Migration):
             },
             bases=(simple_history.models.HistoricalChanges, models.Model),
         ),
-        migrations.RunPython(move_zh_to_zh_hans, migrations.RunPython.noop),
     ]
