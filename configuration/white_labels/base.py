@@ -399,6 +399,10 @@ class ConfigurationData:
             "default": "MFB_Logo",
             "[REPLACE_ME]": "",
         },
+        "faviconSource": {
+            "default": "favicon.ico",
+            "[REPLACE_ME]": "",
+        },
         "logoAlt": {
             "default": {"id": "referrerHook.logoAlts.default", "defaultMessage": "MyFriendBen home page button"},
             "[REPLACE_ME]": {
