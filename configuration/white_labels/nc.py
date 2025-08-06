@@ -195,8 +195,8 @@ class NcConfigurationData(ConfigurationData):
             "_label": "referralOptions.felp",
             "_default_message": "Future Endeavors Life Program (FELP)",
         },
-        "hf": {
-            "_label": "referralOptions.hf",
+        "hfed": {
+            "_label": "referralOptions.hfed",
             "_default_message": "Hispanic Federation",
         },
         "mda": {
@@ -273,7 +273,7 @@ class NcConfigurationData(ConfigurationData):
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "中文 (简体)",
+        "zh-hans": "中文 (简体)",
         "ar": "عربي",
         "sw": "Kiswahili",
     }
@@ -2825,62 +2825,24 @@ class NcConfigurationData(ConfigurationData):
         "theme": {"default": "default", "211nc": "twoOneOneNC"},
         "logoSource": {
             "default": "MFB_NCLogo",
-            "bia": "BIA_MFBLogo",
-            "jeffcoHS": "JHSA_MFBLogo",
-            "jeffcoHSCM": "JHSA_MFBLogo",
-            "villageExchange": "VE_Logo",
-            "cch": "CCH_MFBLogo",
-            "lgs": "LGS_Logo",
-            "gac": "GAC_Logo",
-            "fircsummitresourcecenter": "FIRC_Logo",
-            "coBenefits": "CO_MFBLogo",
-            "dhs": "DHS_MFBLogo",
+            "hfed": "HispanicFederation_MFBLogo",
         },
         "logoAlt": {
             "default": {
                 "id": "referrerHook.logoAlts.default",
                 "defaultMessage": "MyFriendBen home page button",
             },
-            "bia": {
-                "id": "referrerHook.logoAlts.bia",
-                "defaultMessage": "Benefits in Action and MyFriendBen home page button",
-            },
-            "jeffcoHS": {
-                "id": "referrerHook.logoAlts.jeffcoHS",
-                "defaultMessage": "Jeffco Human Services and MyFriendBen home page button",
-            },
-            "jeffcoHSCM": {
-                "id": "referrerHook.logoAlts.jeffcoHSCM",
-                "defaultMessage": "Jeffco Human Services and MyFriendBen home page button",
-            },
-            "cch": {
-                "id": "referrerHook.logoAlts.cch",
-                "defaultMessage": "Colorado Coalition for the Homeless and MyFriendBen home page button",
-            },
-            "lgs": {
-                "id": "referrerHook.logoAlts.lgs",
-                "defaultMessage": "Let's Get Set home page button",
-            },
-            "gac": {
-                "id": "referrerHook.logoAlts.gac",
-                "defaultMessage": "Get Ahead Colorado home page button",
-            },
-            "fircsummitresourcecenter": {
-                "id": "referrerHook.logoAlts.fircsummitresourcecenter",
-                "defaultMessage": "Firc Summit Resource Center",
-            },
-            "coBenefits": {
-                "id": "referrerHook.logoAlts.coBenefits",
-                "defaultMessage": "MyFriendBen home page button",
-            },
-            "dhs": {
-                "id": "referrerHook.logoAlts.dhs",
-                "defaultMessage": "Denver Human Services and MyFriendBen home page button",
+            "hfed": {
+                "id": "referrerHook.logoAlts.hfed",
+                "defaultMessage": "Hispanic Federation and MyFriendBen home page button",
             },
         },
         "logoFooterSource": {"default": "MFB_NCFooterLogo"},
         "logoFooterAlt": {"default": {"id": "footer.logo.alt", "defaultMessage": "MFB Logo"}},
-        "logoClass": {"default": "logo"},
+        "logoClass": {
+            "default": "logo",
+            "hfed": "hfed-logo-size",
+        },
         "footerLogoClass": {"default": "footer-logo-nc"},
         "twoOneOneLink": {
             "default": "https://nc211.org/?utm_source=myfriendben&utm_medium=inlink&utm_campaign=organic&utm_id=211mfb"
@@ -2915,11 +2877,12 @@ class NcConfigurationData(ConfigurationData):
         "featureFlags": {
             "default": ["nc_show_211_link"],
             "211nc": ["no_results_more_help", "nc_show_211_link", "211nc"],
+            "hfed": ["no_results_more_help", "hfed"],
         },
         "noResultMessage": {
             "default": {
-                "_label": "noResultMessage",
-                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab. For additional resources, please click the 'More Help' button below to get the resources you’re looking for.",
+                "_label": "noResultMessage.nc",
+                "_default_message": "It looks like you may not qualify for benefits included in MyFriendBen at this time. If you indicated need for an immediate resource, please click on the “Near-Term Benefits” tab.",
             }
         },
     }

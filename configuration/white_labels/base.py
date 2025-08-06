@@ -126,7 +126,7 @@ class ConfigurationData:
         "ru": "Русский",
         "ne": "नेपाली",
         "my": "မြန်မာဘာသာစကား",
-        "zh": "中文 (简体)",
+        "zh-hans": "中文 (简体)",
         "ar": "عربي",
         "sw": "Kiswahili",
     }
@@ -397,6 +397,10 @@ class ConfigurationData:
         "theme": {"default": "default", "[REPLACE_ME]": ""},
         "logoSource": {
             "default": "MFB_Logo",
+            "[REPLACE_ME]": "",
+        },
+        "faviconSource": {
+            "default": "favicon.ico",
             "[REPLACE_ME]": "",
         },
         "logoAlt": {
