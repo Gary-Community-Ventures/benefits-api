@@ -6,6 +6,7 @@ from programs.programs.policyengine.calculators.base import PolicyEngineCalulato
 
 il_member_calculators = {
     "il_wic": member.IlWic,
+    "il_medicaid": member.IlMedicaid,
 }
 
 il_tax_unit_calculators = {}
