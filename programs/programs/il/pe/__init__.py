@@ -5,6 +5,7 @@ from programs.programs.policyengine.calculators.base import PolicyEngineCalulato
 
 
 il_member_calculators = {
+    "il_familycare": member.IlFamilyCare,
     "il_wic": member.IlWic,
 }
 
