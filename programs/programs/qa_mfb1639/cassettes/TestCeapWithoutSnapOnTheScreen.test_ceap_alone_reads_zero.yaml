@@ -1,0 +1,78 @@
+interactions:
+- request:
+    body: '{"household": {"people": {"1639111": {"employment_income": {"2026": 24564},
+      "self_employment_income": {"2026": 0}, "rental_income": {"2026": 0}, "taxable_pension_income":
+      {"2026": 0}, "social_security": {"2026": 0}, "unemployment_compensation": {"2026":
+      0}, "long_term_capital_gains": {"2026": 0}, "taxable_ira_distributions": {"2026":
+      0}, "ssi": {"2026": null}, "receives_ssi": {"2026": false}, "takes_up_ssi_if_eligible":
+      {"2026": false}}}, "tax_units": {"main_tax_unit": {"members": ["1639111"]}},
+      "families": {"family": {"members": ["1639111"]}}, "households": {"household":
+      {"members": ["1639111"], "state_code": {"2026": "TX"}}}, "spm_units": {"spm_unit":
+      {"members": ["1639111"], "tanf": {"2026": null}, "receives_tanf": {"2026": false},
+      "takes_up_tanf_if_eligible": {"2026": false}, "receives_snap": {"2026": false},
+      "takes_up_snap_if_eligible": {"2026": false}, "electricity_expense": {"2026":
+      1800.0}, "tx_ceap": {"2026": null}}}, "marital_units": {}}, "version": "1.821.10"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '985'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.4
+    method: POST
+    uri: https://household.api.policyengine.org/us/calculate
+  response:
+    body:
+      string: '{"status": "ok", "message": null, "result": {"people": {"1639111":
+        {"employment_income": {"2026": 24564}, "self_employment_income": {"2026":
+        0}, "rental_income": {"2026": 0}, "taxable_pension_income": {"2026": 0}, "social_security":
+        {"2026": 0}, "unemployment_compensation": {"2026": 0}, "long_term_capital_gains":
+        {"2026": 0}, "taxable_ira_distributions": {"2026": 0}, "ssi": {"2026": 0.0},
+        "receives_ssi": {"2026": false}, "takes_up_ssi_if_eligible": {"2026": false}}},
+        "tax_units": {"main_tax_unit": {"members": ["1639111"]}}, "families": {"family":
+        {"members": ["1639111"]}}, "households": {"household": {"members": ["1639111"],
+        "state_code": {"2026": "TX"}}}, "spm_units": {"spm_unit": {"members": ["1639111"],
+        "tanf": {"2026": 0.0}, "receives_tanf": {"2026": false}, "takes_up_tanf_if_eligible":
+        {"2026": false}, "receives_snap": {"2026": false}, "takes_up_snap_if_eligible":
+        {"2026": false}, "electricity_expense": {"2026": 1800.0}, "tx_ceap": {"2026":
+        0.0}}}, "marital_units": {}}, "policyengine_bundle": {"model_version": "1.821.10",
+        "data_version": null, "dataset": null}}'
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+      Content-Length:
+      - '1082'
+      access-control-allow-origin:
+      - '*'
+      content-type:
+      - application/json
+      date:
+      - Tue, 08 Sep 2026 22:25:00 GMT
+      server:
+      - Google Frontend
+      traceparent:
+      - 00-f2ffbdd7752e133e519bdd99b43d4720-2e20dd4f20412c58-00
+      via:
+      - 1.1 google
+      x-cloud-trace-context:
+      - f2ffbdd7752e133e519bdd99b43d4720
+      x-policyengine-backend:
+      - modal
+      x-policyengine-primary-backend:
+      - modal
+      x-policyengine-primary-state:
+      - healthy
+      x-policyengine-request-id:
+      - 010f2afc-d7d9-4989-b32d-39d4389f74a4
+      x-policyengine-route-channel:
+      - frontier
+    status:
+      code: 200
+      message: OK
+version: 1

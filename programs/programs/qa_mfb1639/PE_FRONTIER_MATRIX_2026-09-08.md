@@ -1,0 +1,98 @@
+# MFB-1639 — SNAP against the PolicyEngine frontier
+
+**QA-only, TEMPORARY — not for production merge.**
+
+Verdict: **the MFB-1637 fix holds.** Every household the hours change could reach is held at its
+pre-change value by the 40-hour floor, and the pre-fix payload reproduces the false-$0 failure
+mode the ticket predicted. Four findings came out of the matrix that the ticket did not anticipate;
+three of them are latent rather than live, and all four are listed in `FINDINGS.md`.
+
+## How this was run, and why not as written
+
+| Ticket says | What was done |
+|---|---|
+| Compare `?pe_version=frontier` against `current`, Aug 19–25 | Not available. `GET /versions/us` on 2026-09-08 returns `current` 1.821.2, `frontier` 1.821.10 — both past 1.815.1, where the 40-hour default was removed. The window closed on Aug 26. |
+| On staging | On PolicyEngine's private API (`household.api.policyengine.org/us/calculate`), pinned to **1.821.10**, the frontier version at time of recording. `PolicyEngineConfig.clean` rejects the floating aliases, so the pin is the exact number; every `min_pe_version` floor in `pe_dependencies/` is ≤ `(1, 779, 3)`, so gating at 1.821.10 sends the identical input set the `frontier` alias would have. |
+| "Without the fix" arm | Reconstructed by dropping `SNAP_HOURS_INPUT` from `pe_inputs` rather than by finding a model that still carries the old default. Reproduces the pre-MFB-1637 request exactly and does not rot when frontier moves again. |
+| — | A third arm was added: **floorless**, hours sent without the 40-hour floor. It is what isolates MFB-1637's *policy* choice from the *fix*, which is what the ticket's "or intentionally differ per the hours-policy decision" clause asks about. MFB-1731 owns the revisit. |
+
+All values are annual dollars, the figure the screener reports. The date is pinned to
+**2026-01-15**: `Snap.pe_period_month` reads today's month and it travels in the request body, so
+a wall-clock month would move every figure (the maximum allotment steps up each October). The arms
+differ only by the hours input, so no work-test verdict here depends on the month — with one
+exception, called out in row 9, where the month decides which ABAWD waivers are in force.
+
+Rows 1–7 are Kansas, a clean federal passthrough. FY2026 maximum allotments: $298 (one person),
+$546 (two).
+
+## Three premises in the ticket that no longer hold
+
+These are why several rows are re-pointed rather than run as written. All three predate the
+ticket's Aug 12 filing or landed before the cutover, and all three narrow the blast radius.
+
+1. **The general 30-hour work test cannot deny.** `meets_snap_general_work_requirements` returns
+   `exempted | compliant`, where `compliant = is_snap_work_program_participant |
+   ~is_snap_work_registration_noncompliant` and the noncompliance flag defaults False.
+   PolicyEngine made that change on **2026-07-08**, before 1.815.1. Measured: True for every
+   member of every scenario here, in every arm, including with no hours sent at all. **Hours bite
+   only through ABAWD.**
+2. **A household member under 14 is routed around ABAWD entirely.**
+   `meets_snap_work_requirements_person` returns `abawd & general` only when no household member
+   is under the dependent-child threshold, which HR1 moved from 18 to **14**. With the general
+   test unable to deny, any household containing someone under 14 is untouchable by the hours
+   change. The ticket's row 4 ("youngest child 6+, parent not exempt") is therefore protected as
+   written, and had to be re-pointed at 14 to become probative.
+3. **ABAWD's exempt age is 65, not 60.** The bracket moved 50 → 51 → 53 → 55 → **65** on
+   2025-07-04 (HR1). 60 exempts from the general test, which cannot deny. So the ticket's "60+
+   adult" row is fully exposed at 62 and only inert at 66; it was run at both.
+
+## The matrix
+
+| # | Row | Household | shipped | control | floorless | Verdict |
+|---|---|---|---|---|---|---|
+| 1 | Working single adult, hourly | 30, $20/hr × **15 hrs** reported | **$564** (40 hrs sent) | **$0** | **$0** (15 hrs sent) | Fix holds. The only row where all three arms differ — the floor, not the fix, is what holds this household eligible |
+| 2 | Working single adult, salaried | 30, $1,200/mo | **$864** (41.38 hrs) | **$0** | **$864** | Fix holds; floor inert (approximation already clears 20) |
+| 3 | Unemployed childless adult (ABAWD) | 30, no income | **$3,576** (40 hrs) | **$0** | **$0** | Fix holds. **The row the policy decision rests on**: the floor asserts a work test is met for a household that reported no work |
+| 4a | Youngest child 6+ *(as written)* | 40 + child **8** | $6,552 | **$6,552** | $6,552 | No movement. Premise stale — the under-14 gate skips ABAWD |
+| 4b | Youngest child 14+ *(re-pointed)* | 40 + child **15** | **$6,552** | **$3,576** | $3,576 | Fix holds — but **not** as a false $0. See finding 1 |
+| 5 | Child under 6 | 40 + child 3 | $6,552 | $6,552 | $6,552 | No movement; doubly exempt |
+| 6 | Disabled adult | 40, `disabled=True` | $3,576 | $3,576 | $3,576 | No movement; `is_disabled` exempts from ABAWD |
+| 7a | 60+ adult *(re-pointed to 62)* | 62, no income | **$3,576** | **$0** | **$0** | Fix holds. Premise stale — 62 is *not* ABAWD-exempt |
+| 7b | 60+ adult *(re-pointed to 66)* | 66, no income | $3,576 | $3,576 | $3,576 | No movement; past the 65 exempt age |
+| 8 | MA, TAFDC active vs not | MA, 30 @ $20/hr × 15, child 4 | $5,328 | $5,328 | $5,328 | Swap works — one request, no split. But MA SNAP was never exposed: TAFDC needs a child, and a child under 14 skips ABAWD. See finding 4 |
+| 9 | KS/NC with county set | unemployed childless adult per state | — | KS **$0**, NC **$0**, CO **$0**, WA **$3,576**, IL **$3,576** | — | KS/NC have no waiver to interact with. WA read as waived on a county we never sent. See finding 2 |
+
+### Knock-ons
+
+| Program | Household | shipped | control | Verdict |
+|---|---|---|---|---|
+| **TX CEAP** | TX childless adult, ~157% FPG, $150/mo heating | SNAP $288, **CEAP $1,200** | SNAP $0, **CEAP $0** | **Exposed, and protected only by SNAP.** `tx_ceap_eligible` reads `is_snap_eligible`, which is not take-up-gated. Matches MFB-1640's $1,200 |
+| **TX CEAP, alone** | same household, SNAP not on the screen | — | **CEAP $0** | MFB-1640's open edge, settled. See finding 3 |
+| **TX WIC** | TX, 30 @ $1,200/mo + child 3 | SNAP $3,840, WIC $723 | SNAP $3,840, WIC $723 | **Structurally unreachable.** Every WIC category implies a member under 14 or a pregnancy, both of which take the household out of ABAWD's reach. Independently, `meets_wic_categorical_eligibility` reads a take-up-gated `snap` that MFB already zeroes for non-reporters (MFB-1312). The protection the ticket credits to MFB-1637 came from MFB-1312 |
+
+## Test package
+
+51 tests, all passing, replayed from committed cassettes at the pinned version
+(`VCR_MODE=none`, which cannot record):
+
+- `test_mfb1639_matrix.py` — 23 tests, rows 1–7 across three arms
+- `test_mfb1639_shared_request.py` — 19 tests, row 8 (MA), the CEAP knock-on and CEAP-alone,
+  the exemption-input coupling, and WIC
+- `test_mfb1639_waived_area.py` — 6 tests, row 9 at January and September 2026
+- `test_mfb1639_reachability.py` — 9 tests, static, no network
+
+Recorded with `PE_RECORD=1`; replay with `VCR_MODE=none .venv/bin/python -m pytest
+programs/programs/qa_mfb1639 -n 0`. Re-recording is a deliberate act: PolicyEngine serves only
+what `current`/`frontier` currently resolve to, so once it promotes past 1.821.10 these cassettes
+return 422 `unsupported_version` rather than refreshing.
+
+Nothing under `programs/programs/cross_white_label/`, `programs/framework/`, `integrations/` or
+`screener/` was modified — `git diff origin/main` over those paths is empty.
+
+## Missing context
+
+`policyengine-update-audit-2026-08-12.md`, cited by both MFB-1637 and MFB-1639 as living "in
+mfb-repos", does not exist on any accessible surface. MFB-1640's session searched the filesystem,
+all three repos' git history, Google Drive, Linear documents, Slack, and `gh repo list` and did
+not find it; that search was not repeated here. Every claim in this document is sourced from
+PolicyEngine's own variables and parameters, MFB's code, and the measurements above.
