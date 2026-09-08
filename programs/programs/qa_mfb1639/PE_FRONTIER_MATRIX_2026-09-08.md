@@ -59,8 +59,26 @@ ticket's Aug 12 filing or landed before the cutover, and all three narrow the bl
 | 6 | Disabled adult | 40, `disabled=True` | $3,576 | $3,576 | $3,576 | No movement; `is_disabled` exempts from ABAWD |
 | 7a | 60+ adult *(re-pointed to 62)* | 62, no income | **$3,576** | **$0** | **$0** | Fix holds. Premise stale — 62 is *not* ABAWD-exempt |
 | 7b | 60+ adult *(re-pointed to 66)* | 66, no income | $3,576 | $3,576 | $3,576 | No movement; past the 65 exempt age |
-| 8 | MA, TAFDC active vs not | MA, 30 @ $20/hr × 15, child 4 | $5,328 | $5,328 | $5,328 | Swap works — one request, no split. But MA SNAP was never exposed: TAFDC needs a child, and a child under 14 skips ABAWD. See finding 4 |
+| 8a | MA, TAFDC active vs not | MA, 30 @ $20/hr × 15, child **4** | $5,328 | $5,328 | $5,328 | Swap works — one request, no split, all three programs sending the MA class. SNAP unexposed: a child under 14 skips ABAWD |
+| 8b | MA, youngest dependent in the TAFDC/ABAWD gap | MA, 38 @ $20/hr × 15, child **15** | **$5,328** | **$2,352** | — | TAFDC's dependent limit is 18, ABAWD's is 14, so 14–17 falls in the gap and MA SNAP **does** move pre-fix. Same member-removal partial loss as row 4b |
 | 9 | KS/NC with county set | unemployed childless adult per state | — | KS **$0**, NC **$0**, CO **$0**, WA **$3,576**, IL **$3,576** | — | KS/NC have no waiver to interact with. WA read as waived on a county we never sent. See finding 2 |
+
+### One failing adult
+
+MFB-1637 states the impact as "one failing adult can zero out the household's SNAP". Run — the
+ticket's matrix has no two-adult row — it is too strong. Two childless KS adults, one on $1,200/mo
+and one reporting nothing:
+
+| Arm | Value | What happens |
+|---|---|---|
+| shipped | **$3,840** ($320/mo) | Both hold, intact two-person unit |
+| floorless | **$864** ($72/mo) | Only the adult without hours is removed; the unit shrinks to one person |
+| control | **$0** | *Both* adults read zero hours, so no passing member is left to hold the unit |
+
+The $864 is exactly row 2's figure for a *single* adult on the same $1,200/mo — the removal
+mechanism showing its work, with the removed member's income still counted in full
+(7 CFR 273.11(c)(1)). So the stated $0 needs *every* adult to fail; one failing adult produces a
+partial loss with a plausible-looking number.
 
 ### Knock-ons
 
@@ -72,11 +90,11 @@ ticket's Aug 12 filing or landed before the cutover, and all three narrow the bl
 
 ## Test package
 
-51 tests, all passing, replayed from committed cassettes at the pinned version
+56 tests, all passing, replayed from committed cassettes at the pinned version
 (`VCR_MODE=none`, which cannot record):
 
-- `test_mfb1639_matrix.py` — 23 tests, rows 1–7 across three arms
-- `test_mfb1639_shared_request.py` — 19 tests, row 8 (MA), the CEAP knock-on and CEAP-alone,
+- `test_mfb1639_matrix.py` — 26 tests, rows 1–7 across three arms, plus the one-failing-adult case
+- `test_mfb1639_shared_request.py` — 21 tests, rows 8a/8b (MA), the CEAP knock-on and CEAP-alone,
   the exemption-input coupling, and WIC
 - `test_mfb1639_waived_area.py` — 6 tests, row 9 at January and September 2026
 - `test_mfb1639_reachability.py` — 9 tests, static, no network

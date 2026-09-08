@@ -71,11 +71,15 @@ class TestRow8MassachusettsSharedRequest(SharedRequestTestCase):
     share a payload. `MaSnap` swaps the class rather than adding it, so the disagreement never
     arises.
 
-    Second, MA SNAP was never exposed to the hours change on a TAFDC-active screen at all. TAFDC
-    requires a dependent child, and a household with a member under 14 is routed around ABAWD by
-    `meets_snap_work_requirements_person` — so the household MA's swap protects is a household
-    whose SNAP the work test could not have touched. The swap earns its keep by keeping the screen
-    to one request, not by changing a SNAP value.
+    Second, MA SNAP is unexposed to the hours change on a TAFDC screen **whose youngest dependent
+    is under 14** — the common case, and the one below. TAFDC requires a dependent child, and a
+    household with a member under 14 is routed around ABAWD by
+    `meets_snap_work_requirements_person`, so the work test cannot touch its SNAP whatever we send.
+    The swap earns its keep by keeping the screen to one request, not by changing a SNAP value.
+
+    That is narrower than "never exposed on a TAFDC screen": TAFDC's dependent limit is 18, ABAWD's
+    is 14, so a youngest dependent of 14–17 falls in the gap and pre-fix MA SNAP does move. See
+    `TestRow8MassachusettsTeenagerGap`.
     """
 
     def ma_household(self):
@@ -371,3 +375,61 @@ class TestWicKnockOnIsStructurallyUnreachable(SharedRequestTestCase):
         self.assertTrue(run.member(probes.MeetsWicCategoricalEligibilityProbe, child.id))
         self.assertEqual(run.value(snap_class), 3_840)
         self.assertEqual(run.value(TxWic), 723)
+
+
+class TestRow8MassachusettsTeenagerGap(SharedRequestTestCase):
+    """Row 8's exposed case, and a correction to the class above.
+
+    "MA SNAP is never exposed on a TAFDC-active screen" is too strong. The two programs draw the
+    dependent-child line in different places:
+
+      TAFDC  `gov/states/ma/dta/tcap/tafdc/eligibility/age_limit/dependent.yaml` = **18**
+             (`student_dependent.yaml` = 19), per 106 CMR 703.200 / 703.230
+      ABAWD  `gov/usda/snap/work_requirements/abawd/age_threshold/dependent`, post-HR1 = **14**
+
+    Those are PolicyEngine parameters, not asserted here: `policyengine_us` is not a benefits-api
+    dependency, so a test importing it would not run in CI. The two tests below prove the gap
+    behaviourally instead, which is the part that matters — the parent moves.
+
+    So a TAFDC household whose youngest dependent is **14 to 17** qualifies for TAFDC and is *not*
+    routed around ABAWD. Pre-fix, that parent fails the work test and is removed from the SNAP
+    unit — the same partial loss as `TestRow4YoungestChildFourteenPlus`, on a screen where the
+    hours-class swap is also in play. The swap's justification (one shared request, no 500) is
+    unaffected; what is narrower than claimed is the set of TAFDC households the hours change
+    could not reach.
+    """
+
+    def ma_teenager_household(self):
+        screen = make_screen(1639_18, household_size=2, **MA)
+        parent = add_member(screen, 1639_18 * 10 + 1, "headOfHousehold", 38)
+        add_income(parent, amount=20, income_type="wages", frequency="hourly")
+        parent.income_streams.update(hours_worked=15)
+        # 15: a TAFDC dependent (under 18) who is over the ABAWD threshold (14).
+        child = add_member(screen, 1639_18 * 10 + 2, "child", 15)
+        return screen, parent, child
+
+    def test_shipped_holds_the_parent_in_the_unit(self):
+        screen, parent, child = self.ma_teenager_household()
+        self.pinned()
+        program = make_program("ma", "ma_snap", YEAR)
+
+        arm = run_arm(screen, MaSnap, program)
+
+        self.assertEqual(arm.hours_sent(parent.id), 40)
+        self.assertTrue(arm.member(probes.MeetsSnapWorkRequirementsPersonProbe, parent.id))
+        self.assertEqual(arm.value(), 5328)
+
+    def test_control_removes_the_parent_from_the_unit(self):
+        """The case the "never exposed" claim missed: pre-fix MA SNAP does move here."""
+        screen, parent, child = self.ma_teenager_household()
+        self.pinned()
+        program = make_program("ma", "ma_snap", YEAR)
+
+        arm = run_arm(screen, drop_hours(MaSnap), program)
+
+        self.assertFalse(arm.member(probes.MeetsSnapWorkRequirementsPersonProbe, parent.id))
+        self.assertTrue(arm.member(probes.MeetsSnapWorkRequirementsPersonProbe, child.id))
+        self.assertTrue(arm.spm(probes.IsSnapEligibleProbe))
+        # $196/mo against the shipped $444/mo: the parent is out of the unit, and the household
+        # keeps a plausible-looking 44% of its benefit rather than losing all of it.
+        self.assertEqual(arm.value(), 2352)

@@ -13,18 +13,33 @@ is the ticket that opens it.
 
 ## 1. The pre-fix failure mode was not only false $0 — it silently halves mixed households
 
-**Verified.** `test_mfb1639_matrix.py::TestRow4YoungestChildFourteenPlus`.
+**Verified.** `test_mfb1639_matrix.py::TestRow4YoungestChildFourteenPlus`,
+`::TestOneFailingAdultDoesNotZeroTheHousehold`, and
+`test_mfb1639_shared_request.py::TestRow8MassachusettsTeenagerGap`.
 
 A household of a parent and a 15-year-old, pre-fix payload: SNAP stays **eligible** and drops from
 **$546/mo to $298/mo** — the two-person allotment to the one-person allotment. PolicyEngine
 removes a work-test-noncompliant member from the SNAP unit rather than zeroing the unit
 (`is_snap_work_registration_noncompliant`: "removed from the SNAP unit size"), and the remaining
-child keeps the unit eligible.
+child keeps the unit eligible. The same thing happens in MA at $444/mo → $196/mo where the
+youngest dependent is 15.
+
+**MFB-1637's own framing is too strong.** It states the impact as "one failing adult can zero out
+the household's SNAP". Two childless adults, one on $1,200/mo and one reporting nothing:
+
+| Arm | Value | What happens |
+|---|---|---|
+| shipped | $3,840 | Both hold |
+| floorless | **$864** | Only the adult without hours is removed; unit shrinks to one person |
+| control | **$0** | *Both* read zero hours, so no passing member is left |
+
+$864 is exactly what a *single* adult on the same $1,200/mo receives, with the removed member's
+income still counted in full (7 CFR 273.11(c)(1)). So the stated $0 needs **every** adult to fail.
+One failing adult is a partial loss.
 
 Why it matters: a QA check written against the ticket's stated expectation — "expect false $0 SNAP
-results" — passes this household. Any future work-test regression in a household with both an
-exposed adult and a qualifying dependent will present as a plausible-looking smaller number, not a
-zero.
+results" — passes every one of these households. Any future work-test regression in a household
+that retains one qualifying member will present as a plausible-looking smaller number, not a zero.
 
 **Not a defect in MFB code, and nothing to file.** Recorded so the next person testing this area
 does not write a $0-vs-nonzero assertion and believe it covers the case.

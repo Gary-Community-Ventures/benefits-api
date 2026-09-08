@@ -347,3 +347,56 @@ class TestRow7OlderAdultAtSixtySix(Mfb1639MatrixTestCase):
         arm = self.arm(screen, program, KsSnap)
 
         self.assertEqual(arm.value(), MAX_ALLOTMENT_ONE * 12)
+
+
+class TestOneFailingAdultDoesNotZeroTheHousehold(Mfb1639MatrixTestCase):
+    """MFB-1637 states the impact as "one failing adult can zero out the household's SNAP". The
+    matrix in this ticket has no two-adult row, so that claim was never run. It is too strong.
+
+    Two childless adults, one earning and one reporting nothing, read in the floorless arm — the
+    only arm that can put one passing and one failing adult in the same unit. The failing adult is
+    removed from the SNAP unit and the household keeps the one-person allotment. Same mechanism as
+    the parent-and-teenager case in `TestRow4YoungestChildFourteenPlus`: a partial loss, not a
+    denial.
+
+    The distinction matters for monitoring. A household that loses one of two adults is still
+    "eligible" with a plausible number, so nothing about the result looks wrong.
+    """
+
+    def test_floorless_removes_only_the_adult_without_hours(self):
+        screen, program, earner, other = households.two_adults_one_without_hours()
+
+        arm = self.arm(screen, program, reported_hours_only(KsSnap))
+
+        self.assertAlmostEqual(arm.hours_sent(earner.id), 1200 / 7.25 / 4)
+        self.assertEqual(arm.hours_sent(other.id), 0)
+        self.assertTrue(arm.member(probes.MeetsSnapWorkRequirementsPersonProbe, earner.id))
+        self.assertFalse(arm.member(probes.MeetsSnapWorkRequirementsPersonProbe, other.id))
+        # Still eligible, and not zero — the unit shrinks to one person.
+        self.assertTrue(arm.spm(probes.IsSnapEligibleProbe))
+        # $72/mo, which is exactly what `TestRow2SalariedWorker` gets for a *single* adult on the
+        # same $1,200/mo. That equality is the removal mechanism showing its work: the failing
+        # adult is out of the unit size while their household's income still counts in full
+        # (7 CFR 273.11(c)(1)), leaving a one-person unit at $1,200 — the same household row 2
+        # already priced.
+        self.assertEqual(arm.value(), 72 * 12)
+
+    def test_shipped_keeps_both_adults_in_the_unit(self):
+        screen, program, earner, other = households.two_adults_one_without_hours()
+
+        arm = self.arm(screen, program, KsSnap)
+
+        self.assertEqual(arm.hours_sent(other.id), 40)
+        self.assertTrue(arm.member(probes.MeetsSnapWorkRequirementsPersonProbe, other.id))
+        # $320/mo for the intact two-person unit — 4.4x the floorless figure below it.
+        self.assertEqual(arm.value(), 320 * 12)
+
+    def test_control_denies_the_whole_unit(self):
+        """With nothing sent, *both* adults read zero hours, so there is no passing member left to
+        hold the unit together. This is the only shape that produces the stated $0."""
+        screen, program, earner, other = households.two_adults_one_without_hours()
+
+        arm = self.arm(screen, program, drop_hours(KsSnap))
+
+        self.assertFalse(arm.spm(probes.IsSnapEligibleProbe))
+        self.assertEqual(arm.value(), 0)

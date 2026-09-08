@@ -110,3 +110,19 @@ def older_adult(age: int, screen_id: int):
     screen = _screen(screen_id, 1, **KS)
     adult = add_member(screen, screen_id * 10 + 1, "headOfHousehold", age)
     return screen, make_program("ks", "ks_snap", YEAR), adult
+
+
+def two_adults_one_without_hours(screen_id: int = 1639_15):
+    """MFB-1637's stated impact: "One failing adult can zero out the household's SNAP."
+
+    Two childless adults, one earning $1,200/mo and one reporting nothing. Childless so ABAWD
+    applies to both. Read in the *floorless* arm, this is the only household in the package where
+    one member passes the work test and another fails — which is what the claim describes, and
+    which neither the shipped nor the control arm can show (they send 40 for both, or nothing for
+    both).
+    """
+    screen = _screen(screen_id, 2, **KS)
+    earner = add_member(screen, screen_id * 10 + 1, "headOfHousehold", 30)
+    add_income(earner, amount=1_200, income_type="wages", frequency="monthly")
+    other = add_member(screen, screen_id * 10 + 2, "spouse", 31)
+    return screen, make_program("ks", "ks_snap", YEAR), earner, other
