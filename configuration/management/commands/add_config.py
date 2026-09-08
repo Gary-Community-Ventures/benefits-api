@@ -5,8 +5,22 @@ from configuration.models import (
     Configuration,
 )
 from configuration.white_labels import state_options, white_label_config
+from programs.models import Referrer
 from screener.models import NPSScore
 import argparse
+
+# Standard "how did you hear about us" options every white label should have
+# in its referral-source dropdown. Partner-org referrers are added separately
+# via the Django admin.
+GENERIC_REFERRERS = {
+    "flyers": "Flyer",
+    "friend": "Friend / Family / Word of Mouth",
+    "merit": "Merit America",
+    "other": "Other",
+    "searchEngine": "Google or other search engine",
+    "socialMedia": "Social Media",
+    "testOrProspect": "Test / Prospective Partner",
+}
 
 
 class Command(BaseCommand):
@@ -103,6 +117,26 @@ class Command(BaseCommand):
                 white_label=white_label,
                 defaults={"data": WhiteLabelData.override_text, "active": True},
             )
+
+            # Ensure the standard generic referral-source dropdown options
+            # exist. Without these, a newly-launched white label's referral
+            # source step has nothing selectable until someone adds them by
+            # hand (MFB-1760).
+            for referrer_code, name in GENERIC_REFERRERS.items():
+                Referrer.objects.get_or_create(
+                    white_label=white_label,
+                    referrer_code=referrer_code,
+                    defaults={"name": name, "show_in_dropdown": True, "is_partner": False},
+                )
+
+            # merit may already exist as a Referrer row from
+            # 0145_seed_referrer_rows_from_referral_options.py, which
+            # classified it as a partner (is_partner=True). get_or_create
+            # above won't touch an existing row, so correct it explicitly
+            # now that it's confirmed generic.
+            Referrer.objects.filter(
+                white_label=white_label, referrer_code="merit", is_partner=True
+            ).update(is_partner=False)
 
             if WhiteLabelData.is_default:
                 continue
