@@ -134,9 +134,9 @@ class Command(BaseCommand):
             # classified it as a partner (is_partner=True). get_or_create
             # above won't touch an existing row, so correct it explicitly
             # now that it's confirmed generic.
-            Referrer.objects.filter(
-                white_label=white_label, referrer_code="merit", is_partner=True
-            ).update(is_partner=False)
+            Referrer.objects.filter(white_label=white_label, referrer_code="merit", is_partner=True).update(
+                is_partner=False
+            )
 
             if WhiteLabelData.is_default:
                 continue
