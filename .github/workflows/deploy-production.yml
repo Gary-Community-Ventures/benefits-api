@@ -10,6 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
+    outputs:
+      sha: ${{ steps.resolve_sha.outputs.sha }}
+
     env:
       SECRET_KEY: django-insecure-test-key-ci-github-actions-only
       DJANGO_SETTINGS_MODULE: benefits.settings
@@ -55,6 +58,31 @@ jobs:
         uses: actions/checkout@v7
         with:
           ref: ${{ github.event.release.tag_name }}
+          # No later step performs an authenticated Git operation, and this job
+          # runs repository test code, so don't leave a usable token behind.
+          persist-credentials: false
+
+      # Pin the commit the tag resolved to and hand it to `deploy`. Tags are
+      # mutable: resolving `tag_name` independently in both jobs would let a tag
+      # moved mid-run ship a commit that was never tested.
+      - name: Resolve release commit
+        id: resolve_sha
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      # Fail loudly rather than quietly thinning the suite. Wiring the input
+      # does not prove the secret has a value, and pytest_collection_modifyitems
+      # skips the HUD integration tests when it is empty -- so an unset secret
+      # would deploy on a green run with that coverage silently missing.
+      # Checked here rather than in the shared run-tests action, where fork PRs
+      # are meant to pass with no secrets at all.
+      - name: Require a HUD API token
+        env:
+          HUD_API_TOKEN: ${{ secrets.HUD_API_TOKEN }}
+        run: |
+          if [ -z "$HUD_API_TOKEN" ]; then
+            echo "::error::HUD_API_TOKEN is empty - the HUD integration tests would be skipped."
+            exit 1
+          fi
 
       # Django system checks and migrations (the build equivalent -- a config or
       # import error otherwise surfaces only at the push to Heroku) plus the full
@@ -69,8 +97,8 @@ jobs:
           # pinned to versions it has since rolled past.
           vcr-mode: none
           upload-coverage: 'false'
-          # Keep this wired: pytest_collection_modifyitems skips the HUD tests
-          # when the token is absent, so dropping it loses coverage silently.
+          # Guarded as non-empty above, since an absent token silently skips
+          # the HUD integration tests rather than failing.
           hud-api-token: ${{ secrets.HUD_API_TOKEN }}
 
       - name: Send verification failure notification to Slack
@@ -85,6 +113,10 @@ jobs:
 
   deploy:
     needs: [verify]
+    # `published` fires for prereleases too. Keeping them off production also
+    # makes a throwaway prerelease a safe way to exercise `verify` -- it runs,
+    # this job skips, production is untouched.
+    if: github.event.release.prerelease == false
     name: Deploy Backend to Heroku Production
     runs-on: ubuntu-latest
     timeout-minutes: 30
@@ -93,10 +125,11 @@ jobs:
       url: https://cobenefits-api.herokuapp.com
 
     steps:
-      - name: Checkout release tag
+      # The exact commit `verify` tested, not the tag it came from.
+      - name: Checkout verified commit
         uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.release.tag_name }}
+          ref: ${{ needs.verify.outputs.sha }}
 
       - name: Deploy to Heroku
         uses: ./.github/actions/deploy-to-heroku
