@@ -1,0 +1,162 @@
+interactions:
+- request:
+    body: '{"household": {"people": {"1639241": {"child_support_expense": {"2026":
+      0.0}, "real_estate_taxes": {"2026": 0}, "age": {"2026": 38}, "other_medical_expenses":
+      {"2026": 0}, "is_disabled": {"2026": null}, "ssi": {"2026": null}, "receives_ssi":
+      {"2026": false}, "takes_up_ssi_if_eligible": {"2026": false}, "social_security_disability":
+      {"2026": 0.0}, "meets_ssi_disability_criteria": {"2026": null}, "is_full_time_college_student":
+      {"2026": false}, "is_part_time_college_student": {"2026": false}, "meets_snap_work_exception":
+      {"2026": false}, "is_snap_employment_training_or_work_incentive_student": {"2026":
+      false}, "weekly_hours_worked_before_lsr": {"2026": 40}, "meets_snap_general_work_requirements":
+      {"2026-01": null}, "meets_snap_abawd_work_requirements": {"2026-01": null},
+      "meets_snap_work_requirements_person": {"2026-01": null}, "is_in_snap_abawd_waived_area":
+      {"2026-01": null}, "meets_wic_categorical_eligibility": {"2026-01": null}, "ma_tcap_gross_earned_income":
+      {"2026": 15659}, "ma_tcap_gross_unearned_income": {"2026": 0}, "is_tax_unit_dependent":
+      {"2026": false}, "is_pregnant": {"2026": false}, "ma_tafdc_pregnancy_eligible":
+      {"2026": false}, "is_in_secondary_school": {"2026": false}, "employment_income":
+      {"2026": 15659}, "self_employment_income": {"2026": 0}, "long_term_capital_gains":
+      {"2026": 0}, "taxable_pension_income": {"2026": 0}, "social_security": {"2026":
+      0}, "is_tax_unit_head": {"2026": true}, "is_tax_unit_spouse": {"2026": false},
+      "ssi_countable_resources": {"2026": 0}, "is_blind": {"2026": false}, "ssi_earned_income":
+      {"2026": 15659}, "ssi_unearned_income": {"2026": 0}}, "1639242": {"child_support_expense":
+      {"2026": 0.0}, "real_estate_taxes": {"2026": 0}, "age": {"2026": 4}, "other_medical_expenses":
+      {"2026": 0}, "is_disabled": {"2026": null}, "ssi": {"2026": null}, "receives_ssi":
+      {"2026": false}, "takes_up_ssi_if_eligible": {"2026": false}, "social_security_disability":
+      {"2026": 0.0}, "meets_ssi_disability_criteria": {"2026": null}, "is_full_time_college_student":
+      {"2026": false}, "is_part_time_college_student": {"2026": false}, "meets_snap_work_exception":
+      {"2026": false}, "is_snap_employment_training_or_work_incentive_student": {"2026":
+      false}, "weekly_hours_worked_before_lsr": {"2026": 0}, "meets_snap_general_work_requirements":
+      {"2026-01": null}, "meets_snap_abawd_work_requirements": {"2026-01": null},
+      "meets_snap_work_requirements_person": {"2026-01": null}, "is_in_snap_abawd_waived_area":
+      {"2026-01": null}, "meets_wic_categorical_eligibility": {"2026-01": null}, "ma_tcap_gross_earned_income":
+      {"2026": 0}, "ma_tcap_gross_unearned_income": {"2026": 0}, "is_tax_unit_dependent":
+      {"2026": true}, "is_pregnant": {"2026": false}, "ma_tafdc_pregnancy_eligible":
+      {"2026": false}, "is_in_secondary_school": {"2026": false}, "employment_income":
+      {"2026": 0}, "self_employment_income": {"2026": 0}, "long_term_capital_gains":
+      {"2026": 0}, "taxable_pension_income": {"2026": 0}, "social_security": {"2026":
+      0}, "is_tax_unit_head": {"2026": false}, "is_tax_unit_spouse": {"2026": false},
+      "ssi_countable_resources": {"2026": 0}, "is_blind": {"2026": false}, "ssi_earned_income":
+      {"2026": 0}, "ssi_unearned_income": {"2026": 0}}}, "tax_units": {"main_tax_unit":
+      {"members": ["1639241", "1639242"]}}, "families": {"family": {"members": ["1639241",
+      "1639242"]}}, "households": {"household": {"members": ["1639241", "1639242"],
+      "state_code": {"2026": "MA"}, "is_in_public_housing": {"2026": false}}}, "spm_units":
+      {"spm_unit": {"members": ["1639241", "1639242"], "snap_unearned_income": {"2026":
+      0.0}, "snap_earned_income": {"2026": 15659.999999999998}, "snap_assets": {"2026":
+      0}, "tanf": {"2026": null}, "receives_tanf": {"2026": false}, "takes_up_tanf_if_eligible":
+      {"2026": false}, "receives_snap": {"2026": false}, "takes_up_snap_if_eligible":
+      {"2026": false}, "snap_emergency_allotment": {"2026": 0}, "housing_cost": {"2026":
+      0}, "has_phone_expense": {"2026": false}, "has_heating_cooling_expense": {"2026":
+      false}, "heating_cooling_expense": {"2026": 0.0}, "childcare_expenses": {"2026":
+      4800.0}, "water_expense": {"2026": 0.0}, "phone_expense": {"2026": 0.0}, "homeowners_association_fees":
+      {"2026": 0.0}, "homeowners_insurance": {"2026": 0.0}, "snap_if_takes_up": {"2026-01":
+      null}, "is_snap_eligible": {"2026-01": null}, "spm_unit_pre_subsidy_childcare_expenses":
+      {"2026": 4800.0}, "ma_tafdc": {"2026": null}, "ma_eaedc_living_arrangement":
+      {"2026": "A"}, "spm_unit_cash_assets": {"2026": 0}, "ma_eaedc_non_financial_eligible":
+      {"2026": false}, "ma_eaedc": {"2026": null}}}, "marital_units": {}}, "version":
+      "1.821.10"}'
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '4578'
+      Content-Type:
+      - application/json
+      User-Agent:
+      - python-requests/2.32.4
+    method: POST
+    uri: https://household.api.policyengine.org/us/calculate
+  response:
+    body:
+      string: '{"status": "ok", "message": null, "result": {"people": {"1639241":
+        {"child_support_expense": {"2026": 0.0}, "real_estate_taxes": {"2026": 0},
+        "age": {"2026": 38}, "other_medical_expenses": {"2026": 0}, "is_disabled":
+        {"2026": false}, "ssi": {"2026": 0.0}, "receives_ssi": {"2026": false}, "takes_up_ssi_if_eligible":
+        {"2026": false}, "social_security_disability": {"2026": 0.0}, "meets_ssi_disability_criteria":
+        {"2026": false}, "is_full_time_college_student": {"2026": false}, "is_part_time_college_student":
+        {"2026": false}, "meets_snap_work_exception": {"2026": false}, "is_snap_employment_training_or_work_incentive_student":
+        {"2026": false}, "weekly_hours_worked_before_lsr": {"2026": 40}, "meets_snap_general_work_requirements":
+        {"2026-01": true}, "meets_snap_abawd_work_requirements": {"2026-01": true},
+        "meets_snap_work_requirements_person": {"2026-01": true}, "is_in_snap_abawd_waived_area":
+        {"2026-01": false}, "meets_wic_categorical_eligibility": {"2026-01": true},
+        "ma_tcap_gross_earned_income": {"2026": 15659}, "ma_tcap_gross_unearned_income":
+        {"2026": 0}, "is_tax_unit_dependent": {"2026": false}, "is_pregnant": {"2026":
+        false}, "ma_tafdc_pregnancy_eligible": {"2026": false}, "is_in_secondary_school":
+        {"2026": false}, "employment_income": {"2026": 15659}, "self_employment_income":
+        {"2026": 0}, "long_term_capital_gains": {"2026": 0}, "taxable_pension_income":
+        {"2026": 0}, "social_security": {"2026": 0}, "is_tax_unit_head": {"2026":
+        true}, "is_tax_unit_spouse": {"2026": false}, "ssi_countable_resources": {"2026":
+        0}, "is_blind": {"2026": false}, "ssi_earned_income": {"2026": 15659}, "ssi_unearned_income":
+        {"2026": 0}}, "1639242": {"child_support_expense": {"2026": 0.0}, "real_estate_taxes":
+        {"2026": 0}, "age": {"2026": 4}, "other_medical_expenses": {"2026": 0}, "is_disabled":
+        {"2026": false}, "ssi": {"2026": 0.0}, "receives_ssi": {"2026": false}, "takes_up_ssi_if_eligible":
+        {"2026": false}, "social_security_disability": {"2026": 0.0}, "meets_ssi_disability_criteria":
+        {"2026": false}, "is_full_time_college_student": {"2026": false}, "is_part_time_college_student":
+        {"2026": false}, "meets_snap_work_exception": {"2026": false}, "is_snap_employment_training_or_work_incentive_student":
+        {"2026": false}, "weekly_hours_worked_before_lsr": {"2026": 0}, "meets_snap_general_work_requirements":
+        {"2026-01": true}, "meets_snap_abawd_work_requirements": {"2026-01": true},
+        "meets_snap_work_requirements_person": {"2026-01": true}, "is_in_snap_abawd_waived_area":
+        {"2026-01": false}, "meets_wic_categorical_eligibility": {"2026-01": true},
+        "ma_tcap_gross_earned_income": {"2026": 0}, "ma_tcap_gross_unearned_income":
+        {"2026": 0}, "is_tax_unit_dependent": {"2026": true}, "is_pregnant": {"2026":
+        false}, "ma_tafdc_pregnancy_eligible": {"2026": false}, "is_in_secondary_school":
+        {"2026": false}, "employment_income": {"2026": 0}, "self_employment_income":
+        {"2026": 0}, "long_term_capital_gains": {"2026": 0}, "taxable_pension_income":
+        {"2026": 0}, "social_security": {"2026": 0}, "is_tax_unit_head": {"2026":
+        false}, "is_tax_unit_spouse": {"2026": false}, "ssi_countable_resources":
+        {"2026": 0}, "is_blind": {"2026": false}, "ssi_earned_income": {"2026": 0},
+        "ssi_unearned_income": {"2026": 0}}}, "tax_units": {"main_tax_unit": {"members":
+        ["1639241", "1639242"]}}, "families": {"family": {"members": ["1639241", "1639242"]}},
+        "households": {"household": {"members": ["1639241", "1639242"], "state_code":
+        {"2026": "MA"}, "is_in_public_housing": {"2026": false}}}, "spm_units": {"spm_unit":
+        {"members": ["1639241", "1639242"], "snap_unearned_income": {"2026": 0.0},
+        "snap_earned_income": {"2026": 15659.999999999998}, "snap_assets": {"2026":
+        0}, "tanf": {"2026": 0.0}, "receives_tanf": {"2026": false}, "takes_up_tanf_if_eligible":
+        {"2026": false}, "receives_snap": {"2026": false}, "takes_up_snap_if_eligible":
+        {"2026": false}, "snap_emergency_allotment": {"2026": 0}, "housing_cost":
+        {"2026": 0}, "has_phone_expense": {"2026": false}, "has_heating_cooling_expense":
+        {"2026": false}, "heating_cooling_expense": {"2026": 0.0}, "childcare_expenses":
+        {"2026": 4800.0}, "water_expense": {"2026": 0.0}, "phone_expense": {"2026":
+        0.0}, "homeowners_association_fees": {"2026": 0.0}, "homeowners_insurance":
+        {"2026": 0.0}, "snap_if_takes_up": {"2026-01": 546.0}, "is_snap_eligible":
+        {"2026-01": true}, "spm_unit_pre_subsidy_childcare_expenses": {"2026": 4800.0},
+        "ma_tafdc": {"2026": 7271.2505}, "ma_eaedc_living_arrangement": {"2026": "A"},
+        "spm_unit_cash_assets": {"2026": 0}, "ma_eaedc_non_financial_eligible": {"2026":
+        false}, "ma_eaedc": {"2026": 0.0}}}, "marital_units": {}}, "policyengine_bundle":
+        {"model_version": "1.821.10", "data_version": null, "dataset": null}}'
+    headers:
+      Alt-Svc:
+      - h3=":443"; ma=2592000
+      Content-Length:
+      - '4686'
+      access-control-allow-origin:
+      - '*'
+      content-type:
+      - application/json
+      date:
+      - Wed, 09 Sep 2026 15:36:12 GMT
+      server:
+      - Google Frontend
+      traceparent:
+      - 00-a9579bc269b606933a4ff78409e687f8-2851228a91c7dbc8-01
+      via:
+      - 1.1 google
+      x-cloud-trace-context:
+      - a9579bc269b606933a4ff78409e687f8;o=1
+      x-policyengine-backend:
+      - modal
+      x-policyengine-primary-backend:
+      - modal
+      x-policyengine-primary-state:
+      - healthy
+      x-policyengine-request-id:
+      - 8bef9397-56b5-4284-b9ba-a6085afa3b19
+      x-policyengine-route-channel:
+      - frontier
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -71,15 +71,19 @@ class TestRow8MassachusettsSharedRequest(SharedRequestTestCase):
     share a payload. `MaSnap` swaps the class rather than adding it, so the disagreement never
     arises.
 
-    Second, MA SNAP is unexposed to the hours change on a TAFDC screen **whose youngest dependent
-    is under 14** — the common case, and the one below. TAFDC requires a dependent child, and a
-    household with a member under 14 is routed around ABAWD by
-    `meets_snap_work_requirements_person`, so the work test cannot touch its SNAP whatever we send.
-    The swap earns its keep by keeping the screen to one request, not by changing a SNAP value.
+    Second, the swap earns its keep by keeping the screen to one request, not by changing a SNAP
+    value — and on a TAFDC-active screen MA SNAP was not exposed to the hours change at all. Two
+    independent reasons cover it, and it took two corrections to get them both:
 
-    That is narrower than "never exposed on a TAFDC screen": TAFDC's dependent limit is 18, ABAWD's
-    is 14, so a youngest dependent of 14–17 falls in the gap and pre-fix MA SNAP does move. See
-    `TestRow8MassachusettsTeenagerGap`.
+      * a household member under 14 is routed around ABAWD by
+        `meets_snap_work_requirements_person`, and
+      * `MaTafdc` and `MaEaedc` declare `MaTotalHoursWorkedDependency` themselves, so on any screen
+        where they run the hours are in the shared payload whether SNAP declares them or not.
+
+    The second is the one that actually covers TAFDC screens, because the first does not: TAFDC's
+    dependent limit is 18 against ABAWD's 14, leaving a 14–17 gap. See
+    `TestRow8MassachusettsTeenagerGap` for that gap and `TestRow8TafdcActiveVersusNot` for the
+    sibling-hours rescue that closes it.
     """
 
     def ma_household(self):
@@ -392,11 +396,18 @@ class TestRow8MassachusettsTeenagerGap(SharedRequestTestCase):
     behaviourally instead, which is the part that matters — the parent moves.
 
     So a TAFDC household whose youngest dependent is **14 to 17** qualifies for TAFDC and is *not*
-    routed around ABAWD. Pre-fix, that parent fails the work test and is removed from the SNAP
-    unit — the same partial loss as `TestRow4YoungestChildFourteenPlus`, on a screen where the
-    hours-class swap is also in play. The swap's justification (one shared request, no 500) is
-    unaffected; what is narrower than claimed is the set of TAFDC households the hours change
-    could not reach.
+    routed around ABAWD. Pre-fix, that parent fails the work test and is removed from the SNAP unit
+    — the same partial loss as `TestRow4YoungestChildFourteenPlus`.
+
+    **This runs `MaSnap` alone, which is a synthetic configuration.** With a 14–17 dependent, TAFDC
+    is inside its own age limit, so it can calc and lands in the shared payload — carrying the
+    hours that rescue the parent (`TestRow8TafdcActiveVersusNot`). Pre-fix exposure therefore
+    needed the age gap *and* TAFDC/EAEDC absent from the request, which on a real MA screen means
+    the same config routes as finding 3: an inactive or uncategorised program row, a
+    `Referrer.remove_programs` entry, or a version pin that drops them.
+
+    So the mechanism below is real and the exposure was narrow. It is kept because the mechanism is
+    what a future work-test change would run into, not because MA users saw this.
     """
 
     def ma_teenager_household(self):
@@ -433,3 +444,150 @@ class TestRow8MassachusettsTeenagerGap(SharedRequestTestCase):
         # $196/mo against the shipped $444/mo: the parent is out of the unit, and the household
         # keeps a plausible-looking 44% of its benefit rather than losing all of it.
         self.assertEqual(arm.value(), 2352)
+
+
+class TestRow8TafdcActiveVersusNot(SharedRequestTestCase):
+    """Row 8 as the ticket literally words it — "MA screen with TAFDC active vs. not
+    (shared-request hours interaction)" — which the classes above never ran: they all call
+    `run_arm` with `MaSnap` alone.
+
+    Run properly, it inverts the reason MA was safe. `MaTafdc` and `MaEaedc` both declare
+    `MaTotalHoursWorkedDependency` themselves, and one request carries every program on the
+    screen. So on a TAFDC-active screen the hours are in the payload **whether or not SNAP
+    declares them** — pre-fix MA SNAP was protected by its siblings, not by the child-age gate.
+
+    Measured on the 14–17 household, the one case the child-age gate does *not* cover:
+
+        SNAP alone,        pre-fix   $196/mo   parent removed from the unit
+        SNAP + TAFDC/EAEDC, pre-fix  $444/mo   hours arrive from TAFDC; parent stays
+
+    Which settles what MFB-1637 bought for MA: payload integrity (one request, no
+    `DependencyError`, no 500), not SNAP values. A MA screen running TAFDC never saw the SNAP
+    values move at all.
+    """
+
+    def teenager_household(self, screen_id):
+        screen = make_screen(screen_id, household_size=2, **MA)
+        parent = add_member(screen, screen_id * 10 + 1, "headOfHousehold", 38)
+        add_income(parent, amount=20, income_type="wages", frequency="hourly")
+        parent.income_streams.update(hours_worked=15)
+        child = add_member(screen, screen_id * 10 + 2, "child", 15)
+        return screen, parent, child
+
+    def specs(self, snap_class, with_siblings):
+        specs = [(snap_class, make_program("ma", "ma_snap", YEAR))]
+        if with_siblings:
+            specs += [
+                (MaTafdc, make_program("ma", "ma_tafdc", YEAR)),
+                (MaEaedc, make_program("ma", "ma_eaedc", YEAR)),
+            ]
+        return specs
+
+    def test_tafdc_not_active_pre_fix_removes_the_parent(self):
+        screen, parent, child = self.teenager_household(1639_20)
+        self.pinned()
+        snap_class = drop_hours(MaSnap)
+
+        run = run_shared(screen, self.specs(snap_class, with_siblings=False))
+
+        self.assertFalse(run.sent("weekly_hours_worked_before_lsr", parent.id))
+        self.assertFalse(run.member(probes.MeetsSnapWorkRequirementsPersonProbe, parent.id))
+        self.assertEqual(run.value(snap_class), 2352)
+
+    def test_tafdc_active_pre_fix_keeps_the_parent_via_its_own_hours_input(self):
+        """The interaction the row is named after. SNAP sends nothing; TAFDC and EAEDC do."""
+        screen, parent, child = self.teenager_household(1639_21)
+        self.pinned()
+        snap_class = drop_hours(MaSnap)
+
+        run = run_shared(screen, self.specs(snap_class, with_siblings=True))
+
+        self.assertTrue(run.sent("weekly_hours_worked_before_lsr", parent.id))
+        self.assertTrue(run.member(probes.MeetsSnapWorkRequirementsPersonProbe, parent.id))
+        self.assertEqual(run.value(snap_class), 5328)
+
+    def test_tafdc_active_makes_no_difference_once_snap_sends_its_own_hours(self):
+        """Post-fix the siblings are redundant for SNAP, which is the point of sending hours on
+        SNAP itself: the value no longer depends on which programs share the screen."""
+        screen, parent, child = self.teenager_household(1639_22)
+        self.pinned()
+
+        run = run_shared(screen, self.specs(MaSnap, with_siblings=True))
+
+        self.assertEqual(run.value(MaSnap), 5328)
+
+
+class TestFloorInflatesTheMaDependentCareDeduction(SharedRequestTestCase):
+    """The cost MFB-1637 accepted and nobody priced.
+
+    Its commit message notes the 40-hour floor "costs some accuracy on the field's three other
+    readers (tx_ccs, ma_tafdc, ma_eaedc all get more generous); accepted deliberately". That
+    reads as a rounding error. It is not.
+
+    `ma_tafdc_dependent_care_deduction_person` sets the deduction from a bracket on the SPM
+    unit's *total* weekly hours (106 CMR 704.275(A)), monthly, for a younger child:
+
+        0–10 hrs → $50    11–20 → $100    21–30 → $150    31+ → $200
+
+    So a member reporting 15 hours, read as the floored 40, jumps two brackets: $100 → $200/mo of
+    deduction against countable income. Measured on a MA parent with a 4-year-old, $20/hr × 15
+    hrs, and $400/mo of childcare — a household near TAFDC's income limit:
+
+        floor (40 hrs)      TAFDC  $7,271/yr
+        reported (15 hrs)   TAFDC  $0
+
+    Unlike this ticket's other findings, **this one is live**, not latent behind the floor: the
+    floor *is* the change. `MaTotalHoursWorkedDependency` already fed TAFDC before MFB-1637, so
+    PR 1725 moved MA TAFDC values in production for any household reporting under 40 hours — and
+    in the over-granting direction, since the regulation tiers the deduction on hours actually
+    worked.
+
+    The $0 → $7,271 magnitude is a cliff, not a scaling: this household sits on TAFDC's income
+    limit, so one bracket step crosses it. A household far from the limit sees only the deduction
+    change. What generalises is the mechanism and its direction, not the size.
+
+    SNAP is unmoved here ($6,552 both arms) because the 4-year-old routes the household around
+    ABAWD — which is what isolates the deduction as the only thing the floor is doing.
+    """
+
+    def childcare_household(self, screen_id):
+        screen = make_screen(screen_id, household_size=2, **MA)
+        parent = add_member(screen, screen_id * 10 + 1, "headOfHousehold", 38)
+        add_income(parent, amount=20, income_type="wages", frequency="hourly")
+        parent.income_streams.update(hours_worked=15)
+        child = add_member(screen, screen_id * 10 + 2, "child", 4)
+        Expense.objects.create(
+            screen=screen, household_member=parent, type="childCare", amount=400, frequency="monthly"
+        )
+        return screen, parent, child
+
+    def specs(self, floorless: bool):
+        """All three calculators move together — the floor is the only variable."""
+        unfloor = reported_hours_only if floorless else (lambda cls: cls)
+        snap_class, tafdc_class, eaedc_class = unfloor(MaSnap), unfloor(MaTafdc), unfloor(MaEaedc)
+        return [
+            (snap_class, make_program("ma", "ma_snap", YEAR)),
+            (tafdc_class, make_program("ma", "ma_tafdc", YEAR)),
+            (eaedc_class, make_program("ma", "ma_eaedc", YEAR)),
+        ], snap_class, tafdc_class
+
+    def test_with_the_floor_tafdc_pays(self):
+        screen, parent, child = self.childcare_household(1639_24)
+        self.pinned()
+        specs, snap_class, tafdc_class = self.specs(floorless=False)
+
+        run = run_shared(screen, specs)
+
+        self.assertEqual(run.value(tafdc_class), 7_271)
+        self.assertEqual(run.value(snap_class), 6_552)
+
+    def test_on_reported_hours_tafdc_pays_nothing(self):
+        screen, parent, child = self.childcare_household(1639_25)
+        self.pinned()
+        specs, snap_class, tafdc_class = self.specs(floorless=True)
+
+        run = run_shared(screen, specs)
+
+        self.assertEqual(run.value(tafdc_class), 0)
+        # SNAP is untouched, which is what makes the deduction the only moving part.
+        self.assertEqual(run.value(snap_class), 6_552)

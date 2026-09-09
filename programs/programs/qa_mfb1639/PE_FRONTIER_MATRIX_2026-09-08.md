@@ -59,8 +59,9 @@ ticket's Aug 12 filing or landed before the cutover, and all three narrow the bl
 | 6 | Disabled adult | 40, `disabled=True` | $3,576 | $3,576 | $3,576 | No movement; `is_disabled` exempts from ABAWD |
 | 7a | 60+ adult *(re-pointed to 62)* | 62, no income | **$3,576** | **$0** | **$0** | Fix holds. Premise stale — 62 is *not* ABAWD-exempt |
 | 7b | 60+ adult *(re-pointed to 66)* | 66, no income | $3,576 | $3,576 | $3,576 | No movement; past the 65 exempt age |
-| 8a | MA, TAFDC active vs not | MA, 30 @ $20/hr × 15, child **4** | $5,328 | $5,328 | $5,328 | Swap works — one request, no split, all three programs sending the MA class. SNAP unexposed: a child under 14 skips ABAWD |
-| 8b | MA, youngest dependent in the TAFDC/ABAWD gap | MA, 38 @ $20/hr × 15, child **15** | **$5,328** | **$2,352** | — | TAFDC's dependent limit is 18, ABAWD's is 14, so 14–17 falls in the gap and MA SNAP **does** move pre-fix. Same member-removal partial loss as row 4b |
+| 8a | MA, SNAP alone, child under 14 | MA, 38 @ $20/hr × 15, child **4** | $5,328 | $5,328 | $5,328 | Swap works — one request, no split, all three programs sending the MA class. SNAP unexposed: a child under 14 skips ABAWD |
+| 8b | MA, SNAP alone, dependent in the TAFDC/ABAWD gap | MA, 38 @ $20/hr × 15, child **15** | **$5,328** | **$2,352** | — | TAFDC's dependent limit is 18, ABAWD's is 14, so 14–17 falls in the gap. **Synthetic config** — see 8c |
+| 8c | MA, **TAFDC active vs not** — the row as worded | same household as 8b, with `MaTafdc` + `MaEaedc` co-computed | $5,328 | **$5,328** | — | TAFDC and EAEDC declare the hours input themselves, so the pre-fix payload still carries hours and the parent stays. **On a TAFDC-active screen MA SNAP never moved.** What MFB-1637 bought MA is payload integrity, not SNAP values |
 | 9 | KS/NC with county set | unemployed childless adult per state | — | KS **$0**, NC **$0**, CO **$0**, WA **$3,576**, IL **$3,576** | — | KS/NC have no waiver to interact with. WA read as waived on a county we never sent. See finding 2 |
 
 ### One failing adult
@@ -80,6 +81,30 @@ mechanism showing its work, with the removed member's income still counted in fu
 (7 CFR 273.11(c)(1)). So the stated $0 needs *every* adult to fail; one failing adult produces a
 partial loss with a plausible-looking number.
 
+### The floor's cost to MA TAFDC — live, and the one thing here that is not dormant
+
+MFB-1637 notes the floor "costs some accuracy on the field's three other readers (tx_ccs,
+ma_tafdc, ma_eaedc all get more generous); accepted deliberately". Priced, on a MA parent with a
+4-year-old, $20/hr × 15 hrs and $400/mo childcare:
+
+| Arm | Hours read | TAFDC | SNAP |
+|---|---|---|---|
+| shipped | 40 (floored) | **$7,271** | $6,552 |
+| floorless | 15 (reported) | **$0** | $6,552 |
+
+`ma_tafdc_dependent_care_deduction_person` brackets the deduction on the SPM unit's total weekly
+hours (106 CMR 704.275(A)) — $50 / $100 / $150 / $200 per month at 0 / 11 / 21 / 31+ hours. A
+15-hour member read as 40 jumps two brackets, $100 → $200/mo against countable income.
+
+Two things separate this from every other finding here. It is **live**: `MaTotalHoursWorkedDependency`
+already fed TAFDC before MFB-1637, so PR 1725 moved MA TAFDC values in production for any
+household reporting under 40 hours. And it runs in the **over-granting** direction, since the
+regulation tiers the deduction on hours actually worked.
+
+The $0 → $7,271 magnitude is a cliff, not a scaling: this household sits on TAFDC's income limit,
+so one bracket step crosses it. What generalises is the mechanism and its direction, not the size.
+`tx_ccs` reads the same field and was not priced.
+
 ### Knock-ons
 
 | Program | Household | shipped | control | Verdict |
@@ -90,12 +115,12 @@ partial loss with a plausible-looking number.
 
 ## Test package
 
-56 tests, all passing, replayed from committed cassettes at the pinned version
+61 tests, all passing, replayed from committed cassettes at the pinned version
 (`VCR_MODE=none`, which cannot record):
 
 - `test_mfb1639_matrix.py` — 26 tests, rows 1–7 across three arms, plus the one-failing-adult case
-- `test_mfb1639_shared_request.py` — 21 tests, rows 8a/8b (MA), the CEAP knock-on and CEAP-alone,
-  the exemption-input coupling, and WIC
+- `test_mfb1639_shared_request.py` — 26 tests, rows 8a/8b/8c (MA), the floor's cost to TAFDC, the
+  CEAP knock-on and CEAP-alone, the exemption-input coupling, and WIC
 - `test_mfb1639_waived_area.py` — 6 tests, row 9 at January and September 2026
 - `test_mfb1639_reachability.py` — 9 tests, static, no network
 

@@ -148,6 +148,40 @@ carers — three populations that are exempt by statute.
 
 ---
 
+## 5. The 40-hour floor inflates MA TAFDC's dependent-care deduction — and this one is live
+
+**Verified.** `test_mfb1639_shared_request.py::TestFloorInflatesTheMaDependentCareDeduction`.
+
+MFB-1637 notes the floor "costs some accuracy on the field's three other readers (tx_ccs,
+ma_tafdc, ma_eaedc all get more generous); accepted deliberately". That reads as a rounding error.
+Priced, on a MA parent with a 4-year-old, $20/hr × 15 hrs, $400/mo childcare:
+
+| Arm | Hours read | TAFDC |
+|---|---|---|
+| shipped | 40 (floored) | **$7,271/yr** |
+| floorless | 15 (reported) | **$0** |
+
+`ma_tafdc_dependent_care_deduction_person` brackets the deduction on the SPM unit's total weekly
+hours (106 CMR 704.275(A)): $50 / $100 / $150 / $200 per month at 0 / 11 / 21 / 31+ hours. A
+15-hour member read as 40 jumps two brackets — $100 → $200/mo against countable income.
+
+**Unlike findings 2–4, this is not dormant.** `MaTotalHoursWorkedDependency` already fed TAFDC
+before MFB-1637, so PR 1725 changed MA TAFDC values in production for any household reporting
+under 40 hours, in the **over-granting** direction — the regulation tiers the deduction on hours
+actually worked. It is the mirror image of the SNAP case: on SNAP the floor preserves prior
+behaviour, on TAFDC it is the change.
+
+Scope honestly: $0 → $7,271 is a cliff, not a scaling. This household sits on TAFDC's income limit
+so one bracket step crosses it; a household far from the limit sees only the deduction move. What
+generalises is the mechanism and its direction. **`tx_ccs` reads the same field and was not
+priced** — it gates on a work requirement rather than a deduction, so the shape there is likely
+eligibility rather than amount.
+
+**Ask, not prescribe:** MFB-1731 owns revisiting the floor. This is the number that revisit needs,
+and it argues the floor cannot simply be removed *or* kept without deciding TAFDC separately —
+removing it drops part-time MA households to $0, keeping it over-grants them. Belongs as
+information on MFB-1731 rather than as its own ticket.
+
 ## Follow-up tickets to file
 
 | Finding | Ask | Relationship | Status |
@@ -155,8 +189,10 @@ carers — three populations that are exempt by statute.
 | 2 | Send `county_str` on SNAP requests so `is_in_snap_abawd_waived_area` stops riding an alphabetical fallback | Blocks MFB-1731 | **Filed: MFB-1848** |
 | 3 | `TxCeap` should declare the hours input it depends on | Independent; fixes a silent $0 reachable by config today | Drafted, not filed |
 | 4 | Send `is_pregnant`, `unemployment_compensation`, `is_incapable_of_self_care` on SNAP requests | Blocks MFB-1731 | Drafted, not filed |
+| 5 | Price the floor's effect on MA TAFDC (and `tx_ccs`) before the floor is revisited | Information for MFB-1731 | Not drafted — comment, not a ticket |
 
-Finding 1 is a note, not a ticket.
+Finding 1 is a note, not a ticket. Finding 5 belongs as a comment on MFB-1731 rather than a new
+ticket, since that ticket already owns the floor.
 
 Findings 2 and 4 are the same shape and could reasonably have been one ticket — "SNAP does not
 send the inputs its own work test reads" — with the county as its fourth field. They went
