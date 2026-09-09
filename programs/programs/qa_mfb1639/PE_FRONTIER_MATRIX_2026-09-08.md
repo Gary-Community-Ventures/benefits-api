@@ -101,9 +101,15 @@ already fed TAFDC before MFB-1637, so PR 1725 moved MA TAFDC values in productio
 household reporting under 40 hours. And it runs in the **over-granting** direction, since the
 regulation tiers the deduction on hours actually worked.
 
-The $0 → $7,271 magnitude is a cliff, not a scaling: this household sits on TAFDC's income limit,
-so one bracket step crosses it. What generalises is the mechanism and its direction, not the size.
-`tx_ccs` reads the same field and was not priced.
+Two magnitude limiters. It is a **cliff, not a scaling** — this household sits on TAFDC's income
+limit, so one bracket step crosses it. And the deduction is **capped at actual care expenses**
+(`min_(total_amount, care_expenses)`), so a household with under $200/mo of care costs cannot see
+the full bracket move; the example's $400/mo is above the cap, so it stands. Mechanism and
+direction generalise, magnitude does not.
+
+`tx_ccs` is affected by a confirmed path and remains unmeasured: `weekly_hours_worked` `adds`
+`weekly_hours_worked_before_lsr`, and `tx_ccs_work_requirement_eligible` gates on 25 hours (one
+non-exempt parent) or 50 (two or more) — which a floored 40 clears and a reported 15 fails.
 
 ### Knock-ons
 

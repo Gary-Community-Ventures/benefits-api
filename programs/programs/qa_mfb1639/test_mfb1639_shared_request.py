@@ -542,9 +542,15 @@ class TestFloorInflatesTheMaDependentCareDeduction(SharedRequestTestCase):
     in the over-granting direction, since the regulation tiers the deduction on hours actually
     worked.
 
-    The $0 → $7,271 magnitude is a cliff, not a scaling: this household sits on TAFDC's income
-    limit, so one bracket step crosses it. A household far from the limit sees only the deduction
-    change. What generalises is the mechanism and its direction, not the size.
+    Two magnitude limiters, so this is not "the floor doubles TAFDC". It is a cliff, not a scaling
+    — this household sits on TAFDC's income limit, so one bracket step crosses it. And the
+    deduction is capped at actual care expenses (`min_(total_amount, care_expenses)`), so a
+    household with under $200/mo of care costs cannot see the full bracket move; the $400/mo here
+    is above the cap. Mechanism and direction generalise, magnitude does not.
+
+    `tx_ccs` reads the same field through `weekly_hours_worked` (which `adds`
+    `weekly_hours_worked_before_lsr`) and gates on 25 or 50 hours — a floored 40 clears it, a
+    reported 15 does not. Confirmed path, unmeasured magnitude.
 
     SNAP is unmoved here ($6,552 both arms) because the 4-year-old routes the household around
     ABAWD — which is what isolates the deduction as the only thing the floor is doing.

@@ -171,11 +171,24 @@ under 40 hours, in the **over-granting** direction — the regulation tiers the 
 actually worked. It is the mirror image of the SNAP case: on SNAP the floor preserves prior
 behaviour, on TAFDC it is the change.
 
-Scope honestly: $0 → $7,271 is a cliff, not a scaling. This household sits on TAFDC's income limit
-so one bracket step crosses it; a household far from the limit sees only the deduction move. What
-generalises is the mechanism and its direction. **`tx_ccs` reads the same field and was not
-priced** — it gates on a work requirement rather than a deduction, so the shape there is likely
-eligibility rather than amount.
+Two further magnitude limiters, so this is not read as "the floor doubles TAFDC":
+
+1. **A cliff, not a scaling.** This household sits on TAFDC's income limit, so one bracket step
+   crosses it. A household far from the limit sees only the deduction move.
+2. **The deduction is capped at actual care expenses** — the formula ends
+   `min_(total_amount, care_expenses)`, over `pre_subsidy_childcare_expenses + care_expenses`. A
+   household with under $200/mo of care costs cannot see the full bracket move at all. The example
+   above reports $400/mo, well above the cap, so its measurement stands.
+
+What generalises is the mechanism and its direction, not the size.
+
+**`tx_ccs` is affected too, by a confirmed path, and remains unmeasured.** It reads
+`weekly_hours_worked`, which `adds` `weekly_hours_worked_before_lsr` (plus a behavioural-response
+term that is zero in a static household run), so the floor reaches it.
+`tx_ccs_work_requirement_eligible` then gates on total non-exempt-parent hours against 25 (one
+such parent) or 50 (two or more) — thresholds a floored 40 clears and a reported 15 does not. So
+the shape there is eligibility rather than amount, as expected; what has not been measured is the
+dollar consequence.
 
 **Ask, not prescribe:** MFB-1731 owns revisiting the floor. This is the number that revisit needs,
 and it argues the floor cannot simply be removed *or* kept without deciding TAFDC separately —
