@@ -195,29 +195,53 @@ and it argues the floor cannot simply be removed *or* kept without deciding TAFD
 removing it drops part-time MA households to $0, keeping it over-grants them. Belongs as
 information on MFB-1731 rather than as its own ticket.
 
-## 6. A fourth route to the CEAP-alone state, and it is not a config mistake
+## 6. A `/versions/us` outage removes SNAP, SSI and TANF from every screen
 
-**Verified.** `test_mfb1639_reachability.py::TestCeapLosesSnapWhenPolicyEngineVersionsIsUnreachable`.
-Found after MFB-1861 was filed, so **that ticket does not yet carry it.**
+**Verified.** `test_mfb1639_reachability.py::TestVersionsOutageDropsSnapSsiAndTanfFromEveryScreen`
+and `::TestCeapLosesSnapWhenPolicyEngineVersionsIsUnreachable`. Found after MFB-1861 was filed, so
+**that ticket does not carry it.**
 
-MFB-1861 lists three routes by which SNAP leaves a request that keeps CEAP, all of them
-configuration. There is a fourth, in `_drop_unreadable_programs`' own docstring: "or via
-/versions/us being unreachable while /calculate is healthy".
+I first wrote this up as "a fourth route to the CEAP-alone state". That framing was wrong, and a
+peer review pushed back on it. CEAP reading $0 is a *downstream symptom*; the defect is much wider.
 
-On an unpinned request the resolved version comes from `resolve_unpinned_comparable_version`,
-which returns `None` when `GET /versions/us` cannot be reached — and `version_supports` treats
-`None` as failing any minimum floor. `snap_if_takes_up` carries `min_pe_version = (1, 779, 3)`;
-`tx_ceap` is ungated. So SNAP is dropped and CEAP is kept, reading `is_snap_eligible` with no
-hours in the payload and returning $0.
+**The chain, every link confirmed in code:**
 
-Why it is worse than routes 1–3: it needs no misconfiguration, it is **transient** (so it will
-not be found by inspecting config), and it hits **every screen at once** rather than one
-referrer. MFB-1637 records that we are unpinned in staging and production, which is exactly the
-condition it requires. `_drop_unreadable_programs` does emit a `capture_message`, so it is not
-silent in Sentry — but the user-facing result is an ordinary-looking $0.
+1. Unpinned (MFB-1637 records staging and production both are) → `determine_pe_version` returns
+   the literal `"current"`.
+2. `to_comparable_pe_version("current")` → `None`.
+3. `_resolve_comparable_version` sees a gated field on the request, so it calls
+   `resolve_unpinned_comparable_version()` → `GET /versions/us`.
+4. That fetch fails → `None`, "keeping the conservative withhold-gated behavior".
+5. `version_supports(None, min_floor)` → `False`, asymmetric by explicit design.
+6. `_drop_unreadable_programs` drops every program carrying a min-gated **output**.
 
-**Ask:** add this as a fourth route on MFB-1861. Not done — the ticket is filed and amending it
-past the approved stub needs Kate's word.
+**Blast radius, measured: 16 of 133 registered calculators**, across the three largest
+cash-and-food families — MFB-1312's receipt contract made the `*_if_takes_up` outputs the first
+gated ones in the codebase:
+
+| Output | Rows dropped |
+|---|---|
+| `snap_if_takes_up` | 10 — federal base, CO, IL, KS, MA, MO, NC, TX, WA, `wa_fap` |
+| `ssi_if_takes_up` | 5 — federal base, KS, MO, TX, WA |
+| `tanf_if_takes_up` | 1 — federal `tanf` |
+
+So while `/versions/us` is unavailable and `/calculate` is healthy, **SNAP, SSI and federal TANF
+disappear from every screen in every state**, and the other 117 programs compute as though those
+households receive none of them. CEAP's $0 follows because dropping SNAP also removes SNAP's
+inputs — the hours among them — from the payload the survivors share.
+
+**Bounds, so this is not overstated.** `_fetch_pe_versions` caches success for an hour
+(`_PE_VERSIONS_CACHE_TTL = 3600`) and deliberately does not cache failures, so an outage bites
+only once the last good entry expires and then bites every request until PE recovers. And
+`_drop_unreadable_programs` emits a `capture_message`, so it is visible in Sentry rather than
+silent. The finding is about the served result — an ordinary-looking screen missing three major
+programs — not about observability.
+
+**Ask:** its own ticket rather than a fourth route on MFB-1861. MFB-1861 asks a program-scoped
+question (should `TxCeap` declare hours), and that fix mitigates CEAP without touching this: the
+remedy here lives at the version-resolution layer — retry, serve a stale cached version, or fail
+loud rather than degrade quietly. Different layer, different fix. Worth one line on MFB-1861 as
+corroborating evidence. Not filed: needs Kate's word.
 
 ## 7. The production hours guard has a hole: `mo_snap` is not in `SNAP_VARIANTS`
 
@@ -246,7 +270,7 @@ the failure MFB-1637 existed to prevent.
 | 3 | `TxCeap` should declare the hours input it depends on | Independent; fixes a silent $0 reachable by config today | **Filed: MFB-1861** |
 | 4 | Send `is_pregnant`, `unemployment_compensation`, `is_incapable_of_self_care` on SNAP requests | Blocks MFB-1731 | **Filed: MFB-1862** |
 | 5 | Price the floor's effect on MA TAFDC (and `tx_ccs`) before the floor is revisited | Information for MFB-1731 | Held on this branch — Kate reads it first, nothing posted to MFB-1731 |
-| 6 | Add the `/versions/us`-unreachable route to MFB-1861 | Amends MFB-1861 | Not done — needs Kate's word to amend a filed ticket |
+| 6 | `/versions/us` outage drops SNAP + SSI + TANF from every screen (16 calculators) | Own ticket; one line on MFB-1861 as evidence | Not filed — needs Kate's word |
 | 7 | Replace `SNAP_VARIANTS`'s hardcoded dict with a registry-driven assertion | Independent; test coverage only | Not drafted |
 
 Finding 1 is a note, not a ticket. Finding 5 belongs as a comment on MFB-1731 rather than a new

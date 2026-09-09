@@ -208,3 +208,78 @@ class TestCeapLosesSnapWhenPolicyEngineVersionsIsUnreachable(TestCase):
         # None is what an unreachable /versions/us resolves to on an unpinned request.
         self.assertFalse(pe_versions.version_supports(None, (1, 779, 3), ()))
         self.assertTrue(pe_versions.version_supports(None, (), ()))
+
+
+class TestVersionsOutageDropsSnapSsiAndTanfFromEveryScreen(TestCase):
+    """The blast radius of the `/versions/us` route, measured rather than reasoned about.
+
+    `TestCeapLosesSnapWhenPolicyEngineVersionsIsUnreachable` above frames this as a CEAP problem.
+    That framing is too narrow: CEAP reading $0 is a *downstream symptom* of a screen-wide
+    failure.
+
+    `_drop_unreadable_programs` drops every program whose output the resolved model may not
+    define, and MFB-1312's receipt contract made the `*_if_takes_up` outputs the first gated ones
+    in the codebase. With `comparable_version` None, that is **16 of 133 registered calculators**,
+    across the three largest cash-and-food families:
+
+        snap_if_takes_up   10 rows — the federal base, seven states, MO, and wa_fap
+        ssi_if_takes_up     5 rows — the federal base plus KS, MO, TX, WA
+        tanf_if_takes_up    1 row  — federal tanf
+
+    So while `/versions/us` is unavailable and `/calculate` is healthy, SNAP, SSI and federal TANF
+    disappear from every screen in every state, and the other 117 programs compute as though those
+    households receive none of them. CEAP's $0 follows because dropping SNAP also removes SNAP's
+    inputs — including the hours — from the payload the surviving programs share.
+
+    Two timing details bound it. `_fetch_pe_versions` caches success for an hour
+    (`_PE_VERSIONS_CACHE_TTL = 3600`) and deliberately does **not** cache failures, so an outage
+    bites only once the last good entry expires, and then bites every request until PE recovers.
+    `_drop_unreadable_programs` emits a `capture_message`, so this is visible in Sentry rather
+    than silent — but the served result is an ordinary screen with three major programs missing.
+    """
+
+    def dropped_when_unresolved(self):
+        dropped = {}
+        for code, calculator in all_calculators.items():
+            unsupported = [
+                output.field
+                for output in calculator.pe_outputs
+                if not pe_versions.version_supports(
+                    None,
+                    getattr(output, "min_pe_version", ()),
+                    getattr(output, "max_pe_version", ()),
+                )
+            ]
+            if unsupported:
+                dropped[code] = unsupported
+        return dropped
+
+    def test_the_drop_set_is_snap_ssi_and_tanf(self):
+        dropped = self.dropped_when_unresolved()
+
+        fields = {field for fields in dropped.values() for field in fields}
+        self.assertEqual(fields, {"snap_if_takes_up", "ssi_if_takes_up", "tanf_if_takes_up"})
+
+    def test_every_snap_row_is_dropped_not_merely_the_one_ceap_rides_on(self):
+        dropped = self.dropped_when_unresolved()
+
+        snap_rows = {code for code in all_calculators if code.endswith("snap") or code.endswith("_fap")}
+        self.assertTrue(snap_rows <= set(dropped), snap_rows - set(dropped))
+        self.assertGreaterEqual(len(snap_rows), 10)
+
+    def test_ceap_itself_survives_the_request_that_loses_them(self):
+        """Which is what turns a missing-programs outage into a wrong *number* for CEAP."""
+        dropped = self.dropped_when_unresolved()
+
+        self.assertNotIn("tx_liheap", dropped)
+        self.assertIn("tx_snap", dropped)
+
+    def test_the_failure_is_reported_rather_than_silent(self):
+        """`_drop_unreadable_programs` calls `capture_message`, so Sentry sees it. The finding is
+        about the served result, not about observability."""
+        import inspect
+
+        from integrations.clients.policyengine import policy_engine
+
+        source = inspect.getsource(policy_engine._drop_unreadable_programs)
+        self.assertIn("capture_message", source)
