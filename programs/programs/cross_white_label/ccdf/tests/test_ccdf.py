@@ -1,5 +1,7 @@
 from django.test import TestCase
+from programs.programs.cross_white_label.ccdf.base import Ccdf
 from programs.programs.cross_white_label.ccdf.il import IlChildCareAssistanceProgram
+from programs.programs.cross_white_label.ccdf.ma import MaCcdf
 from screener.models import Screen, HouseholdMember, IncomeStream, WhiteLabel
 from programs.models import Program, FederalPoveryLimit
 from programs.framework.base import Eligibility
@@ -788,3 +790,40 @@ class TestIlChildCareAssistanceProgram(TestCase):
         # Net benefit: $17,688 - $444 = $17,244
         expected_net = (1474 * 12) - (37 * 12)
         self.assertEqual(eligibility.value, expected_net)
+
+
+class TestCcdfChildCareCostContract(TestCase):
+    """The base class's "subclasses must define this" guard.
+
+    It used to `raise NotImplemented(...)`, which is a singleton constant rather than an
+    exception type: raising it produced `TypeError: 'NotImplementedType' object is not
+    callable` and threw away the message. Unreachable in production — MaCcdf is the only
+    subclass and it overrides the method — but a subclass that forgot to should be told what
+    it forgot.
+    """
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.white_label = WhiteLabel.objects.create(name="Massachusetts", code="ma", state_code="MA")
+        cls.program = Program.objects.new_program(white_label="ma", name_abbreviated="ma_ccdf_test")
+
+    def test_missing_override_raises_notimplementederror(self):
+        class _IncompleteCcdf(Ccdf, abstract=True):
+            pass
+
+        screen = Screen.objects.create(
+            white_label=self.white_label,
+            zipcode="02108",
+            household_size=1,
+            completed=False,
+        )
+        member = HouseholdMember.objects.create(screen=screen, relationship="headOfHousehold", age=4)
+        calculator = _IncompleteCcdf(screen, self.program, Dependencies())
+
+        with self.assertRaises(NotImplementedError) as raised:
+            calculator.child_care_cost(member)
+
+        self.assertIn("child_care_cost", str(raised.exception))
+
+    def test_the_real_subclass_defines_it(self):
+        self.assertIsNot(MaCcdf.child_care_cost, Ccdf.child_care_cost)

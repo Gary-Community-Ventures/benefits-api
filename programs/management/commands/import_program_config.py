@@ -725,6 +725,8 @@ class Command(BaseCommand):
         if configuration:
             self._import_program_configuration(program, configuration)
 
+        self._require_year_for_pe_program(program)
+
         # Import translations
         if translations:
             self._import_program_translations(program, translations)
@@ -915,6 +917,38 @@ class Command(BaseCommand):
                 # Append this translation object to the list for this text
                 translation_objects[text].append(translation_obj)
 
+    def _require_year_for_pe_program(self, program: Program) -> None:
+        """Refuse the import when a PolicyEngine-backed program would land with no year.
+
+        `Program.year` is nullable and most programs legitimately have none, so a missing
+        year is only a problem for a PolicyEngine program: every input and output it asks for
+        is keyed by period, and there is no period without a FederalPoveryLimit. Such a
+        program is dropped from the request at run time, so it would silently never appear in
+        anyone's results. Failing the import puts that where the mistake is made.
+
+        Checked here rather than inside `_import_program_configuration` because a config with
+        no `configuration` block at all skips that method entirely and would land in exactly
+        the same state.
+
+        The registry is imported inside the function: building it walks every calculator, and
+        those import from programs.models, which imports this command's dependencies. At
+        module import time that cycle is unresolvable.
+        """
+        if program.year is not None:
+            return
+
+        from integrations.clients.policyengine.registry import all_calculators
+
+        if program.name_abbreviated not in all_calculators:
+            return
+
+        raise CommandError(
+            f"'{program.name_abbreviated}' is a PolicyEngine program and the config gives it no "
+            "year. It cannot be calculated without one — every variable it requests is keyed by "
+            "period — so it would be dropped from every screen. Add a 'year' to the config's "
+            "program block matching an existing FederalPoveryLimit."
+        )
+
     def _import_program_configuration(self, program: Program, configuration: dict[str, Any]) -> None:
         """Import non-translatable configuration for a program."""
         # Handle year
@@ -925,7 +959,10 @@ class Command(BaseCommand):
                 program.year = year_obj
                 self.stdout.write(f"  Year: {year_value}")
             except FederalPoveryLimit.DoesNotExist:
-                self.stdout.write(self.style.WARNING(f"  Warning: Year '{year_value}' not found"))
+                # Left unset; _require_year_for_pe_program decides whether that is fatal.
+                self.stdout.write(
+                    self.style.WARNING(f"  Warning: Year '{year_value}' not found, leaving the program without one")
+                )
 
         # Handle legal_status_required
         if "legal_status_required" in configuration:

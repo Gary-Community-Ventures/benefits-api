@@ -12,6 +12,7 @@ from django.test import TestCase, TransactionTestCase
 
 from programs.models import (
     County,
+    FederalPoveryLimit,
     LegalStatus,
     Navigator,
     Program,
@@ -917,3 +918,84 @@ class WarningMessageScopeTestCase(TransactionTestCase):
         )
 
         self.assertEqual([c.name for c in warning.counties.all()], ["King County"])
+
+
+class ImportProgramConfigYearTestCase(TransactionTestCase):
+    """A PolicyEngine program must not be importable without a FederalPoveryLimit.
+
+    `Program.year` is nullable and most programs legitimately have none, but a PolicyEngine
+    program with no year has no period to request its variables at, so it is dropped from
+    every screen — silently absent from results rather than visibly broken. The importer used
+    to allow it (a warning at most), which put the failure a long way from the mistake.
+    """
+
+    def setUp(self):
+        self.white_label = WhiteLabel.objects.create(code="test_wl", name="Test White Label")
+        FederalPoveryLimit.objects.create(year="2026", period="2026")
+
+        self.translate_patcher = patch("programs.management.commands.import_program_config.Translate")
+        mock_instance = self.translate_patcher.start().return_value
+        mock_instance.bulk_translate.side_effect = lambda langs, texts: {
+            text: {lang: f"{text} (translated to {lang})" for lang in langs} for text in texts
+        }
+
+    def tearDown(self):
+        self.translate_patcher.stop()
+
+    def _config(self, name_abbreviated: str, year: str | None = None) -> str:
+        config = {
+            "white_label": {"code": "test_wl"},
+            "program_category": {
+                "external_name": "test_category",
+                "icon": "test_icon",
+                "name": "Test Category",
+                "description": "Test category description",
+            },
+            "program": {
+                "name_abbreviated": name_abbreviated,
+                "external_name": name_abbreviated,
+                "name": "Test Program Name",
+                "description": "Test program description",
+                "active": True,
+            },
+        }
+        if year is not None:
+            config["program"]["year"] = year
+
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
+            json.dump(config, f)
+            return f.name
+
+    def _import(self, config_file: str):
+        try:
+            call_command("import_program_config", config_file, stdout=StringIO())
+        finally:
+            Path(config_file).unlink()
+
+    def test_pe_program_without_a_year_is_rejected(self):
+        with self.assertRaises(CommandError) as raised:
+            self._import(self._config("snap"))
+
+        self.assertIn("PolicyEngine program", str(raised.exception))
+        self.assertFalse(Program.objects.filter(name_abbreviated="snap").exists())
+
+    def test_pe_program_with_an_unknown_year_is_rejected(self):
+        # The year is present but names no FederalPoveryLimit row, so the program would land
+        # in exactly the same state as one with no year at all.
+        with self.assertRaises(CommandError):
+            self._import(self._config("snap", year="1999"))
+
+        self.assertFalse(Program.objects.filter(name_abbreviated="snap").exists())
+
+    def test_pe_program_with_a_year_imports(self):
+        self._import(self._config("snap", year="2026"))
+
+        program = Program.objects.get(name_abbreviated="snap")
+        self.assertEqual(program.year.period, "2026")
+
+    def test_non_pe_program_without_a_year_still_imports(self):
+        # Most programs have no FPL and are calculated without one. Only PolicyEngine
+        # programs are held to this.
+        self._import(self._config("test_program"))
+
+        self.assertIsNone(Program.objects.get(name_abbreviated="test_program").year)
