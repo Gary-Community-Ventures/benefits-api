@@ -133,11 +133,11 @@ about production, not only about frontier.
 
 ## Test package
 
-78 tests, all passing, replayed from committed cassettes at the pinned version
+69 tests, all passing, replayed from committed cassettes at the pinned version
 (`VCR_MODE=none`, which cannot record):
 
 - `test_mfb1639_matrix.py` — 26 tests, rows 1–7 across three arms, plus the one-failing-adult case
-- `test_mfb1639_shared_request.py` — 26 tests, rows 8a/8b/8c (MA), the floor's cost to TAFDC, the
+- `test_mfb1639_shared_request.py` — 20 tests, rows 8a/8b/8c (MA), the floor's cost to TAFDC, the
   CEAP knock-on and CEAP-alone, the exemption-input coupling, and WIC
 - `test_mfb1639_waived_area.py` — 6 tests, row 9 at January and September 2026
 - `test_mfb1639_reachability.py` — 12 tests, static, no network
