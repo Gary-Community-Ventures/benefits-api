@@ -1,4 +1,7 @@
-# MFB-1639 close-out — drafts, not posted
+# MFB-1639 close-out — drafts
+
+Stub 1 is filed as MFB-1848. The comment is posted. Stubs 2 and 3 are **not** filed, pending
+review.
 
 ## Comment for MFB-1639
 
@@ -68,6 +71,12 @@ above is sourced from PE's own variables and parameters, MFB's code, and the rec
 ---
 
 ## Ticket stub 1 — Send the county on SNAP requests
+
+> **FILED as [MFB-1848](https://linear.app/myfriendben/issue/MFB-1848/send-the-county-on-snap-requests)**
+> (2026-09-09, Backlog, label `PE`, blocks MFB-1731, related to MFB-1639). Body went in verbatim,
+> as the reframed correctness point rather than a model-the-waiver request — which is what let it
+> proceed alongside the standing decision to defer ABAWD county-waiver modelling.
+> Do not re-file. Stubs 2 and 3 below remain unfiled.
 
 **Blocks MFB-1731.** Label: PE.
 

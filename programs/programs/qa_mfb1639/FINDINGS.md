@@ -150,14 +150,15 @@ carers — three populations that are exempt by statute.
 
 ## Follow-up tickets to file
 
-| Finding | Ask | Relationship |
-|---|---|---|
-| 2 | Send `county_str` on SNAP requests so `is_in_snap_abawd_waived_area` stops riding an alphabetical fallback | Blocks MFB-1731 |
-| 3 | `TxCeap` should declare the hours input it depends on | Independent; fixes a silent $0 reachable by config today |
-| 4 | Send `is_pregnant`, `unemployment_compensation`, `is_incapable_of_self_care` on SNAP requests | Blocks MFB-1731 |
+| Finding | Ask | Relationship | Status |
+|---|---|---|---|
+| 2 | Send `county_str` on SNAP requests so `is_in_snap_abawd_waived_area` stops riding an alphabetical fallback | Blocks MFB-1731 | **Filed: MFB-1848** |
+| 3 | `TxCeap` should declare the hours input it depends on | Independent; fixes a silent $0 reachable by config today | Drafted, not filed |
+| 4 | Send `is_pregnant`, `unemployment_compensation`, `is_incapable_of_self_care` on SNAP requests | Blocks MFB-1731 | Drafted, not filed |
 
 Finding 1 is a note, not a ticket.
 
-Findings 2 and 4 are the same shape and could reasonably be one ticket — "SNAP does not send the
-inputs its own work test reads" — with the county as its fourth field. Filed separately here
-because the county has a live consumer beyond the work test and its own fiscal-year cadence.
+Findings 2 and 4 are the same shape and could reasonably have been one ticket — "SNAP does not
+send the inputs its own work test reads" — with the county as its fourth field. They went
+separately because the county has a live consumer beyond the work test and its own fiscal-year
+cadence; MFB-1848 covers the county alone, so finding 4 remains available to file either way.
