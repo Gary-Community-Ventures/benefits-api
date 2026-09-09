@@ -11,6 +11,7 @@ a request, and the other three routes are reachable by configuration.
 
 from django.test import TestCase
 
+from integrations.clients.policyengine import versions as pe_versions
 from integrations.clients.policyengine.registry import all_calculators
 from programs.framework.pe_dependencies import member as member_dependency
 from programs.programs.cross_white_label.liheap.tx import TxCeap
@@ -132,3 +133,78 @@ class TestSnapDoesNotSendItsOwnWorkExemptionInputs(TestCase):
             with self.subTest(program=code):
                 self.assertNotIn("county_str", sent_fields(calculator))
                 self.assertNotIn("county_fips", sent_fields(calculator))
+
+
+class TestTheProductionHoursGuardHasAHole(TestCase):
+    """`test_work_hours.py`'s `SNAP_VARIANTS` is a hardcoded dict, and `mo_snap` is not in it.
+
+    That dict drives `test_every_snap_variant_sends_hours` and
+    `test_every_snap_variant_sends_the_class_its_state_uses` — the guard that is supposed to
+    ensure no SNAP row goes to PolicyEngine without hours. It lists eight rows plus MA; Missouri
+    was added later (MFB-1637's own description enumerates "all seven state subclasses (CO, IL,
+    KS, MA, NC, TX, WA)") and never joined it.
+
+    Behaviour is fine: `MoSnap` splats `Snap.pe_inputs`, so it does send the base class. The hole
+    is in the guard, and it is asymmetric — `TestOneHoursClassPerState` iterates the registry, so
+    a *conflicting* hours class is caught for every program, but an *absent* one is only caught
+    for the nine rows named in the dict. A ninth state added tomorrow that forgot to splat the
+    parent's inputs would ship silently.
+
+    The assertion below is the registry-driven form the guard should have taken. It is here rather
+    than in the production suite because this package is not for merge; closing it properly means
+    replacing that dict upstream.
+    """
+
+    def test_every_registered_snap_calculator_sends_exactly_one_hours_class(self):
+        snap_calculators = {
+            code: calculator
+            for code, calculator in all_calculators.items()
+            if code.endswith("snap") or code.endswith("_fap")
+        }
+
+        # Ten today: the federal base, eight states, and wa_fap.
+        self.assertGreaterEqual(len(snap_calculators), 10)
+        self.assertIn("mo_snap", snap_calculators)
+
+        for code, calculator in snap_calculators.items():
+            with self.subTest(program=code):
+                declared = [dep for dep in calculator.pe_inputs if dep.field == HOURS_FIELD]
+                self.assertEqual(len(declared), 1, f"{code} sends {len(declared)} hours inputs")
+
+    def test_mo_snap_is_missing_from_the_production_guards_list(self):
+        """Pins the hole itself, so adding `MoSnap` upstream turns this red and it can be deleted
+        along with the finding."""
+        from programs.programs.cross_white_label.snap.tests.test_work_hours import SNAP_VARIANTS
+        from programs.programs.cross_white_label.snap.mo import MoSnap
+
+        self.assertNotIn(MoSnap, SNAP_VARIANTS)
+
+
+class TestCeapLosesSnapWhenPolicyEngineVersionsIsUnreachable(TestCase):
+    """A fourth route to the CEAP-alone state, and the only one that is not a config mistake.
+
+    `_drop_unreadable_programs` drops any calculator whose *output* the resolved model may not
+    define. When there is no pin, the resolved version comes from `resolve_unpinned_comparable_version`,
+    which returns None if `GET /versions/us` cannot be reached — and `version_supports` treats None
+    as failing any minimum floor. `snap_if_takes_up` carries `min_pe_version = (1, 779, 3)`;
+    `tx_ceap` is ungated.
+
+    So if `/versions/us` is unavailable while `/calculate` is healthy, SNAP is dropped from every
+    screen and CEAP is kept — reading `is_snap_eligible` with no hours in the payload, and
+    returning $0 for households PolicyEngine would pay. Unlike routes 1–3 this needs no
+    misconfiguration, is transient, and hits every screen at once rather than one referrer.
+
+    The docstring on `_drop_unreadable_programs` names this condition itself; what it does not say
+    is that CEAP survives the same request that loses SNAP.
+    """
+
+    def test_an_unresolved_version_withholds_snaps_output_but_not_ceaps(self):
+        snap_output = {out.field: out.min_pe_version for out in TxSnap.pe_outputs}
+        ceap_output = {out.field: out.min_pe_version for out in TxCeap.pe_outputs}
+
+        self.assertEqual(snap_output["snap_if_takes_up"], (1, 779, 3))
+        self.assertEqual(ceap_output["tx_ceap"], ())
+
+        # None is what an unreachable /versions/us resolves to on an unpinned request.
+        self.assertFalse(pe_versions.version_supports(None, (1, 779, 3), ()))
+        self.assertTrue(pe_versions.version_supports(None, (), ()))

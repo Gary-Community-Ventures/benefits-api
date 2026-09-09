@@ -195,6 +195,49 @@ and it argues the floor cannot simply be removed *or* kept without deciding TAFD
 removing it drops part-time MA households to $0, keeping it over-grants them. Belongs as
 information on MFB-1731 rather than as its own ticket.
 
+## 6. A fourth route to the CEAP-alone state, and it is not a config mistake
+
+**Verified.** `test_mfb1639_reachability.py::TestCeapLosesSnapWhenPolicyEngineVersionsIsUnreachable`.
+Found after MFB-1861 was filed, so **that ticket does not yet carry it.**
+
+MFB-1861 lists three routes by which SNAP leaves a request that keeps CEAP, all of them
+configuration. There is a fourth, in `_drop_unreadable_programs`' own docstring: "or via
+/versions/us being unreachable while /calculate is healthy".
+
+On an unpinned request the resolved version comes from `resolve_unpinned_comparable_version`,
+which returns `None` when `GET /versions/us` cannot be reached — and `version_supports` treats
+`None` as failing any minimum floor. `snap_if_takes_up` carries `min_pe_version = (1, 779, 3)`;
+`tx_ceap` is ungated. So SNAP is dropped and CEAP is kept, reading `is_snap_eligible` with no
+hours in the payload and returning $0.
+
+Why it is worse than routes 1–3: it needs no misconfiguration, it is **transient** (so it will
+not be found by inspecting config), and it hits **every screen at once** rather than one
+referrer. MFB-1637 records that we are unpinned in staging and production, which is exactly the
+condition it requires. `_drop_unreadable_programs` does emit a `capture_message`, so it is not
+silent in Sentry — but the user-facing result is an ordinary-looking $0.
+
+**Ask:** add this as a fourth route on MFB-1861. Not done — the ticket is filed and amending it
+past the approved stub needs Kate's word.
+
+## 7. The production hours guard has a hole: `mo_snap` is not in `SNAP_VARIANTS`
+
+**Verified.** `test_mfb1639_reachability.py::TestTheProductionHoursGuardHasAHole`.
+
+`test_work_hours.py`'s `SNAP_VARIANTS` is a hardcoded dict of nine rows, and `mo_snap` is not in
+it. That dict drives the two tests meant to guarantee no SNAP row reaches PolicyEngine without
+hours. Missouri was added after PR 1725 — MFB-1637's description enumerates "all seven state
+subclasses (CO, IL, KS, MA, NC, TX, WA)" — and never joined the list.
+
+**Behaviour is correct**: `MoSnap` splats `Snap.pe_inputs`, so it does send the base class,
+confirmed against the registry. The defect is in the guard, and it is asymmetric —
+`TestOneHoursClassPerState` iterates the registry, so a *conflicting* hours class is caught for
+every program, but an *absent* one is only caught for the nine rows named in the dict. A state
+added tomorrow that forgot to splat its parent's inputs would ship silently, which is precisely
+the failure MFB-1637 existed to prevent.
+
+**Ask:** replace the hardcoded dict with a registry-driven assertion (the form in
+`TestTheProductionHoursGuardHasAHole`). Low severity, small fix, no user impact today.
+
 ## Follow-up tickets to file
 
 | Finding | Ask | Relationship | Status |
@@ -203,6 +246,8 @@ information on MFB-1731 rather than as its own ticket.
 | 3 | `TxCeap` should declare the hours input it depends on | Independent; fixes a silent $0 reachable by config today | **Filed: MFB-1861** |
 | 4 | Send `is_pregnant`, `unemployment_compensation`, `is_incapable_of_self_care` on SNAP requests | Blocks MFB-1731 | **Filed: MFB-1862** |
 | 5 | Price the floor's effect on MA TAFDC (and `tx_ccs`) before the floor is revisited | Information for MFB-1731 | Held on this branch — Kate reads it first, nothing posted to MFB-1731 |
+| 6 | Add the `/versions/us`-unreachable route to MFB-1861 | Amends MFB-1861 | Not done — needs Kate's word to amend a filed ticket |
+| 7 | Replace `SNAP_VARIANTS`'s hardcoded dict with a registry-driven assertion | Independent; test coverage only | Not drafted |
 
 Finding 1 is a note, not a ticket. Finding 5 belongs as a comment on MFB-1731 rather than a new
 ticket, since that ticket already owns the floor.

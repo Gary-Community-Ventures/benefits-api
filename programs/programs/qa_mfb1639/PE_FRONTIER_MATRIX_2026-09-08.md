@@ -119,16 +119,29 @@ non-exempt parent) or 50 (two or more) — which a floored 40 clears and a repor
 | **TX CEAP, alone** | same household, SNAP not on the screen | — | **CEAP $0** | MFB-1640's open edge, settled. See finding 3 |
 | **TX WIC** | TX, 30 @ $1,200/mo + child 3 | SNAP $3,840, WIC $723 | SNAP $3,840, WIC $723 | **Structurally unreachable.** Every WIC category implies a member under 14 or a pregnancy, both of which take the household out of ABAWD's reach. Independently, `meets_wic_categorical_eligibility` reads a take-up-gated `snap` that MFB already zeroes for non-reporters (MFB-1312). The protection the ticket credits to MFB-1637 came from MFB-1312 |
 
+## Does the verdict hold at the version production serves?
+
+The matrix runs pinned to **frontier** (1.821.10), because that is what the ticket asked for. But
+MFB-1637 records that we are "unpinned in both staging and production", and an unpinned request
+sends the literal `current` alias — **1.821.2** on the day of recording, one release behind. So
+every figure above is evidence about a model users are not on.
+
+Checked rather than assumed. The decisive scenarios re-run pinned to `current` return **identical
+values**: row 3 at $3,576 shipped / $0 pre-fix, the general test still unable to deny, and the
+CEAP pair at $1,200 / $0. `test_mfb1639_current_version.py`. So the conclusions here can be stated
+about production, not only about frontier.
+
 ## Test package
 
-61 tests, all passing, replayed from committed cassettes at the pinned version
+78 tests, all passing, replayed from committed cassettes at the pinned version
 (`VCR_MODE=none`, which cannot record):
 
 - `test_mfb1639_matrix.py` — 26 tests, rows 1–7 across three arms, plus the one-failing-adult case
 - `test_mfb1639_shared_request.py` — 26 tests, rows 8a/8b/8c (MA), the floor's cost to TAFDC, the
   CEAP knock-on and CEAP-alone, the exemption-input coupling, and WIC
 - `test_mfb1639_waived_area.py` — 6 tests, row 9 at January and September 2026
-- `test_mfb1639_reachability.py` — 9 tests, static, no network
+- `test_mfb1639_reachability.py` — 12 tests, static, no network
+- `test_mfb1639_current_version.py` — 5 tests, the decisive scenarios re-run at `current` 1.821.2
 
 Recorded with `PE_RECORD=1`; replay with `VCR_MODE=none .venv/bin/python -m pytest
 programs/programs/qa_mfb1639 -n 0`. Re-recording is a deliberate act: PolicyEngine serves only
