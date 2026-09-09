@@ -237,7 +237,27 @@ only once the last good entry expires and then bites every request until PE reco
 silent. The finding is about the served result — an ordinary-looking screen missing three major
 programs — not about observability.
 
-**Ask:** its own ticket rather than a fourth route on MFB-1861. MFB-1861 asks a program-scoped
+**Filed as [MFB-1863](https://linear.app/myfriendben/issue/MFB-1863/a-versionsus-timeout-silently-drops-snap-ssi-and-tanf-from-every)**, priority High, cycle 13,
+related to MFB-1639, MFB-1861, MFB-1234 (which introduced this resolver) and MFB-1312 (which
+introduced the gated outputs).
+
+**Two things established after the first writeup, both of which raised the severity:**
+
+*The trigger is latency, not an outage.* Both endpoints are the same host, so a genuine host
+outage takes `/calculate` down too and fails loudly on the existing `PolicyEngineAPIError` path.
+What makes this reachable is that the calls are configured differently: `/versions/us` is
+`timeout=(3, 5)` and **unauthenticated**, `/calculate` is `timeout=(5, 30)` and authenticated. So
+ordinary PE slowness times out the version fetch at 5s while the calculate call has 30s and
+succeeds. Rate limiting on an unauthenticated route would do it too.
+
+*The user is shown nothing.* `eligibility_results` does set `missing_programs = True` and
+`all_results` returns it. But in benefits-calculator, `missingPrograms` is consumed in exactly one
+place — `ResultsMessage` in `Referrer.tsx`, guarded on `formData.immutableReferrer === 'lgs'`. For
+every other referrer the flag is read and discarded, so the page renders normally with SNAP, SSI
+and TANF absent. That is a pre-existing gap independent of this bug — it makes *any* cause of
+missing programs invisible — and is noted in MFB-1863 as needing its own decision.
+
+**Placement:** its own ticket rather than a fourth route on MFB-1861. MFB-1861 asks a program-scoped
 question (should `TxCeap` declare hours), and that fix mitigates CEAP without touching this: the
 remedy here lives at the version-resolution layer — retry, serve a stale cached version, or fail
 loud rather than degrade quietly. Different layer, different fix. Worth one line on MFB-1861 as
@@ -270,8 +290,9 @@ the failure MFB-1637 existed to prevent.
 | 3 | `TxCeap` should declare the hours input it depends on | Independent; fixes a silent $0 reachable by config today | **Filed: MFB-1861** |
 | 4 | Send `is_pregnant`, `unemployment_compensation`, `is_incapable_of_self_care` on SNAP requests | Blocks MFB-1731 | **Filed: MFB-1862** |
 | 5 | Price the floor's effect on MA TAFDC (and `tx_ccs`) before the floor is revisited | Information for MFB-1731 | Held on this branch — Kate reads it first, nothing posted to MFB-1731 |
-| 6 | `/versions/us` outage drops SNAP + SSI + TANF from every screen (16 calculators) | Own ticket; one line on MFB-1861 as evidence | Not filed — needs Kate's word |
+| 6 | `/versions/us` timeout drops SNAP + SSI + TANF from every screen (16 calculators) | Own ticket | **Filed: MFB-1863** (High) |
 | 7 | Replace `SNAP_VARIANTS`'s hardcoded dict with a registry-driven assertion | Independent; test coverage only | Not drafted |
+| 8 | `missing_programs` is returned but ignored by the frontend except for the `lgs` referrer | Noted inside MFB-1863; may want its own ticket | Not drafted |
 
 Finding 1 is a note, not a ticket. Finding 5 belongs as a comment on MFB-1731 rather than a new
 ticket, since that ticket already owns the floor.
