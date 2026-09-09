@@ -7,6 +7,17 @@ from screener.models import Screen
 class WarningCalculator:
     dependencies = tuple()
 
+    # Whether `eligible()` reads `self.eligibility.eligible_members`.
+    #
+    # The eligibility run (screener.views.eligibility_results) always has a fully
+    # populated `Eligibility`, so this is False for it in every case. It matters to
+    # callers that evaluate warnings OUTSIDE that run — `screener.assistant`
+    # rebuilds a minimal `Eligibility` from `ProgramEligibilitySnapshot`, which
+    # stores no member breakdown, so `eligible_members` is empty there. A calculator
+    # that reads it would silently return False rather than erroring; this flag lets
+    # such callers skip it loudly instead. See `_warnings_by_name`.
+    needs_member_eligibility = False
+
     def __init__(
         self, screen: Screen, warning: WarningMessage, eligibility: Eligibility, missing_dependencies: Dependencies
     ):
