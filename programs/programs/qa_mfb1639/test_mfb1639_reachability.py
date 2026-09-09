@@ -283,3 +283,75 @@ class TestVersionsOutageDropsSnapSsiAndTanfFromEveryScreen(TestCase):
 
         source = inspect.getsource(policy_engine._drop_unreadable_programs)
         self.assertIn("capture_message", source)
+
+
+class TestThisQaPackageDoesNotPolluteTheRegistry(TestCase):
+    """This package lives inside `programs.programs`, which `registry.build` walks.
+
+    That is not a neutral place to put it. `_walk_classes` imports every `.py` under the package
+    and registers any calculator declaring a `program_code`, so a QA module defining one at module
+    level would either collide with the real calculator (`DuplicateRegistryKey`) or silently
+    replace it. `harness.drop_hours`, `reported_hours_only` and `with_probes` all mint calculator
+    subclasses that inherit `program_code` unchanged — they are safe only because they are created
+    inside functions at call time, never bound as module attributes.
+
+    Two things keep this working, and both are load-bearing:
+
+      * `_module_names` skips `test_*`, `tests`, `conftest` and anything under a `tests/` directory
+        — by design, "a test module's throwaway subclasses must not reach the registry". So the
+        test modules here are never imported in production.
+      * `harness.py`, `households.py` and `probes.py` *are* imported at registry build, and define
+        no module-level calculator classes.
+
+    Locked in because the failure mode is bad and non-obvious: defining `class Foo(KsSnap)` at
+    module level in this package would break the real `ks_snap` for every screen, and nothing in
+    the QA suite would notice.
+    """
+
+    def test_the_registry_holds_no_key_from_this_package(self):
+        from programs.programs.qa_mfb1639 import harness, households, probes
+
+        qa_modules = {harness.__name__, households.__name__, probes.__name__}
+        offenders = {
+            code: calculator.__module__
+            for code, calculator in all_calculators.items()
+            if calculator.__module__ in qa_modules or "qa_mfb1639" in calculator.__module__
+        }
+
+        self.assertEqual(offenders, {})
+
+    def test_no_module_level_calculator_subclass_is_defined_here(self):
+        """The rule the package has to keep: mint calculator subclasses inside functions only."""
+        import inspect
+
+        from programs.framework.pe_base import PolicyEngineCalulator
+        from programs.programs.qa_mfb1639 import harness, households, probes
+
+        for module in (harness, households, probes):
+            for name, attr in vars(module).items():
+                if not inspect.isclass(attr):
+                    continue
+                if issubclass(attr, PolicyEngineCalulator) and attr.__module__ == module.__name__:
+                    self.fail(
+                        f"{module.__name__}.{name} is a module-level calculator subclass; it would "
+                        f"claim program_code {getattr(attr, 'program_code', None)!r} in the registry"
+                    )
+
+    def test_the_walker_still_excludes_test_modules(self):
+        """If this ever stops being true, every test module in the repo starts registering."""
+        from programs.framework.registry import _module_names
+
+        import programs.programs as package
+
+        names = set(_module_names("programs.programs", package))
+        qa_names = {n for n in names if "qa_mfb1639" in n}
+
+        self.assertEqual(
+            qa_names,
+            {
+                "programs.programs.qa_mfb1639",
+                "programs.programs.qa_mfb1639.harness",
+                "programs.programs.qa_mfb1639.households",
+                "programs.programs.qa_mfb1639.probes",
+            },
+        )
