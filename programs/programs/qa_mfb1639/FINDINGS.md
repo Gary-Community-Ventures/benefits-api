@@ -200,9 +200,9 @@ information on MFB-1731 rather than as its own ticket.
 | Finding | Ask | Relationship | Status |
 |---|---|---|---|
 | 2 | Send `county_str` on SNAP requests so `is_in_snap_abawd_waived_area` stops riding an alphabetical fallback | Blocks MFB-1731 | **Filed: MFB-1848** |
-| 3 | `TxCeap` should declare the hours input it depends on | Independent; fixes a silent $0 reachable by config today | Drafted, not filed |
-| 4 | Send `is_pregnant`, `unemployment_compensation`, `is_incapable_of_self_care` on SNAP requests | Blocks MFB-1731 | Drafted, not filed |
-| 5 | Price the floor's effect on MA TAFDC (and `tx_ccs`) before the floor is revisited | Information for MFB-1731 | Not drafted — comment, not a ticket |
+| 3 | `TxCeap` should declare the hours input it depends on | Independent; fixes a silent $0 reachable by config today | **Filed: MFB-1861** |
+| 4 | Send `is_pregnant`, `unemployment_compensation`, `is_incapable_of_self_care` on SNAP requests | Blocks MFB-1731 | **Filed: MFB-1862** |
+| 5 | Price the floor's effect on MA TAFDC (and `tx_ccs`) before the floor is revisited | Information for MFB-1731 | Held on this branch — Kate reads it first, nothing posted to MFB-1731 |
 
 Finding 1 is a note, not a ticket. Finding 5 belongs as a comment on MFB-1731 rather than a new
 ticket, since that ticket already owns the floor.

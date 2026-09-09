@@ -1,7 +1,8 @@
 # MFB-1639 close-out — drafts
 
-Stub 1 is filed as MFB-1848. The comment is posted. Stubs 2 and 3 are **not** filed, pending
-review.
+All three stubs are filed: MFB-1848 (county), MFB-1861 (TxCeap hours), MFB-1862 (work-test
+exemptions). The comment is posted. Finding 5 stays on this branch only, by Kate's decision —
+she wants to read it before it reaches MFB-1731.
 
 ## Comment for MFB-1639
 
@@ -107,6 +108,9 @@ left out that we should know about before changing it?
 
 ## Ticket stub 2 — TxCeap should declare the hours input it depends on
 
+> **FILED as [MFB-1861](https://linear.app/myfriendben/issue/MFB-1861/txceap-should-declare-the-hours-input-it-depends-on)**
+> (2026-09-09, cycle 13, Refinement, label `PE`, related to MFB-1639 and MFB-1640). Do not re-file.
+
 Label: PE. Independent of MFB-1731 — reachable by configuration today.
 
 `tx_ceap_eligible` reads `is_snap_eligible`, which PE gates on the SNAP work test. `TxCeap.pe_inputs`
@@ -137,6 +141,10 @@ indistinguishable from a genuine income-test denial. Evidence:
 ---
 
 ## Ticket stub 3 — SNAP does not send the work-test exemptions the screener collects
+
+> **FILED as [MFB-1862](https://linear.app/myfriendben/issue/MFB-1862/snap-does-not-send-the-work-test-exemptions-the-screener-collects)**
+> (2026-09-09, cycle 13, Refinement, label `PE`, blocks MFB-1731, related to MFB-1639 and
+> MFB-1848). Do not re-file.
 
 **Blocks MFB-1731.** Label: PE.
 
