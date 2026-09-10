@@ -71,11 +71,18 @@ MAX_PROMPT_FIELD_LEN = 160
 # prompt-injection reason MAX_PROMPT_FIELD_LEN exists.
 MAX_PROMPT_TEXT_LEN = 400
 
-# Per-program ceilings on those lists. Nothing in the seed config approaches either
-# (the largest documents block is 8); they exist so a misconfigured program can't
-# crowd out the rest of the prompt. Same role as MAX_VISIBLE_PROGRAMS.
-MAX_DOCUMENTS_PER_PROGRAM = 12
-MAX_WARNINGS_PER_PROGRAM = 6
+# Per-program ceilings on those lists, so a misconfigured program can't crowd out the
+# rest of the prompt. Same role as MAX_VISIBLE_PROGRAMS.
+#
+# Sized against production, NOT the seed configs — most of this data is created through
+# the Django admin and never appears in a *_initial_config.json. As of 2026-09-10 the
+# real maxima are 16 documents on one program (mo_tanf, MO) and 5 warnings on one.
+# These must stay above those: truncating a checklist would break the parity with the
+# results page that this feature exists to provide, and it would do it silently, on
+# whichever program happens to have the most documents. Headroom is deliberate — the
+# document count grows whenever a program's config is revised.
+MAX_DOCUMENTS_PER_PROGRAM = 24
+MAX_WARNINGS_PER_PROGRAM = 10
 
 # Apply links are dropped rather than truncated past this, so it's a reject threshold
 # and not a clip point. Comfortably above the longest link in the seed config (~200).
@@ -290,7 +297,7 @@ def _warning_messages(
     `energy_calculator`, `num_adults`. `screen.missing_fields()` is pure screen data (no
     PolicyEngine), and `Eligibility()` takes no constructor args, so the only input we
     cannot reproduce is `eligible_members`, which no snapshot stores. Calculators that
-    read it declare `needs_member_eligibility` and are skipped loudly below.
+    read it declare `needs_full_eligibility` and are skipped loudly below.
 
     Because the gates read the screen as it is *now* while the program list comes from
     the last snapshot, a screen edited since that run could yield warnings the results
@@ -332,7 +339,7 @@ def _warning_messages(
                 level="warning",
             )
             continue
-        if calculator.needs_member_eligibility:
+        if calculator.needs_full_eligibility:
             capture_message(
                 f"Skipping warning {warning.external_name or warning.id} on "
                 f"{program.name_abbreviated} for the assistant: '{warning.calculator}' needs "

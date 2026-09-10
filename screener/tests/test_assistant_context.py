@@ -374,6 +374,19 @@ class BuildContextTests(TestCase):
 
         self.assertEqual(len(context["eligible_programs"][0]["documents"]), MAX_DOCUMENTS_PER_PROGRAM)
 
+    def test_document_cap_clears_the_largest_real_program(self):
+        """A guard on the constant, not on behavior.
+
+        The cap was originally 12, chosen against the seed configs — where the largest
+        documents block is 8. Most of this data is created through the Django admin and
+        never reaches a *_initial_config.json, and production (checked 2026-09-10) has
+        16 documents on mo_tanf. At 12 the assistant would have handed that household a
+        silently short checklist, breaking the results-page parity this feature exists
+        for. Lowering the constant below the real maximum must fail a test rather than
+        show up as a missing document.
+        """
+        self.assertGreaterEqual(MAX_DOCUMENTS_PER_PROGRAM, 16)
+
     def test_documents_use_the_screen_language_not_the_request_language(self):
         """Same reason program names do: `get_language()` reflects the browser's
         Accept-Language, so an English session in a Spanish browser would otherwise get
@@ -507,7 +520,7 @@ class BuildContextTests(TestCase):
 
     def test_calculator_needing_member_eligibility_is_skipped(self):
         """co_upk reads `eligibility.eligible_members`, which the snapshot has no
-        breakdown for. It declares `needs_member_eligibility` so it's skipped
+        breakdown for. It declares `needs_full_eligibility` so it's skipped
         explicitly instead of silently evaluating against an empty list."""
         HouseholdMember.objects.create(screen=self.screen, relationship="child", age=3)
         self.add_snapshot_row("snap")
@@ -1105,7 +1118,7 @@ class AssistantStartViewTests(APITestCase):
         though the unit-level N+1 tests supply the prefetch themselves and so can't see
         the constant going missing.
 
-        Roughly: screen (+white_label joined), the two CONTEXT_PREFETCH prefetches,
+        Roughly: screen (+white_label joined), the CONTEXT_PREFETCH prefetches,
         snapshot, its program_snapshots prefetch, the insurance name/base_program lookup,
         the apply-link programs + their translations prefetch, and current_programs. All
         flat in program and member count — which is what the sibling tests assert.

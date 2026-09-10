@@ -7,16 +7,22 @@ from screener.models import Screen
 class WarningCalculator:
     dependencies = tuple()
 
-    # Whether `eligible()` reads `self.eligibility.eligible_members`.
+    # Set True if `eligible()` reads ANYTHING off `self.eligibility` other than
+    # `.eligible` — `eligible_members`, `household_value`, `pass_messages`,
+    # `fail_messages`.
     #
-    # The eligibility run (screener.views.eligibility_results) always has a fully
-    # populated `Eligibility`, so this is False for it in every case. It matters to
-    # callers that evaluate warnings OUTSIDE that run — `screener.assistant`
-    # rebuilds a minimal `Eligibility` from `ProgramEligibilitySnapshot`, which
-    # stores no member breakdown, so `eligible_members` is empty there. A calculator
-    # that reads it would silently return False rather than erroring; this flag lets
-    # such callers skip it loudly instead. See `_warnings_by_name`.
-    needs_member_eligibility = False
+    # The eligibility run (screener.views.eligibility_results) always passes a fully
+    # populated `Eligibility`, so this never restricts it. It matters to callers that
+    # evaluate warnings OUTSIDE that run: `screener.assistant` rebuilds a minimal
+    # `Eligibility` from a `ProgramEligibilitySnapshot`, which stores only the
+    # `eligible` flag, so every other attribute sits at its constructor default
+    # (empty list, 0). A calculator reading one would not error — it would quietly
+    # compute against zeroes and return a plausible wrong answer. This flag lets such
+    # callers skip it loudly instead (see `_warning_messages` in screener.assistant).
+    #
+    # Scoped to the whole object rather than to `eligible_members` alone because the
+    # hazard is the silent-default behaviour, which is identical for every field on it.
+    needs_full_eligibility = False
 
     def __init__(
         self, screen: Screen, warning: WarningMessage, eligibility: Eligibility, missing_dependencies: Dependencies
