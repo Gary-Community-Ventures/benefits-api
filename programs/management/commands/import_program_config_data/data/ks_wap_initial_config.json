@@ -27,6 +27,7 @@
     "estimated_value": "",
     "value_format": "lump_sum",
     "website_description": "Free home energy upgrades to lower your bills",
+    "active": true,
     "show_on_current_benefits": true,
     "has_calculator": true,
     "show_in_has_benefits_step": false
