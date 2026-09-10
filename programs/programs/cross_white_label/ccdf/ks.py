@@ -6,7 +6,6 @@ from programs.framework.base import Eligibility, MemberEligibility, ProgramCalcu
 import programs.framework.eligibility_messages as messages
 from screener.models import EARNED_INCOME_TYPES, HouseholdMember
 
-
 # Appendix C-18a provider rate county groupings. Group #3 is every county not named
 # here. C-18/C-18a print "Greely" and "Pottawatomi"; the KS white label's spellings
 # are used instead, because a literal transcription matches neither county and drops
