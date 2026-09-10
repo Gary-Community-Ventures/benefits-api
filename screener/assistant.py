@@ -45,6 +45,9 @@ from .throttles import (
 
 logger = logging.getLogger(__name__)
 
+# Keys already reported by `_report_once`, for the life of the process.
+_REPORTED: set[str] = set()
+
 # Where mfb-ai-service lives, and the shared service token (must match the
 # service's SERVICE_AUTH_TOKEN). Both come from the environment.
 AI_SERVICE_URL = os.getenv("AI_SERVICE_URL", "http://localhost:8080")
@@ -69,7 +72,13 @@ MAX_PROMPT_FIELD_LEN = 160
 # tx_lifeline's warning ("...you should enroll in SNAP before applying for Lifeline")
 # would lose the instruction that makes it worth sending. Still bounded, for the same
 # prompt-injection reason MAX_PROMPT_FIELD_LEN exists.
-MAX_PROMPT_TEXT_LEN = 400
+#
+# 800 rather than 400 because 400 was already clipping production: the longest live
+# warning we actually forward is 562 chars (cccap_jeffco, CO), and the seed configs
+# hold warnings up to 706. Documents top out at 338. A clipped warning is the failure
+# `_apply_url` refuses for links — a half-sentence instruction delivered with full
+# authority — so anything that does hit this is reported rather than silently cut.
+MAX_PROMPT_TEXT_LEN = 800
 
 # Per-program ceilings on those lists, so a misconfigured program can't crowd out the
 # rest of the prompt. Same role as MAX_VISIBLE_PROGRAMS.
@@ -81,6 +90,15 @@ MAX_PROMPT_TEXT_LEN = 400
 # results page that this feature exists to provide, and it would do it silently, on
 # whichever program happens to have the most documents. Headroom is deliberate — the
 # document count grows whenever a program's config is revised.
+#
+# There is deliberately no cap on programs x documents. The absolute ceiling, measured
+# against production, is a household eligible for every active program in the largest
+# white label: 43 programs, 207 document lines, ~13,000 characters (~3,300 tokens). A
+# total budget that dropped lines past a threshold would buy a smaller worst case at the
+# price of silently handing someone a short checklist — the same failure this file just
+# fixed by raising the per-program cap, and the one thing the results-page parity in
+# MFB-1788 cannot tolerate. If the budget ever needs enforcing, the honest lever is
+# fewer programs in the prompt (inject on demand), not fewer documents per program.
 MAX_DOCUMENTS_PER_PROGRAM = 24
 MAX_WARNINGS_PER_PROGRAM = 10
 
@@ -116,6 +134,50 @@ def _ai_headers() -> dict:
     if AI_SERVICE_TOKEN:
         headers["Authorization"] = f"Bearer {AI_SERVICE_TOKEN}"
     return headers
+
+
+def _report_once(key: str, message: str, *, level: str = "warning") -> None:
+    """Report a config-level condition once per process rather than once per request.
+
+    These conditions are properties of the configuration, not of the request: an
+    unregistered calculator, a calculator the snapshot cannot satisfy, a warning too
+    long for the prompt. They are unchanging until someone edits the admin, but they are
+    evaluated inside a per-program, per-warning loop on every assistant start — so
+    reporting them per request turns one static fact into the highest-volume event this
+    module emits, and buries the ones that are actionable.
+
+    Deduping in-process (not globally) is deliberate: a fresh dyno re-reports, so the
+    signal survives a deploy and cannot be permanently silenced by one early request.
+    """
+    if key in _REPORTED:
+        return
+    _REPORTED.add(key)
+    if level == "info":
+        logger.info(message)
+    else:
+        capture_message(message, level=level)
+
+
+def _clipped(text: str, what: str) -> str:
+    """Bound a document line or warning message, reporting rather than silently cutting.
+
+    Truncation here is not cosmetic: these are instructions ("enroll in SNAP before
+    applying for Lifeline"), and half of one is the same class of failure `_apply_url`
+    refuses for links — authoritative-looking and wrong. The text is still clipped
+    rather than dropped, because most of a checklist item is worth more than none of it,
+    but the condition is a config problem someone should fix, so it is reported.
+
+    Resolves at full length (`max_len=None`) so the check sees the real length; going
+    through `_translated`'s own cap would make over-long text indistinguishable from
+    text that happens to end at the limit.
+    """
+    if len(text) <= MAX_PROMPT_TEXT_LEN:
+        return text
+    _report_once(
+        f"clipped:{what}",
+        f"Clipping {what} for the assistant: {len(text)} chars exceeds " f"MAX_PROMPT_TEXT_LEN={MAX_PROMPT_TEXT_LEN}",
+    )
+    return text[:MAX_PROMPT_TEXT_LEN]
 
 
 def _translated(
@@ -192,7 +254,7 @@ def _documents_prefetch() -> Prefetch:
     """
     return Prefetch(
         "documents",
-        queryset=Document.objects.select_related("text").prefetch_related("text__translations"),
+        queryset=(Document.objects.select_related("text").prefetch_related("text__translations").order_by("id")),
     )
 
 
@@ -224,7 +286,11 @@ def _context_programs(screen: Screen, name_abbreviations: list[str]) -> dict[str
             _documents_prefetch(),
             Prefetch(
                 "warning_messages",
-                queryset=WarningMessage.objects.select_related("message").prefetch_related("message__translations"),
+                queryset=(
+                    WarningMessage.objects.select_related("message")
+                    .prefetch_related("message__translations")
+                    .order_by("id")
+                ),
             ),
             "warning_messages__counties",
             "warning_messages__legal_statuses",
@@ -265,14 +331,21 @@ def _document_texts(program: Program, language_code: str) -> list[str]:
     Static per program — no household gating, unlike warnings — so these are read
     straight off `Program` with no reconstruction.
 
-    Ordering is `documents.all()`'s default, which is what the results page renders, so
-    the assistant's checklist matches the "more info" panel item for item.
+    Ordered explicitly by id, matching the `order_by` added to the results page's own
+    prefetch in `screener.views`. Neither `Document` nor the auto-created M2M declares
+    an ordering, and Postgres guarantees no row order between two separate queries
+    against the same join table — so "the default order" was not a shared order at all,
+    and the checklist could read back in a different sequence from the "more info"
+    panel beside it. Both sides now sort the same way by construction.
     """
     texts = []
     for document in program.documents.all():
         # Blank and [PLACEHOLDER] rows come back "" — an untranslated document is
         # dropped rather than rendered as an empty checklist line.
-        text = _translated(document.text, language_code, max_len=MAX_PROMPT_TEXT_LEN)
+        text = _clipped(
+            _translated(document.text, language_code, max_len=None),
+            f"document {document.external_name or document.id} on {program.name_abbreviated}",
+        )
         if text:
             texts.append(text)
     return texts[:MAX_DOCUMENTS_PER_PROGRAM]
@@ -333,14 +406,17 @@ def _warning_messages(
     for warning in warnings:
         calculator = warning_calculators.get(warning.calculator)
         if calculator is None:
-            capture_message(
+            _report_once(
+                f"unknown-calculator:{warning.calculator}",
                 f"Skipping warning {warning.external_name or warning.id} on "
                 f"{program.name_abbreviated}: '{warning.calculator}' is not a valid calculator name",
-                level="warning",
             )
             continue
         if calculator.needs_full_eligibility:
-            capture_message(
+            # A documented, accepted limitation rather than an incident, so it goes to
+            # the log and not to Sentry — see `_report_once`.
+            _report_once(
+                f"needs-full-eligibility:{warning.calculator}",
                 f"Skipping warning {warning.external_name or warning.id} on "
                 f"{program.name_abbreviated} for the assistant: '{warning.calculator}' needs "
                 "member-level eligibility, which the snapshot does not store",
@@ -353,7 +429,10 @@ def _warning_messages(
         if not calculator(screen, warning, eligibility, missing_dependencies).calc():
             continue
 
-        message = _translated(warning.message, language_code, max_len=MAX_PROMPT_TEXT_LEN)
+        message = _clipped(
+            _translated(warning.message, language_code, max_len=None),
+            f"warning {warning.external_name or warning.id} on {program.name_abbreviated}",
+        )
         if message:
             messages.append(message)
 

@@ -38,6 +38,7 @@ from screener.assistant import (
     AssistantStartView,
     MAX_DOCUMENTS_PER_PROGRAM,
     MAX_PROGRAM_VALUE,
+    MAX_PROMPT_TEXT_LEN,
     MAX_VISIBLE_PROGRAMS,
     _build_context,
     _visible_programs,
@@ -386,6 +387,65 @@ class BuildContextTests(TestCase):
         show up as a missing document.
         """
         self.assertGreaterEqual(MAX_DOCUMENTS_PER_PROGRAM, 16)
+
+    def test_over_long_warning_is_clipped_and_reported(self):
+        """400 was already clipping production (cccap_jeffco is 562 chars). Clipping an
+        instruction mid-sentence is the failure `_apply_url` refuses for links, so if it
+        happens at all it must be visible rather than silent."""
+        self.add_snapshot_row("snap")
+        long_message = "A" * (MAX_PROMPT_TEXT_LEN + 200)
+        seed_warning(self.programs["snap"], "_show", long_message)
+
+        with mock.patch("screener.assistant._REPORTED", set()):
+            with mock.patch("screener.assistant.capture_message") as reported:
+                context = self.context()
+
+        self.assertEqual(len(context["eligible_programs"][0]["warnings"][0]), MAX_PROMPT_TEXT_LEN)
+        self.assertEqual(reported.call_count, 1)
+        self.assertIn("exceeds MAX_PROMPT_TEXT_LEN", reported.call_args.args[0])
+
+    def test_text_at_the_limit_is_not_reported(self):
+        """Resolving at full length is what distinguishes over-long text from text that
+        happens to end exactly at the cap; going through _translated's own cap could not
+        tell them apart."""
+        self.add_snapshot_row("snap")
+        seed_warning(self.programs["snap"], "_show", "A" * MAX_PROMPT_TEXT_LEN)
+
+        with mock.patch("screener.assistant._REPORTED", set()):
+            with mock.patch("screener.assistant.capture_message") as reported:
+                context = self.context()
+
+        self.assertEqual(len(context["eligible_programs"][0]["warnings"][0]), MAX_PROMPT_TEXT_LEN)
+        reported.assert_not_called()
+
+    def test_a_static_config_condition_is_reported_once_per_process(self):
+        """These conditions are properties of the config, not the request, but they're
+        evaluated in a per-program loop on every assistant start. Reporting per request
+        would make one unchanging fact the loudest event this module emits."""
+        self.add_snapshot_row("snap")
+        seed_warning(self.programs["snap"], "not_a_real_calculator", "Should not appear.")
+
+        with mock.patch("screener.assistant._REPORTED", set()):
+            with mock.patch("screener.assistant.capture_message") as reported:
+                self.context()
+                self.context()
+                self.context()
+
+        self.assertEqual(reported.call_count, 1)
+
+    def test_documents_are_ordered_deterministically(self):
+        """Document declares no Meta.ordering and the M2M is auto-created, so without an
+        explicit order_by the sequence is whatever Postgres returns — which need not
+        match the results page reading the same rows in a separate query."""
+        self.add_snapshot_row("snap")
+        first = seed_document(self.programs["snap"], "aaa_last_alphabetically", "Zebra document")
+        second = seed_document(self.programs["snap"], "zzz_first_alphabetically", "Apple document")
+
+        documents = self.context()["eligible_programs"][0]["documents"]
+
+        # id order, not insertion-coincidence and not alphabetical by either field.
+        self.assertEqual(documents, ["Zebra document", "Apple document"])
+        self.assertLess(first.id, second.id)
 
     def test_documents_use_the_screen_language_not_the_request_language(self):
         """Same reason program names do: `get_language()` reflects the browser's
@@ -920,7 +980,13 @@ class BuildContextTests(TestCase):
         # constant-query claim only covers the fields that existed before MFB-1788.
         seed_document(self.programs["snap"], "snap_id", "Photo ID")
         seed_document(self.programs["tanf"], "tanf_id", "Photo ID")
-        seed_warning(self.programs["snap"], "_show", "SNAP applications take a while.")
+        # _tax_unit, not just _show: _show reads nothing, so it cannot exercise the
+        # axis that scales. _tax_unit reaches Screen.has_members_outside_of_tax_unit ->
+        # is_dependent -> get_reference_date, which is unprefetchable by construction
+        # (order_by builds a fresh queryset) and was an N+1 on members x programs until
+        # that method was memoized.
+        seed_warning(self.programs["snap"], "_tax_unit", "SNAP has tax-unit rules.")
+        seed_warning(self.programs["tanf"], "_show", "TANF applications take a while.")
         with_one = query_count()
 
         self.add_snapshot_row("wic")
@@ -928,7 +994,8 @@ class BuildContextTests(TestCase):
         set_translation(self.programs["lifeline"].name, "Lifeline")
         seed_document(self.programs["wic"], "wic_id", "Photo ID")
         seed_document(self.programs["lifeline"], "lifeline_id", "Photo ID")
-        seed_warning(self.programs["wic"], "_show", "WIC applications take a while.")
+        seed_warning(self.programs["wic"], "_tax_unit", "WIC has tax-unit rules.")
+        seed_warning(self.programs["lifeline"], "_show", "Lifeline takes a while.")
         with_two = query_count()
 
         self.assertEqual(with_one, with_two)
@@ -950,17 +1017,27 @@ class BuildContextTests(TestCase):
         # Evaluating a warning calls screen.missing_fields(), which walks every member
         # plus each member's reverse `insurance`/`energy_calculator` and their income
         # streams — a third N+1 axis unless CONTEXT_PREFETCH covers them.
-        seed_warning(self.programs["snap"], "_show", "SNAP applications take a while.")
-        member = HouseholdMember.objects.create(screen=self.screen, relationship="headOfHousehold", age=40)
-        Insurance.objects.create(household_member=member, employer=True)
-        with_one_member = query_count()
+        # _tax_unit walks every member (see the sibling test); _show would keep this
+        # flat no matter how badly the member axis regressed.
+        seed_warning(self.programs["snap"], "_tax_unit", "SNAP has tax-unit rules.")
+        seed_warning(self.programs["wic"], "_show", "WIC applications take a while.")
 
-        for age in (38, 10, 12):
+        # The baseline needs a member who is neither head nor spouse. `is_in_tax_unit`
+        # short-circuits on those two, so a head-only household never reaches
+        # `is_dependent` and never reads the reference date — measuring from there would
+        # compare a run that skips a branch against one that takes it, and report the
+        # branch as growth.
+        for relationship, age in (("headOfHousehold", 40), ("child", 10)):
+            member = HouseholdMember.objects.create(screen=self.screen, relationship=relationship, age=age)
+            Insurance.objects.create(household_member=member, employer=True)
+        with_two_members = query_count()
+
+        for age in (38, 12, 14):
             extra = HouseholdMember.objects.create(screen=self.screen, relationship="child", age=age)
             Insurance.objects.create(household_member=extra, employer=True)
-        with_four_members = query_count()
+        with_five_members = query_count()
 
-        self.assertEqual(with_one_member, with_four_members)
+        self.assertEqual(with_two_members, with_five_members)
 
 
 class VisibleProgramsParsingTests(SimpleTestCase):
