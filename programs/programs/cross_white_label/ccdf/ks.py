@@ -191,11 +191,16 @@ class KsCcap(ProgramCalculator):
 
     program_code = "ks_ccap"
 
-    # `household_size` and `household_assets` are deliberately absent: both are
-    # nullable, and the spec commits this calculator to explicit handling for each
-    # (a member-count fallback and a fall-open resource test). Declaring them would
-    # drop the program from results before either could run.
-    dependencies = ["age", "relationship", "county", "income_amount", "income_frequency"]
+    # `household_assets` is deliberately absent, and nullable: the spec commits this
+    # calculator to a fall-open resource test, which declaring it would pre-empt --
+    # a missing dependency drops the program from results before the test can run.
+    # `household_size` is declared for the opposite reason. It is user-entered and
+    # independent of the member list, so a member count is a different number rather
+    # than a recovery of the missing one, and it keys both the income ceiling and the
+    # family share deduction. Guessing it wrong denies an eligible household or
+    # inflates an ineligible one's value, silently; being dropped from results says
+    # so.
+    dependencies = ["age", "relationship", "county", "household_size", "income_amount", "income_frequency"]
 
     RESOURCE_LIMIT = Decimal("10000")
     FEDERAL_MINIMUM_WAGE = Decimal("7.25")
@@ -398,15 +403,13 @@ class KsCcap(ProgramCalculator):
 
         This is the same number for the income limit and for the Family Share
         Deduction -- never compute the two separately. It is user-entered and
-        independent of the member list, so `num_children` is not used.
+        independent of the member list, so neither `num_children` nor a member count
+        stands in for it: a null is a declared dependency and drops the program from
+        results rather than being guessed at.
         """
-        size = self.screen.household_size
-        if size is None:
-            size = self.screen.household_members.count()
-
         # The form validates `.lte(8)`, and below 2 is unreachable because criterion 1
         # requires an eligible child; clamped so an API-path screen still gets a row.
-        return min(max(size, MIN_FAMILY_SIZE), MAX_FAMILY_SIZE)
+        return min(max(self.screen.household_size, MIN_FAMILY_SIZE), MAX_FAMILY_SIZE)
 
     def income_limit(self) -> Decimal:
         """

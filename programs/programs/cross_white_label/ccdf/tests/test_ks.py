@@ -45,6 +45,7 @@ from programs.programs.cross_white_label.ccdf.ks import (
     KsCcap,
 )
 from programs.programs.testing_fixtures.pe_integration import add_member, make_program, make_screen
+from programs.util import DependencyError
 from screener.models import HouseholdMember, IncomeStream, Screen
 from screener.serializers import _write_current_benefits
 from screener.tests.helpers import seed_program
@@ -206,11 +207,15 @@ class TestClassAttributes(KsCcapTestCase):
     def test_only_the_head_and_a_spouse_or_partner_are_activity_tested(self):
         self.assertEqual(set(KsCcap.tested_relationships), {"headOfHousehold", "spouse", "domesticPartner"})
 
-    def test_nullable_screen_fields_are_not_declared_dependencies(self):
-        # Declaring either would drop the program from results before the
-        # calculator's own committed null handling could run.
+    def test_household_assets_is_not_a_declared_dependency(self):
+        # Declaring it would drop the program from results before the committed
+        # fall-open resource test could run, contradicting Scenario 17.
         self.assertNotIn("household_assets", KsCcap.dependencies)
-        self.assertNotIn("household_size", KsCcap.dependencies)
+
+    def test_household_size_is_a_declared_dependency(self):
+        # The opposite call: it keys both the income ceiling and the family share
+        # deduction, and no other field recovers it.
+        self.assertIn("household_size", KsCcap.dependencies)
 
 
 class TestPublishedTables(KsCcapTestCase):
@@ -679,12 +684,24 @@ class TestCommittedBranchesWithoutScenarios(KsCcapTestCase):
         self.add_monthly(eighteen, "1000.00")
         self.assertEqual(self.calculator(screen).countable_monthly_income(), Decimal("870.00"))
 
-    def test_a_null_household_size_falls_back_to_the_member_count(self):
+    def test_a_null_household_size_drops_the_program_from_results(self):
+        # Rather than substituting the member count, which is a different number:
+        # `household_size` is user-entered and independent of the member list, and
+        # it keys both the income ceiling and the family share deduction. Guessing
+        # it wrong denies an eligible household or inflates an ineligible one's
+        # value with no signal; `DependencyError` is what the eligibility loop
+        # catches to leave the program out instead.
         screen = self.build(3)
-        self.add_person(screen, "headOfHousehold", (1994, 3))
+        head = self.add_person(screen, "headOfHousehold", (1994, 3))
+        self.add_hourly(head, "23.00", 30)
         self.add_person(screen, "child", (2022, 1))
         screen.household_size = None
-        self.assertEqual(self.calculator(screen).family_size(), 2)
+        screen.save()
+
+        calculator = self.calculator(screen)
+        self.assertFalse(calculator.can_calc())
+        with self.assertRaises(DependencyError):
+            calculator.calc()
 
     def test_family_size_is_clamped_to_the_published_grid(self):
         # Below 2 is unreachable because criterion 1 requires an eligible child, and
