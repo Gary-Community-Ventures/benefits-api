@@ -9,6 +9,7 @@ results, so a disagreement costs a round trip instead of the response.
 """
 
 import datetime
+import re
 from unittest.mock import MagicMock, patch
 
 from django.test import TestCase, override_settings
@@ -196,11 +197,20 @@ class TestTheDisagreementIsReported(PeBucketTestBase):
     def test_it_does_not_send_the_household_values_to_sentry(self):
         """A conflicting slot holds screener data about a real household. What disagreed is
         actionable; what the household reported is not, and Sentry has no scrubbing
-        configured."""
+        configured.
+
+        Matched on word boundaries, not as bare substrings. The message names the slot as
+        `<unit>/<sub_unit>`, and `sub_unit` is a HouseholdMember primary key — so a plain
+        `assertNotIn("41", ...)` also fires on `people/417`, which is an id and not a
+        household value. That made the test a function of whatever the id sequence
+        happened to reach: it passed locally and failed in CI on the same commit, for any
+        branch whose fixtures shifted the sequence. `\\b41\\b` still catches a real leak,
+        including `41` and `41.0` rendered into the values position.
+        """
         message = self.warning_message()
 
-        self.assertNotIn("40", message)
-        self.assertNotIn("41", message)
+        self.assertIsNone(re.search(r"\b40\b", message), message)
+        self.assertIsNone(re.search(r"\b41\b", message), message)
 
 
 class TestPastTheRequestLimit(PeBucketTestBase):
