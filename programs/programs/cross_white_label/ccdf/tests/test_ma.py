@@ -9,10 +9,10 @@ and the four tiers of the age-based value table.
 Eligibility comes from PolicyEngine and the value is ours, so every scenario runs the
 household through PolicyEngine once and replays from a cassette.
 
-Two documented consequences of the migration have tests of their own rather than a
-comment: a 13-year-old is no longer eligible (``TestChildAgeThreshold``), and a disabled
-child of 13 to 15 makes the unit eligible while drawing $0 from the age table
-(``TestDisabledChildAgeThreshold``).
+Massachusetts applies two age limits, and both have tests of their own rather than a
+comment: 13 for a child in general (``TestChildAgeThreshold``) and 16 for a child with a
+diagnosed special need (``TestDisabledChildAgeThreshold``), which is the only way to
+reach the top of the age table.
 """
 
 from programs.programs.cross_white_label.ccdf.ma import MaCcdf
@@ -26,7 +26,7 @@ from programs.programs.testing_fixtures.pe_integration import (
     screener_value,
 )
 
-PE_VERSION = "1.821.2"
+PE_VERSION = "1.821.10"
 
 #: The period ``ma_ccdf`` is configured for. It decides which CCFA income limit applies:
 #: PolicyEngine holds the new-applicant limit at 50% of SMI before 2026-01-01 and 85%
@@ -176,7 +176,7 @@ class TestAssetLimit(MaCcfaTestCase):
 
 
 class TestChildAgeThreshold(MaCcfaTestCase):
-    """Under 13. The value table paid to 14, so 13-year-olds lose the program."""
+    """Under 13 for a child with no diagnosed special need."""
 
     screen_id = 7304
 
@@ -198,31 +198,39 @@ class TestChildAgeThreshold(MaCcfaTestCase):
 
 
 class TestDisabledChildAgeThreshold(MaCcfaTestCase):
-    """Under 16 when disabled — reachable in PolicyEngine, unpaid by our age table.
+    """Under 16 when the child has a diagnosed special need.
 
-    The unit is eligible and every member value is 0, so ``eligible = value > 0`` reports
-    the household as not eligible. Pinned as the known consequence of keeping the age
-    table while adopting the MA age thresholds.
+    Ages 13 to 15 are the only ones that reach the school-age tier, since the general
+    limit already stops everyone else at 13. Both ends of that range are pinned here.
     """
 
     screen_id = 7305
 
-    def test_disabled_fifteen_year_old_draws_nothing(self):
+    def test_disabled_thirteen_year_old_is_paid(self):
+        """The age the general limit turns away, kept by the disability limit."""
+        screen = self.build(2)
+        self.add_parent(screen)
+        self.add_child(screen, 13, disabled=True)
+        result = self.run_ccfa(screen)
+        self.assertTrue(result.eligible)
+        self.assertEqual(screener_value(result), 12_632)
+
+    def test_disabled_fifteen_year_old_is_paid(self):
         screen = self.build(2)
         self.add_parent(screen)
         self.add_child(screen, 15, disabled=True)
         result = self.run_ccfa(screen)
-        self.assertFalse(result.eligible)
-        self.assertEqual(screener_value(result), 0)
+        self.assertTrue(result.eligible)
+        self.assertEqual(screener_value(result), 12_632)
 
-    def test_disabled_fifteen_year_old_does_not_block_a_sibling(self):
+    def test_disabled_fifteen_year_old_is_paid_alongside_a_sibling(self):
         screen = self.build(3)
         self.add_parent(screen)
         self.add_child(screen, 15, offset=2, disabled=True)
         self.add_child(screen, 4, offset=3)
         result = self.run_ccfa(screen)
         self.assertTrue(result.eligible)
-        self.assertEqual(screener_value(result), 16_572)
+        self.assertEqual(screener_value(result), 12_632 + 16_572)
 
 
 class TestActivityTest(MaCcfaTestCase):
