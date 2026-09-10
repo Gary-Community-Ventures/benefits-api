@@ -335,12 +335,18 @@ class TestKsHcvAnnualIncome(TestCase):
         return make_calculator(members=members)._annual_income()
 
     def test_minor_earned_income_is_excluded(self):
-        members = [make_member(born=(1988, 3), income={"wages": 21_600}), make_member(born=(2013, 3), relationship="child", income={"wages": 2_400})]
+        members = [
+            make_member(born=(1988, 3), income={"wages": 21_600}),
+            make_member(born=(2013, 3), relationship="child", income={"wages": 2_400}),
+        ]
         self.assertEqual(self._income(members), 21_600)
 
     def test_minor_unearned_income_still_counts(self):
         """§ 5.609(a)(1) counts unearned income of a dependent under 18."""
-        members = [make_member(born=(1988, 3)), make_member(born=(2013, 3), relationship="child", income={"childSupport": 1_200})]
+        members = [
+            make_member(born=(1988, 3)),
+            make_member(born=(2013, 3), relationship="child", income={"childSupport": 1_200}),
+        ]
         self.assertEqual(self._income(members), 1_200)
 
     def test_a_minor_head_of_household_contributes_in_full(self):
@@ -349,25 +355,40 @@ class TestKsHcvAnnualIncome(TestCase):
         self.assertEqual(self._income(members), 9_000)
 
     def test_a_minor_spouse_contributes_in_full(self):
-        members = [make_member(born=(1988, 3)), make_member(born=(2009, 3), relationship="spouse", income={"wages": 9_000})]
+        members = [
+            make_member(born=(1988, 3)),
+            make_member(born=(2009, 3), relationship="spouse", income={"wages": 9_000}),
+        ]
         self.assertEqual(self._income(members), 9_000)
 
     def test_a_minor_domestic_partner_contributes_in_full(self):
         """MFB extends the § 5.609(a)(1) carve-out to a co-head, which the text
         does not name; § 5.403 authorises the substitution elsewhere."""
-        members = [make_member(born=(1988, 3)), make_member(born=(2009, 3), relationship="domesticPartner", income={"wages": 9_000})]
+        members = [
+            make_member(born=(1988, 3)),
+            make_member(born=(2009, 3), relationship="domesticPartner", income={"wages": 9_000}),
+        ]
         self.assertEqual(self._income(members), 9_000)
 
     def test_dependent_full_time_student_earned_income_is_capped(self):
-        members = [make_member(born=(1985, 3), income={"wages": 12_000}), make_member(born=(2006, 4), relationship="child", student_full_time=True, income={"wages": 6_000})]
+        members = [
+            make_member(born=(1985, 3), income={"wages": 12_000}),
+            make_member(born=(2006, 4), relationship="child", student_full_time=True, income={"wages": 6_000}),
+        ]
         self.assertEqual(self._income(members), 12_500)
 
     def test_dependent_student_earning_under_the_cap_counts_in_full(self):
-        members = [make_member(born=(1985, 3)), make_member(born=(2006, 4), relationship="child", student_full_time=True, income={"wages": 300})]
+        members = [
+            make_member(born=(1985, 3)),
+            make_member(born=(2006, 4), relationship="child", student_full_time=True, income={"wages": 300}),
+        ]
         self.assertEqual(self._income(members), 300)
 
     def test_dependent_student_unearned_income_is_not_capped(self):
-        members = [make_member(born=(1985, 3)), make_member(born=(2006, 4), relationship="child", student_full_time=True, income={"childSupport": 6_000})]
+        members = [
+            make_member(born=(1985, 3)),
+            make_member(born=(2006, 4), relationship="child", student_full_time=True, income={"childSupport": 6_000}),
+        ]
         self.assertEqual(self._income(members), 6_000)
 
     def test_a_head_who_is_a_full_time_student_is_not_capped(self):
@@ -375,13 +396,21 @@ class TestKsHcvAnnualIncome(TestCase):
         self.assertEqual(self._income(members), 6_000)
 
     def test_workers_compensation_is_excluded_for_any_member(self):
-        members = [make_member(born=(1988, 3), income={"wages": 10_800, "workersComp": 2_400}), make_member(born=(1990, 6), relationship="spouse", income={"workersComp": 5_000})]
+        members = [
+            make_member(born=(1988, 3), income={"wages": 10_800, "workersComp": 2_400}),
+            make_member(born=(1990, 6), relationship="spouse", income={"workersComp": 5_000}),
+        ]
         self.assertEqual(self._income(members), 10_800)
 
     def test_foster_member_income_is_excluded_entirely(self):
         """§ 5.609(b)(8) — applied to every `fosterChild`-relationship member (D2),
         across both earned and unearned streams."""
-        members = [make_member(born=(1991, 3), income={"wages": 21_600}), make_member(born=(2020, 1), relationship="fosterChild", income={"cashAssistanceOther": 1_800, "wages": 900})]
+        members = [
+            make_member(born=(1991, 3), income={"wages": 21_600}),
+            make_member(
+                born=(2020, 1), relationship="fosterChild", income={"cashAssistanceOther": 1_800, "wages": 900}
+            ),
+        ]
         self.assertEqual(self._income(members), 21_600)
 
 
@@ -390,7 +419,11 @@ class TestKsHcvDependents(TestCase):
         return make_calculator(members=members)._count_dependents()
 
     def test_minor_children_count(self):
-        members = [make_member(born=(1988, 3)), make_member(born=(2016, 1), relationship="child"), make_member(born=(2020, 1), relationship="child")]
+        members = [
+            make_member(born=(1988, 3)),
+            make_member(born=(2016, 1), relationship="child"),
+            make_member(born=(2020, 1), relationship="child"),
+        ]
         self.assertEqual(self._count(members), 2)
 
     def test_head_spouse_and_domestic_partner_never_count(self):
@@ -402,7 +435,10 @@ class TestKsHcvDependents(TestCase):
         self.assertEqual(self._count(members), 0)
 
     def test_adult_full_time_student_counts(self):
-        members = [make_member(born=(1985, 3)), make_member(born=(2006, 4), relationship="child", student_full_time=True)]
+        members = [
+            make_member(born=(1985, 3)),
+            make_member(born=(2006, 4), relationship="child", student_full_time=True),
+        ]
         self.assertEqual(self._count(members), 1)
 
     def test_adult_with_a_disability_counts(self):
@@ -495,7 +531,10 @@ class TestKsHcvTotalTenantPayment(TestCase):
 
     def test_deductions_never_drive_adjusted_income_negative(self):
         calc = make_calculator(
-            members=[make_member(born=(1958, 3), income={"sSRetirement": 200}), make_member(born=(2016, 1), relationship="child")]
+            members=[
+                make_member(born=(1958, 3), income={"sSRetirement": 200}),
+                make_member(born=(2016, 1), relationship="child"),
+            ]
         )
         self.assertEqual(calc._adjusted_income(200), 0)
 
@@ -779,9 +818,7 @@ class TestKsHcvSpecScenarios(TestCase):
         """The pregnancy rule moves the bedroom lookup 0BR → 1BR and leaves the
         income-limit household size at 1."""
         calc = make_calculator(members=[make_member(born=(1999, 1), income={"wages": 14_400}, pregnant=True)])
-        patcher, income_mock, payment_mock = hud_mocks(
-            income_limit=WICHITA_VLI[1], payment_standard=WICHITA_SAFMR[1]
-        )
+        patcher, income_mock, payment_mock = hud_mocks(income_limit=WICHITA_VLI[1], payment_standard=WICHITA_SAFMR[1])
         with patcher:
             e = calc.calc()
         self.assertTrue(e.eligible)
