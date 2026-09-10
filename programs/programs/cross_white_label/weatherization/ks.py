@@ -19,7 +19,11 @@ class KsWap(ProgramCalculator):
         poverty guideline for the household size. The program row's `year` pin
         selects the guideline edition — 2026, whose 200% figures reproduce the
         table KHRC prints on its own application exactly, at every size from 1
-        to 16 ($31,920 / $43,280 / $54,640 / $66,000 … $202,320).
+        to 16 ($31,920 / $43,280 / $54,640 / $66,000 … $202,320). Only sizes 1
+        through 8 are reachable in practice: the screener caps household size
+        at 8, and that cap is not per-white-label. The threshold arithmetic
+        above 8 is correct and tested, but no Kansas household can currently
+        reach it.
       * Criterion 2 defines what "income" means for criterion 1: gross cash
         receipts less the exclusions the current DOE Weatherization Program
         Notice lists. See `excluded_income_types` and
@@ -176,6 +180,13 @@ class KsWap(ProgramCalculator):
         amount, which is exactly how KHRC's own printed table is built — its
         sizes 9 through 16 are $122,800 through $202,320, and 200% of the 2026
         guideline reproduces every one of them.
+
+        Sizes above 8 are not reachable today: the screener's household-size
+        step caps at 8 for every white label. ``get_limit`` is still the right
+        call rather than clamping to 8 — there is no hardcoded table here to
+        truncate, a clamp would silently understate the limit for a large
+        household if the cap is ever raised, and the extrapolation is already
+        the published Kansas figure.
         """
         household_size = self.screen.household_size
         if household_size is None:

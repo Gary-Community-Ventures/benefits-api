@@ -758,10 +758,14 @@ class TestKsWapSpecScenarios(KsWapTestCase):
 class TestKsWapBindingImplementationRequirements(KsWapTestCase):
     """The two regressions specs/ks.md commits to as build requirements.
 
-    Both depend on inputs the screener cannot yet produce — the Kansas
-    has-benefits step has no energy-assistance tile, and the household-size
-    step caps at 8. The calculator side of each is implemented and pinned here;
-    the screener side is tracked separately."""
+    Requirement 1 is fully delivered: flipping `ks_lieap`'s has-benefits flag
+    made the input enterable, so its regression is reachable end to end.
+
+    Requirement 2 is delivered on the calculator side only. The screener caps
+    household size at 8 for every white label, so sizes 9 and up cannot be
+    entered and the two tests below them assert arithmetic no Kansas household
+    can currently reach. They stay because the arithmetic is this calculator's
+    to get right and is cheap to pin — not because the sizes are supported."""
 
     def test_lieap_route_admits_an_over_income_kansas_household(self):
         """Requirement 1. `ks_lieap.show_in_has_benefits_step` is flipped to

@@ -214,14 +214,20 @@ Sixteen core scenarios, all executable against the current screener. Location ap
 - Config-level criteria are tested outside this calculator suite: legal status (criterion 4) is the program row's `legal_status_required`, and Kansas routing (criterion 5) is the white label.
 - The committed data gaps have no executable scenarios, because the screener cannot observe them.
 - Section 8 / HCV has no executable Kansas scenario: no Kansas `section_8` program row exists.
-- LIEAP and household sizes 9–16 are covered by the binding implementation regressions below.
+- LIEAP is covered by binding implementation requirement 1 below.
+- **Household sizes 9–16 are not reachable.** The screener caps household size at 8, so no scenario above that size can be entered. Sizes 1–8 are the full testable range; requirement 2 below records what was and was not delivered.
 
 **Binding implementation requirements**
 
-Both are committed build requirements for this program.
+Both were committed build requirements for this program. Requirement 1 is delivered; requirement 2 is delivered on the calculator side only.
 
-1. **LIEAP current-benefit visibility.** Set `ks_lieap.show_in_has_benefits_step = true` and add an energy-assistance category to the Kansas current-benefits step. Until both land, no `CurrentBenefit` row for LIEAP can be written, `has_base_benefit("liheap")` is false on every Kansas screen, and criterion 3's LIEAP route cannot fire. Illinois, Colorado and North Carolina all carry an energy option; Kansas does not. Required regression once the input is enterable: an over-income Kansas household with current `ks_lieap` → **Eligible — $7,475**. It becomes ordinary core scenario coverage at that point.
-2. **Kansas household sizes 1–16.** The Kansas white label must permit household sizes 1–16 in both the household-size entry and the household-member flow; other white labels retain their existing maximum. `KsWap` must read the threshold through `program.year.get_limit(household_size)`. Required regression: ZIP `66603`, Shawnee County, household size 10, countable annual income $134,160 → **Eligible — $7,475**, with no error. Kansas's PolicyEngine-backed programs must also be exercised at sizes 9–16, since raising the cap sends them inputs they have never received.
+1. **LIEAP current-benefit visibility — delivered.** `ks_lieap.show_in_has_benefits_step` is set to `true` (in the program's config and, for rows that already exist, migration `0175_ks_lieap_on_has_benefits_step`). No separate white-label or frontend change was needed: the has-benefits step is data-driven, rendering whatever `/api/has_benefits_programs/{white_label}` returns and grouping it by the program's own category. Until this landed, no `CurrentBenefit` row for LIEAP could be written, `has_base_benefit("liheap")` was false on every Kansas screen, and criterion 3's LIEAP route could not fire. Regression, now ordinary coverage: an over-income Kansas household with current `ks_lieap` → **Eligible — $7,475**.
+
+2. **Kansas household sizes 1–16 — calculator only; the screener still caps at 8.**
+   - **Delivered:** `KsWap` reads the threshold through `program.year.get_limit(household_size)`, never `as_dict()[household_size]`. That extends past size 8 by the per-additional-person amount and reproduces KHRC's printed rows for 9 through 16 exactly ($122,800 … $202,320). Unit-tested at every published size, including 10 and 16.
+   - **Not delivered:** the screener does not accept a household larger than 8. The cap is a hardcoded `.lte(8)` in `benefits-calculator` (`src/Components/Steps/HouseholdSize/HouseholdSize.tsx`), not a per-white-label setting, so Kansas cannot be raised on its own without a frontend change. A Kansas household of 9 or more therefore cannot be screened at all, and this program's sizes 9–16 support is unreachable in production.
+   - **Why it was not done here:** raising the cap is cross-cutting rather than KS-specific. Twelve calculators and urgent needs index `program.year.as_dict()[household_size]` directly and would raise `KeyError` above size 8 — and because `screener/views.py` catches only `DependencyError` around the per-program loop, that would 500 the entire eligibility response rather than dropping one program. HUD publishes AMI only for sizes 1–8 (and the client enforces it), and the SMI service has its own `MAX_HOUSEHOLD_SIZE = 8`, so ~28 programs have no upstream limit to read above 8. Kansas's PolicyEngine-backed programs have also never received a household that large.
+   - **Tracked in MFB-1869**, an investigation into whether and how to raise the cap. Until it concludes, treat size 8 as this program's effective maximum.
 
 ### Scenario 1: Four-person household under the income limit — Eligible, $7,475
 **What we're checking**: the reference case — income comfortably within the limit for the household's size.
