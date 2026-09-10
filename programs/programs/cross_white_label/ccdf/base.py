@@ -20,7 +20,12 @@ class Ccdf(PolicyEngineMembersCalculator, abstract=True):
     pe_outputs = [dependency.member.Ccdf]
 
     def child_care_cost(self, member: HouseholdMember) -> int:
-        raise NotImplemented("Please define the 'child_care_cost' method")
+        """A state's own child care cost for an eligible member. Subclasses must define it.
+
+        `NotImplementedError`, not `NotImplemented` — the latter is a singleton constant,
+        not an exception type, so raising it produced `TypeError: 'NotImplementedType'
+        object is not callable` and never the message it carries."""
+        raise NotImplementedError(f"{type(self).__name__} must define the 'child_care_cost' method")
 
     def member_value(self, member: HouseholdMember):
         if not self.get_member_variable(member.id):

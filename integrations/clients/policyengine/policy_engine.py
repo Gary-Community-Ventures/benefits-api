@@ -61,6 +61,8 @@ def calc_pe_eligibility(
             continue
         valid_programs[name_abbr] = calculator
 
+    valid_programs = _drop_unconfigured_programs(valid_programs)
+
     # Resolve the model version ONCE and thread it through both consumers: independent
     # resolutions can disagree (PolicyEngine promotes a new `current`, or our cached lookup
     # expires or fails between calls), and a disagreement is exactly the failure
@@ -102,6 +104,29 @@ def calc_pe_eligibility(
             "PolicyEngine programs are unavailable for this screen.",
             level="error",
         )
+        record_external_api_failure(POLICY_ENGINE)
+        return empty_result
+    except Exception as e:
+        # Anything else out of payload assembly: a misconfigured row, a dependency reading a
+        # screen shape it did not expect, a KeyError on a value we assumed was there.
+        #
+        # This used to escape `calc_pe_eligibility` entirely — `eligibility_results`' own
+        # `try` is scoped to the previous-snapshot lookup and `track_external_api_failures`
+        # is try/finally with no suppression — so one program's assembly bug returned a 500
+        # and the user saw no results at all, not even the programs that never touch
+        # PolicyEngine. Degrading instead keeps the custom calculators, urgent needs and
+        # navigators, and puts the failure on the same contract as every other
+        # PolicyEngine-side one: loud in Sentry, reported to the frontend, PolicyEngine
+        # programs absent.
+        #
+        # SystemExit and KeyboardInterrupt are BaseException and pass through untouched, so a
+        # worker being torn down still dies rather than being logged as a payload failure.
+        capture_exception(e, level="error")
+        capture_message(
+            "PolicyEngine: payload assembly failed; PolicyEngine programs are unavailable for this screen.",
+            level="error",
+        )
+        record_external_api_failure(POLICY_ENGINE)
         return empty_result
 
     _report_conflicts(plan, program_names)
@@ -183,8 +208,8 @@ def _run_bucket(
                 print(repr(e))
             capture_exception(e, level="error")
             capture_message(
-                f"Failed to calculate eligibility with the {Method.method_name} method; "
-                f"PolicyEngine programs are unavailable for this screen.",
+                f"Failed to calculate eligibility with the {Method.method_name} method"
+                f"{_status_suffix(e)}; PolicyEngine programs are unavailable for this screen.",
                 level="error",
             )
             record_external_api_failure(POLICY_ENGINE)
@@ -196,6 +221,20 @@ def _run_bucket(
             return result
 
     return {}, {"request": None, "response": None}
+
+
+def _status_suffix(error: Exception) -> str:
+    """The HTTP status PolicyEngine answered with, for the Sentry message.
+
+    PolicyEngineAPIError has carried `status_code` since it was written but nothing read it,
+    so every failure looked alike in the issue list. The status is what separates the kinds:
+    400 is our payload, 422 a version pin PolicyEngine no longer serves, 401 an expired token
+    (already cleared from the cache, so the next request recovers on its own), 5xx and a bare
+    None — timeout, DNS, connection reset — theirs. Empty for a failure with no response at
+    all, which is itself the signal that the request never landed.
+    """
+    status_code = getattr(error, "status_code", None)
+    return f" (HTTP {status_code})" if status_code is not None else ""
 
 
 def _combine_pe_data(requests_made: List[Dict[str, Any]]) -> PEData:
@@ -275,6 +314,41 @@ def all_eligibility(method: Sim, valid_programs: dict[str, PolicyEngineCalulator
         all_eligibility[name_abbr] = e
 
     return all_eligibility
+
+
+def _drop_unconfigured_programs(
+    valid_programs: dict[str, PolicyEngineCalulator],
+) -> dict[str, PolicyEngineCalulator]:
+    """Drop programs with no `FederalPoveryLimit`, which have no period to be requested at.
+
+    `Program.year` is nullable and most programs legitimately have none, but a PolicyEngine
+    program without one cannot be asked for: every dependency and output is keyed by period.
+    Reaching `pe_period` in that state raises, and because the first touch happens while the
+    payload is being built — before any request — the raise would cost *every* PolicyEngine
+    program on the screen its result, over one row's missing foreign key.
+
+    So the check moves ahead of payload assembly, where it costs only the program it is about
+    (the caller reports it as missing, exactly like a version-gated one). It should never
+    fire: `PROTECT` on the FK stops an FPL deletion from nulling the column, and
+    `import_program_config` refuses a PolicyEngine-backed program without a year. A hit means
+    a row was edited into that state by hand, so it is reported rather than passed over.
+    """
+    configured: dict[str, PolicyEngineCalulator] = {}
+    dropped: list[str] = []
+    for name_abbr, calculator in valid_programs.items():
+        if calculator.program.year is None:
+            dropped.append(name_abbr)
+            continue
+        configured[name_abbr] = calculator
+
+    if dropped:
+        capture_message(
+            f"PolicyEngine: dropped {len(dropped)} program(s) with no FederalPoveryLimit "
+            f"configured, so there is no period to request them at: {sorted(dropped)}",
+            level="error",
+        )
+
+    return configured
 
 
 def _drop_unreadable_programs(

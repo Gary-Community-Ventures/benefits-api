@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from integrations.external_api_status import track_external_api_failures
 from screener.models import Screen
 from screener.views import eligibility_results
 from tqdm import trange
@@ -39,7 +40,12 @@ class Command(BaseCommand):
         errors = []
         for i in trange(len(screens), desc="Screens"):
             try:
-                eligibility_results(screens[i], batch=True)
+                # Per screen, so one screen's PolicyEngine failure marks only its own
+                # snapshot. Without a tracking context `eligibility_results` cannot tell a
+                # degraded run from a clean one, and every batch snapshot would be written
+                # as clean.
+                with track_external_api_failures():
+                    eligibility_results(screens[i], batch=True)
                 time.sleep(1)
             except Exception as e:
                 errors.append(str(screens[i].id) + ": " + str(e))
