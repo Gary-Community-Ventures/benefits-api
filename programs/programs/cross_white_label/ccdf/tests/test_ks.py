@@ -42,6 +42,7 @@ from programs.models import Program
 from programs.programs.cross_white_label.ccdf.ks import (
     CENTRE_HOURLY_RATES,
     FAMILY_SHARE_DEDUCTIONS,
+    MAX_FAMILY_SIZE,
     KsCcap,
 )
 from programs.programs.testing_fixtures.pe_integration import add_member, make_program, make_screen
@@ -703,13 +704,20 @@ class TestCommittedBranchesWithoutScenarios(KsCcapTestCase):
         with self.assertRaises(DependencyError):
             calculator.calc()
 
-    def test_family_size_is_clamped_to_the_published_grid(self):
-        # Below 2 is unreachable because criterion 1 requires an eligible child, and
-        # the form validates `.lte(8)`; an API-path screen still gets a row.
-        for household_size, expected in ((1, 2), (9, 8)):
+    def test_family_size_is_clamped_to_the_implemented_range(self):
+        # Deliberately the implemented range, not the published one: Appendix F-1
+        # publishes sizes 2-11, and this calculator carries 2-8 because the screener
+        # form validates `.lte(8)`. Both ends are API-path only -- below 2 cannot
+        # arise because criterion 1 requires an eligible child.
+        for household_size, expected in ((1, 2), (9, 8), (11, 8)):
             with self.subTest(household_size=household_size):
                 screen = self.build(household_size)
                 self.assertEqual(self.calculator(screen).family_size(), expected)
+
+    def test_the_grid_stops_at_the_screener_form_cap(self):
+        # Pins the ceiling to the form's `.lte(8)`. If that cap is ever raised, this
+        # fails and points at the three F-1 rows (9, 10, 11) that must be added.
+        self.assertEqual(MAX_FAMILY_SIZE, 8)
 
     def test_no_eligible_child_means_no_ssi_resource_exemption(self):
         # `all()` over an empty set is vacuously true, which would waive the

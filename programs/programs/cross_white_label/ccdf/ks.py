@@ -58,6 +58,12 @@ CENTRE_HOURLY_RATES = (
 # The grid resolves Appendix F-1's printing slips; one is load-bearing, the family-of-3
 # 170% bound, printed such that $3,870.01-$3,870.09 falls in no band at all. Do not
 # transcribe F-1 literally and do not correct the source snapshots.
+#
+# Stopping at 8 is deliberate, not an incomplete transcription: F-1 publishes sizes
+# **2 through 11**, but the screener's household size step validates `.lte(8)`, so no
+# form-submitted screen can carry a larger one. `family_size` clamps above 8 rather
+# than carrying three rows only the API path could reach. If that form cap is ever
+# raised, add sizes 9-11 from the F-1 snapshot before the cap ships.
 FAMILY_SHARE_DEDUCTIONS: dict[int, tuple[tuple[Decimal, int], ...]] = {
     2: (
         (Decimal("1803"), 0),
@@ -407,8 +413,11 @@ class KsCcap(ProgramCalculator):
         stands in for it: a null is a declared dependency and drops the program from
         results rather than being guessed at.
         """
-        # The form validates `.lte(8)`, and below 2 is unreachable because criterion 1
-        # requires an eligible child; clamped so an API-path screen still gets a row.
+        # Both ends are unreachable through the screener: the form validates `.lte(8)`,
+        # and below 2 cannot arise because criterion 1 requires an eligible child, whose
+        # relationship is never `headOfHousehold`. The clamp is for the API path only.
+        # Above 8 it is a deliberate ceiling rather than a missing row -- see the note
+        # on FAMILY_SHARE_DEDUCTIONS.
         return min(max(self.screen.household_size, MIN_FAMILY_SIZE), MAX_FAMILY_SIZE)
 
     def income_limit(self) -> Decimal:
