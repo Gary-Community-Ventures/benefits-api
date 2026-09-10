@@ -179,12 +179,23 @@ class KsCcap(ProgramCalculator):
 
     The value is an **MFB-owned estimate, not an amount DCF publishes**. Kansas sets
     the benefit from its own maximum hourly rate rather than from what the family
-    pays, and the two inputs that rate is multiplied by -- provider type and the
-    authorized monthly hours -- are unobservable, so the estimate pins a licensed
-    centre and the 129-hour part-time block. It understates full-time care by about
-    67% and overstates licensed-home and relative care. It also sums over every child
-    meeting the age and relationship test, because which children a family requests
-    care for is unobservable too.
+    pays, so the estimate turns on two inputs DCF observes and the screener does not.
+
+    **Provider type is pinned to a licensed centre**, which is the highest of the four
+    rates Kansas pays -- in Johnson County for a preschooler, $5.51/hour against $4.23
+    for a licensed home, $2.81 for an out-of-home relative and $2.42 for an in-home
+    relative. C-18 sets centre and licensed-home rates at roughly the 75th percentile
+    of surveyed market price, which makes the centre the defensible standard case, but
+    no source says which type CCAP families actually use. A household using a relative
+    is overstated by up to about 2.3x.
+
+    **Authorized hours are derived rather than pinned** -- see `authorized_monthly_hours`.
+    KEESM 7620 sets them from the adults' work schedule, which `hours_worked` records,
+    so the block follows the household's reported hours where every adult on the case
+    has them and falls back to part-time where one does not.
+
+    The value also sums over every child meeting the age and relationship test, because
+    which children a family requests care for is unobservable.
 
     Data gaps, in the exclusionary direction: seven of KEESM 2820's eight need reasons
     cannot be established from any screener field and are **not** assumed met, so a
@@ -211,7 +222,13 @@ class KsCcap(ProgramCalculator):
     RESOURCE_LIMIT = Decimal("10000")
     FEDERAL_MINIMUM_WAGE = Decimal("7.25")
     MINIMUM_WEEKLY_HOURS = 20
-    MONTHLY_AUTHORIZED_HOURS = 129
+    # KEESM 7620's two authorized blocks, and the hours-needed figure that chooses
+    # between them. `WEEKS_PER_MONTH` matches the factor the screener's own income
+    # conversion uses, so a week of work and a week of care are counted alike.
+    PART_TIME_HOURS = 129
+    FULL_TIME_HOURS = 215
+    HOURS_NEEDED_THRESHOLD = 108
+    WEEKS_PER_MONTH = Decimal("4.35")
 
     # KEESM 4410's eligible-child set: the adults' own minor children, plus its
     # catch-all for other children in the household an adult on the case caretakes.
@@ -320,7 +337,7 @@ class KsCcap(ProgramCalculator):
         # implied wage at exactly the federal minimum, which would make the wage
         # floor circular, and it floors reported hours at 40 for members aged 16 and
         # over, which would make the 20-hour test unfailable.
-        hourly = [stream for stream in earned if stream.frequency == "hourly" and stream.hours_worked]
+        hourly = self.hourly_earned_streams(member)
         if not hourly:
             return True
 
@@ -334,6 +351,76 @@ class KsCcap(ProgramCalculator):
         # exactly that stream's rate.
         wages = sum((stream.amount * stream.hours_worked for stream in hourly), Decimal(0))
         return wages / total_hours >= self.FEDERAL_MINIMUM_WAGE
+
+    @staticmethod
+    def hourly_earned_streams(member: HouseholdMember) -> list:
+        """
+        The member's hourly-frequency earned streams that carry usable hours.
+
+        `hours_worked` is populated only at hourly frequency, so this is the whole
+        of what the screener can say about anyone's schedule. A zero or null is
+        dropped rather than counted: it cannot be averaged over and reads as
+        unstated rather than as an assertion of no hours.
+        """
+        return [
+            stream
+            for stream in member.income_streams.all()
+            if stream.type in EARNED_INCOME_TYPES and stream.frequency == "hourly" and stream.hours_worked
+        ]
+
+    def tested_adults(self) -> list[HouseholdMember]:
+        """The KEESM 4410 adults on the case: the head plus a spouse or partner."""
+        return [
+            member for member in self.screen.household_members.all() if member.relationship in self.tested_relationships
+        ]
+
+    def authorized_monthly_hours(self) -> int:
+        """
+        KEESM 7620's authorized block: 129 hours where the hours needed are 108 or
+        fewer, 215 where they are more.
+
+        7620 sets hours needed from the adults' weekly work schedule (plus travel)
+        and the child's school schedule. The work schedule is the one input the
+        screener records, on `hours_worked`, so the block is derived from it rather
+        than pinned — but only when **every** adult on the case has derivable hours.
+        A salaried, weekly or biweekly earner carries no `hours_worked` at all, so
+        one such adult makes the household's schedule unreadable and the estimate
+        falls back to the part-time block.
+
+        Care is needed only while every adult on the case is away, so the household's
+        hours track the **least**-working adult: KEESM 2810 denies the household
+        where one parent works and the other does not, the non-employed parent being
+        expected to provide the care. Without actual schedules the overlap between
+        two adults cannot exceed the shorter of them, so the minimum is that
+        overlap's upper bound — staggered shifts need less care than this allows,
+        never more.
+
+        Two sourced inputs remain unobservable and pull opposite ways: travel time,
+        which 7620 counts and which raises hours, and the child's school schedule,
+        which lowers them for a school-age child. Neither is collected.
+        """
+        adults = self.tested_adults()
+        if not adults:
+            return self.PART_TIME_HOURS
+
+        weekly_hours = []
+        for adult in adults:
+            hourly = self.hourly_earned_streams(adult)
+            if not hourly:
+                # One unreadable schedule makes the household's unreadable, because
+                # the block turns on the minimum across all of them.
+                return self.PART_TIME_HOURS
+            weekly_hours.append(sum(stream.hours_worked for stream in hourly))
+
+        hours_needed = min(weekly_hours) * self.WEEKS_PER_MONTH
+
+        # 7620's own wording -- 129 at "108 or less", 215 at "more than 108" -- but the
+        # boundary is unreachable and so untestable: `hours_worked` is an integer and
+        # 108 / 4.35 is 24.83, so no whole week of work lands exactly on 108. The
+        # turnover sits between 24 hours (104.4) and 25 (108.75). `>=` here would
+        # behave identically; it is written `>` to match the source, not because a
+        # household can tell the difference.
+        return self.FULL_TIME_HOURS if hours_needed > self.HOURS_NEEDED_THRESHOLD else self.PART_TIME_HOURS
 
     def countable_monthly_income(self) -> Decimal:
         """
@@ -483,8 +570,9 @@ class KsCcap(ProgramCalculator):
         shape across `member_value` and a negative `household_value`; in that shape
         neither clamp can be expressed.
         """
+        hours = self.authorized_monthly_hours()
         gross = sum(
-            (self.centre_hourly_rate(child) * self.MONTHLY_AUTHORIZED_HOURS for child in self.eligible_children()),
+            (self.centre_hourly_rate(child) * hours for child in self.eligible_children()),
             Decimal(0),
         )
 

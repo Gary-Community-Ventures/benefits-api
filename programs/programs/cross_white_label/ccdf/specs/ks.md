@@ -166,13 +166,17 @@ denies on criterion 3 does so on the Maintain Employment test, and every scenari
 criteria 4 or 5 does so on an observable income or asset figure.
 
 1. **The type of provider the family uses — licensed child care centre, licensed home, out-of-home relative, or in-home relative**
-   - Why: the screener collects no provider type, and the DCF benefit rate is set by it.
-   - Handling: narrows/widens results — the benefit estimate pins the licensed-centre rate and is disclosed in Benefit Value as an MFB estimate. Never screens a household out.
+   - Why: the screener collects no provider type, and the DCF benefit rate is set by it. Kansas pays four different hourly rates and the licensed centre is the **highest**: for a preschooler in Johnson County, `$5.51` centre against `$4.23` licensed home, `$2.81` out-of-home relative and `$2.42` in-home relative.
+   - Handling: **pinned, and deliberately left pinned** — the estimate uses the licensed-centre rate and is disclosed in Benefit Value as an MFB estimate. Never screens a household out.
+   - This gap **cannot be closed by further research on published sources.** C-18's 75th-percentile note explains how DCF sets each rate; it says nothing about which type CCAP families use. That is administrative data DCF holds and no snapshot carries. Closing it needs DCF's provider mix, not another document.
+   - Error direction, quantified against Scenario 1's household: a licensed home returns roughly 1.3x less than shown, an out-of-home relative roughly 2.0x less, an in-home relative roughly 2.3x less. The estimate is therefore an **upper** bound on the rate axis, and the reviewer should read every committed value as "a centre-rate household".
    - Source: Appendix C-18 — "MAXIMUM HOURLY CHILD CARE BENEFIT RATES**" — [snapshot `2026-09-02--appendix-c-18-provider-rate-chart`](../../../sources/ks/ks_ccap/2026-09-02--appendix-c-18-provider-rate-chart/content.md), accessed 2026-09-02
 
-2. **The authorized monthly hours of care, which DCF sets from the parent's work schedule and the child's school schedule**
-   - Why: the screener collects no child-care schedule or hours of care; no such field exists anywhere in benefits-api.
-   - Handling: narrows/widens results — the estimate pins the 129-hour part-time block. Never screens a household out.
+2. **Travel time and the child's school schedule — the two inputs to KEESM 7620's hours-needed estimate that remain unobservable after the block is derived**
+   - Why: **the primary input is no longer missing.** 7620 sets hours needed from the adults' weekly work schedule plus travel time plus the child's school schedule. The work schedule *is* recorded, on `hours_worked`, so the block is derived from it (see Benefit Value). What is still missing is the other two terms: no field records commute time, and none records whether a child is in school or for how many hours.
+   - Handling: `assumed-absent` — both are omitted from the derivation, which reads the work schedule alone. Never screens a household out.
+   - The two pull in **opposite** directions, so the residual error is two-sided rather than systematic. Travel time is counted by 7620 and would raise hours needed, pushing a household nearer the 215 block; a school-age child's school hours would lower them, pushing the other way. 7620's own example of a child needing the full block is "a four year old who is **not** in pre-school, Head Start or pre-kindergarten", which is exactly the case where the school term is zero.
+   - A third limb is structural rather than missing: `hours_worked` exists only on hourly streams, so a household with any non-hourly earner among the adults on the case falls back to the 129-hour block. That is the same population Data Gap 6 covers for the activity test.
    - Source: KEESM 7620 — "EES staff shall establish a reasonable estimate of the hours needed for child care by determining with the parent(s) their average weekly work schedule." — [snapshot `2026-09-02--keesm-7610-child-care-plan-duration`](../../../sources/ks/ks_ccap/2026-09-02--keesm-7610-child-care-plan-duration/content.md), accessed 2026-09-02
 
 3. **The three determinations under which personal need is not met — the caretaker's work or school hours falling inside the child's regular school hours, a TANF assistance unit member whose needs are met for caring for the child, or another legally responsible person at home available to provide care**
@@ -301,7 +305,8 @@ hours, less one Family Share Deduction for the household.
 
 DCF can compute this exactly because it knows the provider type and the authorized care schedule.
 **MFB observes neither**, so the figure below is an **MFB-owned estimate**, not an amount Kansas
-publishes or guarantees. It pins the licensed-centre rate and the 129-hour part-time block.
+publishes or guarantees. It **pins the licensed-centre rate** and **derives the authorized
+hours block** from the household's reported work schedule.
 
 It also pins **which children are in the sum**. Kansas authorizes hours for the children a family
 requests care for; MFB cannot see that set and sums over every child meeting criterion 1 instead.
@@ -309,7 +314,7 @@ That is Data Gap 17, and it is over-inclusive: a school-age child who needs no p
 contributes a full block. Of the three pinned axes it is the one that scales the figure by whole
 multiples rather than shifting it.
 
-- Value: `max( 1, 12 × max( Σ_children (centre rate for the child's age band and county group × 129) − FSD, 0 ) )` per year — where FSD is the single Appendix F-1 Family Share Deduction for the household's family size and income band, deducted **once per household**, not per child. The inner `max(…, 0)` is the policy clamp; the outer `max( 1, … )` is a visibility floor, not a benefit claim — see the note below
+- Value: `max( 1, 12 × max( Σ_children (centre rate for the child's age band and county group × authorized hours) − FSD, 0 ) )` per year — where authorized hours is 129 or 215 per the block rule below — where FSD is the single Appendix F-1 Family Share Deduction for the household's family size and income band, deducted **once per household**, not per child. The inner `max(…, 0)` is the policy clamp; the outer `max( 1, … )` is a visibility floor, not a benefit claim — see the note below
 - `value_format`: `estimated_annual`
 - Variation axes: county group (3) · child age band (4) · number of eligible children · family size × income band (the FSD table) · the FSD-exempt pathways — each appears in Test Scenarios
 - Constant: county group from `county` (Screen) — Group #1 = Johnson; Group #2 = Butler, Douglas, Ellis, Geary, Greeley, Harvey, Jefferson, Leavenworth, Miami, Pottawatomie, Riley, Rush, Scott, Sedgwick, Seward, Shawnee, Wyandotte; Group #3 = all other counties
@@ -340,7 +345,10 @@ multiples rather than shifting it.
 - Implementation note: the rate is set by the **provider's** county, not the family's. MFB observes only the family's county and uses it as a proxy; for an out-of-state provider Kansas caps the rate at the nearest signing region's county.
 - Source: KEESM 10240 — "may not be more than the rate of the county in the Region signing the Agreement for Purchase of DCF Child Care that is nearest to the provider." — [snapshot `2026-09-02--keesm-10200-child-care-payments`](../../../sources/ks/ks_ccap/2026-09-02--keesm-10200-child-care-payments/content.md), accessed 2026-09-02
 - Implementation note: the outer `max( 1, … )` is a visibility floor, not a claim that Kansas pays $1 — an eligible program valued at `$0` is dropped from the results page entirely. The inner `max( …, 0 )` is the policy clamp, and DCF genuinely pays such a household nothing.
-- Implementation note: the 129-hour block is a pin, not a derivation. KEESM 7620 estimates hours of care from the adult's weekly work schedule including travel time plus the child's school schedule — **not** from the 20-hour activity minimum, and the two must not be equated. Its own example of a child needing the 215-hour block is "a four year old who is not in pre-school, Head Start or pre-kindergarten", and thirteen scenarios below use a 56-month child; the operative test stays the unobservable hours-needed estimate (Data Gap 2). A household on the 215 block receives about 67% more.
+- Implementation note: the authorized block is **derived, not pinned**. KEESM 7620 sets hours needed from the adults' weekly work schedule (including travel time) plus the child's school schedule, and authorizes 129 hours where that comes to 108 or fewer and 215 where it comes to more. The work schedule is the one input the screener records — `hours_worked`, on hourly streams — so the block follows it: `min(weekly hours across the adults on the case) × 4.35 > 108 → 215, else 129`. The `4.35` is the same weeks-per-month factor the screener's own income conversion uses, so a week of work and a week of care are counted alike. The turnover falls between 24 and 25 reported hours a week.
+- Implementation note: the block reads the **least**-working adult on the case, not the head and not the most. Care is needed only while every adult is away, and with no actual schedules the overlap between two adults cannot exceed the shorter of them — so the minimum is that overlap's upper bound. Staggered shifts need less care than this allows, never more. KEESM 2810 grounds the direction: it denies the household where one parent works and the other does not, the non-employed parent being expected to provide the care.
+- Implementation note: the derivation is **all-or-nothing per household**. `hours_worked` exists only on hourly streams, so one salaried, weekly or biweekly adult on the case makes the household's minimum unknowable, and the estimate falls back to the 129-hour block rather than reading the remaining adult's hours as if they were the household's. Same fallback where no adult on the case has any derivable hours.
+- Implementation note: two of KEESM 7620's own inputs remain unobservable and pull in opposite directions. **Travel time** is counted by 7620 and raises hours needed; the **child's school schedule** lowers them, which is why 7620's example of a child needing the 215-hour block is "a four year old who is **not** in pre-school, Head Start or pre-kindergarten". Neither is collected, so the derivation reads the work schedule alone. See Data Gap 2.
   - Source: KEESM 7620 — "The weekly work schedule (including travel time) and the child’s school schedule (if applicable) will be entered into the system to obtain a reasonable estimate of the monthly hours to be authorized for benefits." — [snapshot `2026-09-02--keesm-7610-child-care-plan-duration`](../../../sources/ks/ks_ccap/2026-09-02--keesm-7610-child-care-plan-duration/content.md), accessed 2026-09-02
 - Source: KEESM 7620 — "215 hours per month for children who need more than 108 hours of care per month (i.e. a four year old who is not in pre-school, Head Start or pre-kindergarten)" — [snapshot `2026-09-02--keesm-7610-child-care-plan-duration`](../../../sources/ks/ks_ccap/2026-09-02--keesm-7610-child-care-plan-duration/content.md), accessed 2026-09-02
 - Implementation note: the whole figure is returned from `household_value()`, with no member values, because both `max` operations are on the household total. `il_ccap` splits the same shape across `member_value()` and a negative `household_value()`; in that shape the clamp cannot be expressed at all.
@@ -365,7 +373,8 @@ multiples rather than shifting it.
 - Source: Appendix C-18 — "benefits for families using licensed home providers or child care centers are paid at approximately the 75th percentile or better" — [snapshot `2026-09-02--appendix-c-18-provider-rate-chart`](../../../sources/ks/ks_ccap/2026-09-02--appendix-c-18-provider-rate-chart/content.md), accessed 2026-09-02
 - Source: Appendix C-18 — "Out of home relative providers are paid at a rate that is 65% of the rate for licensed child care homes." — [snapshot `2026-09-02--appendix-c-18-provider-rate-chart`](../../../sources/ks/ks_ccap/2026-09-02--appendix-c-18-provider-rate-chart/content.md), accessed 2026-09-02
 - Source: Appendix C-18a — "Group #1 = Johnson" — [snapshot `2026-09-02--appendix-c-18a-provider-rate-county-grouping`](../../../sources/ks/ks_ccap/2026-09-02--appendix-c-18a-provider-rate-county-grouping/content.md), accessed 2026-09-02
-- Justification: the licensed centre is the setting DCF's rate chart leads with, and C-18 records centre and licensed-home benefits as set at approximately the 75th percentile of surveyed market price, so a centre rate is the defensible standard case. The 129-hour block is the lower of the two KEESM 7620 publishes, and it is pinned rather than derived: the choice between the two turns on an individualised hours-needed estimate MFB cannot observe (Data Gap 2, and the note on 7620 above). The block is not a function of the 20-hour activity minimum, and no captured source maps one onto the other. The two pinned assumptions pull in opposite directions: the centre rate is the highest of the four provider types, and 129 hours is the lower of the two blocks, which keeps the estimate near the middle of the plausible range rather than at either end. It **understates** for a household needing full-time care, where the 215-hour block would raise the figure by about 67%. It **overstates** for a household using a licensed home, an out-of-home relative paid 65% of the licensed-home rate, or an in-home relative paid a flat $2.42 an hour statewide.
+- Justification: **one assumption remains pinned — the provider type**, and it is the estimate's largest remaining source of error. Kansas pays four different hourly rates, and the licensed centre is the **highest** of them. For a preschooler in Johnson County: licensed centre `$5.51`, licensed home `$4.23`, out-of-home relative `$2.81` (65% of the licensed-home rate), in-home relative `$2.42` flat statewide. C-18 records centre and licensed-home benefits as set at approximately the 75th percentile of surveyed market price, which makes a centre the defensible standard case — but that is a fact about how DCF sets rates, **not** evidence about which provider type CCAP families actually use. That fact lives in DCF administrative data and no captured source carries it. A household using an in-home relative is overstated by roughly 2.3x; one using a licensed home by roughly 1.3x. The pin is deliberate and stands until DCF's provider mix is available; it is not a data gap that further research on published sources could close.
+- Justification: the hours block is **no longer pinned**. It was, at 129 hours, on the reasoning that the choice turned on an hours-needed estimate MFB could not observe. That reasoning was too strong: 7620 names the adults' work schedule as the primary input, and the screener records it for hourly earners. Deriving it removes the systematic understatement the pin caused for full-time-working households — under the old pin, a household on the 215 block was understated by **76%** of the shown value, not the 67% an earlier draft of this spec stated (67% is the ratio of the hours alone; because the family share is a fixed subtraction, the effect on the value is larger). What survives is narrower and disclosed above: travel time and the school schedule are still unobservable, and a household with any non-hourly earner on the case still falls back to 129.
 
 ## Test Scenarios
 
@@ -398,6 +407,7 @@ multiples rather than shifting it.
 | Value: multiple children, one FSD | 13 |
 | Value: `max(…, 0)` policy clamp and `max( 1, … )` visibility floor | 15 (deduction exceeds gross → clamp to $0, floor to $1) |
 | Value: truncation, not rounding | 3b, 5b, 6b, 7, 9b, 14 |
+| Value: authorized block derived from reported hours | 2a (20 hrs → 129); 1 (30 hrs → 215); 15 (both adults 20 hrs → 129, which is what makes the clamp reachable); 8c (19-hr spouse pulls the household to 129); 13 (25-hr spouse, 20-hr head → 129 on the minimum) |
 
 **Known scenario gaps**: criterion 2 has no scenario — `legal_status_required` is never applied as
 an eligibility gate in the backend, so asserting an outcome on it would test the frontend, not this
@@ -424,9 +434,9 @@ by the float-derived `Decimal(4.35)`, which is strictly below 4.35 — so criter
 quantisation is what makes every income below exact, and what gives Scenarios 2a and 4a their bite.
 Benefit values are truncated to whole dollars in the calculator, not rounded — see Benefit Value on why the truncation cannot be left to `screener/views.py`.
 
-### Scenario 1: Baseline — Johnson County, one eligible child — Eligible, $7,461
+### Scenario 1: Baseline — Johnson County, one eligible child — Eligible, $13,147
 **What we're checking**: the whole eligible path, the committed value arithmetic, and the resource limit at exactly $10,000.
-**Expected**: Eligible — $7,461 (centre rate $5.51 for 56 months in Group #1 × 129 hrs = $710.79/month; − $89 FSD for family of 3 in the $2,960.01–$3,187 band = $621.79/month; × 12 = $7,461.48 → $7,461)
+**Expected**: Eligible — $13,147 (30 hrs/week × 4.35 = 130.5 hours needed, over 108, so the 215-hour block; centre rate $5.51 for 56 months in Group #1 × 215 hrs = $1,184.65/month; − $89 FSD for family of 3 in the $2,960.01–$3,187 band = $1,095.65/month; × 12 = $13,147.80 → $13,147)
 **Steps**:
 * Location: ZIP `66210`, county `Johnson County`
 * Person 1: born March 1994 (age 32), head of household, wages `hourly` $23.00/hr, hours worked 30/week (= $3,001.50/month)
@@ -455,9 +465,9 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 * Household assets: $2,000
 **Why this matters**: kills an off-by-one band comparison (`<` where `<=` belongs) in the F-1 lookup — the likeliest table bug, worth $72/year here.
 
-### Scenario 3a: County group #2 — Eligible, $5,325
+### Scenario 3a: County group #2 — Eligible, $9,587
 **What we're checking**: the county-group axis of the rate table.
-**Expected**: Eligible — $5,325 (centre rate $4.13 in Group #2 × 129 = $532.77/month; − $89 = $443.77/month; × 12 = $5,325.24 → $5,325)
+**Expected**: Eligible — $9,587 (215-hour block; centre rate $4.13 in Group #2 × 215 = $887.95/month; − $89 = $798.95/month; × 12 = $9,587.40 → $9,587)
 **Steps**:
 * Location: ZIP `67202`, county `Sedgwick County`
 * Person 1: born March 1994 (age 32), head of household, wages `hourly` $23.00/hr, hours worked 30/week (= $3,001.50/month)
@@ -466,9 +476,9 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 * Household assets: $2,000
 **Why this matters**: kills a single hardcoded rate table, or a county-group mapping that defaults every county to Group #1.
 
-### Scenario 3b: County group #3 pays more than group #2 — Eligible, $5,541
+### Scenario 3b: County group #3 pays more than group #2 — Eligible, $9,948
 **What we're checking**: the non-monotonicity — the Group #3 rate for this age band is higher than Group #2's.
-**Expected**: Eligible — $5,541 (centre rate $4.27 in Group #3 × 129 = $550.83/month; − $89 = $461.83/month; × 12 = $5,541.96 → $5,541)
+**Expected**: Eligible — $9,948 (215-hour block; centre rate $4.27 in Group #3 × 215 = $918.05/month; − $89 = $829.05/month; × 12 = $9,948.60 → $9,948)
 **Steps**:
 * Location: ZIP `67156`, county `Cowley County`
 * Person 1: born March 1994 (age 32), head of household, wages `hourly` $23.00/hr, hours worked 30/week (= $3,001.50/month)
@@ -497,9 +507,9 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 * Household assets: $2,000
 **Why this matters**: paired with 4a, kills a table that silently falls through to the top band instead of denying above it.
 
-### Scenario 5a: Rate age band, 59 months — Eligible, $7,461
+### Scenario 5a: Rate age band, 59 months — Eligible, $13,147
 **What we're checking**: the upper edge of the 36–59 month centre band.
-**Expected**: Eligible — $7,461 ($5.51 × 129 = $710.79; − $89 = $621.79; × 12 = $7,461.48 → $7,461)
+**Expected**: Eligible — $13,147 (215-hour block; $5.51 × 215 = $1,184.65; − $89 = $1,095.65; × 12 = $13,147.80 → $13,147)
 **Steps**:
 * Location: ZIP `66210`, county `Johnson County`
 * Person 1: born March 1994 (age 32), head of household, wages `hourly` $23.00/hr, hours worked 30/week (= $3,001.50/month)
@@ -508,9 +518,9 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 * Household assets: $2,000
 **Why this matters**: paired with 5b, pins the band edge — one month of age is worth $1,083.60/year.
 
-### Scenario 5b: Rate age band, 60 months — Eligible, $6,377
+### Scenario 5b: Rate age band, 60 months — Eligible, $11,341
 **What we're checking**: the child crosses into the 60-months-and-older band.
-**Expected**: Eligible — $6,377 ($4.81 × 129 = $620.49; − $89 = $531.49; × 12 = $6,377.88 → $6,377)
+**Expected**: Eligible — $11,341 (215-hour block; $4.81 × 215 = $1,034.15; − $89 = $945.15; × 12 = $11,341.80 → $11,341)
 **Steps**:
 * Location: ZIP `66210`, county `Johnson County`
 * Person 1: born March 1994 (age 32), head of household, wages `hourly` $23.00/hr, hours worked 30/week (= $3,001.50/month)
@@ -529,9 +539,9 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 * Household assets: $2,000
 **Why this matters**: `age_from_date` flips on the first of the birth month, not the birthday, so this kills a day-precision age test. It tests the sourced *initial*-eligibility rule rather than a simplification of it: KEESM 2810 establishes no initial eligibility for a 13-year-old unless the incapacity or court-supervision branch applies, and this child meets neither.
 
-### Scenario 6b: Child one month younger — Eligible, $6,401
+### Scenario 6b: Child one month younger — Eligible, $11,365
 **What we're checking**: the other side of the same boundary.
-**Expected**: Eligible — $6,401 ($4.81 × 129 = $620.49; − $87 FSD for family of 2 in the $2,885.01–$3,066 band = $533.49/month; × 12 = $6,401.88 → $6,401)
+**Expected**: Eligible — $11,365 (215-hour block; $4.81 × 215 = $1,034.15; − $87 FSD for family of 2 in the $2,885.01–$3,066 band = $947.15/month; × 12 = $11,365.80 → $11,365)
 **Steps**:
 * Location: ZIP `66210`, county `Johnson County`
 * Person 1: born March 1994 (age 32), head of household, wages `hourly` $23.00/hr, hours worked 30/week (= $3,001.50/month)
@@ -560,9 +570,9 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 * Household assets: $2,000
 **Why this matters**: this is the scenario that separates the sourced Kansas rule from MFB's existing `il_ccap`, which tests only the head of household. At 19 hours it also pins the threshold to the hour, which a round-number stand-in would not.
 
-### Scenario 8b: A non-working grandparent in the home does not fail the test — Eligible, $7,461
+### Scenario 8b: A non-working grandparent in the home does not fail the test — Eligible, $13,147
 **What we're checking**: the activity test reaches the nuclear-family adults only, so an adult outside that unit is not tested.
-**Expected**: Eligible — $7,461 (centre rate $5.51 for 56 months in Group #1 × 129 hrs = $710.79/month; − $89 FSD for family of 3 in the $2,960.01–$3,187 band = $621.79/month; × 12 = $7,461.48 → $7,461)
+**Expected**: Eligible — $13,147 (215-hour block from the head's 30 hrs/week — the grandparent is not on the case, so their absent schedule neither lowers the block nor is tested; centre rate $5.51 × 215 = $1,184.65/month; − $89 FSD for family of 3 = $1,095.65/month; × 12 = $13,147.80 → $13,147)
 **Steps**:
 * Location: ZIP `66210`, county `Johnson County`
 * Person 1: born March 1994 (age 32), head of household, wages `hourly` $23.00/hr, hours worked 30/week (= $3,001.50/month)
@@ -613,9 +623,9 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 * Household assets: $2,000
 **Why this matters**: paired with 9, pins the wage floor to the cent — a strict `> 7.25` would deny this household. It is also the only scenario in the $0 deduction band: an implementation that omits F-1's `$0–$1,803 → $0` row and falls through to the 110% row would charge this family $54 a month it does not owe.
 
-### Scenario 9c: Two hourly jobs, one below the floor — Eligible, $7,809
+### Scenario 9c: Two hourly jobs, one below the floor — Eligible, $13,495
 **What we're checking**: the wage floor is the adult's average hourly wage across their hourly streams, not a test of each stream on its own.
-**Expected**: Eligible — $7,809 (average wage ($12.00 × 20 + $6.00 × 10) ÷ 30 = $10.00/hour, above the floor; countable income $2,005.00, family of 2 in the $1,984.01–$2,164 band → $60 FSD; $710.79 − $60 = $650.79/month; × 12 = $7,809.48 → $7,809)
+**Expected**: Eligible — $13,495 (average wage ($12.00 × 20 + $6.00 × 10) ÷ 30 = $10.00/hour, above the floor; the same 30 summed hours give 130.5 hours needed → 215-hour block; countable income $2,005.00, family of 2 in the $1,984.01–$2,164 band → $60 FSD; $1,184.65 − $60 = $1,124.65/month; × 12 = $13,495.80 → $13,495)
 **Steps**:
 * Location: ZIP `66210`, county `Johnson County`
 * Person 1: born March 1994 (age 32), head of household, wages `hourly` $12.00/hr, hours worked 20/week (= $1,044.00/month), plus wages `hourly` $6.00/hr, hours worked 10/week (= $261.00/month), plus wages `monthly` $700.00 (total $2,005.00)
@@ -644,9 +654,9 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 * Household assets: $10,000.01
 **Why this matters**: paired with Scenario 1's exactly-$10,000 pass, pins the limit to the cent. Also kills a limit set at the federal CCDF $1,000,000 figure, the value MFB's `il_ccap` uses.
 
-### Scenario 12: TANF household above the income ceiling — Eligible, $8,529
+### Scenario 12: TANF household above the income ceiling — Eligible, $14,215
 **What we're checking**: TANF receipt waives the income test, bypasses the resource limit, and zeroes the family share deduction.
-**Expected**: Eligible — $8,529 ($710.79 − $0 FSD = $710.79/month; × 12 = $8,529.48 → $8,529), despite monthly income of $7,001.50 exceeding the family-of-3 limit of $6,719 and assets above $10,000
+**Expected**: Eligible — $14,215 (215-hour block; $1,184.65 − $0 FSD = $1,184.65/month; × 12 = $14,215.80 → $14,215), despite monthly income of $7,001.50 exceeding the family-of-3 limit of $6,719 and assets above $10,000
 **Steps**:
 * Location: ZIP `66210`, county `Johnson County`
 * Person 1: born March 1994 (age 32), head of household, wages `hourly` $23.00/hr, hours worked 30/week (= $3,001.50/month), plus wages `monthly` $4,000.00
@@ -685,8 +695,8 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 **Expected**: Eligible — $1 (Group #3 rate $3.16 for 90 months × 129 = $407.64/month gross; the $430 FSD for family of 8 in the $8,590.01–$11,038 band exceeds it, so the policy clamp floors the monthly value at $0; × 12 = $0; the outer visibility floor then returns $1)
 **Steps**:
 * Location: ZIP `67156`, county `Cowley County`
-* Person 1: born March 1994 (age 32), head of household, wages `hourly` $30.00/hr, hours worked 40/week (= $5,220.00/month)
-* Person 2: born July 1993 (age 33), spouse, wages `hourly` $22.00/hr, hours worked 40/week (= $3,828.00/month)
+* Person 1: born March 1994 (age 32), head of household, wages `hourly` $50.00/hr, hours worked 20/week (= $4,350.00/month)
+* Person 2: born July 1993 (age 33), spouse, wages `hourly` $50.00/hr, hours worked 20/week (= $4,350.00/month — household total $8,700.00)
 * Person 3: born March 2019 (age 7, 90 months), child
 * Person 4: born May 2009 (age 17), child, no disability
 * Person 5: born May 2010 (age 16), child, no disability
@@ -694,7 +704,8 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 * Person 7: born May 2012 (age 14), child, no disability
 * Person 8: born May 2013 (age 13), child, no disability
 * Household assets: $5,000
-**Why this matters**: kills three separate mistakes. An unclamped subtraction returns a negative annual value of −$268.32 and displays as a negative benefit. Clamping at `$0` without the outer floor is worse than it looks: the household is eligible on every criterion, and Kansas genuinely pays it nothing under this spec's pinned assumptions, but a `$0` value is dropped from the results page by `filterPrograms.ts`'s strict `programValue > 0`, so the family would see no card at all rather than an eligible one worth nothing. Returning `$12` instead of `$1` would mean the floor had been applied per month rather than once to the annual figure. Family size 8 is the only size at which the policy clamp is reachable: at size 7 the top deduction is $386 against $407.64 of gross benefit, so it does not fire, and sizes above 8 cannot be entered.
+**Why this matters**: kills three separate mistakes. An unclamped subtraction returns a negative annual value of −$268.32 and displays as a negative benefit. Clamping at `$0` without the outer floor is worse than it looks: the household is eligible on every criterion, and Kansas genuinely pays it nothing under this spec's pinned provider assumption, but a `$0` value is dropped from the results page by `filterPrograms.ts`'s strict `programValue > 0`, so the family would see no card at all rather than an eligible one worth nothing. Returning `$12` instead of `$1` would mean the floor had been applied per month rather than once to the annual figure.
+**Why this household**: the clamp is reachable only on the **129-hour block** — at 215 hours the smallest gross this program can produce is $2.42 × 215 = $520.30, above every deduction F-1 publishes. So both adults work exactly 20 hours, the criterion 3 minimum, which keeps the block part-time, and earn $50.00/hour so the household still reaches family-of-8's top band, the only band whose $430 deduction can exceed the benefit. Family size 8 is the only size at which it fires: at size 7 the top deduction is $386 against $407.64 of gross, and sizes above 8 cannot be entered. Deriving the block rather than pinning it therefore narrows this scenario's reachable population sharply, and that narrowing is the point of stating the household this precisely.
 
 ### Scenario 16: The deduction band whose F-1 bound carries a source typo — Eligible, $7,137
 **What we're checking**: the resolution of Appendix F-1's family-of-3 180% bound, printed as `$3,870.10` where the ascending sequence implies `$3,870.01`.
@@ -707,9 +718,9 @@ Benefit values are truncated to whole dollars in the calculator, not rounded —
 * Household assets: $2,000
 **Why this matters**: $3,870.05 falls inside the gap a literal transcription of the PDF would leave unmapped ($3,870.01–$3,870.09). A table built from the printed text rather than the sequence-implied bound would find no band for this household.
 
-### Scenario 17: Assets not provided — Eligible, $7,461
+### Scenario 17: Assets not provided — Eligible, $13,147
 **What we're checking**: the nullable-`household_assets` guard falls open.
-**Expected**: Eligible — $7,461 (criterion 5 is not applied when `household_assets` is null; value as Scenario 1)
+**Expected**: Eligible — $13,147 (criterion 5 is not applied when `household_assets` is null; value as Scenario 1)
 **Steps**:
 * Location: ZIP `66210`, county `Johnson County`
 * Person 1: born March 1994 (age 32), head of household, wages `hourly` $23.00/hr, hours worked 30/week (= $3,001.50/month)

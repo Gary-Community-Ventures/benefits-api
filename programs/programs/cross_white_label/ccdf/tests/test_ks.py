@@ -187,8 +187,10 @@ class TestClassAttributes(KsCcapTestCase):
     def test_minimum_weekly_hours_is_20(self):
         self.assertEqual(KsCcap.MINIMUM_WEEKLY_HOURS, 20)
 
-    def test_authorized_hours_pin_the_part_time_block(self):
-        self.assertEqual(KsCcap.MONTHLY_AUTHORIZED_HOURS, 129)
+    def test_authorized_hours_are_keesm_7620s_two_blocks(self):
+        self.assertEqual(KsCcap.PART_TIME_HOURS, 129)
+        self.assertEqual(KsCcap.FULL_TIME_HOURS, 215)
+        self.assertEqual(KsCcap.HOURS_NEEDED_THRESHOLD, 108)
 
     def test_child_relationships_carry_keesm_4410s_catch_all(self):
         # `relatedOther` is the catch-all limb `il_ccap`'s six-value set omits.
@@ -286,7 +288,7 @@ class TestScenarios(KsCcapTestCase):
         # band) = $621.79; x 12 = $7,461.48 -> $7,461. Assets sit at exactly
         # $10,000, so a strict `<` would deny this household.
         screen = self.baseline(assets=Decimal("10000.00"))
-        self.assert_eligible(screen, 7_461)
+        self.assert_eligible(screen, 13_147)
 
     def test_scenario_2a_family_share_band_lower_edge(self):
         # The F-1 band is read inclusively at its upper bound, and this is also the
@@ -310,12 +312,12 @@ class TestScenarios(KsCcapTestCase):
 
     def test_scenario_3a_county_group_2(self):
         # $4.13 x 129 = $532.77; - $89 = $443.77; x 12 = $5,325.24 -> $5,325.
-        self.assert_eligible(self.baseline(location=SEDGWICK), 5_325)
+        self.assert_eligible(self.baseline(location=SEDGWICK), 9_587)
 
     def test_scenario_3b_county_group_3_pays_more_than_group_2(self):
         # $4.27 x 129 = $550.83; - $89 = $461.83; x 12 = $5,541.96 -> $5,541. Also a
         # truncation case: rounding would return $5,542.
-        self.assert_eligible(self.baseline(location=COWLEY), 5_541)
+        self.assert_eligible(self.baseline(location=COWLEY), 9_948)
 
     def test_scenario_4a_income_exactly_at_the_85_percent_smi_limit(self):
         # A strict `<` at the ceiling would deny a family sitting on the published
@@ -339,12 +341,12 @@ class TestScenarios(KsCcapTestCase):
 
     def test_scenario_5a_rate_age_band_59_months(self):
         # The upper edge of the 36-59 month centre band.
-        self.assert_eligible(self.baseline(child_born=(2021, 10)), 7_461)
+        self.assert_eligible(self.baseline(child_born=(2021, 10)), 13_147)
 
     def test_scenario_5b_rate_age_band_60_months(self):
         # One month of age is worth $1,083.60/year. Also a truncation case:
         # $6,377.88 would round to $6,378.
-        self.assert_eligible(self.baseline(child_born=(2021, 9)), 6_377)
+        self.assert_eligible(self.baseline(child_born=(2021, 9)), 11_341)
 
     def test_scenario_6a_child_reaches_13_in_the_reference_month(self):
         # `calc_age` flips on the first of the birth month, not the birthday, so
@@ -362,7 +364,7 @@ class TestScenarios(KsCcapTestCase):
         head = self.add_person(screen, "headOfHousehold", (1994, 3))
         self.add_hourly(head, "23.00", 30)
         self.add_person(screen, "child", (2013, 10))
-        self.assert_eligible(screen, 6_401)
+        self.assert_eligible(screen, 11_365)
 
     def test_scenario_7_disabled_15_year_old(self):
         # Kills an unconditional `age < 13`, which would drop every eligible
@@ -394,7 +396,7 @@ class TestScenarios(KsCcapTestCase):
         self.add_hourly(head, "23.00", 30)
         self.add_person(screen, "child", (2022, 1))
         self.add_person(screen, "grandParent", (1958, 6))
-        self.assert_eligible(screen, 7_461)
+        self.assert_eligible(screen, 13_147)
 
     def test_scenario_8c_a_disabled_adult_under_20_hours_is_excused(self):
         # Scenario 8 with the 19-hour spouse made disabled. The only scenario
@@ -446,7 +448,7 @@ class TestScenarios(KsCcapTestCase):
         self.add_hourly(head, "6.00", 10)
         self.add_monthly(head, "700.00")  # total $2,005.00
         self.add_person(screen, "child", (2022, 1))
-        self.assert_eligible(screen, 7_809)
+        self.assert_eligible(screen, 13_495)
 
     def test_scenario_10_a_16_year_olds_wages_are_exempt(self):
         # Kills the default `calc_gross_income` call, which sums every stream
@@ -480,7 +482,7 @@ class TestScenarios(KsCcapTestCase):
         self.add_person(screen, "child", (2022, 1))
         self.add_person(screen, "child", (2010, 5))
         self.receive_tanf(screen)
-        self.assert_eligible(screen, 8_529)
+        self.assert_eligible(screen, 14_215)
 
     def test_scenario_13_three_eligible_children_one_family_share(self):
         # $7.33 + $6.25 + $5.51 = $19.09/hour x 129 = $2,462.61; - one $298 FSD.
@@ -514,11 +516,17 @@ class TestScenarios(KsCcapTestCase):
         # -$268.32; clamped to $0 without the outer floor the household is dropped
         # from the results page by `programValue > 0`. Returning $12 would mean the
         # floor had been applied per month rather than once to the annual figure.
+        #
+        # The clamp is reachable only on the part-time block: at 215 hours the
+        # smallest gross this program can produce is $2.42 x 215 = $520.30, above
+        # every published deduction. So both adults work exactly 20 hours -- the
+        # criterion 3 minimum -- and earn enough per hour to reach family-of-8's top
+        # band, which is the only band whose $430 deduction can exceed the benefit.
         screen = self.build(8, location=COWLEY, assets=Decimal("5000"))
         head = self.add_person(screen, "headOfHousehold", (1994, 3))
-        self.add_hourly(head, "30.00", 40)
+        self.add_hourly(head, "50.00", 20)
         spouse = self.add_person(screen, "spouse", (1993, 7))
-        self.add_hourly(spouse, "22.00", 40)
+        self.add_hourly(spouse, "50.00", 20)  # household total $8,700.00/month
         self.add_person(screen, "child", (2019, 3))  # 90 months, the only eligible child
         for born in ((2009, 5), (2010, 5), (2011, 5), (2012, 5), (2013, 5)):
             self.add_person(screen, "child", born)
@@ -538,7 +546,7 @@ class TestScenarios(KsCcapTestCase):
     def test_scenario_17_assets_not_provided(self):
         # Scenario 1 with the asset figure omitted. Kills both a null-as-failure
         # reading and a crash on `None`.
-        self.assert_eligible(self.baseline(assets=None), 7_461)
+        self.assert_eligible(self.baseline(assets=None), 13_147)
 
     def test_scenario_18_an_ssi_parents_wages_are_exempt_too(self):
         # KEESM 6410 exempts the income of an SSI *recipient*. Counting the head's
@@ -596,21 +604,105 @@ class TestValueShape(KsCcapTestCase):
         # across `member_value` and a negative `household_value` cannot express
         # either clamp.
         eligibility = self.calc(self.baseline())
-        self.assertEqual(eligibility.household_value, 7_461)
+        self.assertEqual(eligibility.household_value, 13_147)
         self.assertEqual([member.value for member in eligibility.eligible_members], [0, 0, 0])
 
     def test_value_is_truncated_rather_than_rounded(self):
-        # $5,541.96 -> $5,541. The `math.trunc` in `screener/views.py` touches only
+        # $9,948.60 -> $9,948. The `math.trunc` in `screener/views.py` touches only
         # the payload's `estimated_value`, while the results card reads
         # `household_value` and formats it with `maximumFractionDigits: 0`.
         screen = self.baseline(location=COWLEY)
-        self.assertEqual(self.calculator(screen).household_value(), 5_541)
+        self.assertEqual(self.calculator(screen).household_value(), 9_948)
 
     def test_an_ineligible_child_contributes_no_hours_block(self):
         # The 16-year-old in the baseline counts toward family size but is not in
         # the sum: a second block would make this $15,990.
         screen = self.baseline()
         self.assertEqual(len(self.calculator(screen).eligible_children()), 1)
+
+
+class TestAuthorizedHoursBlock(KsCcapTestCase):
+    """
+    KEESM 7620's block, derived from the adults' reported schedule rather than
+    pinned. 108 hours a month is 24.83 hours a week at the screener's own 4.35
+    weeks-per-month factor, so the block turns over between 24 and 25 hours.
+    """
+
+    def hours_for(self, adults):
+        """`adults` is a list of (relationship, weekly hours or None)."""
+        screen = self.build(3)
+        for relationship, weekly in adults:
+            member = self.add_person(
+                screen, relationship, (1994, 3) if relationship == "headOfHousehold" else (1993, 7)
+            )
+            if weekly is not None:
+                self.add_hourly(member, "20.00", weekly)
+            elif weekly is None and relationship != "headOfHousehold":
+                self.add_monthly(member, "3000.00")  # salaried: no hours_worked
+        self.add_person(screen, "child", (2022, 1))
+        return self.calculator(screen).authorized_monthly_hours()
+
+    def test_twenty_hours_is_part_time(self):
+        # 20 x 4.35 = 87 hours needed, at or under the 108 threshold.
+        self.assertEqual(self.hours_for([("headOfHousehold", 20)]), 129)
+
+    def test_twenty_four_hours_is_still_part_time(self):
+        # 24 x 4.35 = 104.4, the last whole week under the threshold.
+        self.assertEqual(self.hours_for([("headOfHousehold", 24)]), 129)
+
+    def test_twenty_five_hours_crosses_to_full_time(self):
+        # 25 x 4.35 = 108.75, the first whole week over it.
+        self.assertEqual(self.hours_for([("headOfHousehold", 25)]), 215)
+
+    def test_forty_hours_is_full_time(self):
+        self.assertEqual(self.hours_for([("headOfHousehold", 40)]), 215)
+
+    def test_the_block_follows_the_least_working_adult(self):
+        # Care is needed only while every adult on the case is away, and without
+        # schedules the overlap cannot exceed the shorter of the two. A 40-hour
+        # parent alongside a 20-hour parent needs the part-time block, not the
+        # full-time one the 40 alone would give.
+        self.assertEqual(self.hours_for([("headOfHousehold", 40), ("spouse", 20)]), 129)
+        self.assertEqual(self.hours_for([("headOfHousehold", 40), ("spouse", 30)]), 215)
+
+    def test_a_non_nuclear_adults_hours_are_ignored(self):
+        # A grandparent is not on the case, so their schedule is not DCF's input.
+        screen = self.build(3)
+        head = self.add_person(screen, "headOfHousehold", (1994, 3))
+        self.add_hourly(head, "20.00", 40)
+        grandparent = self.add_person(screen, "grandParent", (1958, 6))
+        self.add_hourly(grandparent, "20.00", 20)
+        self.add_person(screen, "child", (2022, 1))
+        self.assertEqual(self.calculator(screen).authorized_monthly_hours(), 215)
+
+    def test_one_unreadable_schedule_falls_back_to_part_time(self):
+        # A salaried spouse carries no `hours_worked`, so the household's minimum
+        # is unknowable and the estimate takes the lower block rather than reading
+        # the head's hours as if they were the household's.
+        self.assertEqual(self.hours_for([("headOfHousehold", 40), ("spouse", None)]), 129)
+
+    def test_no_derivable_hours_at_all_falls_back_to_part_time(self):
+        screen = self.build(2)
+        head = self.add_person(screen, "headOfHousehold", (1994, 3))
+        self.add_monthly(head, "3000.00")
+        self.add_person(screen, "child", (2022, 1))
+        self.assertEqual(self.calculator(screen).authorized_monthly_hours(), 129)
+
+    def test_the_block_is_per_child_and_the_deduction_is_not(self):
+        # Scenario 13's household on the full-time block: three children each get
+        # 215 hours, but still one family share between them.
+        screen = self.build(5)
+        head = self.add_person(screen, "headOfHousehold", (1994, 3))
+        self.add_hourly(head, "10.00", 30)
+        self.add_monthly(head, "3695.00")
+        spouse = self.add_person(screen, "spouse", (1993, 7))
+        self.add_hourly(spouse, "12.00", 30)
+        for born in ((2025, 10), (2023, 10), (2022, 1)):
+            self.add_person(screen, "child", born)
+        calculator = self.calculator(screen)
+        self.assertEqual(calculator.authorized_monthly_hours(), 215)
+        # ($7.33 + $6.25 + $5.51) x 215 = $4,104.35, less one $298 deduction.
+        self.assertEqual(calculator.household_value(), 45_676)
 
 
 class TestCommittedBranchesWithoutScenarios(KsCcapTestCase):
