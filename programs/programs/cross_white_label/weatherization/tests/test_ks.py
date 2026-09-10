@@ -173,7 +173,9 @@ class TestKsWapClassAttributes(KsWapTestCase):
         this calculator's configuration — Kansas's categorical list names SSI,
         TANF and LIEAP, and the DOE expansions reach HUD and USDA."""
         configured = (
-            set(KsWap.excluded_income_types) | set(KsWap.categorical_income_types) | set(KsWap.categorical_base_programs)
+            set(KsWap.excluded_income_types)
+            | set(KsWap.categorical_income_types)
+            | set(KsWap.categorical_base_programs)
         )
         self.assertNotIn("snap", {name.lower() for name in configured})
 
