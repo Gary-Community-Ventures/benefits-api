@@ -31,6 +31,11 @@ class ConfigurationData:
     # State name for display (override in your white label config)
     state = {"name": ""}
 
+    # Two-letter US state code, used by add_config to populate WhiteLabel.state_code
+    # (required by SMI/income-limit lookups). None for white labels not tied to a
+    # single real-world state (e.g. _default) — override in your white label config.
+    state_code = None
+
     # Banner messages displayed at top of screener (optional)
     banner_messages = []
 

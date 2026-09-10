@@ -11,6 +11,7 @@ class MaConfigurationData(ConfigurationData):
     publicly_launched = True
 
     state = {"name": "Massachusetts"}
+    state_code = "MA"
 
     public_charge_rule = {
         "link": "https://miracoalition.org/news/public-charge-rule-new-community-update-july-2026/",
