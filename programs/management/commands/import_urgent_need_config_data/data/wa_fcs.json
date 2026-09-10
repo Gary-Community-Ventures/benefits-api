@@ -7,12 +7,13 @@
     },
     "type_short": ["housing"],
     "functions": [],
+    "phone_number": "+18444512828",
     "counties": [],
     "required_expense_types": [],
     "translations": {
       "name": "Foundational Community Supports (FCS)",
-      "description": "FCS is a free Apple Health (Medicaid) service for people 16 and older who have complex health needs. Supportive Housing helps you find a home and keep it. Supported Employment helps you find a job and keep it. You, a provider, or someone helping you can send a referral to get started.",
-      "link": "https://www.hca.wa.gov/about-hca/programs-and-initiatives/medicaid-transformation-project-mtp/foundational-community-supports",
+      "description": "FCS is a free Apple Health (Medicaid) service for people 16 and older who have complex health needs. Supportive Housing helps you find a home and keep it. Supported Employment helps you find a job and keep it. You, a provider, or someone helping you can send a referral to Wellpoint to get started.",
+      "link": "https://www.provider.wellpoint.com/washington-provider/patient-care/foundational-community-supports",
       "warning": "",
       "website_description": "Housing and employment support for Apple Health members, plus the FCS referral form.",
       "notification_message": ""
