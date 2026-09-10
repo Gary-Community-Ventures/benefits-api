@@ -140,11 +140,26 @@ class Screen(models.Model):
         Get the reference date for age calculations.
         For frozen screens (with validations), use the earliest validation's created_date
         to keep ages consistent over time. For non-frozen screens, use current date.
+
+        Memoized per instance. `order_by()` builds a fresh queryset, so this read can
+        never be served by `prefetch_related` — and callers reach it once per household
+        member, from inside per-program calculators (`is_dependent`, and the SSDI/BSP
+        family), so uncached it is an N+1 on members x programs. Nothing invalidates the
+        cache: an instance lives for one request, and a reference date that shifts
+        mid-request is a bug in its own right, since the whole point is to keep ages
+        consistent (two calls either side of midnight would otherwise disagree on an
+        unfrozen screen).
         """
+        cached = getattr(self, "_reference_date", None)
+        if cached is not None:
+            return cached
+
         earliest_validation = self.validations.order_by("created_date").first()
         if earliest_validation and earliest_validation.created_date:
-            return earliest_validation.created_date.date()
-        return timezone.now().date()
+            self._reference_date = earliest_validation.created_date.date()
+        else:
+            self._reference_date = timezone.now().date()
+        return self._reference_date
 
     def calc_gross_income(self, frequency, types, exclude=[]):
         household_members = self.household_members.all()
