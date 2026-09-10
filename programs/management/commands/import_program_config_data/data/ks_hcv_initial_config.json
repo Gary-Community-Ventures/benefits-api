@@ -30,7 +30,7 @@
     "value_format": "estimated_annual",
     "show_on_current_benefits": true,
     "show_in_has_benefits_step": true,
-    "active": false,
+    "active": true,
     "base_program": "section_8",
     "website_description": "Help paying rent for low-income families"
   },
