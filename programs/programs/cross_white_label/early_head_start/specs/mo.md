@@ -103,8 +103,8 @@ Stripping the receipt/take-up inputs from the payload — the pre-#1685 request 
 - [x] Scenario 1 (Missouri, single participant — golden path): User should be **eligible** — $19,616/year
 - [x] Scenario 2 (Missouri, two eligible participants — aggregation test): User should be **eligible** — $39,233/year
 - [x] Scenario 3 (Missouri, pregnant-only applicant — `PregnancyDependency` integration check): User should be **eligible** — $19,616/year
-- [ ] Scenario 4 (SNAP not reported, income above the test): User should be **not eligible** — $0
-- [ ] Scenario 5 (SNAP reported, same household): User should be **eligible** — $19,616/year
+- [x] Scenario 4 (SNAP not reported, income above the test): User should be **not eligible** — $0
+- [x] Scenario 5 (SNAP reported, same household): User should be **eligible** — $19,616/year
 
 ---
 
@@ -117,7 +117,7 @@ Stripping the receipt/take-up inputs from the payload — the pre-#1685 request 
 
 **Why this matters**: Missouri's spending/enrollment parameters are the only thing this ticket adds — eligibility itself is entirely federal. If a future PE parameter update changes Missouri's EHS spending or enrollment figures, this is what catches it: a passing scenario with a wrong dollar amount would mean MO's value has silently drifted from its source, decoupled from any change in eligibility logic.
 
-- **Location**: ZIP `65101`, County `Cole`, State `MO`
+- **Location**: ZIP `65101`, County `Cole County`, State `MO`
 - **Household**: 2 people
 - **Person 1**: Head of household, birth_year 1996, birth_month 3 (age 30), employment income $1,000/month, citizen, no current benefits
 - **Person 2**: Child, birth_year 2025, birth_month 3 (age 1), no income
@@ -130,7 +130,7 @@ Stripping the receipt/take-up inputs from the payload — the pre-#1685 request 
 **Expected**: Eligible. Value = **$39,233** (MFB sums the raw per-person floats, $19,616.668 × 2 = $39,233.336, and truncates once at serialization; integrated MFB-to-PE path — see `mo_ehs_pe_delta_report.md`).
 
 **Steps**:
-- **Location**: ZIP `65101`, County `Cole`
+- **Location**: ZIP `65101`, County `Cole County`
 - **Household**: 4 people
 - **Person 1**: Head of household, birth_year 1996, birth_month 3 (age 30), employment income $1,200/month, citizen, no current benefits
 - **Person 2**: Spouse, birth_year 1998, birth_month 3 (age 28), no income
@@ -146,7 +146,7 @@ Stripping the receipt/take-up inputs from the payload — the pre-#1685 request 
 **Expected**: **Not eligible**. Value = **$0**.
 
 **Steps**:
-- **Location**: ZIP `65101`, County `Cole`
+- **Location**: ZIP `65101`, County `Cole County`
 - **Household**: 3 people
 - **Person 1**: Head of household, age 30, employment income $2,600/month ($31,200/year)
 - **Person 2**: Child, age 4 (Head Start's participant, not EHS's; present so one household serves this spec and Head Start's)
@@ -176,7 +176,7 @@ Stripping the receipt/take-up inputs from the payload — the pre-#1685 request 
 **Expected**: Eligible (federal financial/categorical eligibility). Value = **$19,616** (same single-person figure as Scenario 1; integrated MFB-to-PE path). Display copy should note this reflects federal eligibility only — local prenatal-service availability should be confirmed with the specific grantee.
 
 **Steps**:
-- **Location**: ZIP `65101`, County `Cole`
+- **Location**: ZIP `65101`, County `Cole County`
 - **Household**: 1 person
 - **Person 1**: Head of household, birth_year 1996, birth_month 3 (age 30), pregnant, employment income $1,000/month (clearly below the 100% FPL threshold for a household of 1), no current benefits
 

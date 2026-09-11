@@ -58,7 +58,7 @@ class MoEarlyHeadStartReceiptTestCase(PeIntegrationTestCase):
             state_code="MO",
             household_size=3,
             zipcode="65101",
-            county="Cole",
+            county="Cole County",
         )
         self.program = make_program("mo", "mo_early_head_start", YEAR)
 

@@ -55,7 +55,7 @@ Scenarios 1 and 2 are both eligible, so the expected dollar amount changes if Mi
 **Expected**: Eligible, $16,314 (unrounded PE output $16,314.723, truncated per MFB's whole-dollar convention)
 
 **Steps**:
-- **Location**: ZIP `65101`, County `Cole`
+- **Location**: ZIP `65101`, County `Cole County`
 - **Household**: 2 people
 - **Person 1**: Head of Household, `birth_year` 1990, `birth_month` 3, income $1,000/mo ($12,000/yr, clearly under the 100% FPL threshold for HH2), US citizen
 - **Person 2**: Child, `birth_year` 2021, `birth_month` 8 (age 4), no income
@@ -68,7 +68,7 @@ Scenarios 1 and 2 are both eligible, so the expected dollar amount changes if Mi
 **Expected**: Eligible, $32,629 — `trunc(16,314.723 + 16,314.723) = trunc(32,629.446) = 32,629`.
 
 **Steps**:
-- **Location**: ZIP `65101`, County `Cole`
+- **Location**: ZIP `65101`, County `Cole County`
 - **Household**: 3 people
 - **Person 1**: Head of Household, `birth_year` 1990, `birth_month` 3, income $1,200/mo ($14,400/yr, clearly under the 100% FPL threshold for HH3), US citizen
 - **Person 2**: Child, `birth_year` 2022, `birth_month` 1 (age 4), no income
@@ -82,7 +82,7 @@ Scenarios 1 and 2 are both eligible, so the expected dollar amount changes if Mi
 **Expected**: **Not eligible**, $0
 
 **Steps**:
-- **Location**: ZIP `65101`, County `Cole`
+- **Location**: ZIP `65101`, County `Cole County`
 - **Household**: 3 people
 - **Person 1**: Head of Household, age 30, employment income $2,600/mo ($31,200/yr)
 - **Person 2**: Child, age 4 (Head Start band)
