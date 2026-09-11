@@ -10,7 +10,7 @@ from django.db import migrations
 # row" branch, or from bulk_import creating it fresh — bulk_import's
 # ProgramDataController never syncs has_calculator on create or update, so a
 # row created here with the flag set correctly stays correct even after a
-# later bulk_import run touches its other fields). MFB-1760.
+# later bulk_import run touches its other fields).
 GAP_TRACKING_PROGRAMS = [
     {
         "white_label_code": "co",
