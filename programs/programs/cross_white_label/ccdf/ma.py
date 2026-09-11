@@ -24,9 +24,12 @@ class MaCcdf(PolicyEngineSpmCalulator):
     stays, gated on PolicyEngine's answer.
 
     The last tier runs to CCFA's disabled age limit rather than its general one, so every
-    child PolicyEngine claims is priced. Massachusetts covers a child with a diagnosed
-    special need to 16 and everyone else to 13, and PolicyEngine applies both bounds, so
-    ages 13 to 15 reach the table only when disabled. They are paid the school-age rate.
+    child PolicyEngine claims is priced. Massachusetts covers a child "prenatal to age
+    13yo (16yo if the child has a diagnosed special need)", and PolicyEngine applies both
+    bounds, so ages 13 to 15 reach the table only when disabled. They are paid the
+    school-age rate rather than nothing.
+
+    Source: https://mass211.org/childcare
     """
 
     program_code = "ma_ccdf"
