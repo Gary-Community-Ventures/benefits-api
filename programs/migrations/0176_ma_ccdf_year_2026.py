@@ -1,0 +1,90 @@
+from django.db import migrations
+
+
+#: The FederalPoveryLimit row supplying `Program.year.period`, which is the period every
+#: PolicyEngine input and output for this program is requested at.
+NEW_YEAR = "2026"
+OLD_YEAR = "2025"
+
+
+def _ma_ccdf_on(apps, year):
+    """The `ma_ccdf` rows sitting on `year`.
+
+    Each direction selects on the year it is moving *from*, so the two undo each other
+    and a row that has since been moved somewhere else, or left null, is not touched.
+    """
+    Program = apps.get_model("programs", "Program")
+
+    return Program.objects.filter(name_abbreviated="ma_ccdf", year__year=year)
+
+
+def _fpl(apps, year):
+    """The FederalPoveryLimit row for `year`, or None if it has not been imported."""
+    FederalPoveryLimit = apps.get_model("programs", "FederalPoveryLimit")
+
+    try:
+        return FederalPoveryLimit.objects.get(year=year, period=year)
+    except FederalPoveryLimit.DoesNotExist:
+        return None
+
+
+def set_ma_ccdf_year_2026(apps, schema_editor):
+    """
+    Move `ma_ccdf` to the 2026 period.
+
+    Massachusetts CCFA reads one of two income limits: 85% of state median income for a
+    household already enrolled, and a new-applicant limit that PolicyEngine holds at 50%
+    before 2026-01-01 and 85% from it. Screening asks the new-applicant question, so at the
+    2025 period the program applies the 50% limit -- measured, that moves a two-person
+    household's ceiling from $91,139 to $53,611.
+
+    The federal CCDF variables this program used to read had a single 85% limit at any
+    period, so the 2025 period cost nothing while they were in use and costs a large share
+    of eligible Massachusetts families now. There is no config file for this program --
+    `year` is set through the admin -- so the bump ships here rather than as an import that
+    could lag the deploy.
+
+    Fails the deploy if the program is on 2025 and the 2026 row is missing. Landing the
+    calculator while the program still reads the 2025 period is the one outcome worth
+    stopping for: it is silent, and it applies the 50% limit to every Massachusetts
+    family screening for childcare. A database that has never imported a config has
+    neither the program nor any FederalPoveryLimit row, so there is nothing to move and
+    nothing to raise about -- `migrate` on a fresh checkout is unaffected.
+    """
+    programs = _ma_ccdf_on(apps, OLD_YEAR)
+    if not programs.exists():
+        return
+
+    fpl = _fpl(apps, NEW_YEAR)
+    if fpl is None:
+        raise RuntimeError(
+            f"ma_ccdf is on the {OLD_YEAR} period and no FederalPoveryLimit row exists for "
+            f"{NEW_YEAR}. Import the {NEW_YEAR} config first: leaving the program on {OLD_YEAR} "
+            "applies CCFA's 50%-of-SMI new-applicant limit instead of 85%."
+        )
+
+    programs.update(year=fpl)
+
+
+def revert_ma_ccdf_year(apps, schema_editor):
+    """Move `ma_ccdf` back to the 2025 period.
+
+    Does not raise when the 2025 row is missing, unlike the forward direction. Being
+    left on 2026 is the correct limit rather than the wrong one, so it is not worth
+    failing an unapply -- which tends to happen under pressure -- over.
+    """
+    fpl = _fpl(apps, OLD_YEAR)
+    if fpl is None:
+        print(f"ma_ccdf: no FederalPoveryLimit for {OLD_YEAR}; leaving the program on {NEW_YEAR}")
+        return
+
+    _ma_ccdf_on(apps, NEW_YEAR).update(year=fpl)
+
+
+class Migration(migrations.Migration):
+    dependencies = [
+        ("programs", "0175_ks_lieap_on_has_benefits_step"),
+    ]
+    operations = [
+        migrations.RunPython(set_ma_ccdf_year_2026, revert_ma_ccdf_year),
+    ]

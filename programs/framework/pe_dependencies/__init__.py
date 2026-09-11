@@ -92,6 +92,53 @@ tanf_income = [
     member.NonTanfCashAssistanceIncomeDependency,
 ]
 
+# Every variable in PolicyEngine's `gov.states.ma.eec.ccfa.income.countable_income.sources`
+# that the screener collects. `ma_ccfa_countable_income` adds exactly that list, and it is a
+# wider base than the federal CCDF test this replaced: `ccdf_income` adds `market_income`
+# alone, so benefit income never reached it. A calculator sending only the taxable set would
+# read $0 of countable income for a household living on Social Security and pass it.
+#
+# Sent under the source's own name:
+#   rental_income, social_security, ssi, unemployment_compensation, workers_compensation,
+#   alimony_income, child_support_received
+#
+# Reached through a PE `adds` chain, so the field we send and the source differ:
+#   employment_income          -> employment_income_before_lsr
+#   self_employment_income     -> self_employment_income_before_lsr
+#   taxable_pension_income     -> pension_income            (pension, veteran)
+#
+# Three sources are deliberately not populated:
+#
+#   `veterans_benefits`. The `veteran` stream already reaches CCFA through
+#   taxable_pension_income -> pension_income, so the money is counted -- just not under its
+#   own name. Routing it properly needs PensionIncomeWithoutVeteranDependency, which writes a
+#   different value to `taxable_pension_income` than the eight other MA programs sending
+#   PensionIncomeDependency. That is a Slot disagreement, and it would split every MA screen
+#   into a second PolicyEngine request to buy a distinction no CCFA formula draws.
+#
+#   `military_retirement_pay`. The screener does not collect it.
+#
+#   `dividend_income` / `interest_income`. The screener's single `investment` stream goes out
+#   as `long_term_capital_gains`, and CCFA's list exempts capital gains. There is no split of
+#   that stream to send here.
+#
+# Not here either, and inert rather than missing: `miscellaneous_income` (gifts) and
+# `long_term_capital_gains`. Both count toward the federal `market_income` this replaced and
+# neither appears in CCFA's list, so listing them would only let a missing-data can_calc()
+# suppress the program over income CCFA does not read.
+ma_ccfa_income = [
+    member.EmploymentIncomeDependency,
+    member.SelfEmploymentIncomeDependency,
+    member.RentalIncomeDependency,
+    member.PensionIncomeDependency,
+    member.SocialSecurityIncomeDependency,
+    member.UnemploymentIncomeDependency,
+    member.WorkersCompensationDependency,
+    member.AlimonyIncomeDependency,
+    member.ChildSupportReceivedDependency,
+    member.Ssi,
+]
+
 # PolicyEngine's actual-receipt contract: countable income and categorical eligibility follow
 # the benefits a household reports receiving, not the ones PolicyEngine simulates them as
 # eligible for. See dependencies/receipt.py.
