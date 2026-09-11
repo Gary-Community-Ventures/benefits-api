@@ -5,28 +5,8 @@ from configuration.models import (
     Configuration,
 )
 from configuration.white_labels import state_options, white_label_config
-from programs.models import Program, Referrer
 from screener.models import NPSScore
 import argparse
-
-# Standard "how did you hear about us" options every white label should have
-# in its referral-source dropdown. Partner-org referrers are added separately
-# via the Django admin.
-GENERIC_REFERRERS = {
-    "flyers": "Flyer",
-    "friend": "Friend / Family / Word of Mouth",
-    "merit": "Merit America",
-    "other": "Other",
-    "searchEngine": "Google or other search engine",
-    "socialMedia": "Social Media",
-    "testOrProspect": "Test / Prospective Partner",
-}
-
-# Tracking-only programs (no eligibility calculator) that both
-# 0141_create_gap_tracking_programs.py's "existing row" branch and
-# bulk_import's ProgramDataController (which never syncs has_calculator)
-# can leave at the model default of True. MFB-1760.
-GAP_TRACKING_PROGRAMS = ["co_andso", "co_section_8", "ma_section_8", "co_care"]
 
 
 class Command(BaseCommand):
@@ -65,19 +45,6 @@ class Command(BaseCommand):
             except ObjectDoesNotExist:
                 self.stdout.write(self.style.WARNING(f'White label for "{white_label_code}" is not in the database'))
                 continue
-
-            # Set state_code on the WhiteLabel row itself (not a Configuration
-            # entry). Nothing else populates this field automatically — required
-            # by SMI/income-limit lookups. MFB-1760.
-            white_label.state_code = WhiteLabelData.state_code
-            white_label.save()
-
-            # Correct has_calculator for known tracking-only programs that
-            # bulk_import or legacy migrations may have left at the model
-            # default (True). MFB-1760.
-            Program.objects.filter(
-                white_label=white_label, name_abbreviated__in=GAP_TRACKING_PROGRAMS, has_calculator=True
-            ).update(has_calculator=False)
 
             # Save referrer_data to database
             Configuration.objects.update_or_create(
@@ -135,26 +102,6 @@ class Command(BaseCommand):
                 name="override_text",
                 white_label=white_label,
                 defaults={"data": WhiteLabelData.override_text, "active": True},
-            )
-
-            # Ensure the standard generic referral-source dropdown options
-            # exist. Without these, a newly-launched white label's referral
-            # source step has nothing selectable until someone adds them by
-            # hand (MFB-1760).
-            for referrer_code, name in GENERIC_REFERRERS.items():
-                Referrer.objects.get_or_create(
-                    white_label=white_label,
-                    referrer_code=referrer_code,
-                    defaults={"name": name, "show_in_dropdown": True, "is_partner": False},
-                )
-
-            # merit may already exist as a Referrer row from
-            # 0145_seed_referrer_rows_from_referral_options.py, which
-            # classified it as a partner (is_partner=True). get_or_create
-            # above won't touch an existing row, so correct it explicitly
-            # now that it's confirmed generic.
-            Referrer.objects.filter(white_label=white_label, referrer_code="merit", is_partner=True).update(
-                is_partner=False
             )
 
             if WhiteLabelData.is_default:

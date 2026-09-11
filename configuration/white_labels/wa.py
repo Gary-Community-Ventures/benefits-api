@@ -15,7 +15,6 @@ class WaConfigurationData(ConfigurationData):
     publicly_launched = True
 
     state = {"name": "Washington"}
-    state_code = "WA"
 
     public_charge_rule = {
         "link": "https://www.dshs.wa.gov/esa/csd-office-refugee-and-immigration-assistance/public-charge-information",

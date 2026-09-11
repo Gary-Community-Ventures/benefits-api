@@ -11,7 +11,6 @@ class TxConfigurationData(ConfigurationData):
     publicly_launched = True
 
     state = {"name": "Texas"}
-    state_code = "TX"
 
     public_charge_rule = {
         "link": "https://pifcoalition.org/pc",

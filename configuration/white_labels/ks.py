@@ -15,7 +15,6 @@ class KsConfigurationData(ConfigurationData):
     publicly_launched = False
 
     state = {"name": "Kansas"}
-    state_code = "KS"
 
     public_charge_rule = {
         "link": "https://www.uscis.gov/green-card/green-card-processes-and-procedures/public-charge",

@@ -11,7 +11,6 @@ class CoConfigurationData(ConfigurationData):
     publicly_launched = True
 
     state = {"name": "Colorado"}
-    state_code = "CO"
 
     # System banner messages
     banner_messages = [

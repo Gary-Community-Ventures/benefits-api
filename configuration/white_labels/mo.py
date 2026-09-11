@@ -15,7 +15,6 @@ class MoConfigurationData(ConfigurationData):
     publicly_launched = False
 
     state = {"name": "Missouri"}
-    state_code = "MO"
 
     public_charge_rule = {
         "link": "https://www.uscis.gov/green-card/green-card-processes-and-procedures/public-charge",

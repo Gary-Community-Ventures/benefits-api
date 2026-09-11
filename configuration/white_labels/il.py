@@ -11,7 +11,6 @@ class IlConfigurationData(ConfigurationData):
     publicly_launched = True
 
     state = {"name": "Illinois"}
-    state_code = "IL"
 
     public_charge_rule = {
         "link": "https://www.icirr.org/ifrp",

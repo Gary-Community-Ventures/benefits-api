@@ -11,7 +11,6 @@ class NcConfigurationData(ConfigurationData):
     publicly_launched = True
 
     state = {"name": "North Carolina"}
-    state_code = "NC"
 
     # System banner messages
     banner_messages = [

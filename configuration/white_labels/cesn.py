@@ -11,7 +11,6 @@ class CesnConfigurationData(ConfigurationData):
     is_state = False
 
     state = {"name": "Colorado"}
-    state_code = "CO"
 
     public_charge_rule = {
         "link": "https://cdhs.colorado.gov/public-charge-rule-and-colorado-immigrants?utm_source=cesn&utm_medium=web&utm_campaign=cesn&utm_id=cesn#:~:text=About%20public%20charge&text=The%20test%20looks%20at%20whether,affidavit%20of%20support%20or%20contract.",
