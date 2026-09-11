@@ -412,6 +412,9 @@ CALC_ORDER = (
     "cesn_eoc",
     "cesn_cowap",
     "cesn_care",
+    # ks_rca is defined as the program for refugees TANF cannot reach, so it gates on
+    # ks_tanf strictly and needs it resolved first.
+    "ks_tanf",
 )
 
 
