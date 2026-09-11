@@ -7,26 +7,25 @@ NEW_YEAR = "2026"
 OLD_YEAR = "2025"
 
 
-def _set_year(apps, from_year, to_year):
-    """Move `ma_ccdf` from one period to another, leaving any other period alone.
+def _ma_ccdf_on(apps, year):
+    """The `ma_ccdf` rows sitting on `year`.
 
-    Gated on the year it is moving from so the two directions undo each other. An
-    unconditional update would have the reverse write 2025 over a row that had been
-    moved somewhere else since, or over a null.
+    Each direction selects on the year it is moving *from*, so the two undo each other
+    and a row that has since been moved somewhere else, or left null, is not touched.
     """
     Program = apps.get_model("programs", "Program")
+
+    return Program.objects.filter(name_abbreviated="ma_ccdf", year__year=year)
+
+
+def _fpl(apps, year):
+    """The FederalPoveryLimit row for `year`, or None if it has not been imported."""
     FederalPoveryLimit = apps.get_model("programs", "FederalPoveryLimit")
 
     try:
-        fpl = FederalPoveryLimit.objects.get(year=to_year, period=to_year)
+        return FederalPoveryLimit.objects.get(year=year, period=year)
     except FederalPoveryLimit.DoesNotExist:
-        # Nothing to point at. Better to leave the program on its current period than to
-        # null out the year, which raises on every screen the program is calculated for.
-        # Loud, because the program is left on the limit this migration exists to escape.
-        print(f"ma_ccdf: no FederalPoveryLimit for {to_year}; leaving the program on {from_year}")
-        return
-
-    Program.objects.filter(name_abbreviated="ma_ccdf", year__year=from_year).update(year=fpl)
+        return None
 
 
 def set_ma_ccdf_year_2026(apps, schema_editor):
@@ -44,12 +43,42 @@ def set_ma_ccdf_year_2026(apps, schema_editor):
     of eligible Massachusetts families now. There is no config file for this program --
     `year` is set through the admin -- so the bump ships here rather than as an import that
     could lag the deploy.
+
+    Fails the deploy if the program is on 2025 and the 2026 row is missing. Landing the
+    calculator while the program still reads the 2025 period is the one outcome worth
+    stopping for: it is silent, and it applies the 50% limit to every Massachusetts
+    family screening for childcare. A database that has never imported a config has
+    neither the program nor any FederalPoveryLimit row, so there is nothing to move and
+    nothing to raise about -- `migrate` on a fresh checkout is unaffected.
     """
-    _set_year(apps, OLD_YEAR, NEW_YEAR)
+    programs = _ma_ccdf_on(apps, OLD_YEAR)
+    if not programs.exists():
+        return
+
+    fpl = _fpl(apps, NEW_YEAR)
+    if fpl is None:
+        raise RuntimeError(
+            f"ma_ccdf is on the {OLD_YEAR} period and no FederalPoveryLimit row exists for "
+            f"{NEW_YEAR}. Import the {NEW_YEAR} config first: leaving the program on {OLD_YEAR} "
+            "applies CCFA's 50%-of-SMI new-applicant limit instead of 85%."
+        )
+
+    programs.update(year=fpl)
 
 
 def revert_ma_ccdf_year(apps, schema_editor):
-    _set_year(apps, NEW_YEAR, OLD_YEAR)
+    """Move `ma_ccdf` back to the 2025 period.
+
+    Does not raise when the 2025 row is missing, unlike the forward direction. Being
+    left on 2026 is the correct limit rather than the wrong one, so it is not worth
+    failing an unapply -- which tends to happen under pressure -- over.
+    """
+    fpl = _fpl(apps, OLD_YEAR)
+    if fpl is None:
+        print(f"ma_ccdf: no FederalPoveryLimit for {OLD_YEAR}; leaving the program on {NEW_YEAR}")
+        return
+
+    _ma_ccdf_on(apps, NEW_YEAR).update(year=fpl)
 
 
 class Migration(migrations.Migration):
